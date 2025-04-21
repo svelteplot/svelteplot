@@ -2,7 +2,7 @@
 title: Bollinger mark
 ---
 
-bollinger foo
+Bollinger Bands are a [useful analysis tool](https://www.investopedia.com/terms/b/bollingerbands.asp) for investors and stock traders. They are named after John Bollinger who invented them in the 1980s.
 
 ```svelte live
 <script>
