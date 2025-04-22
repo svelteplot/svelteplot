@@ -183,12 +183,17 @@
                                         'fontStyle',
                                         'textAnchor'
                                     ]),
-                                    fill: args.textFill || args.stroke,
-                                    stroke: args.textStroke,
                                     strokeWidth: args.textStrokeWidth
+                                        ? args.textStrokeWidth
+                                        : args.textStroke
+                                          ? 2
+                                          : 0,
+                                    fill: args.textFill || args.stroke,
+                                    stroke: args.textStroke
                                 },
                                 'fill',
-                                usedScales
+                                usedScales,
+                                true
                             )}
                             <MarkerPath
                                 {mark}
@@ -200,6 +205,7 @@
                                 strokeWidth={args.strokeWidth}
                                 datum={lineData[0]}
                                 d={pathString}
+                                dInv={text ? linePath(lineData.toReversed()) : null}
                                 color={lineData[0].stroke || 'currentColor'}
                                 {style}
                                 class={styleClass}

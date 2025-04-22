@@ -147,7 +147,6 @@ describe('Line mark', () => {
                 x: 'x',
                 y: 'y',
                 text: 'Line Label',
-                textFill: 'green'
             }
         });
 
@@ -156,6 +155,33 @@ describe('Line mark', () => {
         expect(text?.textContent).toBe('Line Label');
         // The fill might be applied differently or through a different attribute
         expect(text).not.toBeNull();
+        expect(text?.style.fill).toBe('currentColor');
+    });
+
+    it('line with text label and custom style', () => {
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 1 }
+                ],
+                x: 'x',
+                y: 'y',
+                text: 'Line Label',
+                textFill: 'green',
+                textStroke: 'red',
+                textStrokeWidth: 4
+            }
+        });
+
+        const text = container.querySelector('g.lines > g > text');
+        expect(text).not.toBeNull();
+        expect(text?.textContent).toBe('Line Label');
+        // The fill might be applied differently or through a different attribute
+        expect(text).not.toBeNull();
+        expect(text?.style.fill).toBe('green');
+        expect(text?.style.stroke).toBe('red');
+        expect(text?.style.strokeWidth).toBe('4px');
     });
 
     it('line with gaps (invalid data points)', () => {

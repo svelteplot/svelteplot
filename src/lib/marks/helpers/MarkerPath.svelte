@@ -63,6 +63,7 @@
         markerEnd,
         marker,
         d,
+        dInv,
         style,
         class: className = null,
         textStyleClass = null,
@@ -84,33 +85,9 @@
     const firstPt = $derived(text && hasPath ? points.at(0).split(',').map(Number) : []);
     const lastPt = $derived(text && hasPath ? points.at(-1).split(',').map(Number) : []);
     const leftToRight = $derived(text && hasPath ? firstPt[0] < lastPt.at(-2) : true);
-    const pathIsCurve = $derived(text && hasPath ? d.includes('C') : false);
-    // this rather complicated code "reverses" the path to ensure that the text
-    // is not turned upside down
-    const textPath = $derived(
-        !text || leftToRight
-            ? hasPath
-            : pathIsCurve
-              ? [
-                    'M',
-                    points.at(-1).split(',').slice(-2).join(','),
-                    'C',
-                    points.at(-1).split(',').slice(2, 4).join(','),
-                    ',',
-                    points.at(-1).split(',').slice(0, 2).join(','),
-                    ',',
-                    points[0]
-                ].join('')
-              : [
-                    'M',
-                    points.at(-1),
-                    ...points
-                        .toReversed()
-                        .slice(1)
-                        .map((pt) => `L${pt}`)
-                ].join('')
-    );
 
+    // use reversed path if the path is not left to right
+    const textPath = $derived(!text || leftToRight ? d : dInv);
     const strokeWidth_ = $derived(resolveProp(strokeWidth, datum, 1.4));
 </script>
 

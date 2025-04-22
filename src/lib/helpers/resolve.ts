@@ -192,7 +192,8 @@ export function resolveStyles(
     datum: ScaledDataRecord,
     channels: Partial<Record<ChannelName & MarkStyleProps, ChannelAccessor>>,
     defaultColorProp: 'fill' | 'stroke' | null = null,
-    useScale: Record<ScaledChannelName, boolean>
+    useScale: Record<ScaledChannelName, boolean>,
+    recomputeChannels = false
 ): [string | null, string | null] {
     const styleProps = {
         ...getBaseStylesObject(datum.datum, channels),
@@ -204,7 +205,7 @@ export function resolveStyles(
         ...Object.fromEntries(
             (Object.entries(scaledStyleProps) as [ScaledChannelName, string][])
                 .filter(([key]) => channels[key] != null)
-                .map(([key, cssAttr]) => [key, cssAttr, datum[key]])
+                .map(([key, cssAttr]) => [key, cssAttr, recomputeChannels ? resolveChannel(key, datum.datum, channels) : datum[key]])
                 .filter(
                     ([key, , value]) =>
                         isValid(value as RawValue) || key === 'fill' || key === 'stroke'

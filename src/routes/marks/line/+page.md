@@ -469,6 +469,26 @@ With a [spherical projection](/features/projections), line segments become [geod
 
 [fork](https://svelte.dev/playground/8f433172583d4b7eb4ae1d72572d2e31?version=5.28.1)
 
+Lines can show a text label along the path:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Line, Dot } from '$lib';
+
+    import { page } from '$app/state';
+    let { aapl } = $derived(page.data.data);
+</script>
+
+<Plot grid>
+    <Line
+        data={aapl.slice(20, 40)}
+        x="Date"
+        y="Close"
+        curve="basis"
+        text="AAPL" />
+</Plot>
+```
+
 ```svelte live
 <script lang="ts">
     import { Plot, Line, Dot } from '$lib';
@@ -478,23 +498,42 @@ With a [spherical projection](/features/projections), line segments become [geod
 </script>
 
 <p>
-    This allows you to use a plot as tiny chart
+    By disabling the plot axes and reducing the margins and
+    inset you can place tiny line charts
     <Plot
         axes={false}
         inset={3}
-        maxWidth="50px"
+        width={40}
         height={25}
         margins={0}
         testid="axis-off">
         <Line data={aapl.slice(-60)} x="Date" y="Close" />
-    </Plot>, inside a text paragraph or table -- often
-    referred to as sparklines.
+    </Plot> inside a text paragraph or table -- often referred
+    to as sparklines.
 </p>
 
 <style>
-    p :global(figure) {
+    p :global(figure.svelteplot) {
         display: inline-block;
         vertical-align: baseline;
     }
 </style>
+```
+
+Doo
+
+```svelte
+<p>
+    By disabling the plot axes and reducing the margins and
+    inset you can place tiny line charts
+    <Plot
+        axes={false}
+        inset={3}
+        width={40}
+        height={25}
+        margins={0}>
+        <Line data={aapl.slice(-60)} x="Date" y="Close" />
+    </Plot> inside a text paragraph or table -- often referred
+    to as sparklines.
+</p>
 ```

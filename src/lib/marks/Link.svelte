@@ -9,13 +9,10 @@
         CurveName,
         MarkerOptions,
         RawValue,
-        FacetContext,
-        DataRow,
         ScaledDataRecord
     } from '../types.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { maybeData, testFilter } from '../helpers/index.js';
-    import { getUsedScales, projectXY } from '../helpers/scales.js';
+    import { maybeData } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
     import { replaceChannels } from '$lib/transforms/rename.js';
@@ -72,30 +69,39 @@
 
     const sphericalLine = $derived(plot.scales.projection && curve === 'auto');
 
-    const linePath: (d: ScaledDataRecord) => string = $derived.by(() => {
+    const linePath: (d: ScaledDataRecord, reversed: boolean) => string = $derived.by(() => {
         const fn = callWithProps(line, [], {
             curve: maybeCurve(curve === 'auto' ? 'linear' : curve, tension),
             x: (d) => d[0],
             y: (d) => d[1]
         });
 
-        return (d: ScaledDataRecord) =>
-            fn([
-                [d.x1, d.y1],
-                [d.x2, d.y2]
-            ]);
+        return (d: ScaledDataRecord, reversed = false) =>
+            fn(
+                reversed
+                    ? [
+                          [d.x2, d.y2],
+                          [d.x1, d.y1]
+                      ]
+                    : [
+                          [d.x1, d.y1],
+                          [d.x2, d.y2]
+                      ]
+            );
     });
 
-    const sphericalLinePath: (d: ScaledDataRecord) => string = $derived.by(() => {
-        const fn = sphereLine(plot.scales.projection);
-        return (d: ScaledDataRecord) => {
-            const x1 = resolveChannel('x1', d.datum, args);
-            const y1 = resolveChannel('y1', d.datum, args);
-            const x2 = resolveChannel('x2', d.datum, args);
-            const y2 = resolveChannel('y2', d.datum, args);
-            return fn(x1, y1, x2, y2);
-        };
-    });
+    const sphericalLinePath: (d: ScaledDataRecord, reversed: boolean) => string = $derived.by(
+        () => {
+            const fn = sphereLine(plot.scales.projection);
+            return (d: ScaledDataRecord, reversed = false) => {
+                const x1 = resolveChannel('x1', d.datum, args);
+                const y1 = resolveChannel('y1', d.datum, args);
+                const x2 = resolveChannel('x2', d.datum, args);
+                const y2 = resolveChannel('y2', d.datum, args);
+                return reversed ? fn(x2, y2, x1, y1) : fn(x1, y1, x2, y2);
+            };
+        }
+    );
     //     sphericalLine
     //         ?
 
@@ -160,6 +166,7 @@
                         datum={d.datum}
                         color={d.stroke}
                         d={sphericalLine ? sphericalLinePath(d) : linePath(d)}
+                        dInv={sphericalLine ? sphericalLinePath(d, true) : linePath(d, true)}
                         {style}
                         text={text ? resolveProp(text, d.datum) : null}
                         startOffset={resolveProp(args.textStartOffset, d.datum, '50%')}
