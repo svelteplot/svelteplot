@@ -2,7 +2,14 @@
 title: Arrow mark
 ---
 
-The arrow mark is useful for connecting two points in data space with an arrow. If you want to control the arrow length and angle directly, consider using the [vector](/marks/vector) mark instead.
+The Arrow mark draws arrows connecting two points in data space. This versatile mark is useful for:
+
+- Showing transitions or changes between two states (like in before/after comparisons)
+- Visualizing flows, movements, or progressions
+- Creating network/graph visualizations when connecting nodes
+- Annotating charts with directional information
+
+If you want to control the arrow length and angle directly rather than using data coordinates, consider using the [vector](/marks/vector) mark instead.
 
 Metro dataset:
 
@@ -16,7 +23,6 @@ Metro dataset:
     let hl = $state(false);
 </script>
 
-{hl}
 <Plot
     grid
     marginRight={20}
@@ -285,16 +291,56 @@ Another thing you can use the arrow mark for is drawing network diagrams:
 
 ## Arrow options
 
-Options:
+The Arrow mark offers various customization options to control appearance and behavior:
 
-- **x1**, **y1**, **x2**, **y2** - coordinates of start and end points
-- **bend** - the bend angle, in degrees; defaults to 0°; _true_ for 22.5°
-- **insetEnd** - inset at the end of the arrow (useful if the arrow points to a dot)
-- **insetStart** - inset at the start of the arrow
-- **inset** - shorthand for the two insets
-- **headLength** - the arrowhead scale; defaults to 8
-- **headAngle** - the arrowhead angle, in degrees; defaults to 60°
-- **sweep** - controls the direction in which the arrow bends, possible options are _1_, _0_ (no bending), _-1_, _+x_, _-x_, _+y_, _-y_ (see demo below)
+**Core Properties**
+
+- **x1**, **y1** - Coordinates of the arrow's starting point
+- **x2**, **y2** - Coordinates of the arrow's ending point
+- **data** - Array of data objects containing x1/y1/x2/y2 values (or values that can be accessed via the channel accessors)
+
+**Arrow Style and Shape**
+
+- **bend** - Controls the curvature of the arrow in degrees:
+
+    - Set to a number (e.g., `30`) for a specific bend angle
+    - Set to `true` for a default bend of 22.5°
+    - Set to `0` or `false` for a straight arrow
+    - Positive values curve clockwise, negative values curve counterclockwise
+
+- **sweep** - Controls the direction of the bend:
+
+    - `1` (default) - Standard direction
+    - `0` - No bending (straight line regardless of bend angle)
+    - `-1` - Reverse direction
+    - `'+x'` - Bend follows the x-axis in positive direction
+    - `'-x'` - Bend follows the x-axis in negative direction
+    - `'+y'` - Bend follows the y-axis in positive direction
+    - `'-y'` - Bend follows the y-axis in negative direction
+
+- **headAngle** - The arrowhead angle in degrees (default: 60°)
+- **headLength** - Controls the size of the arrowhead (default: 8)
+
+**Spacing and Positioning**
+
+- **insetEnd** - Inset at the end of the arrow; useful when the arrow points to another mark like a dot
+- **insetStart** - Inset at the start of the arrow
+- **inset** - Shorthand to set both insetStart and insetEnd to the same value
+
+**Visual Styling**
+
+All standard styling properties are also available:
+
+- **stroke** - Arrow color
+- **strokeWidth** - Thickness of the arrow
+- **opacity** - Transparency of the arrow
+- **class** - Custom CSS class for additional styling
+
+**Interactivity**
+
+Event handlers can be attached to arrows for interactive visualizations:
+
+- **onclick**, **onmouseover**, **onmouseenter**, **onmouseleave**, etc.
 
 ```svelte live
 <script lang="ts">
