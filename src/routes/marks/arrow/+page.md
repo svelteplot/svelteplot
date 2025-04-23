@@ -21,7 +21,6 @@ Metro dataset:
     let { metros } = $derived(page.data.data);
 
     let hl = $state(false);
-    $inspect({ hl });
 </script>
 
 <Plot
@@ -29,7 +28,7 @@ Metro dataset:
     marginRight={20}
     inset={10}
     height={450}
-    x={{ type: 'log', label: 'Population' }}
+    x={{ type: 'log', label: 'P..opulation' }}
     y={{ label: 'Inequality' }}
     {css}
     color={{
@@ -159,7 +158,7 @@ Works as well with a point scale:
 
 Another thing you can use the arrow mark for is drawing network diagrams:
 
-```svelte live
+```svelte --live
 <script lang="ts">
     import {
         Plot,

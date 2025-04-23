@@ -131,7 +131,8 @@
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         { ...d, __tspanIndex: 0 },
-                        { textAnchor: isLeft ? 'start' : isRight ? 'end' : 'middle', ...args },
+                        { fontSize: 12, fontWeight: 500, strokeWidth: 1.6,
+                            textAnchor: isLeft ? 'start' : isRight ? 'end' : 'middle', ...args },
                         'fill',
                         usedScales
                     )}
@@ -140,7 +141,7 @@
                         <!-- multiline text-->
                         {@const fontSize = resolveProp(args.fontSize, d.datum) || 12}
                         <text
-                            class={[textClassName, styleClass]}
+                            class={[textClassName]}
                             dominant-baseline={LINE_ANCHOR[lineAnchor]}
                             transform="translate({[
                                 Math.round(x + dx),
@@ -155,7 +156,7 @@
                                             fontSize
                                 )
                             ]})"
-                            >{#each textLines as line, l}<tspan x="0" dy={l ? fontSize : 0} {style}
+                            >{#each textLines as line, l}<tspan x="0" dy={l ? fontSize : 0} class={styleClass} {style}
                                     >{line}</tspan
                                 >{/each}{#if title}<title>{title}</title>{/if}</text>
                     {:else}
@@ -175,11 +176,6 @@
 
 <style>
     text {
-        fill: none;
-        stroke: none;
-        font-size: 12px;
-        font-weight: 500;
-        stroke-width: 1.6px;
         paint-order: stroke fill;
     }
 </style>
