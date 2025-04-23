@@ -120,7 +120,7 @@
                         class={[className]}
                         use:addEventHandlers={{
                             getPlotState,
-                            options: mark.options,
+                            options: args,
                             datum: d.datum
                         }}>
                         {#if options.onmouseenter || options.onclick}

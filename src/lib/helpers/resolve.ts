@@ -171,7 +171,7 @@ export function resolveScaledStyleProps(
 
 export function resolveScaledStyles(
     datum: DataRecord,
-    channels: Partial<Record<ScaledChannelName, ChannelAccessor>>,
+    channels: Partial<Record<ScaledChannelName, ChannelAccessor> & { style: string }>,
     useScale: Record<ScaledChannelName, boolean>,
     plot: PlotState,
     defaultColorProp: 'fill' | 'stroke' | null = null
@@ -190,7 +190,7 @@ function stylePropsToCSS(props: Record<string, string>): string {
 export function resolveStyles(
     plot: PlotState,
     datum: ScaledDataRecord,
-    channels: Partial<Record<ChannelName & MarkStyleProps, ChannelAccessor>>,
+    channels: Partial<Record<ChannelName & MarkStyleProps, ChannelAccessor> & { style: string }>,
     defaultColorProp: 'fill' | 'stroke' | null = null,
     useScale: Record<ScaledChannelName, boolean>,
     recomputeChannels = false
@@ -205,7 +205,11 @@ export function resolveStyles(
         ...Object.fromEntries(
             (Object.entries(scaledStyleProps) as [ScaledChannelName, string][])
                 .filter(([key]) => channels[key] != null)
-                .map(([key, cssAttr]) => [key, cssAttr, recomputeChannels ? resolveChannel(key, datum.datum, channels) : datum[key]])
+                .map(([key, cssAttr]) => [
+                    key,
+                    cssAttr,
+                    recomputeChannels ? resolveChannel(key, datum.datum, channels) : datum[key]
+                ])
                 .filter(
                     ([key, , value]) =>
                         isValid(value as RawValue) || key === 'fill' || key === 'stroke'
@@ -225,8 +229,8 @@ export function resolveStyles(
         )
     };
     if (plot.css) {
-        return [null, plot.css(stylePropsToCSS(styleProps))];
+        return [null, plot.css(`${stylePropsToCSS(styleProps)};${channels.style ?? ''}`)];
     } else {
-        return [stylePropsToCSS(styleProps), null];
+        return [`${stylePropsToCSS(styleProps)};${channels.style ?? ''}`, null];
     }
 }

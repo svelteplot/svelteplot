@@ -21,6 +21,7 @@ Metro dataset:
     let { metros } = $derived(page.data.data);
 
     let hl = $state(false);
+    $inspect({ hl });
 </script>
 
 <Plot
@@ -113,7 +114,7 @@ Metro dataset:
 
 Works as well with a point scale:
 
-```svelte --live
+```svelte live
 <script lang="ts">
     import {
         Plot,
@@ -158,7 +159,7 @@ Works as well with a point scale:
 
 Another thing you can use the arrow mark for is drawing network diagrams:
 
-```svelte --live
+```svelte live
 <script lang="ts">
     import {
         Plot,
@@ -235,59 +236,7 @@ Another thing you can use the arrow mark for is drawing network diagrams:
 </Plot>
 ```
 
-```svelte
-<script lang="ts">
-    import { Plot, Arrow, Dot } from 'svelteplot';
-    import { json } from 'd3-fetch';
-    import {
-        forceSimulation,
-        forceLink,
-        forceManyBody,
-        forceCenter
-    } from 'd3-force';
-
-    let links = $state([]);
-    let nodes = $state([]);
-
-    async function loadNetwork() {
-        const graph = await json('/data/miserables.json');
-        links = graph.links.map((d) => ({ ...d }));
-        nodes = graph.nodes.map((d) => ({ ...d }));
-        forceSimulation(nodes)
-            .alphaTarget(0.3)
-            .force(
-                'link',
-                forceLink(links).id((d) => d.id)
-            )
-            .force('charge', forceManyBody())
-            .force('center', forceCenter());
-    }
-
-    $effect(async () => {
-        if (!nodes.length) loadNetwork();
-    });
-</script>
-
-<Plot inset={10} color={{ type: 'categorical' }}>
-    <Arrow
-        data={links}
-        x1={(d) => d.source.x}
-        y1={(d) => d.source.y}
-        x2={(d) => d.target.x}
-        y2={(d) => d.target.y}
-        bend
-        insetStart={(d) => d.source.id.length * 1.1}
-        insetEnd={(d) => d.target.id.length * 1.1}
-        opacity="0.2" />
-    <Dot
-        data={nodes}
-        r={(d) => d.id.length}
-        stroke="var(--svelteplot-bg)"
-        fill="group"
-        x="x"
-        y="y" />
-</Plot>
-```
+[fork](https://svelte.dev/playground/86683daafa8f46bdb98fce9f43330ad8?version=5.28.2)
 
 ## Arrow options
 

@@ -156,6 +156,7 @@
         }
     });
 
+     
     function isDifferent(array1: ResolvedDataRecord[], array2: ResolvedDataRecord[]) {
         if (array1.length !== array2.length) return true;
         for (let i = 0; i < array1.length; i++) {

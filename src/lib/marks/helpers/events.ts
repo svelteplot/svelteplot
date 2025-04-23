@@ -35,7 +35,6 @@ export function addEventHandlers(
 
     const listeners = new Map<string, MouseEventHandler<SVGElement>>();
     // attach event handlers
-
     for (const [eventName, eventHandler] of Object.entries(events)) {
         if (eventHandler) {
             const wrappedHandler = (origEvent: Event) => {
