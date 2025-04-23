@@ -158,7 +158,7 @@ Works as well with a point scale:
 
 Another thing you can use the arrow mark for is drawing network diagrams:
 
-```svelte --live
+```svelte live
 <script lang="ts">
     import {
         Plot,
