@@ -536,6 +536,8 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/abb8f5bfa45b416db9aa7ddac833d1e3?version=5.28.2)
+
 Note that you can achieve a similar axis using a custom tick format function that returns an array. Repeating tick text lines are being omitted automatically:
 
 ```svelte live
