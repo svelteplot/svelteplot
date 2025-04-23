@@ -69,9 +69,6 @@ Metro dataset:
 
 ```svelte
 <Plot
-    marginRight={20}
-    inset={10}
-    height={450}
     x={{ type: 'log', label: 'Population' }}
     y={{ label: 'Inequality', type: 'point' }}
     color={{
@@ -86,16 +83,15 @@ Metro dataset:
         y1="R90_10_1980"
         x2="POP_2015"
         y2="R90_10_2015"
+        stroke={(d) => d.R90_10_2015 - d.R90_10_1980}
         bend
-        style="transition: opacity 0.2s ease-in"
         opacity={{
             scale: null,
             value: (d) =>
                 !hl || hl.Metro === d.Metro ? 1 : 0.1
         }}
         onmouseenter={(evt, d) => (hl = d)}
-        onmouseleave={() => (hl = null)}
-        stroke={(d) => d.R90_10_2015 - d.R90_10_1980} />
+        onmouseleave={() => (hl = null)} />
     <Text
         data={metros}
         x="POP_2015"
@@ -110,6 +106,8 @@ Metro dataset:
         dy={-6} />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/dd59763190914a7a975c6f0f2f38bb34?version=5.28.1)
 
 Works as well with a point scale:
 
@@ -155,6 +153,8 @@ Works as well with a point scale:
         y="nyt_display" />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/9280f8ad582f43f7927005c6a54997d2?version=5.28.1)
 
 Another thing you can use the arrow mark for is drawing network diagrams:
 
@@ -232,6 +232,26 @@ Another thing you can use the arrow mark for is drawing network diagrams:
                 y="y" />
         {/snippet}
     </Pointer>
+</Plot>
+```
+
+```svelte
+<Plot>
+    <Arrow
+        data={links}
+        x1={(d) => d.source.x}
+        y1={(d) => d.source.y}
+        x2={(d) => d.target.x}
+        y2={(d) => d.target.y}
+        bend
+        insetStart={(d) => d.source.id.length * 1}
+        insetEnd={(d) => d.target.id.length * 1} />
+    <Dot
+        data={nodes}
+        r={(d) => d.id.length}
+        fill="group"
+        x="x"
+        y="y" />
 </Plot>
 ```
 

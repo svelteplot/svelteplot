@@ -41,6 +41,32 @@ For example, the heatmap below shows the decline of _The Simpsons_ after Season 
 </Plot>
 ```
 
+```svelte
+<Plot
+    grid
+    aspectRatio={1}
+    x={{ type: 'band', axis: 'top' }}
+    y={{ type: 'band' }}
+    color={{ type: 'quantile', scheme: 'PiYG' }}>
+    <Cell
+        data={simpsons}
+        x="episode"
+        y="season"
+        fill="imdb_rating"
+        inset={0.5} />
+    <Text
+        data={simpsons}
+        y="season"
+        x="episode"
+        fontSize={9}
+        fill="black"
+        text={(d) => d.imdb_rating?.toFixed(1)}
+        title={(d) => d.title} />
+</Plot>
+```
+
+[fork](https://svelte.dev/playground/35a0374e59944167ae83852e2c844c25?version=5.28.1)
+
 Seattle temperatures
 
 ```svelte live
@@ -173,7 +199,7 @@ Equivalent to [cell](/marks/cell#Cell), except that if the **y** option is not s
 </Plot>
 ```
 
-```svelte -
+```svelte
 <Plot
     inset={0}
     maxWidth="60px"
@@ -196,7 +222,7 @@ Equivalent to [cell](/marks/cell#Cell), except that if the **y** option is not s
 
 But better to use a RectX here:
 
-```svelte 0live
+```svelte --live
 <script>
     import { Plot, RectX, Text } from '$lib';
 
