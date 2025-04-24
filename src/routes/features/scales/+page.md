@@ -293,6 +293,8 @@ Point scales map a discrete input domain to single coordinates in your plot. Sve
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/d498a8da41734735990aadd7d8ed5a6a?version=5.28.2)
+
 We can force the y scale to use a point scale, too, by setting `type: 'point'` on the `y` scale. Note that the y scale no longer leaves space for cars with seven cylinders, as there is none in our dataset.
 
 ```svelte live
@@ -339,6 +341,8 @@ We can force the y scale to use a point scale, too, by setting `type: 'point'` o
         fill />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/098aa233bd0c40bb808981b123c4b4da?version=5.28.2)
 
 We can also see that the scale is no longer sorted by cylinders, as the domain of discrete scales will not be sorted. We can fix that using the convenient [sort](/transform/sort) transform that's built in to all marks.
 
@@ -388,6 +392,8 @@ We can also see that the scale is no longer sorted by cylinders, as the domain o
         sort="-cylinders" />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/e53b351b6bb34418a87f149918562f2d?version=5.28.2)
 
 ### Band scale
 
