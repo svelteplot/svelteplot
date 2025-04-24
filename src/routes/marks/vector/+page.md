@@ -314,7 +314,7 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 
 ## Spike
 
-The **Spike** mark is a [convenience wrapper](https://github.com/gka/svelteplot/blob/main/src/lib/marks/Spike.svelte) around the Vector mark that sets nice defaults.
+The **Spike** mark is a [convenience wrapper](https://github.com/svelteplot/svelteplot/blob/main/src/lib/marks/Spike.svelte) around the Vector mark that sets common defaults for spike maps.
 
 ```svelte live
 <script>
