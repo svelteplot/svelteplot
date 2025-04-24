@@ -30,7 +30,7 @@ The vector mark lets you place shapes (like arrows) on your plot. If you want to
 </Plot>
 ```
 
-## Arrow options:
+## Vector options:
 
 - **x** - the horizontal postion (or longitude)
 - **y** - the vertical position (or latitude)
@@ -122,6 +122,8 @@ Here's an example where all arrows point towards the mouse cursor:
         }} />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/9d686b316798439fbb52b19edaa51f5f?version=5.28.2)
 
 Vector mark can deal with projection system, allowing you to create shift maps:
 
@@ -232,6 +234,8 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/0710be65038b49e2917f45bf42ee9060?version=5.28.2)
+
 ```svelte live
 <script>
     import { Plot, Vector, Frame, Dot } from '$lib';
@@ -310,23 +314,23 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 
 ## Spike
 
-The **Spike** mark is a convenience wrapper around the Vector mark that sets nice defaults.
+The **Spike** mark is a [convenience wrapper](https://github.com/gka/svelteplot/blob/main/src/lib/marks/Spike.svelte) around the Vector mark that sets nice defaults.
 
 ```svelte live
 <script>
     import { Plot, Geo, Spike, geoCentroid } from '$lib';
     import * as topojson from 'topojson-client';
     import { page } from '$app/state';
-    let { us, election } = $derived(page.data.data);
+    const { us, election } = $derived(page.data.data);
 
-    let nation = topojson.feature(us, us.objects.nation);
-    let stateMesh = topojson.mesh(us, us.objects.states);
+    const nation = topojson.feature(us, us.objects.nation);
+    const stateMesh = topojson.mesh(us, us.objects.states);
 
     let _election = new Map(
         election.map((d) => [d.fips, d])
     );
 
-    let counties = $derived(
+    const counties = $derived(
         topojson
             .feature(us, us.objects.counties)
             .features.map((feat) => {
