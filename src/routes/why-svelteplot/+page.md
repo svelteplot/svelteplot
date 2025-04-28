@@ -3,7 +3,7 @@ title: Why SveltePlot?
 description: Why do we need yet another Svelte visualization framework?
 ---
 
-SveltePlot combines the concise API and concepts of Observable Plot with Svelte reactivity. It is not just a Svelte-wrapper, but re-implemented from scratch on top of D3. Svelte 5 for all the DOM manipulation and reactivity flow. But what makes SveltePlot better than the existing visualization frameworks in Svelte?
+SveltePlot combines the concise API and concepts of Observable Plot with Svelte reactivity. It is not just a Svelte-wrapper, but re-implemented from scratch on top of D3. But what makes SveltePlot better than the existing visualization frameworks in Svelte?
 
 ## Layered grammar of graphics
 
@@ -347,19 +347,17 @@ Also, simply by being a Svelte framework, SveltePlot can support tweens and tran
     });
 </script>
 
-<button
-    onclick={() =>
-        data.push(data.at(-1) + (data.length - 3))}
-    >add number</button>
-<button
-    onclick={() => {
-        data = [1, 2, 3, 4, 5];
-    }}>reset</button>
-
 <Plot
+    color={{ scheme: 'reds' }}
     x={{ axis: false, padding: data.length < 60 ? 0.1 : 0 }}
     y={{ grid: true, domain: domain.current }}>
-    <BarY {data} fill={(d) => d} />
+    <BarY
+        {data}
+        fill={(d) => d}
+        cursor="pointer"
+        onclick={(e, d, index) => {
+            data[index] += 0.2 * data[index];
+        }} />
     <RuleY data={[0]} />
 </Plot>
 ```
@@ -380,13 +378,14 @@ Also, simply by being a Svelte framework, SveltePlot can support tweens and tran
     );
 </script>
 
-<button onclick={(d) => data.push(Math.random())}
-    >add number</button>
-
 <Plot
     color={{ scheme: 'RdBu' }}
     y={{ grid: true, domain: domain.current }}>
-    <BarY {data} />
+    <BarY
+        {data}
+        onclick={(evt, d, index) => {
+            data[index] += 0.2 * data[index];
+        }} />
     <RuleY data={[0]} />
 </Plot>
 ```

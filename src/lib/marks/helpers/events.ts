@@ -1,6 +1,8 @@
-import type { BaseMarkProps, DataRecord, PlotScales, PlotState } from '$lib/types.js';
+import type { BaseMarkProps, DataRecord, PlotScale, PlotScales, PlotState } from '$lib/types.js';
 import type { MouseEventHandler } from 'svelte/elements';
-import { pick } from 'es-toolkit';
+import { invert, pick } from 'es-toolkit';
+import { RAW_VALUE } from '$lib/transforms/recordize.js';
+import { INDEX } from '$lib/constants.js';
 
 export function addEventHandlers(
     node: SVGElement,
@@ -48,13 +50,15 @@ export function addEventHandlers(
                         origEvent.dataX = x;
                         origEvent.dataY = y;
                     } else {
-                        origEvent.dataX =
-                            scales.x.fn.invert && scales.x.fn.invert(origEvent.layerX);
-                        origEvent.dataY =
-                            scales.y.fn.invert && scales.y.fn.invert(origEvent.layerY);
+                        origEvent.dataX = invertScale(scales.x, origEvent.layerX);
+                        origEvent.dataY = invertScale(scales.y, origEvent.layerY);
                     }
                 }
-                eventHandler(origEvent, datum.___orig___ !== undefined ? datum.___orig___ : datum);
+                eventHandler(
+                    origEvent,
+                    datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
+                    datum[INDEX]
+                );
             };
             listeners.set(eventName, wrappedHandler);
             node.addEventListener(eventName.substring(2), wrappedHandler);
@@ -71,4 +75,15 @@ export function addEventHandlers(
             }
         }
     };
+}
+
+function invertScale(scale: PlotScale, position: number) {
+    if (scale.type === 'band') {
+        // invert band scale since scaleBand doesn't have an invert function
+        const eachBand = scale.fn.step();
+        console.log({ eachBand, position });
+        const index = Math.floor(position / eachBand);
+        return scale.fn.domain()[index];
+    }
+    return scale.fn.invert ? scale.fn.invert(position) : undefined;
 }

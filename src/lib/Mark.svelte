@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext, untrack, type Snippet } from 'svelte';
 
-    import { CHANNEL_SCALE } from '$lib/constants.js';
+    import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
     import type {
         ScaledChannelName,
         MarkType,
@@ -78,6 +78,8 @@
         }
     }
 
+    
+
     const mark = new Mark(type);
 
     $effect(() => {
@@ -126,7 +128,7 @@
     const testFacet = $derived(getTestFacet());
 
     const resolvedData: ResolvedDataRecord[] = $derived(
-        data.flatMap((row) => {
+        data.map((d,i) => ({...d, [INDEX]: i})).flatMap((row) => {
             const channels = options as Record<ChannelName, ChannelAccessor>;
             if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
             const out: ResolvedDataRecord = {

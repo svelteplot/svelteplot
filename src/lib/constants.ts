@@ -101,6 +101,8 @@ export const CSS_COLOR_CONTRAST = /^color-contrast\(/; // just check for prefix
 export const CSS_RGBA = /^rgba\(/; // just check for prefix
 export const CSS_URL = /^url\(#/; // just check for prefix
 
+export const INDEX = Symbol('index');
+
 // export const CHANNEL_MAP: Record<ScaleName, ValueOf<typeof SCALE_TYPES>> = {
 // 	x: SCALE_TYPES.x,
 // 	y: SCALE_TYPES.y,
