@@ -390,6 +390,8 @@ Also, simply by being a Svelte framework, SveltePlot can support tweens and tran
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/5f3acc2b098e4490b09f679218c4cb2d?version=5.28.2)
+
 ## Easy to extend
 
 You can extend SveltePlot by injecting regular Svelte snippets. For instance, the Line mark allows you to provide custom markers by passing a `marker` snippet. So why no use animated line markers, just because we can?
