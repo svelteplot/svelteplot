@@ -26,7 +26,9 @@ The **area mark** draws the region between a baseline (x1, y1) and a topline (x2
 </Plot>
 ```
 
-If you supply `undefined` values
+[fork](https://svelte.dev/playground/0d3db990450f42bab5a0fe474d5d9cb2?version=5.28.2)
+
+If you supply `undefined` values, the area mark will create gaps in the visualization at those points. This is useful when you want to represent missing or invalid data without interpolating across it.
 
 ```svelte live
 <script lang="ts">
@@ -35,55 +37,65 @@ If you supply `undefined` values
     const { aapl } = $derived(page.data.data);
 </script>
 
-<Plot grid>
-    <AreaY data={[1, 3, 2, undefined, 5, 4]} />
-</Plot>
-```
-
-Supplying undefined values is not the same as filtering the data: the latter will interpolate between the data points. Observe the conspicuous straight lines below!
-
-```svelte live
-<script lang="ts">
-    import { Plot, AreaY, LineY, RuleY } from '$lib/index';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
-</script>
-
-<Plot grid>
+<Plot grid height={250}>
     <AreaY
-        data={aapl}
-        filter={(d) => d.Date.getUTCMonth() >= 3}
-        x="Date"
-        y="Close"
-        fillOpacity={0.3} />
-    <LineY
-        data={aapl}
-        y={(d) =>
-            d.Date.getUTCMonth() < 3 ? NaN : d.Close}
-        x="Date" />
-    <RuleY data={[0]} />
+        data={[
+            1.5,
+            2,
+            3.5,
+            4,
+            5.5,
+            undefined,
+            7,
+            8.5,
+            9
+        ]} />
 </Plot>
 ```
 
 ```svelte
-<script lang="ts">
-    import { Plot, AreaY, LineY, RuleY } from 'svelteplot';
-    import aapl from 'data/aapl.csv';
+<script>
+    let data = [1.5, 2, 3.5, 4, 5.5, undefined, 7, 8.5, 9];
 </script>
 
 <Plot grid>
+    <AreaY {data} />
+</Plot>
+```
+
+In order to interpolate across undefined values you need to filter them, e.g. using the filter transform:
+
+```svelte live
+<script lang="ts">
+    import { Plot, AreaY } from '$lib/index';
+    import { page } from '$app/state';
+    const { aapl } = $derived(page.data.data);
+</script>
+
+<Plot grid height={255}>
     <AreaY
-        data={aapl}
-        filter={(d) => d.Date.getUTCMonth() >= 3}
-        x="Date"
-        y="Close"
-        fillOpacity={0.3} />
-    <LineY
-        data={aapl}
-        y={(d) =>
-            d.Date.getUTCMonth() < 3 ? NaN : d.Close}
-        x="Date" />
-    <RuleY data={[0]} />
+        filter={(d) => d !== undefined}
+        data={[
+            1.5,
+            2,
+            3.5,
+            4,
+            5.5,
+            undefined,
+            7,
+            8.5,
+            9
+        ]} />
+</Plot>
+```
+
+```svelte
+<script>
+    let data = [1.5, 2, 3.5, 4, 5.5, undefined, 7, 8.5, 9];
+</script>
+
+<Plot grid>
+    <AreaY {data} filter={(d) => d !== undefined} />
 </Plot>
 ```
 
@@ -318,4 +330,62 @@ Required channels for horizontal area charts:
 ```
 
 Typically, you won't want to use the <b>Area</b> mark directly, but want to use <b>AreaY</b>
-for "horizontal" area charts, where the time axis going from left to right:
+for "horizontal" area charts, where the time axis goes from left to right, or <b>AreaX</b> for "vertical" area charts.
+
+The Area mark is useful when you need precise control over both baseline and topline positions along both axes. It accepts the following required channels:
+
+- `x1`: The x-coordinate for the baseline
+- `y1`: The y-coordinate for the baseline
+- `x2`: The x-coordinate for the topline (for vertical areas)
+- `y2`: The y-coordinate for the topline (for horizontal areas)
+
+Additional options include:
+
+- `z`: Group data into separate areas
+- `fill`: Fill color for the area
+- `stroke`: Stroke color for the area border
+- `opacity`: Overall opacity
+- `fillOpacity`: Opacity for just the fill
+- `strokeOpacity`: Opacity for just the stroke
+- `curve`: Curve type for interpolation between points
+  (options: linear, basis, cardinal, step, etc.)
+
+```svelte live
+<script lang="ts">
+    import { Plot, Area, Line } from '$lib/index.js';
+    import { page } from '$app/state';
+    let { aapl } = $derived(page.data.data);
+
+    // Create a subset of lower value points
+    const baseline = aapl.map((d) => ({
+        date: d.Date,
+        value: d.Close * 0.8
+    }));
+</script>
+
+<Plot grid>
+    <Area
+        data={aapl}
+        x1="Date"
+        y1={(d) =>
+            baseline.find((b) => +b.date === +d.Date)
+                ?.value || 0}
+        y2="Close"
+        opacity={0.25}
+        fill="steelblue" />
+    <Line
+        data={aapl}
+        x="Date"
+        y="Close"
+        stroke="steelblue" />
+    <Line
+        data={baseline}
+        x="date"
+        y="value"
+        stroke="steelblue"
+        strokeOpacity={0.5}
+        strokeDasharray="3,3" />
+</Plot>
+```
+
+This example demonstrates using the Area mark to create a custom area chart with a dynamically calculated baseline, showing both the upper and lower bounds with lines.

@@ -1,11 +1,7 @@
 import isDataRecord from '$lib/helpers/isDataRecord.js';
-import type {
-    ChannelAccessor,
-    DataRecord,
-    DataRow,
-    TransformArgsRow,
-    TransformArgsRecord
-} from '$lib/types.js';
+import type { DataRecord, TransformArgsRow, TransformArgsRecord } from '$lib/types.js';
+
+export const RAW_VALUE = Symbol();
 
 /*
  * This transform takes an array of raw values as input and returns data records
@@ -22,6 +18,8 @@ export function recordizeX(
             data: data.map((value, index) => ({
                 __value: value,
                 ...(withIndex ? { __index: index } : {}),
+                [RAW_VALUE]: value,
+                // TODO: remove ___orig___ references
                 ___orig___: value
             })) as DataRecord[],
             ...channels,
@@ -48,6 +46,7 @@ export function recordizeY(
             data: Array.from(data).map((value, index) => ({
                 __value: value,
                 ...(withIndex ? { __index: index } : {}),
+                [RAW_VALUE]: value,
                 ___orig___: value
             })) as DataRecord[],
             ...channels,

@@ -26,20 +26,21 @@ export default {
                     title: 'Plot',
                     to: '/features/plot/'
                 },
+
+                {
+                    title: 'Marks',
+                    to: '/features/marks/'
+                },
                 {
                     title: 'Scales',
                     to: '/features/scales/'
                 },
-                // {
-                //     title: 'Marks',
-                //     to: '/features/marks/'
-                // },
                 {
                     title: 'Transforms',
                     to: '/features/transforms/'
                 },
                 {
-                    title: 'Facets',
+                    title: 'Facettng',
                     to: '/features/facets/'
                 }
             ]

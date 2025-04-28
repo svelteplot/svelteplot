@@ -296,7 +296,7 @@ export function createScale<T extends ScaleOptions>(
     }
 
     const domain = scaleOptions.domain
-        ? scaleOptions.domain
+        ? extent(scaleOptions.zero ? [0, ...scaleOptions.domain] : scaleOptions.domain)
         : type === 'band' ||
             type === 'point' ||
             type === 'ordinal' ||

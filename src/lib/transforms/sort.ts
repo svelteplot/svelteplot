@@ -4,6 +4,8 @@ import type { DataRecord, DataRow, TransformArg } from '$lib/types.js';
 import { shuffler } from 'd3-array';
 import { randomLcg } from 'd3-random';
 
+export const SORT_KEY = Symbol('sortKey');
+
 export function sort(
     { data, ...channels }: TransformArg<DataRecord>,
     options: { reverse?: boolean } = {}
@@ -22,14 +24,18 @@ export function sort(
         // sort data
         return {
             data: data
-                .map((d) => ({ ...d, __sortkey: resolveChannel('sort', d, { ...channels, sort }) }))
+                .map((d) => ({
+                    ...d,
+                    [SORT_KEY]: resolveChannel('sort', d, { ...channels, sort })
+                }))
                 .toSorted(
                     (a, b) =>
-                        (a.__sortkey > b.__sortkey ? 1 : a.__sortkey < b.__sortkey ? -1 : 0) *
+                        (a[SORT_KEY] > b[SORT_KEY] ? 1 : a[SORT_KEY] < b[SORT_KEY] ? -1 : 0) *
                         (options.reverse || (isDataRecord(sort) && sort?.order === 'descending')
                             ? -1
                             : 1)
-                ),
+                )
+                .map(({ [SORT_KEY]: a, ...rest }) => rest),
 
             ...channels,
             // set the sort channel to null to disable the implicit alphabetical

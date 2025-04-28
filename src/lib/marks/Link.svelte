@@ -156,7 +156,7 @@
                     )}
 
                     <MarkerPath
-                        {mark}
+                        mark={{...mark, options: args}}
                         scales={plot.scales}
                         markerStart={args.markerStart}
                         markerEnd={args.markerEnd}

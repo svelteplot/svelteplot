@@ -46,6 +46,8 @@
             stack
         )
     );
+
+    $inspect({args})
 </script>
 
 <Mark
@@ -71,7 +73,7 @@
                         transform="translate({[minx + dx, d.y + inset + dy - bw * 0.5]})"
                         use:addEventHandlers={{
                             getPlotState,
-                            options: mark.options,
+                            options: args,
                             datum: d.datum
                         }} />
                 {/if}

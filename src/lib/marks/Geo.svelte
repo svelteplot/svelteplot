@@ -79,7 +79,7 @@
                                 )}
                                 use:addEventHandlers={{
                                     getPlotState,
-                                    options: mark.options,
+                                    options: args,
                                     datum
                                 }}>
                                 {#if title}<title>{title}</title>{/if}

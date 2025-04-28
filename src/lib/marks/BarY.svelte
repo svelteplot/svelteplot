@@ -85,7 +85,7 @@
                         transform="translate({[d.x + inset + dx - bw * 0.5, miny + dy]})"
                         use:addEventHandlers={{
                             getPlotState,
-                            options: mark.options,
+                            options: args,
                             datum: d.datum
                         }} />
                 {/if}

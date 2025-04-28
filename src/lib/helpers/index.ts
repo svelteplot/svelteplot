@@ -8,6 +8,7 @@ import type {
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks';
+import { RAW_VALUE } from '$lib/transforms/recordize.js';
 
 /**
  * Returns first argument that is not null or undefined
@@ -22,7 +23,10 @@ export function coalesce(...args: (RawValue | undefined | null)[]) {
 }
 
 export function testFilter(datum: DataRecord, options: Record<ChannelName, ChannelAccessor>) {
-    return options.filter == null || resolveProp(options.filter, datum);
+    return (
+        options.filter == null ||
+        resolveProp(options.filter, datum?.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum)
+    );
 }
 
 export function randomId() {

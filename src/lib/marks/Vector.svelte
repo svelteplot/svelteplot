@@ -48,6 +48,7 @@
     import Mark from '../Mark.svelte';
     //import DotCanvas from './helpers/DotCanvas.svelte';
     import { maybeData, testFilter, isValid } from '$lib/helpers/index.js';
+    import { addEventHandlers } from './helpers/events.js';
 
     const defaultRadius = 3.5;
 
@@ -198,6 +199,11 @@
                                   ? `translate(0, ${d.length})`
                                   : `translate(0, ${d.length / 2})`}"
                             {style}
+                            use:addEventHandlers={{
+                                getPlotState,
+                                options: args,
+                                datum: d.datum
+                            }}
                             class={[styleClass]} />
                     {/if}
                 {/each}

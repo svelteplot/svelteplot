@@ -108,8 +108,6 @@
         inset?: number;
     };
 
-    let scaleCounter = $state(0);
-
     /**
      * the marks used in the plot
      */
@@ -158,7 +156,7 @@
             explicitDomains,
             hasProjection: !!initialOpts.projection,
             margins: initialOpts.margins,
-            inset: initialOpts.inset
+            inset: initialOpts.inset, 
         })
     );
 
