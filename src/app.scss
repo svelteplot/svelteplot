@@ -20,6 +20,9 @@ a.link.highlight {
     }
 }
 
+/*
+ * CSS hack to style the Fork buttons below code examples
+ */
 p:has(a.link.highlight[href^="https://svelte.dev/playground/"]:only-child)
 {
     position: relative;

@@ -47,7 +47,7 @@
         )
     );
 
-    $inspect({args})
+    $inspect({ args });
 </script>
 
 <Mark

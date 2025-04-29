@@ -78,8 +78,6 @@
         }
     }
 
-    
-
     const mark = new Mark(type);
 
     $effect(() => {
@@ -128,24 +126,26 @@
     const testFacet = $derived(getTestFacet());
 
     const resolvedData: ResolvedDataRecord[] = $derived(
-        data.map((d,i) => ({...d, [INDEX]: i})).flatMap((row) => {
-            const channels = options as Record<ChannelName, ChannelAccessor>;
-            if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
-            const out: ResolvedDataRecord = {
-                datum: row
-            };
-            for (const [channel] of Object.entries(CHANNEL_SCALE) as [
-                ScaledChannelName,
-                ScaleName
-            ][]) {
-                // check if the mark has defined an accessor for this channel
-                if (options?.[channel] !== undefined && out[channel] === undefined) {
-                    // resolve value
-                    out[channel] = resolveChannel(channel, row, options);
+        data
+            .map((d, i) => ({ ...d, [INDEX]: i }))
+            .flatMap((row) => {
+                const channels = options as Record<ChannelName, ChannelAccessor>;
+                if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
+                const out: ResolvedDataRecord = {
+                    datum: row
+                };
+                for (const [channel] of Object.entries(CHANNEL_SCALE) as [
+                    ScaledChannelName,
+                    ScaleName
+                ][]) {
+                    // check if the mark has defined an accessor for this channel
+                    if (options?.[channel] !== undefined && out[channel] === undefined) {
+                        // resolve value
+                        out[channel] = resolveChannel(channel, row, options);
+                    }
                 }
-            }
-            return [out];
-        })
+                return [out];
+            })
     );
 
     let prevResolvedData: ResolvedDataRecord[] = [];
@@ -158,7 +158,6 @@
         }
     });
 
-     
     function isDifferent(array1: ResolvedDataRecord[], array2: ResolvedDataRecord[]) {
         if (array1.length !== array2.length) return true;
         for (let i = 0; i < array1.length; i++) {

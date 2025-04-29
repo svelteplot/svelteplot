@@ -131,8 +131,13 @@
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         { ...d, __tspanIndex: 0 },
-                        { fontSize: 12, fontWeight: 500, strokeWidth: 1.6,
-                            textAnchor: isLeft ? 'start' : isRight ? 'end' : 'middle', ...args },
+                        {
+                            fontSize: 12,
+                            fontWeight: 500,
+                            strokeWidth: 1.6,
+                            textAnchor: isLeft ? 'start' : isRight ? 'end' : 'middle',
+                            ...args
+                        },
                         'fill',
                         usedScales
                     )}
@@ -156,8 +161,11 @@
                                             fontSize
                                 )
                             ]})"
-                            >{#each textLines as line, l}<tspan x="0" dy={l ? fontSize : 0} class={styleClass} {style}
-                                    >{line}</tspan
+                            >{#each textLines as line, l}<tspan
+                                    x="0"
+                                    dy={l ? fontSize : 0}
+                                    class={styleClass}
+                                    {style}>{line}</tspan
                                 >{/each}{#if title}<title>{title}</title>{/if}</text>
                     {:else}
                         <!-- singleline text-->

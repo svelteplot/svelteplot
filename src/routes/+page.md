@@ -64,14 +64,26 @@ _features:
    margin-right: auto;
   }
   :global {
+    .intro .gradient-title {
+      font-weight: 750;
+    }
     .intro .description {
       font-size: 2.8rem!important;
       font-weight: 600!important;
       line-height: 1.1!important;
       text-wrap: balance;
     }
+    @media (max-width: 600px) {
+      .intro .description {
+        font-size: 2rem!important;
+      }
+    }
     .svp-action--primary span {
       color: white;
+    }
+    .hero-image img {
+      width: 20rem!important;
+      max-width: 100%!important;
     }
   }
 </style>

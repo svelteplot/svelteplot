@@ -30,8 +30,6 @@ You can use SveltePlot inside any platform that supports Svelte 5, such as [Stac
 </Plot>
 ```
 
-[Fork](https://svelte.dev/playground/db6bcdf02859413fa9b3af456f9b9047).
-
 ```svelte
 <script>
     import { Plot, RectY, binX } from 'svelteplot';
@@ -47,6 +45,8 @@ You can use SveltePlot inside any platform that supports Svelte 5, such as [Stac
         )} />
 </Plot>
 ```
+
+[Fork](https://svelte.dev/playground/db6bcdf02859413fa9b3af456f9b9047).
 
 ## Use SveltePlot in Svelte 5
 

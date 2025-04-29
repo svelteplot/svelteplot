@@ -156,7 +156,7 @@
             explicitDomains,
             hasProjection: !!initialOpts.projection,
             margins: initialOpts.margins,
-            inset: initialOpts.inset, 
+            inset: initialOpts.inset
         })
     );
 
@@ -175,7 +175,9 @@
 
     const hasProjection = $derived(!!preScales.projection);
 
-    const plotWidth = $derived((fixedWidth || width) - plotOptions.marginLeft - plotOptions.marginRight);
+    const plotWidth = $derived(
+        (fixedWidth || width) - plotOptions.marginLeft - plotOptions.marginRight
+    );
 
     // the facet and y domain counts are used for computing the automatic height
     const xFacetCount = $derived(Math.max(1, preScales.fx.domain.length));

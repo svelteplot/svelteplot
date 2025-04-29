@@ -146,7 +146,7 @@ describe('Line mark', () => {
                 ],
                 x: 'x',
                 y: 'y',
-                text: 'Line Label',
+                text: 'Line Label'
             }
         });
 
