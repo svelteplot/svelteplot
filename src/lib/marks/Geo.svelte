@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     import type {
-        DataRecord,
+        DataRow,
         PlotContext,
         BaseMarkProps,
         FacetContext,
@@ -22,7 +22,7 @@
     const plot = $derived(getPlotState());
 
     type GeoMarkProps = {
-        data: DataRecord[];
+        data: DataRow[];
         geoType?: 'sphere' | 'graticule';
         dragRotate: boolean;
         canvas: boolean;

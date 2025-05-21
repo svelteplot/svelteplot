@@ -6,14 +6,14 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         PlotContext,
-        DataRecord,
+        DataRow,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor
     } from '../types.js';
 
     type RuleXMarkProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         x?: ChannelAccessor;
         y1?: ChannelAccessor;
         y2?: ChannelAccessor;
