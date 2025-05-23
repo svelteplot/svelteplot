@@ -59,8 +59,6 @@
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
 
-    const theme = getContext('svelteplot/theme');
-    const p = $props();
     let {
         data = [{}],
         curve = 'auto',
@@ -69,8 +67,11 @@
         canvas = false,
         class: className = null,
         lineClass = null,
-        ...options
-    }: LineMarkProps = { ...(theme?.marks?.line || {}), ...p };
+        ...opts
+    }: LineMarkProps = $props();
+
+    const theme = getContext('svelteplot/theme');
+    const options = $derived({...(theme?.marks?.line || {}), ...opts})
 
     const args = $derived(sort(recordizeXY({ data, ...options })));
 

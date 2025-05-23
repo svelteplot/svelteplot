@@ -20,9 +20,10 @@
         y?: ChannelAccessor;
     } & AreaMarkProps;
 
+    let { data, stack, ...opts }: AreaYProps = $props();
+
     const theme = getContext('svelteplot/theme');
-    const p = $props();
-    let { data, stack, ...options }: AreaYProps = { ...(theme?.marks?.areaY || {}), ...p };
+    const options = $derived({...(theme?.marks?.areaY || {}), ...opts})
 
     const args = $derived(
         renameChannels<AreaYProps>(
