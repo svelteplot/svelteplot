@@ -40,6 +40,8 @@
         wrap?: Snippet;
     };
 
+    const theme = getContext('svelteplot/theme');
+    const p = $props();
     let {
         data = [{}],
         canvas = false,
@@ -50,7 +52,7 @@
         out: tOut = undefined,
         outParams = undefined,
         ...options
-    }: DotProps = $props();
+    }: DotProps = { ...(theme?.marks?.dot || {}), ...p };
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

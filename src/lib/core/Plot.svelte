@@ -92,12 +92,14 @@
         class: className = '',
         css = DEFAULTS.css,
         width: fixedWidth,
+        theme,
         ...initialOpts
     }: Partial<PlotOptions> = $props();
 
     let width = $state(DEFAULTS.initialWidth);
 
     setContext('svelteplot/_defaults', DEFAULTS);
+    setContext('svelteplot/theme', theme);
 
     // information that influences the default plot options
     type PlotOptionsParameters = {

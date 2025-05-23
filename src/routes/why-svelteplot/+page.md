@@ -13,12 +13,16 @@ This means there is no "scatterplot" component in SveltePlot, but you can use th
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
+    import { demoTheme, Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
 </script>
 
-<Plot grid color={{ legend: true }} testid="penguins">
+<Plot
+    grid
+    color={{ legend: true }}
+    testid="penguins"
+    theme={demoTheme}>
     <Dot
         data={penguins}
         x="culmen_length_mm"
@@ -45,7 +49,13 @@ You can think of marks as the building blocks for your visualizations -- or the 
 
 ```svelte live
 <script>
-    import { Plot, Dot, GridY, AxisX } from 'svelteplot';
+    import {
+        demoTheme,
+        Plot,
+        Dot,
+        GridY,
+        AxisX
+    } from 'svelteplot';
     import { page } from '$app/state';
     const { languages } = $derived(page.data.data);
 </script>
@@ -53,10 +63,11 @@ You can think of marks as the building blocks for your visualizations -- or the 
 <Plot
     x={{
         type: 'log',
-        insetLeft: 20,
+        insetLeft: 40,
         insetRight: 20,
         axis: 'top'
     }}
+    theme={demoTheme}
     y={{ type: 'point', label: '' }}>
     <GridY strokeDasharray="1,3" strokeOpacity="0.5" />
     <Dot
@@ -65,16 +76,16 @@ You can think of marks as the building blocks for your visualizations -- or the 
         )}
         x="Total speakers"
         y="Language"
-        fill
         sort={{ channel: '-x' }} />
 </Plot>
 ```
 
 ```svelte
 <Plot
+    theme={demoTheme}
     x={{
         type: 'log',
-        insetLeft: 20,
+        insetLeft: 40,
         insetRight: 20,
         axis: 'top'
     }}
@@ -86,7 +97,6 @@ You can think of marks as the building blocks for your visualizations -- or the 
         data={languages}
         x="Total speakers"
         y="Language"
-        fill
         sort={{ channel: '-x' }} />
 </Plot>
 ```
@@ -97,7 +107,13 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
 
 ```svelte live
 <script>
-    import { Plot, Dot, Line, GridY } from 'svelteplot';
+    import {
+        demoTheme,
+        Plot,
+        Dot,
+        Line,
+        GridY
+    } from 'svelteplot';
     import { page } from '$app/state';
     let { languages: allLanguages } = $derived(
         page.data.data
@@ -110,10 +126,11 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
 </script>
 
 <Plot
+    theme={demoTheme}
     x={{
         type: 'log',
         axis: 'top',
-        insetLeft: 20,
+        insetLeft: 40,
         insetRight: 20
     }}
     y={{ type: 'point', label: '' }}>
@@ -127,7 +144,6 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
         data={languages}
         x="Total speakers"
         y="Language"
-        fill
         sort={{ channel: '-x' }} />
 </Plot>
 ```
@@ -144,7 +160,6 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
         data={languages}
         x="Total speakers"
         y="Language"
-        fill
         sort={{ channel: '-x' }} />
 </Plot>
 ```
@@ -154,6 +169,7 @@ And if we wanted to add uncertainty ranges, we can add a [Rule mark](/marks/rule
 ```svelte live
 <script>
     import {
+        demoTheme,
         Plot,
         Dot,
         Line,
@@ -173,10 +189,11 @@ And if we wanted to add uncertainty ranges, we can add a [Rule mark](/marks/rule
 </script>
 
 <Plot
+    theme={demoTheme}
     x={{
         type: 'log',
         axis: 'top',
-        insetLeft: 20,
+        insetLeft: 40,
         insetRight: 20
     }}
     y={{ type: 'point', label: '' }}>
@@ -198,7 +215,6 @@ And if we wanted to add uncertainty ranges, we can add a [Rule mark](/marks/rule
         data={languages}
         x="Total speakers"
         y="Language"
-        fill
         sort={{ channel: '-x' }} />
 </Plot>
 ```
@@ -219,7 +235,7 @@ Take the following example, where you can filter the data using the [filter](/tr
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
+    import { demoTheme, Plot, Dot } from 'svelteplot';
     import { Slider } from '$lib/ui';
     import { page } from '$app/state';
     const { cars } = $derived(page.data.data);
@@ -233,8 +249,13 @@ Take the following example, where you can filter the data using the [filter](/tr
     label="min economy (mpg)"
     max={50} />
 
-<Plot grid testid="cars" color={{ type: 'linear' }}>
+<Plot
+    grid
+    testid="cars"
+    color={{ type: 'linear' }}
+    theme={demoTheme}>
     <Dot
+        fill={null}
         data={cars}
         filter={(d) => d['economy (mpg)'] > min}
         y="weight (lb)"
@@ -249,6 +270,7 @@ Here's an example where we're binding a live-updated dataset to a [Line mark](/m
 ```svelte live
 <script lang="ts">
     import {
+        demoTheme,
         Plot,
         LineY,
         RuleY,
@@ -292,6 +314,7 @@ Here's an example where we're binding a live-updated dataset to a [Line mark](/m
 </script>
 
 <Plot
+    theme={demoTheme}
     grid
     marginRight={10}
     marginLeft={35 + Math.log10(mag) * 5}
@@ -302,17 +325,8 @@ Here's an example where we're binding a live-updated dataset to a [Line mark](/m
     height={250}>
     <RuleY data={[0]} />
     {#if rand.length > 1}
-        <AreaY
-            data={rand}
-            x="x"
-            y="y"
-            fill="currentColor"
-            opacity={0.1} />
-        <LineY
-            data={rand}
-            x="x"
-            y="y"
-            stroke="currentColor" />
+        <AreaY data={rand} x="x" y="y" />
+        <LineY data={rand} x="x" y="y" />
         <Dot
             data={[rand.at(-1)]}
             x="x"
@@ -405,7 +419,7 @@ You can extend SveltePlot by injecting regular Svelte snippets. For instance, th
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
+    import { demoTheme, Plot, Line } from 'svelteplot';
     import { fly, fade } from 'svelte/transition';
 
     import { page } from '$app/state';
@@ -421,7 +435,7 @@ You can extend SveltePlot by injecting regular Svelte snippets. For instance, th
     });
 </script>
 
-<Plot grid height={300}>
+<Plot grid height={300} theme={demoTheme}>
     <Line
         data={aapl.slice(-40)}
         curve="basis"

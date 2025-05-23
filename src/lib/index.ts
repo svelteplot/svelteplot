@@ -1,6 +1,8 @@
 export { default as Plot } from './Plot.svelte';
 export { default as PlotCore } from './core/Plot.svelte';
 
+export { demoTheme } from './themes/demoTheme';
+
 export * from './marks/index.js';
 export * from './transforms/index.js';
 
