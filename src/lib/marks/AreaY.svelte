@@ -3,13 +3,13 @@
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackY } from '$lib/transforms/stack.js';
     import { recordizeY } from '$lib/transforms/recordize.js';
-    import type { DataRecord, BaseMarkProps, ChannelAccessor } from '../types.js';
+    import type { DataRow, BaseMarkProps, ChannelAccessor } from '../types.js';
 
     /**
      * AreaY mark foo
      */
     type AreaYProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         x?: ChannelAccessor;
         y1?: ChannelAccessor;
         y2?: ChannelAccessor;

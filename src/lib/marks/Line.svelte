@@ -6,7 +6,7 @@
     import type {
         CurveName,
         PlotContext,
-        DataRecord,
+        DataRow,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
@@ -15,7 +15,7 @@
     } from '../types.js';
 
     export type BaseLineMarkProps = {
-        data: DataRecord[];
+        data: DataRow[];
         z?: ChannelAccessor;
         stroke?: ChannelAccessor;
         outlineStroke?: string;

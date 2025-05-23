@@ -9,7 +9,7 @@
     import { resolveChannel } from '../helpers/resolve.js';
     import type {
         PlotContext,
-        DataRecord,
+        DataRow,
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor
@@ -18,7 +18,7 @@
     import RectPath from './helpers/RectPath.svelte';
 
     type CellProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         x?: ChannelAccessor;
         y?: ChannelAccessor;
         borderRadius?:

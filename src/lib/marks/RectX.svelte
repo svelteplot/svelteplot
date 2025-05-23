@@ -2,7 +2,7 @@
     import Rect from './Rect.svelte';
     import { intervalY, stackX, recordizeX } from '$lib/index.js';
     import type {
-        DataRecord,
+        DataRow,
         BaseMarkProps,
         ChannelAccessor,
         BaseRectMarkProps,
@@ -12,7 +12,7 @@
     import { getContext } from 'svelte';
 
     type RectXMarkProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         x?: ChannelAccessor;
         x1?: ChannelAccessor;
         x2?: ChannelAccessor;

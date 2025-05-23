@@ -3,10 +3,10 @@
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackX } from '$lib/transforms/stack.js';
     import { recordizeX } from '$lib/transforms/recordize.js';
-    import type { DataRecord, BaseMarkProps, ChannelAccessor } from '../types.js';
+    import type { DataRow, BaseMarkProps, ChannelAccessor } from '../types.js';
 
     type AreaXProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         x?: ChannelAccessor;
         x1?: ChannelAccessor;
         x2?: ChannelAccessor;

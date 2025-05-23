@@ -3,7 +3,7 @@
     import { intervalX, stackY, recordizeY } from '$lib/index.js';
     import type { StackOptions } from '$lib/transforms/stack.js';
     import type {
-        DataRecord,
+        DataRow,
         BaseMarkProps,
         ChannelAccessor,
         BaseRectMarkProps,
@@ -12,7 +12,7 @@
     import { getContext } from 'svelte';
 
     type RectYMarkProps = BaseMarkProps & {
-        data: DataRecord[];
+        data: DataRow[];
         y?: ChannelAccessor;
         y1?: ChannelAccessor;
         y2?: ChannelAccessor;
