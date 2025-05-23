@@ -42,6 +42,9 @@
         tickClass?: ConstantAccessor<string>;
     };
 
+    const theme = getContext('svelteplot/theme');
+
+    const p = $props();
     let {
         data = [],
         automatic = false,
@@ -56,7 +59,7 @@
         tickFormat,
         tickClass,
         ...options
-    }: AxisXProps = $props();
+    }: AxisXProps = { ...(theme?.marks?.axisX || {}), ...p };
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());

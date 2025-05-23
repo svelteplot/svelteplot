@@ -49,8 +49,11 @@
         inParams = undefined,
         out: tOut = undefined,
         outParams = undefined,
-        ...options
+        ...opts
     }: DotProps = $props();
+
+    const theme = getContext('svelteplot/theme');
+    const options = $derived({...(theme?.marks?.dot || {}), ...opts})
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

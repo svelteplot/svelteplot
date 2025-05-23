@@ -67,8 +67,11 @@
         canvas = false,
         class: className = null,
         lineClass = null,
-        ...options
+        ...opts
     }: LineMarkProps = $props();
+
+    const theme = getContext('svelteplot/theme');
+    const options = $derived({...(theme?.marks?.line || {}), ...opts})
 
     const args = $derived(sort(recordizeXY({ data, ...options })));
 

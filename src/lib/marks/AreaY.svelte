@@ -4,6 +4,7 @@
     import { stackY } from '$lib/transforms/stack.js';
     import { recordizeY } from '$lib/transforms/recordize.js';
     import type { DataRecord, BaseMarkProps, ChannelAccessor } from '../types.js';
+    import { getContext } from 'svelte';
 
     /**
      * AreaY mark foo
@@ -19,7 +20,10 @@
         y?: ChannelAccessor;
     } & AreaMarkProps;
 
-    let { data, stack, ...options }: AreaYProps = $props();
+    let { data, stack, ...opts }: AreaYProps = $props();
+
+    const theme = getContext('svelteplot/theme');
+    const options = $derived({...(theme?.marks?.areaY || {}), ...opts})
 
     const args = $derived(
         renameChannels<AreaYProps>(

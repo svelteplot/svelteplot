@@ -24,7 +24,14 @@
         dy?: ConstantAccessor<number>;
     };
 
-    let { data = [{}], class: className = null, ...options }: RuleXMarkProps = $props();
+    let {
+        data = [{}],
+        class: className = null,
+        ...opts
+    }: RuleXMarkProps = $props();
+
+    const theme = getContext('svelteplot/theme');
+    const options = $derived({...(theme?.marks?.ruleX || {}), ...opts})
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
