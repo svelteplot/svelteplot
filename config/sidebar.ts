@@ -132,15 +132,15 @@ export default {
                 },
                 {
                     title: 'Dot',
-                    to: 'dot'
+                    to: '/examples/dot'
                 },
                 {
                     title: 'Line',
-                    to: 'line'
+                    to: '/examples/line'
                 },
                 {
                     title: 'Rule/Tick',
-                    to: 'rule-tick'
+                    to: '/examples/rule-tick'
                 },
             ]
         }
