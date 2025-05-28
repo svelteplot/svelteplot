@@ -211,7 +211,7 @@ Contrast with a chart where missing values have been filtered out:
 
 ## [Overlapping density estimations](https://observablehq.com/@observablehq/plot-overlapping-density-estimations)
 
-::warning:: Fails with erro 'unknown reducer proportion in AreaY'
+::warning:: Fails with error 'unknown reducer proportion in AreaY'
 
 ```svelte live
 <script>

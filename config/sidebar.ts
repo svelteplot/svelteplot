@@ -138,7 +138,10 @@ export default {
                     title: 'Line',
                     to: 'line'
                 },
-
+                {
+                    title: 'Rule/Tick',
+                    to: 'rule-tick'
+                },
             ]
         }
     ]
