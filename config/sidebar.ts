@@ -142,6 +142,10 @@ export default {
                     title: 'Rule/Tick',
                     to: '/examples/rule-tick'
                 },
+                 {
+                    title: 'Axes',
+                    to: '/examples/axes'
+                },
             ]
         }
     ]
