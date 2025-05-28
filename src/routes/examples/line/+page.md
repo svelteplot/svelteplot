@@ -162,6 +162,8 @@ Contrast with a chart where missing values have been filtered out:
 
 ## [Line chart, percent change](https://observablehq.com/@observablehq/plot-line-chart-percent-change)
 
+> :warning: Setting `ticks: 12` within the `y` prop of `<Plot>` breaks the plot.
+
 ```svelte live
 <script>
     import {
@@ -192,8 +194,7 @@ Contrast with a chart where missing values have been filtered out:
         type: 'log',
         tickFormat: (d) =>
             `${d > 1 ? '+' : ''}${Math.round(100 * (d - 1))}%`,
-        grid: true,
-        ticks: 12
+        grid: true
     }}>
     <RuleY data={[1]} />
     <Line
