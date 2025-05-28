@@ -284,6 +284,9 @@ Manually fixed:
 
 ## [Overlapping histogram](https://observablehq.com/@observablehq/plot-overlapping-histogram)
 
+> :warning: This isn't rendering correctly: I think that rather than rendering a bar up from the x-axis up to the value, it is rendering a bar up form the value to the top of the plot.
+
+
 ```svelte live
 <script>
     import { binX, Plot, RectY, RuleY } from 'svelteplot';
@@ -319,6 +322,7 @@ Manually fixed:
     import { page } from '$app/state';
 
     let { olympians } = $derived(page.data.data);
+    const test = (bin) => bin.some((d) => d.name === "Aaron Brown");
 </script>
 
 <Plot y={{ grid: true }}>
@@ -338,27 +342,7 @@ Manually fixed:
 
 > :warning: The `cumulative` option needs to be moved for this to work.
 
-A n naive translation doesn't work:
-
-```svelte live
-<script>
-    import { binX, Plot, RectY, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-
-    let { olympians } = $derived(page.data.data);
-</script>
-
-<Plot marginLeft={60} y={{ grid: true }}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count', cumulative: +1 }
-        )} />
-    <RuleY data={[0]} />
-</Plot>
-```
-
-Because the `cumulative: +1` option needs to be provided in the first argument to `binX`, rather than second; it moves from being specified alongside `y: "count"` in Observable Plot to being specified alongside `x: "weight"`:
+A naive translation doesn't work:
 
 ```svelte live
 <script>
@@ -377,6 +361,28 @@ Because the `cumulative: +1` option needs to be provided in the first argument t
                 cumulative: +1
             },
             { y: 'count' }
+        )} />
+    <RuleY data={[0]} />
+</Plot>
+```
+
+
+Because the `cumulative: +1` option needs to be provided in the first argument to `binX`, rather than second; it moves from being specified alongside `x: "weight"` in Observable Plot to being specified alongside `y: "count"`:
+
+
+```svelte live
+<script>
+    import { binX, Plot, RectY, RuleY } from 'svelteplot';
+    import { page } from '$app/state';
+
+    let { olympians } = $derived(page.data.data);
+</script>
+
+<Plot marginLeft={60} y={{ grid: true }}>
+    <RectY
+        {...binX(
+            { data: olympians, x: 'weight' },
+            { y: 'count', cumulative: +1 }
         )} />
     <RuleY data={[0]} />
 </Plot>
