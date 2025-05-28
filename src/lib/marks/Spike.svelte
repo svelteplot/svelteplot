@@ -1,6 +1,14 @@
+<!-- 
+    @component
+    Wrapper around the vector mark with presets suitable for spike maps 
+-->
+<script module lang="ts">
+    export type SpikeMarkProps = VectorMarkProps;
+</script>
+
 <script lang="ts">
     import Vector, { type VectorMarkProps } from './Vector.svelte';
-    let { data = [{}], ...options }: VectorMarkProps = $props();
+    let { data = [{}], ...options }: SpikeMarkProps = $props();
 </script>
 
 <Vector

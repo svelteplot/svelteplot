@@ -1,26 +1,13 @@
-<script lang="ts">
-    import { getContext, type Snippet } from 'svelte';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import type {
-        PlotContext,
-        DataRecord,
-        BaseMarkProps,
-        ConstantAccessor,
-        ChannelAccessor
-    } from '../types.js';
-    import { resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import Mark from '../Mark.svelte';
-    import { sort } from '$lib/index.js';
-
-    type TextMarkProps = BaseMarkProps & {
+<!--
+    @component
+    Useful for adding SVG text labels to your plot.
+-->
+<script module lang="ts">
+    export type TextMarkProps = BaseMarkProps & {
         data: DataRecord[];
         x: ChannelAccessor;
         y: ChannelAccessor;
-        fill?: ChannelAccessor;
-        stroke?: ChannelAccessor;
         children?: Snippet;
-        dx?: ConstantAccessor<number>;
-        dy?: ConstantAccessor<number>;
         text: ConstantAccessor<string>;
         title?: ConstantAccessor<string>;
         /**
@@ -42,6 +29,21 @@
             | 'bottom-right'
         >;
     };
+</script>
+
+<script lang="ts">
+    import { getContext, type Snippet } from 'svelte';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import type {
+        PlotContext,
+        DataRecord,
+        BaseMarkProps,
+        ConstantAccessor,
+        ChannelAccessor
+    } from '../types.js';
+    import { resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import Mark from '../Mark.svelte';
+    import { sort } from '$lib/index.js';
 
     let { data = [{}], class: className = null, ...options }: TextMarkProps = $props();
 
@@ -78,7 +80,7 @@
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple class="text {className || null}" length={className ? 2 : args.data.length}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {#if d.valid}
                     {@const title = resolveProp(args.title, d.datum, '')}
                     {@const frameAnchor = resolveProp(args.frameAnchor, d.datum)}
@@ -148,20 +150,17 @@
                         <text
                             class={[textClassName]}
                             dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                            transform="translate({[
-                                Math.round(x + dx),
-                                Math.round(
-                                    y +
-                                        dy -
-                                        (lineAnchor === 'bottom'
-                                            ? textLines.length - 1
-                                            : lineAnchor === 'middle'
-                                              ? (textLines.length - 1) * 0.5
-                                              : 0) *
-                                            fontSize
-                                )
-                            ]})"
-                            >{#each textLines as line, l}<tspan
+                            transform="translate({Math.round(x + dx)},{Math.round(
+                                y +
+                                    dy -
+                                    (lineAnchor === 'bottom'
+                                        ? textLines.length - 1
+                                        : lineAnchor === 'middle'
+                                          ? (textLines.length - 1) * 0.5
+                                          : 0) *
+                                        fontSize
+                            )})"
+                            >{#each textLines as line, l (l)}<tspan
                                     x="0"
                                     dy={l ? fontSize : 0}
                                     class={styleClass}
@@ -172,7 +171,7 @@
                         <text
                             class={[textClassName, styleClass]}
                             dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                            transform="translate({[Math.round(x + dx), Math.round(y + dy)]})"
+                            transform="translate({Math.round(x + dx)},{Math.round(y + dy)})"
                             {style}
                             >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
                     {/if}

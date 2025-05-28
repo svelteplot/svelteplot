@@ -19,7 +19,7 @@ export function recordizeX(
             data: data.map((value, index) => ({
                 __value: value,
                 ...(withIndex ? { [INDEX]: index } : {}),
-                [RAW_VALUE]: value,
+                [RAW_VALUE]: value
             })) as DataRecord[],
             ...channels,
             x: RAW_VALUE,
@@ -44,7 +44,7 @@ export function recordizeY(
         return {
             data: Array.from(data).map((value, index) => ({
                 ...(withIndex ? { __index: index } : {}),
-                [RAW_VALUE]: value,
+                [RAW_VALUE]: value
             })) as DataRecord[],
             ...channels,
             ...(withIndex ? { x: '__index' } : {}),
@@ -93,9 +93,9 @@ export function recordize({ data, ...channels }: TransformArgsRow): TransformArg
     if (!isDataRecord(data[0])) {
         return {
             data: (data as RawValue[]).map((d) => ({
-                [RAW_VALUE]: d,
+                [RAW_VALUE]: d
             })) as DataRecord[],
-            ...channels,
+            ...channels
         };
     }
     return { data, ...channels };

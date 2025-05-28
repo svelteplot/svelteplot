@@ -286,7 +286,7 @@
 
 {#if errors.length}
     <text transform="translate(10,10)">
-        {#each errors as error, i}
+        {#each errors as error, i (i)}
             <tspan x="0" dy={i ? 14 : 0}>{error}</tspan>
         {/each}
     </text>

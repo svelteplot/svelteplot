@@ -7,33 +7,63 @@ title: Bar mark
     import StackedBarPlot from './StackedBarPlot.svelte';
 </script>
 
-Bars are cool. They come in two flavors: [BarY](#BarY) for vertical bars (columns) and [BarX](#BarX) for horizontal bars.
-
-Here's a very simple bar chart:
+Bars are useful to show quantitative data for different categories. They come in two flavors: [BarX](#BarX) for horizontal bars (y axis requires band scale) and [BarY](#BarY) for vertical bars aka. columns (x axis requires band scale).
 
 ```svelte live
 <script>
     import { Plot, BarX, RuleX } from 'svelteplot';
+    const data = [
+        { year: 2019, value: 20 },
+        { year: 2020, value: 24 },
+        { year: 2021, value: 32 },
+        { year: 2022, value: 39 },
+        { year: 2024, value: 56 }
+    ];
 </script>
 
-<Plot
-    y={{ type: 'band' }}
-    x={{ grid: true }}
-    height={200}
-    marginTop={0}>
-    <BarX data={[1, 2, 3, 4, 5]} />
+<Plot>
+    <BarX {data} x="value" y="year" />
     <RuleX data={[0]} />
 </Plot>
 ```
 
 ```svelte
-<Plot y={{ type: 'band' }} x={{ grid: true }} height={120}>
-    <BarX data={[1, 2, 3, 4, 5]} />
+<Plot>
+    <BarX {data} x="value" y="year" />
     <RuleX data={[0]} />
 </Plot>
 ```
 
-You can create stacked bar charts by defining a fill channel which will be used for grouping the series by the implicit [stack transform](/transforms/stack):
+[fork](https://svelte.dev/playground/7a0d38cf74be4a9985feb7bef0456008?version=5)
+
+SveltePlot automatically infers a band scale for the y axis in the above example. but since our data is missing a value for 2023, the value `"2023"` is entirely missing from the band scale domain. We could fix this by passing the domain value manually, or by using the `interval` option of the y axis:
+
+```svelte live
+<script>
+    import { Plot, BarX, RuleX } from 'svelteplot';
+    const data = [
+        { year: 2019, value: 20 },
+        { year: 2020, value: 24 },
+        { year: 2021, value: 32 },
+        { year: 2022, value: 39 },
+        { year: 2024, value: 56 }
+    ];
+</script>
+
+<Plot y={{ interval: 1 }}>
+    <BarX {data} x="value" y="year" />
+    <RuleX data={[0]} />
+</Plot>
+```
+
+```
+<Plot y={{ interval: 1 }}>
+    <BarX {data} x="value" y="year" />
+    <RuleX data={[0]} />
+</Plot>
+```
+
+You can create stacked bar charts by defining a fill channel which will be used for grouping the series by the implicit [stack transform](/transforms/stack). In the following example we're first grouping the penguins dataset by island to then stack them by species:
 
 ```svelte live
 <script lang="ts">
@@ -82,7 +112,7 @@ You can create stacked bar charts by defining a fill channel which will be used 
 
 The `BarX` component renders horizontal bars, typically used with a band scale on the y-axis. This is ideal for categorical data where the categories run along the y-axis, and the values extend horizontally.
 
-### Properties
+**Properties**
 
 - **data** - The data array to visualize
 - **x** - Value accessor for the x channel (length of bar)
@@ -99,35 +129,11 @@ The `BarX` component renders horizontal bars, typically used with a band scale o
 
 Additionally, `BarX` supports all common styling properties like `fill`, `stroke`, `opacity`, etc.
 
-### Example
-
-```svelte
-<Plot y={{ type: 'band' }} x={{ grid: true }}>
-    <BarX
-        data={myData}
-        y="category"
-        x="value"
-        fill="steelblue" />
-</Plot>
-```
-
-For stacked bar charts, provide a `fill` channel that will be used for grouping the series:
-
-```svelte
-<Plot y={{ type: 'band' }} color={{ legend: true }}>
-    <BarX
-        data={myData}
-        y="category"
-        x="value"
-        fill="group" />
-</Plot>
-```
-
 ## BarY
 
 The `BarY` component renders vertical bars (columns), typically used with a band scale on the x-axis. This is ideal for categorical data where the categories run along the x-axis, and the values extend vertically.
 
-### Properties
+**Properties**
 
 - **data** - The data array to visualize
 - **x** - Value accessor for the x channel (position on the category axis)
@@ -145,44 +151,32 @@ The `BarY` component renders vertical bars (columns), typically used with a band
 
 Additionally, `BarY` supports all common styling properties like `fill`, `stroke`, `opacity`, etc.
 
-### Example
-
 ```svelte live
 <script>
     import { Plot, BarY, RuleY } from 'svelteplot';
-    import { range } from 'es-toolkit';
+    const data = [
+        { year: 2019, value: 20 },
+        { year: 2020, value: 24 },
+        { year: 2021, value: 32 },
+        { year: 2022, value: 39 },
+        { year: 2024, value: 56 }
+    ];
 </script>
 
-<Plot>
-    <BarY
-        data={range(2, 10).map((v) => v ** 2)}
-        fill="steelblue" />
-    <RuleY y={0} />
+<Plot height={250}>
+    <BarY {data} x="year" y="value" />
+    <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <BarY
-        data={range(2, 10).map((v) => v ** 2)}
-        fill="steelblue" />
-    <RuleY y={0} />
+    <BarY {data} x="year" y="value" />
+    <RuleY data={[0]} />
 </Plot>
 ```
 
 [fork](https://svelte.dev/playground/8b9fb6c1946d4579a3dc9da32f6c983c?version=5)
-
-For stacked bar charts, provide a `fill` channel that will be used for grouping the series:
-
-```svelte
-<Plot x={{ type: 'band' }} color={{ legend: true }}>
-    <BarY
-        data={myData}
-        x="category"
-        y="value"
-        fill="group" />
-</Plot>
-```
 
 ## Insets
 

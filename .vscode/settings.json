@@ -1,1 +1,25 @@
-{}
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[svelte]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "svelte"],
+    "prettier.useTabs": false,
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 4,
+    "prettier.trailingComma": "none",
+    "prettier.printWidth": 100,
+    "svelte.plugin.svelte.format.enable": false,
+    "eslint.probe": ["javascript", "typescript", "svelte"],
+    "eslint.experimental.useFlatConfig": true
+}

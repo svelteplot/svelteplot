@@ -73,7 +73,7 @@
         locale: 'en-US',
         numberFormat: {
             style: 'decimal',
-            notation: 'compact',
+            // notation: 'compact',
             compactDisplay: 'short'
         },
         markerDotRadius: 3,
@@ -232,6 +232,7 @@
     let facetWidth: number | null = $state(null);
     let facetHeight: number | null = $state(null);
 
+    // eslint-disable-next-line svelte/prefer-writable-derived
     let plotState: PlotState = $state(computePlotState());
 
     $effect(() => {

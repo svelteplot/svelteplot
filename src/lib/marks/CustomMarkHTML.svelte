@@ -75,7 +75,7 @@
 </script>
 
 {#snippet customMarks()}
-    {#each data as datum}
+    {#each data as datum, i (i)}
         {@const [px, py] = getXY(datum)}
         {#if isValid(px) && isValid(py)}
             <div

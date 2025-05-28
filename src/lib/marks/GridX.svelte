@@ -1,3 +1,13 @@
+<!-- @component
+    Renders vertical gridlines at x-axis tick positions
+-->
+<script module lang="ts">
+    export type GridXMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
+        data?: RawValue[];
+        automatic?: boolean;
+    };
+</script>
+
 <script lang="ts">
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
@@ -6,11 +16,6 @@
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
-
-    type GridXMarkProps = BaseMarkProps & {
-        data?: RawValue[];
-        automatic?: boolean;
-    };
 
     let { data = [], automatic = false, ...options }: GridXMarkProps = $props();
 
@@ -45,7 +50,7 @@
     {automatic}>
     {#snippet children({ usedScales })}
         <g class="grid-x">
-            {#each ticks as tick}
+            {#each ticks as tick, t (t)}
                 {#if testFilter(tick, options)}
                     {@const x =
                         plot.scales.x.fn(tick) +

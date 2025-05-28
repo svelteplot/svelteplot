@@ -1,3 +1,18 @@
+<!-- @component
+    Renders vertical rule lines at specified x positions with customizable vertical range
+-->
+<script module lang="ts">
+    export type RuleXMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
+        data: DataRecord[];
+        x?: ChannelAccessor;
+        y1?: ChannelAccessor;
+        y2?: ChannelAccessor;
+        inset?: ConstantAccessor<number>;
+        insetTop?: ConstantAccessor<number>;
+        insetBottom?: ConstantAccessor<number>;
+    };
+</script>
+
 <script lang="ts">
     import Mark from '../Mark.svelte';
     import GroupMultiple from '$lib/marks/helpers/GroupMultiple.svelte';
@@ -12,18 +27,6 @@
         ChannelAccessor
     } from '../types.js';
 
-    type RuleXMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        y1?: ChannelAccessor;
-        y2?: ChannelAccessor;
-        inset?: ConstantAccessor<number>;
-        insetTop?: ConstantAccessor<number>;
-        insetBottom?: ConstantAccessor<number>;
-        dx?: ConstantAccessor<number>;
-        dy?: ConstantAccessor<number>;
-    };
-
     let { data = [{}], class: className = null, ...options }: RuleXMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
@@ -34,7 +37,7 @@
 <Mark type="ruleX" channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple class="rule-x {className || ''}" length={className ? 2 : scaledData.length}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {@const inset = resolveProp(args.inset, d.datum, 0)}
                 {@const insetTop = resolveProp(args.insetTop, d.datum, 0)}
                 {@const insetBottom = resolveProp(args.insetBottom, d.datum, 0)}

@@ -141,7 +141,9 @@ Compare the DOM of the example below:
 ```svelte
 <script>
     import { css } from '@emotion/css';
-    const data = [...];
+    const data = [
+        /*...*/
+    ];
 </script>
 
 <Plot height={250} grid {css}>

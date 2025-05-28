@@ -2,7 +2,7 @@
 title: Facets
 ---
 
-Facets are a way to split a plot into multiple panels
+Facets are a way to split a plot into multiple panels.
 
 ```svelte live
 <script>

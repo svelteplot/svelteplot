@@ -40,7 +40,7 @@ export default {
                     to: '/features/transforms'
                 },
                 {
-                    title: 'Faceting',
+                    title: 'Facets',
                     to: '/features/facets'
                 }
             ]
@@ -66,12 +66,12 @@ export default {
                 { title: 'Line', to: '/marks/line' },
                 { title: 'Link', to: '/marks/link' },
                 { title: 'Pointer', to: '/marks/pointer' },
-                { title: 'Vector', to: '/marks/vector' },
                 { title: 'Rect', to: '/marks/rect' },
                 { title: 'Regression', to: '/marks/regression' },
                 { title: 'Rule', to: '/marks/rule' },
                 { title: 'Text', to: '/marks/text' },
-                { title: 'Tick', to: '/marks/tick' }
+                { title: 'Tick', to: '/marks/tick' },
+                { title: 'Vector', to: '/marks/vector' }
             ]
         },
         {
@@ -82,6 +82,7 @@ export default {
                 { title: 'Filter', to: '/transforms/filter' },
                 { title: 'Group', to: '/transforms/group' },
                 { title: 'Interval', to: '/transforms/interval' },
+                { title: 'Jitter', to: '/transforms/jitter' },
                 { title: 'Map', to: '/transforms/map' },
                 { title: 'Normalize', to: '/transforms/normalize' },
                 { title: 'Select', to: '/transforms/select' },

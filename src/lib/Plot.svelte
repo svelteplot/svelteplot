@@ -91,89 +91,101 @@
 <!-- There's a bug triggering RangeError: Maximum call stack size exceeded 
      when using SveltePlot in ssr, so for now, we're disabling it -->
 
-<Plot
-    {overlay}
-    {underlay}
-    {...restOptions}
-    header={userHeader ||
-    restOptions.title ||
-    restOptions.subtitle ||
-    restOptions.color?.legend ||
-    restOptions.symbol?.legend
-        ? header
-        : null}
-    footer={userFooter || restOptions?.caption ? footer : null}
-    projection={projectionOpts}
-    implicitScales
-    {...scales}>
-    {#snippet children({
-        hasProjection,
-        hasExplicitAxisX,
-        hasExplicitAxisY,
-        hasExplicitGridX,
-        hasExplicitGridY,
-        options,
-        scales,
-        ...restProps
-    })}
-        <svelte:boundary onerror={(err) => console.warn(err)}>
-            <!-- implicit axes -->
-            {#if !hasProjection && !hasExplicitAxisX}
-                {#if options.axes && (options.x.axis === 'top' || options.x.axis === 'both')}
-                    <AxisX anchor="top" automatic />
+<svelte:boundary>
+    <Plot
+        {overlay}
+        {underlay}
+        {...restOptions}
+        header={userHeader ||
+        restOptions.title ||
+        restOptions.subtitle ||
+        restOptions.color?.legend ||
+        restOptions.symbol?.legend
+            ? header
+            : null}
+        footer={userFooter || restOptions?.caption ? footer : null}
+        projection={projectionOpts}
+        implicitScales
+        {...scales}>
+        {#snippet children({
+            hasProjection,
+            hasExplicitAxisX,
+            hasExplicitAxisY,
+            hasExplicitGridX,
+            hasExplicitGridY,
+            options,
+            scales,
+            ...restProps
+        })}
+            <svelte:boundary onerror={(err) => console.warn(err)}>
+                <!-- implicit axes -->
+                {#if !hasProjection && !hasExplicitAxisX}
+                    {#if options.axes && (options.x.axis === 'top' || options.x.axis === 'both')}
+                        <AxisX anchor="top" automatic />
+                    {/if}
+                    {#if options.axes && (options.x.axis === 'bottom' || options.x.axis === 'both')}
+                        <AxisX anchor="bottom" automatic />
+                    {/if}
                 {/if}
-                {#if options.axes && (options.x.axis === 'bottom' || options.x.axis === 'both')}
-                    <AxisX anchor="bottom" automatic />
+                {#if !hasProjection && !hasExplicitAxisY}
+                    {#if options.axes && (options.y.axis === 'left' || options.y.axis === 'both')}
+                        <AxisY anchor="left" automatic />
+                    {/if}
+                    {#if options.axes && (options.y.axis === 'right' || options.y.axis === 'both')}
+                        <AxisY anchor="right" automatic />
+                    {/if}
                 {/if}
-            {/if}
-            {#if !hasProjection && !hasExplicitAxisY}
-                {#if options.axes && (options.y.axis === 'left' || options.y.axis === 'both')}
-                    <AxisY anchor="left" automatic />
+                <!-- implicit grids -->
+                {#if !hasExplicitGridX && (options.grid || options.x.grid)}
+                    <GridX automatic />
                 {/if}
-                {#if options.axes && (options.y.axis === 'right' || options.y.axis === 'both')}
-                    <AxisY anchor="right" automatic />
+                {#if !hasExplicitGridY && (options.grid || options.y.grid)}
+                    <GridY automatic />
                 {/if}
-            {/if}
-            <!-- implicit grids -->
-            {#if !hasExplicitGridX && (options.grid || options.x.grid)}
-                <GridX automatic />
-            {/if}
-            {#if !hasExplicitGridY && (options.grid || options.y.grid)}
-                <GridY automatic />
-            {/if}
-            <!-- implicit frame -->
-            {#if options.frame}
-                <Frame automatic />
-            {/if}
-            {@render parentChildren?.({
-                options,
-                scales,
-                ...restProps
-            })}
-            {#snippet failed(error, reset)}
-                <text class="error" transform="translate(10,10)">
-                    {#each error.message.split('\n') as line, i}
-                        <tspan x="0" dy={i ? 14 : 0}>{line}</tspan>
-                    {/each}
-                </text>{/snippet}
-        </svelte:boundary>
+                <!-- implicit frame -->
+                {#if options.frame}
+                    <Frame automatic />
+                {/if}
+                {@render parentChildren?.({
+                    options,
+                    scales,
+                    ...restProps
+                })}
+                {#snippet failed(error, reset)}
+                    <text class="error" transform="translate(10,10)">
+                        {#each error.message.split('\n') as line, i (i)}
+                            <tspan x="0" dy={i ? 14 : 0}>{line}</tspan>
+                        {/each}
+                    </text>{/snippet}
+            </svelte:boundary>
+        {/snippet}
+        {#snippet facetAxes()}
+            <FacetAxes />
+        {/snippet}
+    </Plot>
+    {#snippet failed(error)}
+        <div class="error">Error: {error.message}</div>
     {/snippet}
-    {#snippet facetAxes()}
-        <FacetAxes />
-    {/snippet}
-</Plot>
+</svelte:boundary>
 
 <style>
     :root {
         --plot-bg: white;
         --plot-fg: currentColor;
     }
-    text.error {
-        stroke: var(--plot-bg);
-        fill: crimson;
+    .error {
         font-size: 11px;
         stroke-width: 3px;
         font-weight: bold;
+    }
+    text.error {
+        stroke: var(--plot-bg);
+        fill: crimson;
         paint-order: stroke fill;
+    }
+    div.error {
+        color: crimson;
+        white-space: pre-wrap;
+        line-height: 1.1;
     }
 </style>

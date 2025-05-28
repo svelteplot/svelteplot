@@ -1,6 +1,6 @@
 import type { RawValue, ScaleType } from '$lib/types.js';
 import { maybeTimeInterval } from './time.js';
-import { range as rangei } from 'd3-array';
+import { extent, range as rangei } from 'd3-array';
 
 export function maybeInterval(interval: null | number | string | (<T>(d: T) => T)) {
     if (interval == null) return;
@@ -38,11 +38,11 @@ export function autoTicks(
     scaleFn,
     count: number
 ) {
-    return ticks
-        ? ticks
-        : interval
-          ? maybeInterval(interval, type).range(domain[0], domain[1])
-          : typeof scaleFn.ticks === 'function'
-            ? scaleFn.ticks(count)
-            : [];
+    if (ticks) return ticks;
+    if (interval) {
+        const [lo, hi] = extent(domain);
+        const I = maybeInterval(interval, type);
+        return I.range(lo, I.offset(hi));
+    }
+    return typeof scaleFn.ticks === 'function' ? scaleFn.ticks(count) : [];
 }

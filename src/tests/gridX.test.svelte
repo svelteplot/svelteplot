@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { GridX, Plot } from 'svelteplot';
-  import type { ComponentProps } from 'svelte';
+    import { GridX, Plot } from 'svelteplot';
+    import type { ComponentProps } from 'svelte';
 
-  interface Props {
-    plotArgs: ComponentProps<typeof Plot>;
-    gridArgs: ComponentProps<typeof GridX>;
-  }
-  
-  let { plotArgs, gridArgs }: Props = $props();
+    interface Props {
+        plotArgs: ComponentProps<typeof Plot>;
+        gridArgs: ComponentProps<typeof GridX>;
+    }
+
+    let { plotArgs, gridArgs }: Props = $props();
 </script>
 
 <Plot width={100} height={100} axes={false} {...plotArgs}>
-  <GridX {...gridArgs} />
+    <GridX {...gridArgs} />
 </Plot>

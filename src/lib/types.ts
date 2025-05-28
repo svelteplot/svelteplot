@@ -632,6 +632,19 @@ export type FacetContext = {
     getFacetState: () => FacetState;
 };
 
+export type LinkableMarkProps = {
+    /**
+     * simple browser tooltip to be displayed on mouseover
+     */
+    title: ConstantAccessor<string>;
+    /**
+     * if set, the mark element will be wrapped in a <a> link
+     * element
+     */
+    href: ConstantAccessor<string>;
+    target: ConstantAccessor<'_self' | '_blank' | string>;
+};
+
 export type BaseMarkProps = Partial<{
     /**
      * Filter the data without modifying the inferred scales
@@ -689,19 +702,9 @@ export type BaseMarkProps = Partial<{
     oncontextmenu?: MouseEventHandler<SVGPathElement>;
     onwheel?: MouseEventHandler<SVGPathElement>;
     /**
-     * simple browser tooltip to be displayed on mouseover
-     */
-    title: ConstantAccessor<string>;
-    /**
-     * if set, the mark element will be wrapped in a <a> link
-     * element
-     */
-    href: ConstantAccessor<string>;
-    target: ConstantAccessor<'_self' | '_blank' | string>;
-    /**
      * if you want to give your mark element an extra CSS class
      */
-    class: string;
+    class: string | null;
     cursor: ConstantAccessor<CSS.Property.Cursor>;
 }>;
 

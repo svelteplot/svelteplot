@@ -25,7 +25,8 @@ Helper component for rendering rectangular marks in SVG
         height,
         useInsetAsFallbackVertically = true,
         useInsetAsFallbackHorizontally = true,
-        usedScales
+        usedScales,
+        fallbackStyle = 'fill'
     }: {
         datum: ScaledDataRecord;
         class: string | null;
@@ -47,39 +48,40 @@ Helper component for rendering rectangular marks in SVG
          */
         useInsetAsFallbackHorizontally?: boolean;
         usedScales: UsedScales;
+        fallbackStyle?: 'fill' | 'stroke';
     } = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const dx = $derived(+(resolveProp(options.dx, datum.datum, 0) as number));
-    const dy = $derived(+(resolveProp(options.dy, datum.datum, 0) as number));
-    const inset = $derived(+(resolveProp(options.inset, datum.datum, 0) as number));
+    const dx = $derived(+(resolveProp(options.dx, datum?.datum, 0) as number));
+    const dy = $derived(+(resolveProp(options.dy, datum?.datum, 0) as number));
+    const inset = $derived(+(resolveProp(options.inset, datum?.datum, 0) as number));
     const insetLeft = $derived(
         +(resolveProp(
             options.insetLeft,
-            datum.datum,
+            datum?.datum,
             useInsetAsFallbackHorizontally ? inset : 0
         ) as number)
     );
     const insetRight = $derived(
         +(resolveProp(
             options.insetRight,
-            datum.datum,
+            datum?.datum,
             useInsetAsFallbackHorizontally ? inset : 0
         ) as number)
     );
     const insetTop = $derived(
         +(resolveProp(
             options.insetTop,
-            datum.datum,
+            datum?.datum,
             useInsetAsFallbackVertically ? inset : 0
         ) as number)
     );
     const insetBottom = $derived(
         +(resolveProp(
             options.insetBottom,
-            datum.datum,
+            datum?.datum,
             useInsetAsFallbackVertically ? inset : 0
         ) as number)
     );
@@ -94,12 +96,14 @@ Helper component for rendering rectangular marks in SVG
                     borderRadius.bottomLeft ?? 0
                 ) > 0)
     );
-    const [style, styleClass] = $derived(resolveStyles(plot, datum, options, 'fill', usedScales));
+    const [style, styleClass] = $derived(
+        resolveStyles(plot, datum, options, fallbackStyle, usedScales)
+    );
 </script>
 
 {#if hasBorderRadius}
     <path
-        transform="translate({[x + dx + insetLeft, y + insetBottom + dy]})"
+        transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
         d={roundedRect(
             0,
             0,
@@ -112,11 +116,11 @@ Helper component for rendering rectangular marks in SVG
         use:addEventHandlers={{
             getPlotState,
             options,
-            datum: datum.datum
+            datum: datum?.datum
         }} />
 {:else}
     <rect
-        transform="translate({[x + dx + insetLeft, y + insetBottom + dy]})"
+        transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
         width={width - insetLeft - insetRight}
         height={height - insetTop - insetBottom}
         class={[styleClass, className]}
@@ -124,6 +128,6 @@ Helper component for rendering rectangular marks in SVG
         use:addEventHandlers={{
             getPlotState,
             options,
-            datum: datum.datum
+            datum: datum?.datum
         }} />
 {/if}

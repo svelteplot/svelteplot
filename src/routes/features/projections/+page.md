@@ -153,7 +153,12 @@ Plot provides a variety of built-in projections. And as above, all world project
 
 ```svelte live
 <script>
-    import { Plot, Geo, Sphere, Graticule } from 'svelteplot';
+    import {
+        Plot,
+        Geo,
+        Sphere,
+        Graticule
+    } from 'svelteplot';
     import { Select } from '$lib/ui';
     import { page } from '$app/state';
     import { geoEqualEarth } from 'd3-geo';
@@ -206,7 +211,12 @@ Plot provides a variety of built-in projections. And as above, all world project
 ```svelte live
 <script>
     import { Slider } from '$lib/ui';
-    import { Plot, Geo, Sphere, Graticule } from 'svelteplot';
+    import {
+        Plot,
+        Geo,
+        Sphere,
+        Graticule
+    } from 'svelteplot';
     import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import { geoCentroid } from 'd3-geo';
@@ -262,7 +272,12 @@ You can use custom projections if you need more control over the projection para
 ```svelte live
 <script>
     import { Slider } from '$lib/ui';
-    import { Plot, Geo, Sphere, Graticule } from 'svelteplot';
+    import {
+        Plot,
+        Geo,
+        Sphere,
+        Graticule
+    } from 'svelteplot';
     import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import { geoOrthographic } from 'd3-geo';

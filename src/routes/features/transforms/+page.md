@@ -90,3 +90,23 @@ In case you want to use SveltePlot transforms outside of a Svelte project you ca
 ```js
 import { binX } from 'svelteplot/transforms';
 ```
+
+## Available Transforms
+
+- [bin](/transforms/bin) - Groups data into discrete bins
+- [bollinger](/transforms/bollinger) - Creates Bollinger bands for time series data
+- [centroid](/transforms/centroid) - Calculates the geometric center of a set of points
+- [facet](/transforms/facet) - Splits data into multiple subplots
+- [filter](/transforms/filter) - Filters data based on a condition
+- [group](/transforms/group) - Groups data by specified dimensions
+- [interval](/transforms/interval) - Creates time or numeric intervals
+- [jitter](/transforms/jitter) - Adds random noise to prevent overplotting
+- [map](/transforms/map) - Applies a mapping function to data
+- [normalize](/transforms/normalize) - Scales data to a common range
+- [recordize](/transforms/recordize) - Converts raw data to record format
+- [rename](/transforms/rename) - Renames channels in a dataset
+- [select](/transforms/select) - Selects specific channels or data points
+- [shift](/transforms/shift) - Shifts data values by a specified amount
+- [sort](/transforms/sort) - Sorts data based on specified criteria
+- [stack](/transforms/stack) - Stacks data series on top of each other
+- [window](/transforms/window) - Creates a moving window over data

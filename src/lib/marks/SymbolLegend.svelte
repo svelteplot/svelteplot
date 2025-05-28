@@ -19,7 +19,7 @@
 
 {#if plot.scales.color.manualActiveMarks > 0}
     <div class="symbol-legend">
-        {#each plot.scales.color.domain as value}
+        {#each plot.scales.color.domain as value (value)}
             {@const symbolV = plot.scales.symbol.fn(value)}
             {@const symbolType = maybeSymbol(symbolV)}
             {@const color = plot.colorSymbolRedundant

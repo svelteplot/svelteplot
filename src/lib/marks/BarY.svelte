@@ -2,16 +2,16 @@
     @component
     For vertical column charts using a band scale as x axis
 -->
-<script lang="ts">
-    import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
-    import { intervalY, stackY, recordizeY, sort } from '$lib/index.js';
-    import type { PlotContext, BaseMarkProps, BaseRectMarkProps } from '../types.js';
-    import type { StackOptions } from '$lib/transforms/stack.js';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import RectPath from './helpers/RectPath.svelte';
+<script module lang="ts">
+    import type {
+        PlotContext,
+        BaseMarkProps,
+        BaseRectMarkProps,
+        ChannelAccessor,
+        DataRow
+    } from '../types.js';
 
-    type BarYProps = BaseMarkProps &
+    export type BarYMarkProps = BaseMarkProps &
         BaseRectMarkProps & {
             data: DataRow[];
             x?: ChannelAccessor;
@@ -25,8 +25,18 @@
              */
             interval?: number | string;
         };
+</script>
 
-    let { data = [{}], class: className = null, stack, ...options }: BarYProps = $props();
+<script lang="ts">
+    import Mark from '../Mark.svelte';
+    import { getContext } from 'svelte';
+    import { intervalY, stackY, recordizeY, sort } from '$lib/index.js';
+
+    import type { StackOptions } from '$lib/transforms/stack.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import RectPath from './helpers/RectPath.svelte';
+
+    let { data = [{}], class: className = null, stack, ...options }: BarYMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -50,7 +60,7 @@
     {...args}>
     {#snippet children({ scaledData, usedScales })}
         <GroupMultiple class="bar-y" length={scaledData.length}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {@const bw = plot.scales.x.fn.bandwidth()}
                 {@const miny = Math.min(d.y1, d.y2)}
                 {@const maxy = Math.max(d.y1, d.y2)}

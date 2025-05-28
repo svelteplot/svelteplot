@@ -2,11 +2,7 @@
     @component
     For arbitrary rectangles, requires band x and y scales 
 -->
-<script lang="ts">
-    import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
-    import { recordizeY, sort } from '$lib/index.js';
-    import { resolveChannel } from '../helpers/resolve.js';
+<script module lang="ts">
     import type {
         PlotContext,
         DataRecord,
@@ -14,24 +10,25 @@
         BaseRectMarkProps,
         ChannelAccessor
     } from '../types.js';
+
+    export type CellMarkProps = BaseMarkProps &
+        BaseRectMarkProps & {
+            data: DataRecord[];
+            x?: ChannelAccessor;
+            y?: ChannelAccessor;
+        };
+</script>
+
+<script lang="ts">
+    import Mark from '../Mark.svelte';
+    import { getContext } from 'svelte';
+    import { recordizeY, sort } from '$lib/index.js';
+    import { resolveChannel } from '../helpers/resolve.js';
+
     import { isValid } from '../helpers/isValid.js';
     import RectPath from './helpers/RectPath.svelte';
 
-    type CellProps = BaseMarkProps & {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        y?: ChannelAccessor;
-        borderRadius?:
-            | number
-            | {
-                  topLeft?: number;
-                  topRight?: number;
-                  bottomRight?: number;
-                  bottomLeft?: number;
-              };
-    } & BaseRectMarkProps;
-
-    let { data = [{}], class: className = null, ...options }: CellProps = $props();
+    let { data = [{}], class: className = null, ...options }: CellMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -61,7 +58,7 @@
         {@const bwx = plot.scales.x.fn.bandwidth()}
         {@const bwy = plot.scales.y.fn.bandwidth()}
         <g class="cell {className || ''}" data-fill={usedScales.fillOpacity}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {#if d.valid && (args.fill == null || isValid(resolveChannel('fill', d.datum, args)))}
                     <RectPath
                         datum={d}

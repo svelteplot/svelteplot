@@ -1,9 +1,4 @@
-import type {
-    ChannelAccessor,
-    ChannelName,
-    DataRecord,
-    RawValue
-} from '$lib/types.js';
+import type { ChannelAccessor, ChannelName, DataRecord, RawValue } from '$lib/types.js';
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks.js';

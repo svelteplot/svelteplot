@@ -15,7 +15,7 @@
 <label
     >{label || ''}
     <select bind:value>
-        {#each options as p}
+        {#each options as p (p)}
             <option value={p}>{format(p)}</option>
         {/each}
     </select></label>

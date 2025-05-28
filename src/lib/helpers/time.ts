@@ -87,7 +87,7 @@ const tickIntervals = [
     ['100 years', 100 * durationYear] // TODO generalize to longer time scales
 ];
 
-const durations = new Map([
+export const durations = new Map([
     ['second', durationSecond],
     ['minute', durationMinute],
     ['hour', durationHour],
@@ -193,7 +193,7 @@ const formatIntervals = [
     ...utcFormatIntervals.slice(3)
 ];
 
-export function parseTimeInterval(input) {
+export function parseTimeInterval(input: string): [string, number] {
     let name = `${input}`.toLowerCase();
     if (name.endsWith('s')) name = name.slice(0, -1); // drop plural
     let period = 1;
@@ -218,15 +218,15 @@ export function parseTimeInterval(input) {
     return [name, period];
 }
 
-export function maybeTimeInterval(input) {
+export function maybeTimeInterval(input: string) {
     return asInterval(parseTimeInterval(input), 'time');
 }
 
-export function maybeUtcInterval(input) {
+export function maybeUtcInterval(input: string) {
     return asInterval(parseTimeInterval(input), 'utc');
 }
 
-function asInterval([name, period], type) {
+function asInterval([name, period]: [string, number], type: 'time' | 'utc') {
     let interval = (type === 'time' ? timeIntervals : utcIntervals).get(name);
     if (period > 1) {
         interval = interval.every(period);

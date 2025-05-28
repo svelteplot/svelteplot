@@ -21,7 +21,7 @@
 </script>
 
 <linearGradient {id} gradientUnits="userSpaceOnUse" x1={0} x2={0} y1={0} y2={plot.height}>
-    {#each projectedStops as { py, color }}
+    {#each projectedStops as { py, color }, i (i)}
         <stop stop-color={color} offset={py} />
     {/each}
 </linearGradient>

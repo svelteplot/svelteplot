@@ -1,3 +1,6 @@
+<!-- @component
+    Creates a horizontal box plot for visualizing data distribution with quartiles and outliers
+-->
 <script lang="ts">
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import type { BoxProps } from './BoxY.svelte';

@@ -4,14 +4,13 @@ import { userEvent } from '@testing-library/user-event';
 import BrushTest from './brush.test.svelte';
 import { tick, type ComponentProps } from 'svelte';
 
-
 describe('Brush mark', () => {
     it('single brush with basic properties', async () => {
         const props: ComponentProps<typeof BrushTest> = $state({
             plotArgs: { x: { domain: [0, 10] }, y: { domain: [0, 10] } },
             brushArgs: {},
             brush: { enabled: false }
-        })
+        });
 
         const { container } = render(BrushTest, props);
 
@@ -21,12 +20,11 @@ describe('Brush mark', () => {
     });
 
     it('brush reacts to state changes', async () => {
-
         const props: ComponentProps<typeof BrushTest> = $state({
             plotArgs: { x: { domain: [0, 10] }, y: { domain: [0, 10] } },
             brushArgs: {},
             brush: { enabled: false }
-        })
+        });
 
         const { container } = render(BrushTest, props);
 
@@ -48,7 +46,7 @@ describe('Brush mark', () => {
             plotArgs: { width: 400, x: { domain: [0, 10] }, y: { domain: [0, 10] } },
             brushArgs: {},
             brush: { enabled: false }
-        })
+        });
 
         const { container } = render(BrushTest, props);
 
@@ -81,6 +79,4 @@ describe('Brush mark', () => {
         const draggedRect = container.querySelectorAll('rect.brush-rect');
         expect(draggedRect.length).toBe(1);
     });
-
-
 });

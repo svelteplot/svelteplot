@@ -6,7 +6,12 @@ Regressions are useful if you want to show the relationship between two variable
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Dot, RuleY, RegressionY } from 'svelteplot';
+    import {
+        Plot,
+        Dot,
+        RuleY,
+        RegressionY
+    } from 'svelteplot';
     import { page } from '$app/state';
     import { Select, Slider } from '$lib/ui';
 
@@ -157,7 +162,12 @@ Returns a linear regression mark where y is the dependent variable and x is the 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Dot, RuleY, RegressionY } from 'svelteplot';
+    import {
+        Plot,
+        Dot,
+        RuleY,
+        RegressionY
+    } from 'svelteplot';
     import { page } from '$app/state';
     import { Select, Slider } from '$lib/ui';
 
@@ -213,7 +223,12 @@ Returns a linear regression mark where x is the dependent variable and y is the 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Dot, RuleY, RegressionX } from 'svelteplot';
+    import {
+        Plot,
+        Dot,
+        RuleY,
+        RegressionX
+    } from 'svelteplot';
     import { page } from '$app/state';
     import { Select, Slider } from '$lib/ui';
 

@@ -9,14 +9,14 @@ The interval transform is often used for time-series bar charts. For example, co
 ```svelte live
 <script lang="ts">
     import { Plot, BarY, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
 
-    const MONTH_YEAR = new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        year: 'numeric'
+    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+        day: 'numeric',
+        month: 'short'
     });
+
     const tickFormat = (date: Date) =>
-        MONTH_YEAR.format(date).split(' ');
+        DAY_MONTH.format(date).split(' ').reverse();
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -37,9 +37,16 @@ In contrast, a [rectY](/marks/rect) mark with the interval option and the day in
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
+
+    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+        day: 'numeric',
+        month: 'short'
+    });
+    const tickFormat = (date: Date) =>
+        DAY_MONTH.format(date).split(' ').reverse();
 </script>
 
-<Plot marginLeft={40} x={{ type: 'time' }} grid>
+<Plot marginLeft={40} x={{ tickFormat }} grid>
     <RectY
         data={aapl.slice(-40)}
         x="Date"
@@ -51,7 +58,7 @@ In contrast, a [rectY](/marks/rect) mark with the interval option and the day in
 ```
 
 ```svelte
-<Plot marginLeft={40} x={{ type: 'time' }} grid>
+<Plot marginLeft={40} x={{ tickFormat }} grid>
     <RectY
         data={aapl.slice(-40)}
         x="Date"
@@ -72,12 +79,13 @@ The meaning of the interval mark option depends on the associated mark, such as 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
 
-    const MONTH_DAY = new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        date: 'numeric'
+    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+        day: 'numeric',
+        month: 'short'
     });
+
     const tickFormat = (date: Date) =>
-        MONTH_DAY.format(date).split(' ');
+        DAY_MONTH.format(date).split(' ').reverse();
 </script>
 
 <Plot marginLeft={40} x={{ tickFormat }} grid>

@@ -133,7 +133,7 @@ describe('Plot component', () => {
         const { container } = render(PlotTest, {
             props: {
                 width: 100,
-                height: 150,
+                height: 150
             }
         });
 

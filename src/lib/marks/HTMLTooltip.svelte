@@ -10,11 +10,12 @@
         x?: ChannelAccessor;
         y?: ChannelAccessor;
         r?: ChannelAccessor;
+        children: Snippet<[{ datum: DataRow }]>;
     };
 </script>
 
 <script lang="ts">
-    import { getContext } from 'svelte';
+    import { getContext, type Snippet } from 'svelte';
     import type { PlotContext } from '../types.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');

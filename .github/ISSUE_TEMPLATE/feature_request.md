@@ -4,7 +4,6 @@ about: Suggest an idea or feature for SveltePlot
 title: ''
 labels: enhancement
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.**

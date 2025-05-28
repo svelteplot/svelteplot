@@ -18,7 +18,7 @@
     {#if label}
         <label for={randomId}>{label}:</label>
     {/if}
-    {#each options as p}
+    {#each options as p (p)}
         <label>
             <input type="radio" id={randomId} bind:group={value} value={p} />
             {format(p)}

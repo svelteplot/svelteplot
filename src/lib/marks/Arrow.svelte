@@ -1,32 +1,14 @@
-<!--
-    @component Arrow2
+<!-- @component
+    Creates arrows with customizable heads, angles, and bending
 -->
-<script lang="ts">
-    import { getContext, type Snippet } from 'svelte';
-    import type {
-        PlotContext,
-        DataRecord,
-        BaseMarkProps,
-        ConstantAccessor,
-        ChannelAccessor,
-        RawValue
-    } from '../types.js';
-    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { coalesce, maybeData, maybeNumber } from '../helpers/index.js';
-    import Mark from '../Mark.svelte';
-    import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
-    import { replaceChannels } from '$lib/transforms/rename.js';
-    import { addEventHandlers } from './helpers/events.js';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
-
-    type ArrowProps = BaseMarkProps & {
+<script module lang="ts">
+    export type ArrowMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
         data: DataRecord[];
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
         x1: ChannelAccessor;
         y1: ChannelAccessor;
         x2: ChannelAccessor;
         y2: ChannelAccessor;
-        stroke?: ChannelAccessor;
         /**
          * the bend angle, in degrees; defaults to 0°; true for 22.5°
          */
@@ -52,10 +34,28 @@
          */
         inset?: ConstantAccessor<number>;
         sweep?: SweepOption;
-        children?: Snippet;
     };
+</script>
 
-    let { data = [{}], class: className = null, ...options }: ArrowProps = $props();
+<script lang="ts">
+    import { getContext, type Snippet } from 'svelte';
+    import type {
+        PlotContext,
+        DataRecord,
+        BaseMarkProps,
+        ConstantAccessor,
+        ChannelAccessor,
+        RawValue
+    } from '../types.js';
+    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import { coalesce, maybeData, maybeNumber } from '../helpers/index.js';
+    import Mark from '../Mark.svelte';
+    import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
+    import { replaceChannels } from '$lib/transforms/rename.js';
+    import { addEventHandlers } from './helpers/events.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+
+    let { data = [{}], class: className = null, ...options }: ArrowMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -81,7 +81,7 @@
     {#snippet children({ mark, usedScales, scaledData })}
         {@const sweep = maybeSweep(args.sweep)}
         <GroupMultiple class="arrow" length={scaledData.length}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {#if d.valid}
                     {@const inset = resolveProp(args.inset, d.datum, 0)}
                     {@const insetStart = resolveProp(args.insetStart, d.datum)}

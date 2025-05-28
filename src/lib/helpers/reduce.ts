@@ -1,10 +1,4 @@
-import type {
-    ChannelName,
-    Channels,
-    DataRecord,
-    DataRow,
-    RawValue
-} from '$lib/types.js';
+import type { ChannelName, Channels, DataRecord, DataRow, RawValue } from '$lib/types.js';
 import { min, max, mode, sum, mean, median, variance, deviation, quantile } from 'd3-array';
 import { resolveChannel } from './resolve.js';
 import { POSITION_CHANNELS } from './index.js';

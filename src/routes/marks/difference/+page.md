@@ -68,7 +68,12 @@ If just one _x_ and _y_ channel is defined, the value zero will be used as compa
 
 ```svelte live
 <script>
-    import { Plot, Line, DifferenceY, RuleY } from 'svelteplot';
+    import {
+        Plot,
+        Line,
+        DifferenceY,
+        RuleY
+    } from 'svelteplot';
     import { page } from '$app/state';
     let { gistemp } = $derived(page.data.data);
 </script>
@@ -102,7 +107,12 @@ You can compare the metric to a different "baseline" by providing a constant _y1
 
 ```svelte live
 <script>
-    import { Plot, Line, DifferenceY, RuleY } from 'svelteplot';
+    import {
+        Plot,
+        Line,
+        DifferenceY,
+        RuleY
+    } from 'svelteplot';
     import { page } from '$app/state';
     let { gistemp } = $derived(page.data.data);
     import { Slider } from '$lib/ui';

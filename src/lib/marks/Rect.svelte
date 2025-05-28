@@ -2,6 +2,20 @@
     @component
     For arbitrary rectangles, requires quantitative x and y scales 
 -->
+<script module lang="ts">
+    export type RectMarkProps = {
+        data: DataRecord[];
+        x?: ChannelAccessor;
+        x1?: ChannelAccessor;
+        x2?: ChannelAccessor;
+        y?: ChannelAccessor;
+        y1?: ChannelAccessor;
+        y2?: ChannelAccessor;
+        interval?: number | string;
+    } & BaseMarkProps &
+        BaseRectMarkProps;
+</script>
+
 <script lang="ts">
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
@@ -15,17 +29,6 @@
     } from '../types.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
-
-    type RectMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        x1?: ChannelAccessor;
-        x2?: ChannelAccessor;
-        y?: ChannelAccessor;
-        y1?: ChannelAccessor;
-        y2?: ChannelAccessor;
-        interval?: number | string;
-    } & BaseRectMarkProps;
 
     let { data = [{}], class: className = 'rect', ...options }: RectMarkProps = $props();
 
@@ -44,7 +47,7 @@
     {...args}>
     {#snippet children({ usedScales, scaledData })}
         <GroupMultiple class={scaledData.length > 1 ? className : null} length={scaledData.length}>
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {#if d.valid}
                     {@const x1 = d.x1 == null ? plot.options.marginLeft : d.x1}
                     {@const x2 = d.x2 == null ? plot.options.marginLeft + plot.facetWidth : d.x2}

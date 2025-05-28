@@ -1,3 +1,6 @@
+<!-- @component
+    Creates a vertical box plot for visualizing data distribution with quartiles and outliers
+-->
 <script lang="ts" module>
     export type BoxProps = {
         data: DataRecord[];

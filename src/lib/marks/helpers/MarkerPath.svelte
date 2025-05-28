@@ -96,7 +96,7 @@
     class={className}
     stroke-width={strokeWidth_}
     use:addEventHandlers={{ getPlotState, options: mark.options, datum }}>
-    {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, marker]}
+    {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, marker] (key)}
         {@const markerId = `marker-${key === 'all' ? '' : `${key}-`}${id}`}
         {#if isSnippet(marker)}
             {@render marker(markerId, color)}

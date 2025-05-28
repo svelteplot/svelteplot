@@ -1,3 +1,18 @@
+<!-- @component
+    Creates dots or symbols at specified positions with customizable size and appearance
+-->
+<script module lang="ts">
+    export type DotMarkProps = BaseMarkProps & {
+        data: DataRecord[];
+        x: ChannelAccessor;
+        y: ChannelAccessor;
+        r?: ChannelAccessor;
+        symbol?: ChannelAccessor | Snippet<[number, string]>;
+        canvas?: boolean;
+        dotClass?: ConstantAccessor<string>;
+    };
+</script>
+
 <script lang="ts">
     import { getContext, type Snippet } from 'svelte';
     import type {
@@ -19,38 +34,13 @@
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
 
-    type DotProps = BaseMarkProps & {
-        data: DataRecord[];
-        x: ChannelAccessor;
-        y: ChannelAccessor;
-        r?: ChannelAccessor;
-        fill?: ChannelAccessor;
-        stroke?: ChannelAccessor;
-        symbol?: ChannelAccessor | Snippet<[number, string]>;
-        children?: Snippet;
-        dx?: ConstantAccessor<number>;
-        dy?: ConstantAccessor<number>;
-        canvas?: boolean;
-        dotClass?: ConstantAccessor<string>;
-        in?: any;
-        inParams?: any;
-        out?: any;
-        outParams?: any;
-        transition?: any;
-        wrap?: Snippet;
-    };
-
     let {
         data = [{}],
         canvas = false,
         class: className = '',
         dotClass = null,
-        in: tIn = undefined,
-        inParams = undefined,
-        out: tOut = undefined,
-        outParams = undefined,
         ...options
-    }: DotProps = $props();
+    }: DotMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -98,7 +88,7 @@
             {#if canvas}
                 <DotCanvas data={scaledData} {mark} />
             {:else}
-                {#each scaledData as d}
+                {#each scaledData as d, i (i)}
                     {#if d.valid && isValid(d.r)}
                         {@const [style, styleClass] = resolveStyles(
                             plot,

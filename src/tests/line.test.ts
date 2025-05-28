@@ -35,7 +35,9 @@ describe('Line mark', () => {
             }
         });
 
-        const lines = container.querySelectorAll('g.lines > g > path') as NodeListOf<SVGPathElement>;
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
         expect(lines).toHaveLength(1);
         expect(lines[0]?.getAttribute('d')).toBe(
             'M1,95L8.917,80C16.833,65,32.667,35,48.5,27.5C64.333,20,80.167,35,88.083,42.5L96,50'
@@ -78,7 +80,9 @@ describe('Line mark', () => {
             }
         });
 
-        const lines = container.querySelectorAll('g.lines > g > path') as NodeListOf<SVGPathElement>;
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
         expect(lines).toHaveLength(1);
         const line = lines[0];
         expect(line?.getAttribute('d')).toBe('M1,95L48.5,50L96,5');
@@ -102,7 +106,9 @@ describe('Line mark', () => {
         });
 
         // The implementation might differ from our expectation - look for any path elements
-        const paths = container.querySelectorAll('g.lines > g > path') as NodeListOf<SVGPathElement>;;
+        const paths = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
         expect(paths.length).toBeGreaterThan(0);
 
         // Check if at least one path has the expected styles
@@ -214,9 +220,37 @@ describe('Line mark', () => {
             }
         });
 
-        const lines = container.querySelectorAll('g.lines > g > path') as NodeListOf<SVGPathElement>;
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
         expect(lines).toHaveLength(2);
         // Verify we have two distinct lines with different stroke colors
         expect(lines[0]?.style.stroke).not.toBe(lines[1]?.style.stroke);
+    });
+
+    it('does not connect points from different groups', () => {
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0, category: 'A' },
+                    { x: 1, y: 1, category: 'A' },
+                    { x: 0, y: 1, category: 'B' },
+                    { x: 0.5, y: 1, category: 'C' }
+                ],
+                x: 'x',
+                y: 'y',
+                z: 'category'
+            }
+        });
+
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
+        expect(lines).toHaveLength(3);
+
+        const ds = Array.from(lines).map((l) => l.getAttribute('d'));
+        expect(ds[0]).toBe('M1,95L96,5');
+        expect(ds[1]).toBe('M1,5Z');
+        expect(ds[2]).toBe('M48.5,5Z');
     });
 });

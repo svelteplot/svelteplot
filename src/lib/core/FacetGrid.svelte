@@ -55,8 +55,8 @@
     });
 </script>
 
-{#each fxValues as facetX, i}
-    {#each fyValues as facetY, j}
+{#each fxValues as facetX, i (i)}
+    {#each fyValues as facetY, j (j)}
         <g
             class="facet"
             fill="currentColor"

@@ -1,0 +1,127 @@
+name: npm prerelease
+
+on:
+    pull_request:
+        branches: [main]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v3
+              with:
+                  version: 10
+                  run_install: false
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Run Vitest tests
+              run: pnpm test
+
+    publish-preview:
+        # Prevent this job from running on forks
+        if: github.repository == 'svelteplot/svelteplot' && github.event.pull_request.draft == false
+        needs: test
+        runs-on: ubuntu-latest
+        environment:
+            name: npm
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v3
+              with:
+                  version: 10
+                  run_install: false
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'pnpm'
+                  registry-url: 'https://registry.npmjs.org'
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Generate preview version
+              run: |
+                  pr_number=${{ github.event.pull_request.number }}
+
+                  # Get existing prerelease versions for this PR
+                  existing_versions=$(npm view svelteplot versions --json 2>/dev/null | grep -o "\"[0-9]*\.[0-9]*\.[0-9]*-pr-${pr_number}\.[0-9]*\"" | tr -d '"' || echo "")
+
+                  if [ -n "$existing_versions" ]; then
+                    # Get the highest existing prerelease version
+                    latest_version=$(echo "$existing_versions" | sort -V | tail -n 1)
+                    
+                    echo "Found latest existing prerelease version: $latest_version"
+                    
+                    # Extract base version (before the `-pr-N.x` part)
+                    base_version=$(echo "$latest_version" | sed -E "s/-pr-${pr_number}\.[0-9]+//")
+                    
+                    # Extract current prerelease number (the `.x` part)
+                    prerelease_num=$(echo "$latest_version" | sed -E "s/.*-pr-${pr_number}\.([0-9]+)$/\1/")
+                    
+                    # Increment prerelease number
+                    next_prerelease=$((prerelease_num + 1))
+                    
+                    next_version="${base_version}-pr-${pr_number}.${next_prerelease}"
+                    
+                    echo "Bumping to next prerelease version: $next_version"
+                    
+                    npm version "$next_version" --no-git-tag-version
+                  else
+                    # No existing prerelease, start fresh from current base version
+                    base_version=$(node -p "require('./package.json').version")
+                    next_version="${base_version}-pr-${pr_number}.0"
+                    
+                    echo "Starting fresh prerelease version: $next_version"
+                    
+                    npm version "$next_version" --no-git-tag-version
+                  fi
+
+                  echo "Generated version: $(node -p "require('./package.json').version")"
+
+            - name: Publish to npm
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH }}
+              run: npm publish --tag pr-${{ github.event.pull_request.number }} --access public
+
+            # Save version for use in PR comment
+            - name: Save version
+              run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+            - name: Comment on PR
+              uses: peter-evans/create-or-update-comment@v3
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      📦 Preview package for this PR is published!
+
+                      Version: `${{ env.PACKAGE_VERSION }}`
+
+                      Install it with:
+                      ```bash
+                      npm install svelteplot@pr-${{ github.event.pull_request.number }}
+                      # or install the specific version
+                      npm install svelteplot@${{ env.PACKAGE_VERSION }}
+                      ```
+                  reactions: '+1, rocket'
+                  edit-mode: replace

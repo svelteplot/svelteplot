@@ -1,17 +1,18 @@
+<!-- @component
+    Creates a horizontal area chart with x value and baseline.  Areas are implicitly 
+    stacked horizontally if just the x channel is defined.
+-->
 <script lang="ts">
     import Area, { type AreaMarkProps } from './Area.svelte';
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackX } from '$lib/transforms/stack.js';
     import { recordizeX } from '$lib/transforms/recordize.js';
-    import type { DataRecord, BaseMarkProps, ChannelAccessor } from '../types.js';
+    import type { ChannelAccessor } from '../types.js';
 
-    type AreaXProps = BaseMarkProps & {
-        data: DataRecord[];
+    type AreaXProps = Omit<AreaMarkProps, 'y1' | 'y2'> & {
         x?: ChannelAccessor;
-        x1?: ChannelAccessor;
-        x2?: ChannelAccessor;
         y?: ChannelAccessor;
-    } & AreaMarkProps;
+    };
 
     // we're discarding y1 and y2 props since they are not
     let { data, stack, ...options }: AreaXProps = $props();

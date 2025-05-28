@@ -10,11 +10,15 @@ describe('Colors', () => {
         const { container } = render(ColorsTest, {
             props: {
                 dotOptions: {
-                    data: [{
-                        x: 1, sex: 'male'
-                    }, {
-                        x: 2, sex: 'female'
-                    }
+                    data: [
+                        {
+                            x: 1,
+                            sex: 'male'
+                        },
+                        {
+                            x: 2,
+                            sex: 'female'
+                        }
                     ],
                     x: 'x',
                     y: 0,
@@ -34,13 +38,19 @@ describe('Colors', () => {
         const { container } = render(ColorsTest, {
             props: {
                 dotOptions: {
-                    data: [{
-                        x: 1, sex: 'male'
-                    }, {
-                        x: 2, sex: 'female'
-                    }, {
-                        x: 3, sex: 'in-between'
-                    }
+                    data: [
+                        {
+                            x: 1,
+                            sex: 'male'
+                        },
+                        {
+                            x: 2,
+                            sex: 'female'
+                        },
+                        {
+                            x: 3,
+                            sex: 'in-between'
+                        }
                     ],
                     x: 'x',
                     y: 0,
@@ -66,6 +76,6 @@ describe('Colors', () => {
 function getDotStyle(path: SVGPathElement) {
     return {
         fill: path.style.fill,
-        stroke: path.style.stroke,
-    }
+        stroke: path.style.stroke
+    };
 }

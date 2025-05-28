@@ -15,14 +15,14 @@ declare global {
 }
 
 /**
- * Translates client coordinates (clientX, clientY) to the layer coordinates 
+ * Translates client coordinates (clientX, clientY) to the layer coordinates
  * of the plot frame, regardless of which element triggered the event
  */
 export function clientToLayerCoordinates(
     event: MouseEvent,
     plotBody: HTMLElement | null | undefined
 ): [number, number] {
-    // If layerX/Y already exist and the target is the plot frame (rect element), 
+    // If layerX/Y already exist and the target is the plot frame (rect element),
     // we can use them directly
     // if (event.layerX !== undefined && (event.target as SVGElement).tagName === 'rect') {
     //     return [event.layerX, event.layerY];
@@ -34,10 +34,7 @@ export function clientToLayerCoordinates(
     const plotBodyRect = plotBody.getBoundingClientRect();
 
     // Calculate the coordinates relative to the plot body
-    return [
-        event.clientX - plotBodyRect.left,
-        event.clientY - plotBodyRect.top
-    ];
+    return [event.clientX - plotBodyRect.left, event.clientY - plotBodyRect.top];
 }
 
 export function addEventHandlers(
@@ -77,7 +74,7 @@ export function addEventHandlers(
         'ontouchcancel',
         'ontouchend',
         'ontouchmove',
-        'onwheel',
+        'onwheel'
     ]);
 
     const listeners = new Map<string, MouseEventHandler<SVGElement>>();

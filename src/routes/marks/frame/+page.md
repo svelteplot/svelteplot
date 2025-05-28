@@ -41,7 +41,7 @@ If you need more customization options, you can add the frame manually by explic
         stroke="magenta"
         strokeWidth="2"
         strokeDasharray="4,4" />
-    <Frame inset="4" />
+    <Frame inset="4" borderRadius={5} />
     <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
@@ -54,7 +54,7 @@ If you need more customization options, you can add the frame manually by explic
         stroke="magenta"
         strokeWidth="2"
         strokeDasharray="4,4" />
-    <Frame inset="4" />
+    <Frame inset="4" borderRadius={5} />
     <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```

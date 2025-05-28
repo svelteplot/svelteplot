@@ -31,7 +31,11 @@ export function resolveProp<T>(
         return datum == null
             ? accessor()
             : accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
-    } else if ((typeof accessor === 'string' || typeof accessor === 'symbol') && datum && datum[accessor] !== undefined) {
+    } else if (
+        (typeof accessor === 'string' || typeof accessor === 'symbol') &&
+        datum &&
+        datum[accessor] !== undefined
+    ) {
         return datum[accessor] as T;
     }
     return isRawValue(accessor) ? accessor : _defaultValue;
@@ -53,14 +57,14 @@ export function toChannelOption(
     return isDataRecord(channel)
         ? (channel as ChannelOptions)
         : {
-            value: channel,
-            scale:
-                (!isPositionScale && !isOpacityScale && typeof channel === 'number') ||
-                    typeof channel === 'undefined'
-                    ? null
-                    : CHANNEL_SCALE[name],
-            channel: null
-        };
+              value: channel,
+              scale:
+                  (!isPositionScale && !isOpacityScale && typeof channel === 'number') ||
+                  typeof channel === 'undefined'
+                      ? null
+                      : CHANNEL_SCALE[name],
+              channel: null
+          };
 }
 
 export function resolveChannel(
@@ -95,7 +99,11 @@ function resolve(
             // so we're passing the original value to accessor functions instead of our wrapped record
             return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
         // use accessor string
-        if ((typeof accessor === 'string' || typeof accessor === 'symbol') && datum[accessor] !== undefined) return datum[accessor];
+        if (
+            (typeof accessor === 'string' || typeof accessor === 'symbol') &&
+            datum[accessor] !== undefined
+        )
+            return datum[accessor];
         // fallback to channel name as accessor
         if (accessor === null && datum[channel] !== undefined) return datum[channel];
         return isRawValue(accessor) ? accessor : null;
@@ -110,10 +118,10 @@ function resolve(
         return typeof accessor === 'function'
             ? accessor(datum)
             : accessor !== null && isRawValue(accessor)
-                ? accessor
-                : !Array.isArray(datum) && (scale === 'x' || scale === 'y')
-                    ? datum
-                    : null;
+              ? accessor
+              : !Array.isArray(datum) && (scale === 'x' || scale === 'y')
+                ? datum
+                : null;
     }
 }
 
@@ -196,7 +204,7 @@ export function resolveStyles(
     recomputeChannels = false
 ): [string | null, string | null] {
     const styleProps = {
-        ...getBaseStylesObject(datum.datum, channels),
+        ...getBaseStylesObject(datum?.datum, channels),
         fill: 'none',
         stroke: 'none',
         ...(defaultColorProp && channels[oppositeColor[defaultColorProp]] == null
@@ -208,7 +216,7 @@ export function resolveStyles(
                 .map(([key, cssAttr]) => [
                     key,
                     cssAttr,
-                    recomputeChannels ? resolveChannel(key, datum.datum, channels) : datum[key]
+                    recomputeChannels ? resolveChannel(key, datum?.datum, channels) : datum?.[key]
                 ])
                 .filter(
                     ([key, , value]) =>

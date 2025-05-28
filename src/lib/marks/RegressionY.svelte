@@ -1,3 +1,10 @@
+<!-- @component
+    Calculates and displays a regression line with y as the dependent variable
+-->
+<script module lang="ts">
+    export type RegressionYMarkProps = RegressionMarkProps;
+</script>
+
 <script lang="ts">
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { ChannelName } from '$lib/types.js';
@@ -5,7 +12,7 @@
     import Regression, { type RegressionMarkProps } from './helpers/Regression.svelte';
     import { groups as d3Groups } from 'd3-array';
 
-    let { data = [{}], ...options }: RegressionMarkProps = $props();
+    let { data = [{}], ...options }: RegressionYMarkProps = $props();
 
     let groupBy: ChannelName | null =
         options.stroke != null ? 'stroke' : options.z != null ? 'z' : null;
@@ -20,7 +27,7 @@
 </script>
 
 <Mark type="regression">
-    {#each groups as group}
+    {#each groups as group, i (i)}
         <Regression data={group} dependent="y" {...options} />
     {/each}
 </Mark>

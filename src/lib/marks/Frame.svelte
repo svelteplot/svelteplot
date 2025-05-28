@@ -1,16 +1,20 @@
-<script lang="ts">
-    import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
-    import type { PlotContext, BaseRectMarkProps } from '../types.js';
-    import type { BaseMarkProps } from '../types.js';
-    import { resolveProp, resolveScaledStyles } from '../helpers/resolve.js';
-    import { addEventHandlers } from './helpers/events.js';
-
-    type FrameMarkProps = BaseMarkProps &
+<!-- 
+    @component 
+    Renders a simple frame around the entire plot domain 
+-->
+<script module lang="ts">
+    export type FrameMarkProps = Omit<
+        BaseMarkProps,
+        'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'
+    > &
         Omit<
             BaseRectMarkProps,
             'inset' | 'insetLeft' | 'insetRight' | 'insetTop' | 'insetBottom'
         > & {
+            fill: string;
+            stroke: string;
+            fillOpacity: number;
+            strokeOpacity: number;
             automatic?: boolean;
             inset?: number;
             insetLeft?: number;
@@ -18,33 +22,40 @@
             insetTop?: number;
             insetBottom?: number;
         };
+</script>
 
-    let { automatic, class: className = '', ...options }: FrameMarkProps = $props();
+<script lang="ts">
+    import Mark from '../Mark.svelte';
+    import { getContext } from 'svelte';
+    import type { PlotContext, BaseRectMarkProps } from '../types.js';
+    import type { BaseMarkProps } from '../types.js';
+    import RectPath from './helpers/RectPath.svelte';
+
+    let {
+        automatic,
+        class: className = 'frame',
+        fill,
+        stroke,
+        fillOpacity,
+        strokeOpacity,
+        ...options
+    }: FrameMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
-
-    const dx = $derived(resolveProp(options.dx, null, 0));
-    const dy = $derived(resolveProp(options.dy, null, 0));
-
-    const {
-        insetLeft = options.inset || 0,
-        insetTop = options.inset || 0,
-        insetRight = options.inset || 0,
-        insetBottom = options.inset || 0
-    } = $derived(options);
 </script>
 
 <Mark type="frame" {automatic}>
-    <rect
-        class={['frame', className]}
-        transform={dx || dy ? `translate(${dx},${dy})` : null}
-        style={resolveScaledStyles({}, options, {}, plot, 'stroke')}
-        x={plot.options.marginLeft + +insetLeft}
-        y={plot.options.marginTop + +insetTop}
-        rx={resolveProp(options.rx, null, null)}
-        ry={resolveProp(options.ry, null, null)}
-        width={plot.facetWidth - (insetLeft || 0) - (insetRight || 0)}
-        height={plot.facetHeight - (insetBottom || 0) - (insetTop || 0)}
-        use:addEventHandlers={{ getPlotState, options: options, datum: {} }} />
+    {#snippet children({ usedScales })}
+        <RectPath
+            class={className}
+            datum={{ fill, stroke, fillOpacity, strokeOpacity, datum: {}, valid: true }}
+            x={plot.options.marginLeft}
+            y={plot.options.marginTop}
+            width={plot.facetWidth}
+            height={plot.facetHeight}
+            {usedScales}
+            fallbackStyle="stroke"
+            options={{ ...options, fill, stroke, fillOpacity, strokeOpacity }} />
+    {/snippet}
 </Mark>

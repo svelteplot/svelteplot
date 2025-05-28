@@ -2,12 +2,8 @@
     @component
     line representing a moving average and an area representing volatility as a band
 -->
-<script lang="ts">
-    import { Area, Line, bollingerY, recordizeY } from '$lib/index.js';
-    import type { BaseMarkProps, ChannelAccessor, DataRow } from '$lib/types.js';
-    import { pick } from 'es-toolkit';
-
-    type BollingerYProps = BaseMarkProps & {
+<script module lang="ts">
+    export type BollingerYMarkProps = BaseMarkProps & {
         data: DataRow[];
         x?: ChannelAccessor;
         y?: ChannelAccessor;
@@ -20,8 +16,14 @@
          */
         k?: number;
     };
+</script>
 
-    let { data, n = 20, k = 2, class: className, ...options }: BollingerYProps = $props();
+<script lang="ts">
+    import { Area, Line, bollingerY, recordizeY } from '$lib/index.js';
+    import type { BaseMarkProps, ChannelAccessor, DataRow } from '$lib/types.js';
+    import { pick } from 'es-toolkit';
+
+    let { data, n = 20, k = 2, class: className, ...options }: BollingerYMarkProps = $props();
 
     const args = $derived(bollingerY(recordizeY({ data, ...options }), { n, k }));
 </script>

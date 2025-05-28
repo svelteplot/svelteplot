@@ -6,7 +6,7 @@
         plotArgs: ComponentProps<typeof Plot>;
         barArgs: ComponentProps<typeof BarX>;
     }
-    
+
     let { plotArgs, barArgs }: Props = $props();
 </script>
 

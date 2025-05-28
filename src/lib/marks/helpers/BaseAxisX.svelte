@@ -198,7 +198,7 @@
                         {#if textLines.length === 1}
                             {textLines[0]}
                         {:else}
-                            {#each textLines as line, i}
+                            {#each textLines as line, i (i)}
                                 <tspan x="0" dy={i ? 12 : 0}
                                     >{!prevTextLines || prevTextLines[i] !== line
                                         ? line

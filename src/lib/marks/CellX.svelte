@@ -1,20 +1,15 @@
+<script module lang="ts">
+    export type CellXMarkProps = Omit<CellMarkProps, 'y'>;
+</script>
+
 <script lang="ts">
-    import Cell from './Cell.svelte';
+    import Cell, { type CellMarkProps } from './Cell.svelte';
     import { recordizeY } from '$lib/index.js';
-    import type { BaseMarkProps, DataRow, RectMarkProps } from '../types.js';
-    import type { ChannelAccessor } from '$lib/types.js';
 
-    type CellXProps = BaseMarkProps & {
-        data: DataRow[];
-        x?: ChannelAccessor;
-        fill?: ChannelAccessor;
-        stroke?: ChannelAccessor;
-    } & RectMarkProps;
-
-    let { data = [{}], ...options }: CellXProps = $props();
+    let { data = [{}], ...options }: CellXMarkProps = $props();
 
     const args = $derived(
-        recordizeY<CellXProps>({
+        recordizeY<CellXMarkProps>({
             data,
             ...options
         })

@@ -46,7 +46,13 @@ Link to [empty page](empty).
 ```svelte
 <script lang="ts">
     import { css } from '@emotion/css';
-    import { Plot, Line, Dot, AreaY, RectX } from 'svelteplot';
+    import {
+        Plot,
+        Line,
+        Dot,
+        AreaY,
+        RectX
+    } from 'svelteplot';
     import { Slider } from '$lib/ui';
 
     import { page } from '$app/state';

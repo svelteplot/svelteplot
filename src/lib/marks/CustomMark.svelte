@@ -30,7 +30,7 @@
 </script>
 
 <GroupMultiple class="g-custom-mark {className || ''}" length={className ? 2 : data.length}>
-    {#each data as datum}
+    {#each data as datum, i (i)}
         {@const x_ = resolveChannel('x', datum, { x, y })}
         {@const y_ = resolveChannel('y', datum, { x, y })}
         {#if isValid(x_) && isValid(y_)}

@@ -1,26 +1,16 @@
-<script lang="ts">
-    import Rect from './Rect.svelte';
-    import { intervalY, stackX, recordizeX } from '$lib/index.js';
-    import type {
-        DataRecord,
-        BaseMarkProps,
-        ChannelAccessor,
-        BaseRectMarkProps,
-        PlotContext
-    } from '../types.js';
-    import type { StackOptions } from '$lib/transforms/stack.js';
-    import { getContext } from 'svelte';
+<!-- @component
+    Convenience wrapper for rectangles oriented along the x axis 
+-->
+<script module lang="ts">
+    export type RectXMarkProps = Omit<RectMarkProps, 'y'> & { stack?: Partial<StackOptions> };
+</script>
 
-    type RectXMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        x1?: ChannelAccessor;
-        x2?: ChannelAccessor;
-        y1?: ChannelAccessor;
-        y2?: ChannelAccessor;
-        stack?: StackOptions;
-        interval?: number | string;
-    } & BaseRectMarkProps;
+<script lang="ts">
+    import Rect, { type RectMarkProps } from './Rect.svelte';
+    import { intervalY, stackX, recordizeX } from '$lib/index.js';
+    import type { PlotContext } from '../types.js';
+    import { getContext } from 'svelte';
+    import type { StackOptions } from '$lib/transforms/stack';
 
     let { data = [{}], stack, ...options }: RectXMarkProps = $props();
 
