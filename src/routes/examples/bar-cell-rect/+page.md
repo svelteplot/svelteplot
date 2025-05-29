@@ -204,7 +204,7 @@ Manually fixed:
 
 > :warning: This fails to render, with an error about "duplicate key in BarX.svelte".
 
-```svelte live
+```svelte
 <script>
     import { groupX, Plot, BarX, RuleX } from 'svelteplot';
     import { page } from '$app/state';
