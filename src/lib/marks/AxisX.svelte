@@ -2,6 +2,7 @@
     Renders a horizontal axis with labels and tick marks
 -->
 <script module lang="ts">
+    import type { XOR } from 'ts-essentials';
     export type AxisXMarkProps = Omit<
         BaseMarkProps,
         'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
@@ -22,7 +23,18 @@
             | Intl.NumberFormatOptions
             | ((d: RawValue) => string);
         tickClass?: ConstantAccessor<string>;
-    };
+        /** ticks is a shorthand for defining data, tickCount or interval */
+        ticks?: number | string | RawValue[];
+    } & XOR<
+            {
+                /** approximate number of ticks to be generated */
+                tickCount?: number;
+            },
+            {
+                /** approximate number of pixels between generated ticks */
+                tickSpacing?: number;
+            }
+        >;
 </script>
 
 <script lang="ts">
@@ -51,12 +63,13 @@
     };
 
     let {
-        data = [],
+        ticks: magicTicks,
+        data = Array.isArray(magicTicks) ? magicTicks : [],
         automatic = false,
         title,
         anchor = DEFAULTS.axisXAnchor as 'top' | 'bottom',
         facetAnchor = 'auto',
-        interval,
+        interval = typeof magicTicks === 'string' ? magicTicks : undefined,
         tickSize = DEFAULTS.tickSize,
         tickFontSize = DEFAULTS.tickFontSize,
         tickPadding = DEFAULTS.tickPadding,
@@ -64,6 +77,8 @@
         tickFormat,
         tickClass,
         class: className,
+        tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
+        tickSpacing,
         ...options
     }: AxisXMarkProps = $props();
 
@@ -71,7 +86,11 @@
     const plot = $derived(getPlotState());
 
     const autoTickCount = $derived(
-        Math.max(3, Math.round(plot.facetWidth / plot.options.x.tickSpacing))
+        tickCount != null
+            ? tickCount
+            : tickSpacing != null
+              ? Math.max(3, Math.round(plot.facetWidth / tickSpacing))
+              : Math.max(3, Math.round(plot.facetWidth / plot.options.x.tickSpacing))
     );
 
     const ticks: RawValue[] = $derived(

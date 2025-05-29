@@ -21,6 +21,18 @@ const config = {
                 bracketSameLine: true,
                 svelteAllowShorthand: true
             }
+        },
+        {
+            files: '**/routes/examples/**/*.svelte',
+            options: {
+                printWidth: 60
+            }
+        },
+        {
+            files: 'src/routes/examples/**/*.svelte',
+            options: {
+                printWidth: 60
+            }
         }
     ]
 };

@@ -1,6 +1,6 @@
 {
     "name": "svelteplot",
-    "version": "0.2.8",
+    "version": "0.2.9",
     "license": "ISC",
     "author": {
         "name": "Gregor Aisch",
@@ -18,7 +18,8 @@
         "test:unit": "vitest",
         "prepack": "npx svelte-package",
         "release-next": "npm version prerelease --preid next && npm publish && git push && git push --tags && sleep 1 && npm dist-tag add svelteplot@$(npm view . version) next",
-        "docs": "npm run build && cd build && rsync --recursive . vis4.net:svelteplot/alpha0/"
+        "docs": "npm run build && cd build && rsync --recursive . vis4.net:svelteplot/alpha0/",
+        "screenshots": "node screenshot-examples.js"
     },
     "exports": {
         ".": {
@@ -83,6 +84,7 @@
         "jsdom": "^26.1.0",
         "prettier": "^3.5.3",
         "prettier-plugin-svelte": "^3.4.0",
+        "puppeteer": "^24.9.0",
         "remark-code-extra": "^1.0.1",
         "remark-code-frontmatter": "^1.0.0",
         "resize-observer-polyfill": "^1.5.1",
@@ -92,6 +94,7 @@
         "svelte-highlight": "^7.8.3",
         "svg-path-parser": "^1.1.0",
         "topojson-client": "^3.1.0",
+        "ts-essentials": "^10.0.4",
         "tslib": "^2.8.1",
         "typedoc": "^0.28.5",
         "typedoc-plugin-markdown": "^4.6.3",

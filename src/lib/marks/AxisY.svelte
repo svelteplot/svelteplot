@@ -2,6 +2,7 @@
     Renders a vertical axis with labels and tick marks
 -->
 <script module lang="ts">
+    import type { XOR } from 'ts-essentials';
     export type AxisYMarkProps = Omit<
         BaseMarkProps,
         'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
@@ -23,7 +24,18 @@
             | Intl.NumberFormatOptions
             | ((d: RawValue) => string);
         tickClass?: ConstantAccessor<string>;
-    };
+        /** ticks is a shorthand for defining data, tickCount or interval */
+        ticks?: number | string | RawValue[];
+    } & XOR<
+            {
+                /** approximate number of ticks to be generated */
+                tickCount?: number;
+            },
+            {
+                /** approximate number of pixels between generated ticks */
+                tickSpacing?: number;
+            }
+        >;
 </script>
 
 <script lang="ts">
@@ -51,17 +63,21 @@
     };
 
     let {
-        data = [],
+        ticks: magicTicks,
+        data = Array.isArray(magicTicks) ? magicTicks : [],
         automatic = false,
         title,
         anchor = DEFAULTS.axisYAnchor as 'left' | 'right',
         facetAnchor = 'auto',
+        interval = typeof magicTicks === 'string' ? magicTicks : undefined,
         lineAnchor = 'center',
         tickSize = DEFAULTS.tickSize,
         tickFontSize = DEFAULTS.tickFontSize,
         tickPadding = DEFAULTS.tickPadding,
         tickFormat,
         tickClass,
+        tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
+        tickSpacing,
         ...options
     }: AxisYMarkProps = $props();
 
@@ -69,7 +85,11 @@
     const plot = $derived(getPlotState());
 
     const autoTickCount = $derived(
-        Math.max(2, Math.round(plot.facetHeight / plot.options.y.tickSpacing))
+        tickCount != null
+            ? tickCount
+            : tickSpacing != null
+              ? Math.max(3, Math.round(plot.facetHeight / tickSpacing))
+              : Math.max(2, Math.round(plot.facetHeight / plot.options.y.tickSpacing))
     );
 
     const ticks: RawValue[] = $derived(
@@ -80,7 +100,7 @@
               autoTicks(
                   plot.scales.y.type,
                   plot.options.y.ticks,
-                  plot.options.y.interval,
+                  interval || plot.options.y.interval,
                   plot.scales.y.domain,
                   plot.scales.y.fn,
                   autoTickCount

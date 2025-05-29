@@ -2,7 +2,7 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "explicit"
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -19,7 +19,14 @@
     "prettier.tabWidth": 4,
     "prettier.trailingComma": "none",
     "prettier.printWidth": 100,
+    "prettier.documentSelectors": [
+        "*.svelte",
+        "*.md",
+        "**/examples/**/*.svelte",
+        "src/routes/examples/**/*.svelte"
+    ],
     "svelte.plugin.svelte.format.enable": false,
     "eslint.probe": ["javascript", "typescript", "svelte"],
-    "eslint.experimental.useFlatConfig": true
+    "eslint.useFlatConfig": true,
+    "eslint.workingDirectories": [{ "mode": "auto" }]
 }

@@ -260,9 +260,13 @@ You can explicitly add an x axis using the `AxisX` mark component. The `AxisX` c
 - `tickSize` - size of the tick marks in pixels (default: 6)
 - `tickFontSize` - font size for tick labels (default: 11)
 - `tickPadding` - padding between tick lines and labels (default: 3)
+- `tickSpacing` - approximate pixel space between generated ticks
+- `tickCount` - approximate number of ticks to generate
 - `tickFormat` - custom formatter for tick labels (can be 'auto', Intl.DateTimeFormatOptions, Intl.NumberFormatOptions, or custom function)
 - `tickClass` - function to assign custom classes to ticks based on their values
 - `automatic` - internal flag, set to true for implicit axes
+
+For compatibility reasons AxisX also supports the "magic" **ticks** option which can be an alias for **data** (array), **interval** (string) or **tickCount** (number) depending on the type of value you're passing.
 
 The `AxisX` component also inherits all styling properties from the base mark component (fill, stroke, strokeWidth, opacity, etc.).
 
@@ -280,9 +284,13 @@ The `AxisY` component provides extensive customization options for y-axis presen
 - `tickSize` - size of the tick marks in pixels (default: 6)
 - `tickFontSize` - font size for tick labels (default: 11)
 - `tickPadding` - padding between tick lines and labels (default: 3)
+- `tickSpacing` - approximate pixel space between generated ticks
+- `tickCount` - approximate number of ticks to generate
 - `tickFormat` - custom formatter for tick labels (can be 'auto', Intl.DateTimeFormatOptions, Intl.NumberFormatOptions, or custom function)
 - `tickClass` - function to assign custom classes to ticks based on their values
 - `automatic` - internal flag, set to true for implicit axes
+
+For compatibility reasons AxisY also supports the "magic" **ticks** option which can be an alias for **data** (array), **interval** (string) or **tickCount** (number) depending on the type of value you're passing.
 
 The `AxisY` component also inherits all styling properties from the base mark component (fill, stroke, strokeWidth, opacity, etc.).
 
