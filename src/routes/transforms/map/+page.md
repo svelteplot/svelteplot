@@ -128,6 +128,7 @@ we not sorted the array, the visualization would look like this:
     import {
         Plot,
         Line,
+        BarY,
         RuleY,
         mapY,
         mapX,
@@ -154,29 +155,56 @@ subset of 10 cars.
 
 ## Quantile
 
+The `quantile` function effectively works the same as the `rank` function, but
+instead of being 0-based index, it outputs a number between 0 and 1, basically
+giving the proportion in which each element lies within the whole dataset. 
+
+The calculation is whatever each element rank has, divided by the total number
+of elements.
+
 ```svelte live
 <script>
     import {
         Plot,
         Line,
+        RuleY,
         mapY,
-        mapX,
-        RectY,binX
+        stackY
     } from 'svelteplot';
 
     import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+    let { cars } = $derived(page.data.data);
 
-    const sortedOlympians = [...olympians].sort((a, b) => b.gold - a.gold).slice(0, 30);
+    let sortedCars = [...cars].sort((a, b) => a["0-60 mph (s)"] - b["0-60 mph (s)"]).slice(0, 10);
+
 </script>
 
 <Plot marginLeft={50} x={{ tickRotate: -45 }}>
-    <Line
-        {...mapY(
-            { data: sortedOlympians, x: 'name', y: 'gold' },
-            'quantile'
-        )}
-    />
+  <RuleY y={0} />
+  <Line {...mapY({ data:sortedCars, x: 'model', y:'0-60 mph (s)' }, 'quantile')}  />
+</Plot>
+```
+
+```svelte
+<script>
+    import {
+        Plot,
+        Line,
+        RuleY,
+        mapY,
+        stackY
+    } from 'svelteplot';
+
+    import { page } from '$app/state';
+    let { cars } = $derived(page.data.data);
+
+    let sortedCars = [...cars].sort((a, b) => a["0-60 mph (s)"] - b["0-60 mph (s)"]).slice(0, 10);
+
+</script>
+
+<Plot marginLeft={50} x={{ tickRotate: -45 }}>
+  <RuleY y={0} />
+  <Line {...mapY({ data:sortedCars, x: 'model', y:'0-60 mph (s)' }, 'quantile')}  />
 </Plot>
 ```
 
