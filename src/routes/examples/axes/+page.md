@@ -3,7 +3,7 @@ title: Examples of customizing Axes
 ---
 
 This page shows many examples of using Axes translated from the [Observable Plot Plot Gallery](https://observablehq.com/@observablehq/plot-gallery).
-It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](www.npmjs.com/package/@observablehq/sample-datasets) package.
+It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](https://www.npmjs.com/package/@observablehq/sample-datasets) package.
 
 
 ## [ggplot2-style axes](https://observablehq.com/@observablehq/plot-ggplot2-style-axes)

@@ -3,8 +3,7 @@ title: Examples of Rule and Tick marks
 ---
 
 This page shows many examples of the use of the `Rule` and `Tick` marks translated from the [Observable Plot Plot Gallery](https://observablehq.com/@observablehq/plot-gallery).
-It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](www.npmjs.com/package/@observablehq/sample-datasets) package;
-it excludes those with `FileAttachment`s added to Observable Notebooks.
+It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](https://www.npmjs.com/package/@observablehq/sample-datasets) package.
 
 
 ## [Candlestick chart](https://observablehq.com/@observablehq/plot-candlestick-chart)

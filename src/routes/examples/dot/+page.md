@@ -3,8 +3,7 @@ title: Examples of Dot mark
 ---
 
 This page shows many examples of the use of the `Dot` mark translated from the [Observable Plot Plot Gallery](https://observablehq.com/@observablehq/plot-gallery).
-It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](www.npmjs.com/package/@observablehq/sample-datasets) package;
-it excludes those with `FileAttachment`s added to Observable Notebooks.
+It only includes examples using the standard demo datasets from the [@observablehq/sample-datasets](https://www.npmjs.com/package/@observablehq/sample-datasets) package.
 
 ## [Scatterplot](https://observablehq.com/@observablehq/plot-scatterplot/2)
 
