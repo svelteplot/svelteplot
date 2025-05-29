@@ -71,7 +71,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 > :warning: Default interactive tooltips aren't currently supported in SveltePlot - see [Issue #101](https://github.com/svelteplot/svelteplot/issues/101)
 
-```svelte live
+```svelte
 <script>
     import { Plot, Dot, RuleY } from 'svelteplot';
     import { page } from '$app/state';
@@ -350,7 +350,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 > :warning: This works in Observable Plot, but SveltePlot complains that the channel `y` is not specified.
 > See [Issue #98](https://github.com/svelteplot/svelteplot/issues/98)
 
-```svelte live
+```svelte
 <script>
     import { binX, Plot, Dot, Frame } from 'svelteplot';
     import { page } from '$app/state';

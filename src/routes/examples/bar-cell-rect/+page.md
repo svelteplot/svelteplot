@@ -231,9 +231,9 @@ Manually fixed:
 
 ## [Stacked percentages](https://observablehq.com/@observablehq/plot-stacked-percentages)
 
-> :warning: This fails to render. I also removed the `TextX` mark.
+> :warning: This fails with error "scale type mismatch for y (needs band)". I also removed the `TextX` mark.
 
-```svelte live
+```svelte
 <script>
     import {
         stackX,

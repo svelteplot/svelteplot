@@ -215,7 +215,7 @@ Contrast with a chart where missing values have been filtered out:
 > :warning: The 'proportion' reducer is not currently implemented ([Issue #96](https://github.com/svelteplot/svelteplot/issues/96))
 > Also, SveltePlot does not currently allow just `y2` (rather than `y`, or `y1` and `y2` jointly) to be set for an Area mark - [Issue #97](https://github.com/svelteplot/svelteplot/issues/97)
 
-```svelte live
+```svelte
 <script>
     import {
         binX,
