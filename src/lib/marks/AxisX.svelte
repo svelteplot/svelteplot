@@ -25,6 +25,8 @@
         tickClass?: ConstantAccessor<string>;
         /** ticks is a shorthand for defining data, tickCount or interval */
         ticks?: number | string | RawValue[];
+        /** set to false or null to disable tick labels */
+        text: boolean | null;
     } & XOR<
             {
                 /** approximate number of ticks to be generated */
@@ -79,6 +81,7 @@
         class: className,
         tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
         tickSpacing,
+        text = true,
         ...options
     }: AxisXMarkProps = $props();
 
@@ -220,6 +223,7 @@
             {tickPadding}
             {tickFontSize}
             {tickClass}
+            {text}
             {options}
             title={useTitle}
             {plot} />

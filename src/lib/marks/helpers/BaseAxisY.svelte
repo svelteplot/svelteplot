@@ -29,6 +29,7 @@
             dy: ConstantAccessor<number>;
         };
         plot: PlotState;
+        text: boolean | null;
     };
 
     let {
@@ -46,7 +47,8 @@
         width,
         title,
         plot,
-        options
+        options,
+        text = true
     }: BaseAxisYProps = $props();
 
     const LINE_ANCHOR = {
@@ -67,16 +69,18 @@
                 element: null as SVGTextElement | null
             };
         });
-        const T = tickObjects.length;
-        for (let i = 0; i < T; i++) {
-            let j = i;
-            // find the preceding tick that was not hidden
-            do {
-                j--;
-            } while (j >= 0 && tickObjects[j].hidden);
-            if (j >= 0) {
-                const tickLabelSpace = Math.abs(tickObjects[i].y - tickObjects[j].y);
-                tickObjects[i].hidden = tickLabelSpace < 15;
+        if (text) {
+            const T = tickObjects.length;
+            for (let i = 0; i < T; i++) {
+                let j = i;
+                // find the preceding tick that was not hidden
+                do {
+                    j--;
+                } while (j >= 0 && tickObjects[j].hidden);
+                if (j >= 0) {
+                    const tickLabelSpace = Math.abs(tickObjects[i].y - tickObjects[j].y);
+                    tickObjects[i].hidden = tickLabelSpace < 15;
+                }
             }
         }
         return tickObjects;
@@ -176,13 +180,15 @@
                         class={tickLineClass}
                         x2={anchor === 'left' ? -tickSize : tickSize} />
                 {/if}
-                <text
-                    bind:this={tickTexts[t]}
-                    class={[textClass, { 'is-left': anchor === 'left' }]}
-                    style={textStyle}
-                    x={(tickSize + tickPadding) * (anchor === 'left' ? -1 : 1)}
-                    dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                    >{Array.isArray(tick.text) ? tick.text.join(' ') : tick.text}</text>
+                {#if text}
+                    <text
+                        bind:this={tickTexts[t]}
+                        class={[textClass, { 'is-left': anchor === 'left' }]}
+                        style={textStyle}
+                        x={(tickSize + tickPadding) * (anchor === 'left' ? -1 : 1)}
+                        dominant-baseline={LINE_ANCHOR[lineAnchor]}
+                        >{Array.isArray(tick.text) ? tick.text.join(' ') : tick.text}</text>
+                {/if}
             </g>
         {/if}
     {/each}

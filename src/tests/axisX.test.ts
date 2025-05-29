@@ -153,4 +153,27 @@ describe('AxisX mark', () => {
         expect(ticks.length).toBe(5);
         expect(tickValues).toStrictEqual(['Jan2000', 'Jul', 'Jan2001', 'Jul', 'Jan2002']);
     });
+
+    it('disable tick texts', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: {
+                    width: 400,
+                    x: { domain: [new Date(2000, 0, 1), new Date(2002, 0, 1)] }
+                },
+                axisArgs: { ticks: '1 month', text: null }
+            }
+        });
+
+        const ticks = container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>;
+        const tickLines = container.querySelectorAll(
+            'g.axis-x > g.tick line'
+        ) as NodeListOf<SVGLineElement>;
+        const tickLabels = container.querySelectorAll(
+            'g.axis-x > g.tick text'
+        ) as NodeListOf<SVGTextElement>;
+        expect(ticks.length).toBe(25);
+        expect(tickLines.length).toBe(25);
+        expect(tickLabels.length).toBe(0);
+    });
 });

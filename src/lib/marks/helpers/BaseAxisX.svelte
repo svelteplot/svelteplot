@@ -33,6 +33,7 @@
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
         };
+        text: boolean;
         plot: PlotState;
     };
 
@@ -50,7 +51,8 @@
         height,
         options,
         plot,
-        title
+        title,
+        text = true
     }: BaseAxisXProps = $props();
 
     function splitTick(tick: string | string[]) {
@@ -86,15 +88,17 @@
             })
         );
         const T = tickObjects.length;
-        for (let i = 0; i < T; i++) {
-            let j = i;
-            // find the preceding tick that was not hidden
-            do {
-                j--;
-            } while (j >= 0 && tickObjects[j].hidden);
-            if (j >= 0) {
-                const tickLabelSpace = Math.abs(tickObjects[i].x - tickObjects[j].x);
-                tickObjects[i].hidden = tickLabelSpace < 15;
+        if (text) {
+            for (let i = 0; i < T; i++) {
+                let j = i;
+                // find the preceding tick that was not hidden
+                do {
+                    j--;
+                } while (j >= 0 && tickObjects[j].hidden);
+                if (j >= 0) {
+                    const tickLabelSpace = Math.abs(tickObjects[i].x - tickObjects[j].x);
+                    tickObjects[i].hidden = tickLabelSpace < 15;
+                }
             }
         }
         return tickObjects;
@@ -102,6 +106,7 @@
 
     $effect(() => {
         untrack(() => [$autoMarginTop, $autoMarginBottom]);
+        if (!text) return;
         const outsideTextAnchor = anchor === 'top' ? 'end' : 'start';
         // measure tick label heights
         const maxLabelHeight =
@@ -144,26 +149,7 @@
 <g class="axis-x">
     {#each positionedTicks as tick, t (t)}
         {#if testFilter(tick.value, options) && !tick.hidden}
-            {@const textLines = tick.text}
-            {@const prevTextLines = t && positionedTicks[t - 1].text}
-            {@const fontSize = resolveProp(tickFontSize, tick)}
             {@const tickClass_ = resolveProp(tickClass, tick.value)}
-            {@const estLabelWidth = max(textLines.map((t) => t.length)) * fontSize * 0.2}
-            {@const moveDown =
-                (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize * 0.35 : 0)) *
-                (anchor === 'bottom' ? 1 : -1)}
-            {@const [textStyle, textClass] = resolveStyles(
-                plot,
-                tick,
-                {
-                    fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
-                    ...options,
-                    fontSize: tickFontSize,
-                    stroke: null
-                },
-                'fill',
-                { x: true }
-            )}
             <g
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.x + tick.dx}, {tickY + tick.dy})"
@@ -182,31 +168,51 @@
                         y2={anchor === 'bottom' ? tickSize : -tickSize} />
                 {/if}
 
-                <text
-                    bind:this={tickTextElements[t]}
-                    transform="translate(0, {moveDown})  rotate({tickRotate})"
-                    style={textStyle}
-                    class={textClass}
-                    x={0}
-                    y={0}
-                    dominant-baseline={tickRotate !== 0
-                        ? 'central'
-                        : anchor === 'bottom'
-                          ? 'hanging'
-                          : 'auto'}>
-                    {#if ticks.length > 0 || t === 0 || t === ticks.length - 1}
-                        {#if textLines.length === 1}
-                            {textLines[0]}
-                        {:else}
-                            {#each textLines as line, i (i)}
-                                <tspan x="0" dy={i ? 12 : 0}
-                                    >{!prevTextLines || prevTextLines[i] !== line
-                                        ? line
-                                        : ''}</tspan>
-                            {/each}
+                {#if text}
+                    {@const textLines = tick.text}
+                    {@const prevTextLines = t && positionedTicks[t - 1].text}
+
+                    {@const moveDown =
+                        (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize * 0.35 : 0)) *
+                        (anchor === 'bottom' ? 1 : -1)}
+                    {@const [textStyle, textClass] = resolveStyles(
+                        plot,
+                        tick,
+                        {
+                            fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
+                            ...options,
+                            fontSize: tickFontSize,
+                            stroke: null
+                        },
+                        'fill',
+                        { x: true }
+                    )}
+                    <text
+                        bind:this={tickTextElements[t]}
+                        transform="translate(0, {moveDown})  rotate({tickRotate})"
+                        style={textStyle}
+                        class={textClass}
+                        x={0}
+                        y={0}
+                        dominant-baseline={tickRotate !== 0
+                            ? 'central'
+                            : anchor === 'bottom'
+                              ? 'hanging'
+                              : 'auto'}>
+                        {#if ticks.length > 0 || t === 0 || t === ticks.length - 1}
+                            {#if textLines.length === 1}
+                                {textLines[0]}
+                            {:else}
+                                {#each textLines as line, i (i)}
+                                    <tspan x="0" dy={i ? 12 : 0}
+                                        >{!prevTextLines || prevTextLines[i] !== line
+                                            ? line
+                                            : ''}</tspan>
+                                {/each}
+                            {/if}
                         {/if}
-                    {/if}
-                </text>
+                    </text>
+                {/if}
             </g>
         {/if}
     {/each}
