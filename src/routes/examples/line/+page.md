@@ -212,7 +212,8 @@ Contrast with a chart where missing values have been filtered out:
 
 ## [Overlapping density estimations](https://observablehq.com/@observablehq/plot-overlapping-density-estimations)
 
-> :warning: Fails with error 'unknown reducer proportion in AreaY'
+> :warning: The 'proportion' reducer is not currently implemented ([Issue #96](https://github.com/svelteplot/svelteplot/issues/96))
+> Also, SveltePlot does not currently allow just `y2` (rather than `y`, or `y1` and `y2` jointly) to be set for an Area mark - [Issue #97](https://github.com/svelteplot/svelteplot/issues/97)
 
 ```svelte live
 <script>
@@ -315,6 +316,7 @@ Contrast with a chart where missing values have been filtered out:
 ## [Variable fill area](https://observablehq.com/@observablehq/plot-variable-fill-area)
 
 > :warning: This renders incorrectly: there should be vertical strips in different colors.
+> SveltePlot does not currently support variable fills for areas - see [Issue #94](https://github.com/svelteplot/svelteplot/issues/94)
 
 ```svelte live
 <script>
