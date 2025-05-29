@@ -27,7 +27,8 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 ## [Lollipop](https://observablehq.com/@observablehq/plot-lollipop)
 
-> :warning: This seems to be interpreting "letter" as a literal value, rather than the name of a field.
+> :warning: These lines are full-height, ignoring the `y` channel; `y1` has to be used instead.
+> See [Issue #93](https://github.com/svelteplot/svelteplot/issues/93)
 
 ```svelte live
 <script>
@@ -38,15 +39,13 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 </script>
 
 <Plot x={{  label: null,  tickPadding: 6,  tickSize: 0}} y={{  percent: true}} >
-  <RuleX data={alphabet} x="letter" y="frequency" strokeWidth={2} />
+  <RuleX data={alphabet} x="letter" y1="frequency" strokeWidth={2} />
   <Dot data={alphabet} x="letter" y="frequency" fill="currentColor" r={4} />
 </Plot>
 ```
 
 
 ## [Bar and tick](https://observablehq.com/@observablehq/plot-bar-and-tick)
-
-> :warning: This fails with error "scale type mismatch for x (needs band)".
 
 ```svelte live
 <script>
