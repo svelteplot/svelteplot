@@ -27,8 +27,6 @@ It only includes examples using the standard demo datasets from the [@observable
 
 ## [Datawrapper-style date axis](https://observablehq.com/@observablehq/plot-datawrapper-style-date-axis)
 
-> :warning: This isn't rendering correctly - there should be ticks every 3 months, labelled with the month name.
-
 ```svelte live
 <script>
     import { Plot, AxisX, Line, GridX, RuleY } from 'svelteplot';
@@ -75,7 +73,7 @@ It only includes examples using the standard demo datasets from the [@observable
 ## [Data based axis](https://observablehq.com/@observablehq/plot-data-based-axis)
 
 > :warning: This isn't rendering correctly - the `x` channel isn't affecting the positioned where the y-axis lines end (and labels are positioned).
-
+> See [Issue #76](https://github.com/svelteplot/svelteplot/issues/76)
 
 ```svelte live
 <script>
@@ -105,6 +103,7 @@ It only includes examples using the standard demo datasets from the [@observable
 ## [Major and minor axis ticks](https://observablehq.com/@observablehq/plot-major-and-minor-axis-ticks)
 
 > :warning: This isn't rendering correctly - the `text: null` is being ignored, leading to labels being over-plotted.
+> See [Issue #77](https://github.com/svelteplot/svelteplot/issues/77)
 
 ```svelte live
 <script>
