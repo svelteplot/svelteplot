@@ -69,7 +69,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 ## [Scatterplot with interactive tips](https://observablehq.com/@observablehq/scatterplot-with-interactive-tips)
 
-> :warning: This doesn't work.
+> :warning: Default interactive tooltips aren't currently supported in SveltePlot - see [Issue #101](https://github.com/svelteplot/svelteplot/issues/101)
 
 ```svelte live
 <script>
@@ -141,7 +141,8 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 ## [Ordinal scatterplot](https://observablehq.com/@observablehq/plot-ordinal-scatterplot)
 
-> :warning: The radius scale doesn't seem to be working, or the faceting by sex isn't working. The x-axis order is also reversed from Observable Plot.
+> :warning: Grouping based on the `color` doesn't work - see [Issue #100](https://github.com/svelteplot/svelteplot/issues/100).
+> The x-axis order is also reversed from Observable Plot.
 
 ```svelte live
 <script>
@@ -172,7 +173,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 ## [Linear regression](https://observablehq.com/@observablehq/plot-linear-regression-simpson)
 
-> :warning: Observable Plot calls this mark _linearRegressionY_ rather than _RegressionY_.
+> :warning: Observable Plot calls this mark _linearRegressionY_ rather than _RegressionY_ - see [Issue #91](https://github.com/svelteplot/svelteplot/issues/91)
 
 ```svelte live
 <script>
@@ -233,7 +234,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 
 ## [Hexbin heatmap](https://observablehq.com/@observablehq/plot-olympians-hexbin)
 
-> :warning: Svelte Plot doesn't have a Hexagon mark, or hexbin transform.
+> :warning: Svelte Plot doesn't have a Hexagon mark, or hexbin transform. See [Issue #80](https://github.com/svelteplot/svelteplot/issues/80).
 
 ```svelte
 <script>
@@ -262,6 +263,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 ## [Dodge cars (beeswarm)](https://observablehq.com/@observablehq/plot-dodge-cars)
 
 > :warning: Svelte Plot doesn't have a dodgeY transform.
+> See [Issue #16](https://github.com/svelteplot/svelteplot/issues/16).
 
 ```svelte
 <script>
@@ -288,6 +290,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 ## [2D faceting](https://observablehq.com/@observablehq/plot-two-dimensional-faceting)
 
 > :warning: Unlike Observable Plot, silently drops 11 penguins where sex is `null`, so only plots 2 columns.
+> See [Issue #99](https://github.com/svelteplot/svelteplot/issues/99)
 
 ```svelte live
 <script>
@@ -313,6 +316,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 ## [Non-faceted marks](https://observablehq.com/@observablehq/plot-non-faceted-marks)
 
 > :warning: Unlike Observable Plot, silently drops 11 penguins where sex is `null`, so only plots 2 columns.
+> See [Issue #99](https://github.com/svelteplot/svelteplot/issues/99)
 
 ```svelte live
 <script>
@@ -344,6 +348,7 @@ it excludes those with `FileAttachment`s added to Observable Notebooks.
 ## [Dot histogram](https://observablehq.com/@observablehq/plot-dot-bins)
 
 > :warning: This works in Observable Plot, but SveltePlot complains that the channel `y` is not specified.
+> See [Issue #98](https://github.com/svelteplot/svelteplot/issues/98)
 
 ```svelte live
 <script>
