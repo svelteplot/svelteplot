@@ -108,7 +108,7 @@ Manually fixed:
 
 ## [Olympians grouped bar chart](https://observablehq.com/@observablehq/plot-olympians-grouped-bar-chart)
 
-> :warning: The bars don't render.
+> :warning: For this to work I had to changed `y2: 'count`  to `y: 'count'`
 
 ```svelte live
 <script>
@@ -137,7 +137,7 @@ Manually fixed:
                 fx: 'sport',
                 fill: 'sex'
             },
-            { y2: 'count' }
+            { y: 'count' }
         )} />
     <RuleY data={[0]} />
 </Plot>
@@ -203,6 +203,7 @@ Manually fixed:
 ## [Stacked unit chart](https://observablehq.com/@observablehq/plot-stacked-unit-chart)
 
 > :warning: This fails to render, with an error about "duplicate key in BarX.svelte".
+> See [Issue #102](https://github.com/svelteplot/svelteplot/issues/102)
 
 ```svelte
 <script>
@@ -284,8 +285,7 @@ Manually fixed:
 
 ## [Overlapping histogram](https://observablehq.com/@observablehq/plot-overlapping-histogram)
 
-> :warning: This isn't rendering correctly: I think that rather than rendering a bar up from the x-axis up to the value, it is rendering a bar up form the value to the top of the plot.
-
+> :warning: I had to change `y2: 'count'` to `y1: 'count'` for this to work - see [Issue #103](https://github.com/svelteplot/svelteplot/issues/103)
 
 ```svelte live
 <script>
@@ -305,7 +305,7 @@ Manually fixed:
                 mixBlendMode: 'multiply'
             },
             {
-                y2: 'count'
+                y1: 'count'
             }
         )} />
     <RuleY data={[0]} />
