@@ -102,9 +102,6 @@ It only includes examples using the standard demo datasets from the [@observable
 
 ## [Major and minor axis ticks](https://observablehq.com/@observablehq/plot-major-and-minor-axis-ticks)
 
-> :warning: This isn't rendering correctly - the `text: null` is being ignored, leading to labels being over-plotted.
-> See [Issue #77](https://github.com/svelteplot/svelteplot/issues/77)
-
 ```svelte live
 <script>
     import { Plot, AxisX, AxisY, Line, GridY, RuleY } from 'svelteplot';
