@@ -14,6 +14,26 @@ The `cumsum` expression stands for Cumulative Sum. It represents how your data
 stacks up and changes. At any given point, you get the total sum of all previous
 data points.
 
+```svelte live
+<script>
+    import {
+        Plot,
+        Line,
+        RuleY,
+        mapY,
+        stackY
+    } from 'svelteplot';
+
+    import { page } from '$app/state';
+    let { aapl } = $derived(page.data.data);
+</script>
+
+<Plot>
+  <RuleY y={0} />
+  <Line {...mapY({ data: aapl, x: 'Date', y:'Volume' }, 'cumsum')}  />
+</Plot>
+```
+
 ```svelte
 <script>
     import {
@@ -97,7 +117,7 @@ Here, we are visualizing the top 10 fastest cars, and their ranking. As you can
 see, the Y axis does not output the actual seconds to reach 60mph, but rather answers the question "in what
 position does each car end up?".
 
-Sorting the cars before passing them to Plot is important. It's not necessary.
+Sorting the cars before passing them to Plot is important, though not strictly necessary.
 The rank function just assigns a number to each datapoint based on the position
 it would occupy with the property provided (in this case, `"0-60 mph (s)"`). Had
 we not sorted the array, the visualization would look like this:
