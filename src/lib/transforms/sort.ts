@@ -5,6 +5,7 @@ import { shuffler } from 'd3-array';
 import { randomLcg } from 'd3-random';
 
 export const SORT_KEY = Symbol('sortKey');
+export const IS_SORTED = Symbol('isSorted');
 
 export function sort(
     { data, ...channels }: TransformArg<DataRecord>,
@@ -38,6 +39,7 @@ export function sort(
                 .map(({ [SORT_KEY]: a, ...rest }) => rest),
 
             ...channels,
+            [IS_SORTED]: sort,
             // set the sort channel to null to disable the implicit alphabetical
             // ordering of ordinal domains, and also to avoid double sorting in case
             // this transform is used "outside" a mark

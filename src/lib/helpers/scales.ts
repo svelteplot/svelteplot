@@ -30,6 +30,7 @@ import isDataRecord from './isDataRecord.js';
 
 import { createProjection } from './projection.js';
 import { maybeInterval } from './autoTicks.js';
+import { IS_SORTED } from 'svelteplot/transforms/sort.js';
 
 /**
  * compute the plot scales
@@ -183,7 +184,10 @@ export function createScale<T extends ScaleOptions>(
         // we're deliberately checking for !== undefined and not for != null
         // since the explicit sort transforms like shuffle will set the
         // sort channel to null to we know that there's an explicit order
-        if (mark.channels.sort !== undefined) sortOrdinalDomain = false;
+        if (name === 'y') console.log(mark.type, mark.options[IS_SORTED]);
+        if (mark.options[IS_SORTED] != null) {
+            sortOrdinalDomain = false;
+        }
         for (const channel of mark.channels) {
             // channelOptions can be passed as prop, but most often users will just
             // pass the channel accessor or constant value, so we may need to wrap

@@ -445,7 +445,7 @@ export type PlotDefaults = {
     css: (d: string) => string | undefined;
 };
 
-export type GenericMarkOptions = Record<string, any>;
+export type GenericMarkOptions = Record<string | symbol, any>;
 
 export type DataRecord = Record<string | symbol, RawValue> & {
     ___orig___?: RawValue | [RawValue, RawValue];
@@ -657,6 +657,15 @@ export type BaseMarkProps = Partial<{
     dy: ConstantAccessor<number>;
     fill: ConstantAccessor<string>;
     fillOpacity: ConstantAccessor<number>;
+    sort:
+        | string
+        | ConstantAccessor<RawValue>
+        | {
+              /** sort data using an already defined channel */
+              channel: string;
+              /** sort order */
+              order?: 'ascending' | 'descending';
+          };
     stroke: ConstantAccessor<string>;
     strokeWidth: ConstantAccessor<number>;
     strokeOpacity: ConstantAccessor<number>;

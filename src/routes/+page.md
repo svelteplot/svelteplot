@@ -5,11 +5,14 @@ heroImage: /logo.png
 tagline: A Svelte-native visualization framework based on the layered grammar of graphics principles.
 actions:
     - label: Getting started
-      type: flat
+      type: primary
       to: /getting-started
     - label: Why SveltePlot?
       to: /why-svelteplot
-      type: primary
+      type: flat
+    - label: Examples
+      to: /examples
+      type: flat
 _features:
     - title: Marks
       description: SveltePlot comes with a powerful set of built-in marks for building for your visualizations

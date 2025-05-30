@@ -167,6 +167,7 @@
     .swatch {
         display: inline-flex;
         align-items: center;
+        column-gap: 0.3rem;
     }
     .item-label {
         vertical-align: super;

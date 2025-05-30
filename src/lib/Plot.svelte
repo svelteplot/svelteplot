@@ -117,7 +117,7 @@
             scales,
             ...restProps
         })}
-            <svelte:boundary onerror={(err) => console.warn(err)}>
+            <svelte:boundary onerror={(err) => console.error(err)}>
                 <!-- implicit axes -->
                 {#if !hasProjection && !hasExplicitAxisX}
                     {#if options.axes && (options.x.axis === 'top' || options.x.axis === 'both')}

@@ -51,7 +51,6 @@
 
     const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
     const { dotRadius } = getContext<PlotDefaults>('svelteplot/_defaults');
-    let testFacet = $derived(getTestFacet());
 
     const args = $derived(
         // todo: move sorting to Mark
@@ -84,7 +83,7 @@
     defaults={{ r: dotRadius, symbol: 'circle' }}
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
-        <g class="dots {className || ''}">
+        <g class="dot {className || ''}">
             {#if canvas}
                 <DotCanvas data={scaledData} {mark} />
             {:else}

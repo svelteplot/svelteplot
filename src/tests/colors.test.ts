@@ -27,11 +27,11 @@ describe('Colors', () => {
                 colorOptions: {}
             }
         });
-        const dots = container.querySelectorAll('g.dots > path') as NodeListOf<SVGPathElement>;
+        const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
         expect(dots.length).toBe(2);
         const styles = Array.from(dots).map(getDotStyle);
-        expect(styles[0].fill).toBe(observable10[0]);
-        expect(styles[1].fill).toBe(observable10[1]);
+        expect(styles[0].fill).toBe(observable10[1]);
+        expect(styles[1].fill).toBe(observable10[0]);
     });
 
     it('set custom scheme as object', () => {
@@ -64,12 +64,12 @@ describe('Colors', () => {
                 }
             }
         });
-        const dots = container.querySelectorAll('g.dots > path') as NodeListOf<SVGPathElement>;
+        const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
         expect(dots.length).toBe(3);
         const styles = Array.from(dots).map(getDotStyle);
         expect(styles[0].fill).toBe('green');
         expect(styles[1].fill).toBe('violet');
-        expect(styles[2].fill).toBe('#cccccc');
+        expect(styles[2].fill).toBe('#cccccc99');
     });
 });
 
