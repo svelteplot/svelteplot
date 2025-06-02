@@ -140,8 +140,7 @@ It only includes examples using the standard demo datasets from the [@observable
 
 ## [Ordinal scatterplot](https://observablehq.com/@observablehq/plot-ordinal-scatterplot)
 
-> :warning: Grouping based on the `color` doesn't work - see [Issue #100](https://github.com/svelteplot/svelteplot/issues/100).
-> The x-axis order is also reversed from Observable Plot.
+> The x-axis order is reversed from Observable Plot.
 
 ```svelte live
 <script>
