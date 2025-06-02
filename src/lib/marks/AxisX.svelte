@@ -99,7 +99,7 @@
     const ticks: RawValue[] = $derived(
         data.length > 0
             ? // use custom tick values if user passed any as prop
-              data
+              Array.from(new Set(data))
             : // use custom scale tick values if user passed any as plot scale option
               autoTicks(
                   plot.scales.x.type,

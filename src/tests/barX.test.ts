@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import BarXTest from './barX.test.svelte';
-import { parseSVG, makeAbsolute } from 'svg-path-parser';
+import { getPathDims, getRectDims } from './utils';
 
 const testData = [
     {
@@ -146,37 +146,3 @@ describe('BarX mark', () => {
         expect(labels.sort()).toEqual(['2019', '2020', '2021', '2022', '2023', '2024']);
     });
 });
-
-function getRectDims(rect: SVGRectElement) {
-    const t = rect
-        ?.getAttribute('transform')
-        ?.match(/translate\((\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\)/);
-    return {
-        x: Math.round(+t[1]),
-        y: Math.round(+t[2]),
-        w: Math.round(+rect.getAttribute('width')),
-        h: Math.round(+rect.getAttribute('height')),
-        fill: rect.style.fill,
-        stroke: rect.style.stroke,
-        strokeWidth: rect.style.strokeWidth
-    };
-}
-
-function getPathDims(path: SVGPathElement) {
-    const r = makeAbsolute(parseSVG(path.getAttribute('d')));
-    const x = r.flatMap((d) => [d.x, d.x0, d.x1]).filter((x) => x != null);
-    const y = r.flatMap((d) => [d.y, d.y0, d.y1]).filter((y) => y != null);
-    const t = path
-        ?.getAttribute('transform')
-        ?.match(/translate\((\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\)/);
-    if (!r || !t) return { x: NaN, y: NaN, w: NaN, h: NaN };
-    return {
-        x: Math.round(Math.min(...x)),
-        y: Math.round(Math.min(...y)),
-        w: Math.round(Math.max(...x) - Math.min(...x)),
-        h: Math.round(Math.max(...y) - Math.min(...y)),
-        fill: path.style.fill,
-        stroke: path.style.stroke,
-        strokeWidth: path.style.strokeWidth
-    };
-}

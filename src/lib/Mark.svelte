@@ -56,7 +56,7 @@
 
     const channelsWithFacets: ScaledChannelName[] = $derived([...channels, 'fx', 'fy']);
 
-    const { addMark, updateMark, updatePlotState, removeMark, getTopLevelFacet, getPlotState } =
+    const { addMark, removeMark, getTopLevelFacet, getPlotState } =
         getContext<PlotContext>('svelteplot');
 
     const plot = $derived(getPlotState());
@@ -258,16 +258,17 @@
                 if (options?.[channel] != null && out[channel] === undefined) {
                     // resolve value
                     const value = row[channel];
-
                     const scaled = usedScales[channel]
                         ? scale === 'x'
                             ? projectX(channel as 'x' | 'x1' | 'x2', plot.scales, value)
                             : scale === 'y'
                               ? projectY(channel as 'y' | 'y1' | 'y1', plot.scales, value)
-                              : plot.scales[scale].fn(value)
+                              : scale === 'color' && !isValid(value)
+                                ? plot.options.color.unknown
+                                : plot.scales[scale].fn(value)
                         : value;
 
-                    out.valid = out.valid && isValid(value);
+                    out.valid = out.valid && (scale === 'color' || isValid(value));
 
                     // apply dx/dy transform
                     out[channel] =

@@ -62,7 +62,7 @@
         initialWidth: 500,
         inset: 0,
         colorScheme: 'turbo',
-        unknown: '#cccccc',
+        unknown: '#cccccc99',
         dotRadius: 3,
         frame: false,
         axes: true,
@@ -450,7 +450,7 @@
                 padding: 0,
                 align: 0
             },
-            color: { type: 'auto' },
+            color: { type: 'auto', unknown: DEFAULTS.unknown },
             length: { type: 'linear' },
             symbol: { type: 'ordinal' },
             fx: { type: 'band', axis: 'top' },

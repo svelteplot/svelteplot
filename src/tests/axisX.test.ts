@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import AxisXTest from './axisX.test.svelte';
+import { getTranslate } from './utils';
 
 describe('AxisX mark', () => {
     it('default axis', () => {
@@ -175,5 +176,42 @@ describe('AxisX mark', () => {
         expect(ticks.length).toBe(25);
         expect(tickLines.length).toBe(25);
         expect(tickLabels.length).toBe(0);
+    });
+
+    it('sorts ordinal ticks by default', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: {
+                    width: 400
+                },
+                axisArgs: { data: ['C', 'A', 'A', 'B', 'B', 'C', 'B', 'C'] }
+            }
+        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBe(3);
+        ticks.sort((a, b) => getTranslate(a)[0] - getTranslate(b)[0]);
+        const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(tickValues).toStrictEqual(['A', 'B', 'C']);
+    });
+
+    it('does not ordinal ticks if turned off', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: {
+                    width: 400,
+                    x: { sort: false }
+                },
+                axisArgs: { data: ['C', 'A', 'A', 'B', 'B', 'C', 'B', 'C'] }
+            }
+        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBe(3);
+        ticks.sort((a, b) => getTranslate(a)[0] - getTranslate(b)[0]);
+        const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(tickValues).toStrictEqual(['C', 'A', 'B']);
     });
 });

@@ -1,9 +1,9 @@
 import { loadDatasets, loadJSON } from '$lib/helpers/data.js';
-import type { PageLoad } from './$types.js';
+import type { PageServerLoad } from '../$types';
 
 export const ssr = true;
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch }) => {
     return {
         data: {
             world: await loadJSON(fetch, 'countries-110m'),
@@ -11,11 +11,13 @@ export const load: PageLoad = async ({ fetch }) => {
             ...(await loadDatasets(
                 [
                     'aapl',
+                    'alphabet',
                     'beagle',
                     'bls',
                     'co2',
                     'crimea',
                     'driving',
+                    'languages',
                     'penguins',
                     'riaa',
                     'stateage',
