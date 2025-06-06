@@ -95,6 +95,26 @@ Seattle temperatures
 </Plot>
 ```
 
+```svelte
+<Plot
+    padding={0}
+    aspectRatio={1}
+    y={{
+        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        tickFormat: formatMonth('en', 'short')
+    }}>
+    <Cell
+        data={seattle}
+        filter={(d) => d.date.getUTCFullYear() === 2015}
+        x={(d) => d.date.getUTCDate()}
+        y={(d) => d.date.getUTCMonth()}
+        fill="temp_max"
+        inset={0.5} />
+</Plot>
+```
+
+[fork](https://svelte.dev/playground/6e1188793b71467e94308d57503c15b4?version=5.33.14)
+
 ```svelte live
 <script>
     import { Plot, Cell, Text } from 'svelteplot';

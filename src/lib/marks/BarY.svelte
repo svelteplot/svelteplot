@@ -2,34 +2,25 @@
     @component
     For vertical column charts using a band scale as x axis
 -->
-<script module lang="ts">
-    import type {
-        PlotContext,
-        BaseMarkProps,
-        BaseRectMarkProps,
-        ChannelAccessor,
-        DataRow,
-        PlotDefaults
-    } from '../types.js';
 
-    export type BarYMarkProps = BaseMarkProps &
-        LinkableMarkProps &
-        BaseRectMarkProps & {
-            data: DataRow[];
-            x?: ChannelAccessor;
-            y?: ChannelAccessor;
-            y1?: ChannelAccessor;
-            y2?: ChannelAccessor;
-            stack?: StackOptions;
-            /**
-             * Converts y into y1/y2 ranges based on the provided interval. Disables the
-             * implicit stacking
-             */
-            interval?: number | string;
-        };
-</script>
+<script lang="ts" generics="Datum extends DataRow">
+    interface BarYMarkProps
+        extends BaseMarkProps<Datum>,
+            LinkableMarkProps<Datum>,
+            BaseRectMarkProps<Datum> {
+        data: Datum[];
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
+        stack?: StackOptions;
+        /**
+         * Converts y into y1/y2 ranges based on the provided interval. Disables the
+         * implicit stacking
+         */
+        interval?: number | string;
+    }
 
-<script lang="ts">
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
     import { intervalY, stackY, recordizeY, sort } from '$lib/index.js';
@@ -37,6 +28,15 @@
     import type { StackOptions } from '$lib/transforms/stack.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
+    import type {
+        PlotContext,
+        BaseMarkProps,
+        BaseRectMarkProps,
+        ChannelAccessor,
+        DataRow,
+        PlotDefaults,
+        LinkableMarkProps
+    } from '../types.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

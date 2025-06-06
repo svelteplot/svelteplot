@@ -2,22 +2,27 @@
     @component
     Useful for adding SVG text labels to your plot.
 -->
-<script module lang="ts">
-    export type TextMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x: ChannelAccessor;
-        y: ChannelAccessor;
+
+<script lang="ts" generics="Datum extends DataRecord">
+    interface TextMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        data: Datum[];
+        x: ChannelAccessor<Datum>;
+        y: ChannelAccessor<Datum>;
         children?: Snippet;
-        text: ConstantAccessor<string>;
-        title?: ConstantAccessor<string>;
+        text: ConstantAccessor<string | null | false | undefined, Datum>;
+        title?: ConstantAccessor<string, Datum>;
+        /**
+         * the font size of the text
+         */
+        fontSize?: ConstantAccessor<number, Datum>;
         /**
          * if you want to apply class names to individual text elements
          */
-        textClass?: ConstantAccessor<string>;
+        textClass?: ConstantAccessor<string, Datum>;
         /**
          * the line anchor for vertical position; top, bottom, or middle
          */
-        lineAnchor?: ConstantAccessor<'bottom' | 'top' | 'middle'>;
+        lineAnchor?: ConstantAccessor<'bottom' | 'top' | 'middle', Datum>;
         frameAnchor?: ConstantAccessor<
             | 'bottom'
             | 'top'
@@ -26,12 +31,11 @@
             | 'top-left'
             | 'bottom-left'
             | 'top-right'
-            | 'bottom-right'
+            | 'bottom-right',
+            Datum
         >;
-    };
-</script>
+    }
 
-<script lang="ts">
     import { getContext, type Snippet } from 'svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import type {
@@ -40,11 +44,15 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        PlotDefaults
+        PlotDefaults,
+        TransformArg,
+        RawValue,
+        LinkableMarkProps
     } from '../types.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
     import { sort } from '$lib/index.js';
+    import Anchor from './helpers/Anchor.svelte';
 
     const DEFAULTS = {
         fontSize: 12,
@@ -56,7 +64,7 @@
     let markProps: TextMarkProps = $props();
 
     const {
-        data = [{}],
+        data = [{} as Datum],
         class: className = '',
         ...options
     }: TextMarkProps = $derived({
@@ -77,7 +85,7 @@
         sort({
             data,
             ...options
-        })
+        } as unknown as TransformArg<DataRecord>)
     );
 </script>
 
@@ -95,7 +103,7 @@
         'fillOpacity'
     ]}
     required={['x', 'y']}
-    {...args}>
+    {...args as unknown as TextMarkProps}>
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple class="text {className}" length={className ? 2 : args.data.length}>
             {#each scaledData as d, i (i)}
@@ -162,37 +170,39 @@
                         usedScales
                     )}
 
-                    {#if textLines.length > 1}
-                        <!-- multiline text-->
-                        {@const fontSize = resolveProp(args.fontSize, d.datum) || 12}
-                        <text
-                            class={[textClassName]}
-                            dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                            transform="translate({Math.round(x + dx)},{Math.round(
-                                y +
-                                    dy -
-                                    (lineAnchor === 'bottom'
-                                        ? textLines.length - 1
-                                        : lineAnchor === 'middle'
-                                          ? (textLines.length - 1) * 0.5
-                                          : 0) *
-                                        fontSize
-                            )})"
-                            >{#each textLines as line, l (l)}<tspan
-                                    x="0"
-                                    dy={l ? fontSize : 0}
-                                    class={styleClass}
-                                    {style}>{line}</tspan
-                                >{/each}{#if title}<title>{title}</title>{/if}</text>
-                    {:else}
-                        <!-- singleline text-->
-                        <text
-                            class={[textClassName, styleClass]}
-                            dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                            transform="translate({Math.round(x + dx)},{Math.round(y + dy)})"
-                            {style}
-                            >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
-                    {/if}
+                    <Anchor {options} datum={d?.datum}>
+                        {#if textLines.length > 1}
+                            <!-- multiline text-->
+                            {@const fontSize = resolveProp(args.fontSize, d.datum) || 12}
+                            <text
+                                class={[textClassName]}
+                                dominant-baseline={LINE_ANCHOR[lineAnchor]}
+                                transform="translate({Math.round(x + dx)},{Math.round(
+                                    y +
+                                        dy -
+                                        (lineAnchor === 'bottom'
+                                            ? textLines.length - 1
+                                            : lineAnchor === 'middle'
+                                              ? (textLines.length - 1) * 0.5
+                                              : 0) *
+                                            fontSize
+                                )})"
+                                >{#each textLines as line, l (l)}<tspan
+                                        x="0"
+                                        dy={l ? fontSize : 0}
+                                        class={styleClass}
+                                        {style}>{line}</tspan
+                                    >{/each}{#if title}<title>{title}</title>{/if}</text>
+                        {:else}
+                            <!-- singleline text-->
+                            <text
+                                class={[textClassName, styleClass]}
+                                dominant-baseline={LINE_ANCHOR[lineAnchor]}
+                                transform="translate({Math.round(x + dx)},{Math.round(y + dy)})"
+                                {style}
+                                >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
+                        {/if}
+                    </Anchor>
                 {/if}
             {/each}
         </GroupMultiple>
