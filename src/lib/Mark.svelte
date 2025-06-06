@@ -1,6 +1,24 @@
-<script lang="ts">
-    import { getContext, untrack, type Snippet } from 'svelte';
+<script lang="ts" generics="Datum extends DataRecord">
+    interface MarkProps extends Partial<BaseMarkProps<Datum>> {
+        data?: Datum[];
+        automatic?: boolean;
+        type: MarkType;
+        channels?: ScaledChannelName[];
+        required?: ScaledChannelName[];
+        requiredScales?: Partial<Record<ScaleName, ScaleType[]>>;
+        children?: Snippet<
+            [
+                {
+                    mark: Mark<GenericMarkOptions>;
+                    usedScales: ReturnType<typeof getUsedScales>;
+                    scaledData: ScaledDataRecord[];
+                }
+            ]
+        >;
+        defaults?: Partial<Record<ScaledChannelName, RawValue>>;
+    }
 
+    import { getContext, untrack, type Snippet } from 'svelte';
     import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
     import type {
         ScaledChannelName,
@@ -22,26 +40,6 @@
     import { getUsedScales, projectXY, projectX, projectY } from './helpers/scales.js';
     import { testFilter, isValid } from '$lib/helpers/index.js';
     import { resolveChannel, resolveProp } from './helpers/resolve.js';
-
-    type MarkProps = {
-        data?: DataRecord[];
-        automatic?: boolean;
-        type: MarkType;
-        channels?: ScaledChannelName[];
-        required?: ScaledChannelName[];
-        requiredScales?: Partial<Record<ScaleName, ScaleType[]>>;
-        children?: Snippet<
-            [
-                {
-                    mark: Mark<GenericMarkOptions>;
-                    usedScales: ReturnType<typeof getUsedScales>;
-                    scaledData: ScaledDataRecord[];
-                }
-            ]
-        >;
-        defaults?: Partial<Record<ScaledChannelName, RawValue>>;
-    } & Partial<Record<ChannelName, ChannelAccessor>> &
-        Partial<BaseMarkProps>;
 
     let {
         data = [],
@@ -134,13 +132,13 @@
     const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
     const testFacet = $derived(getTestFacet());
 
-    const resolvedData: ResolvedDataRecord[] = $derived(
+    const resolvedData: ResolvedDataRecord<Datum>[] = $derived(
         data
             .map((d, i) => ({ ...d, [INDEX]: i }))
             .flatMap((row) => {
-                const channels = options as Record<ChannelName, ChannelAccessor>;
+                const channels = options as Record<ChannelName, ChannelAccessor<Datum>>;
                 if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
-                const out: ResolvedDataRecord = {
+                const out: ResolvedDataRecord<Datum> = {
                     datum: row
                 };
                 for (const [channel] of Object.entries(CHANNEL_SCALE) as [
@@ -208,7 +206,7 @@
      */
     const scaledData = $derived(
         resolvedData.flatMap((row) => {
-            const out: ScaledDataRecord = {
+            const out: ScaledDataRecord<Datum> = {
                 datum: row.datum,
                 valid: true
             };

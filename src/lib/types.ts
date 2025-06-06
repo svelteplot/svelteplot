@@ -1,40 +1,46 @@
 import type { ScaleBand, ScaleLinear, ScaleOrdinal } from 'd3-scale';
-import type { Snippet } from 'svelte';
+import type { ComponentProps, Snippet } from 'svelte';
 import type { MouseEventHandler } from 'svelte/elements';
 import type { MarkerShape } from './marks/helpers/Marker.svelte';
 import type { Writable } from 'svelte/store';
 import type * as CSS from 'csstype';
-import type { AreaMarkProps } from './marks/Area.svelte';
-import type { ArrowMarkProps } from './marks/Arrow.svelte';
-import type { AxisXMarkProps } from './marks/AxisX.svelte';
-import type { AxisYMarkProps } from './marks/AxisY.svelte';
-import type { BarXMarkProps } from './marks/BarX.svelte';
-import type { CellMarkProps } from './marks/Cell.svelte';
-import type { DotMarkProps } from './marks/Dot.svelte';
-import type { FrameMarkProps } from './marks/Frame.svelte';
-import type { GeoMarkProps } from './marks/Geo.svelte';
-import type { GraticuleMarkProps } from './marks/Graticule.svelte';
-import type { LineMarkProps } from './marks/Line.svelte';
-import type { LinkMarkProps } from './marks/Link.svelte';
-import type { RectMarkProps } from './marks/Rect.svelte';
-import type { RuleXMarkProps } from './marks/RuleX.svelte';
-import type { SphereMarkProps } from './marks/Sphere.svelte';
-import type { SpikeMarkProps } from './marks/Spike.svelte';
-import type { TextMarkProps } from './marks/Text.svelte';
-import type { TickXMarkProps } from './marks/TickX.svelte';
-import type { VectorMarkProps } from './marks/Vector.svelte';
-import type { BrushMarkProps } from './marks/Brush.svelte';
-import type { BrushXMarkProps } from './marks/BrushX.svelte';
-import type { BrushYMarkProps } from './marks/BrushY.svelte';
-import type { RectXMarkProps } from './marks/RectX.svelte';
-import type { RectYMarkProps } from './marks/RectY.svelte';
-import type { RuleYMarkProps } from './marks/RuleY.svelte';
-import type { TickYMarkProps } from './marks/TickY.svelte';
-import type { GridYMarkProps } from './marks/GridY.svelte';
-import type { GridXMarkProps } from './marks/GridX.svelte';
-import type { PointerMarkProps } from './marks/Pointer.svelte';
-import type { BoxXMarkProps } from './marks/BoxX.svelte';
-import type { BoxYMarkProps } from './marks/BoxY.svelte';
+
+import type {
+    Area,
+    AreaX,
+    AreaY,
+    Arrow,
+    AxisX,
+    AxisY,
+    BarX,
+    BarY,
+    BoxX,
+    BoxY,
+    Brush,
+    BrushX,
+    BrushY,
+    Cell,
+    Dot,
+    Frame,
+    Geo,
+    Graticule,
+    GridX,
+    GridY,
+    Line,
+    Link,
+    Pointer,
+    Rect,
+    RectX,
+    RectY,
+    RuleX,
+    RuleY,
+    Sphere,
+    Spike,
+    Text,
+    TickX,
+    TickY,
+    Vector
+} from './marks';
 
 export type MarkType =
     | 'area'
@@ -100,7 +106,7 @@ export type Mark<T> = {
     type: MarkType;
     channels: ScaledChannelName[];
     scales: Set<ScaleName>;
-    data: DataRecord[];
+    data: DataRecord<T>[];
     options: T;
 };
 
@@ -365,7 +371,7 @@ export type PlotOptions = {
          * The data to facet by. Turns on automatic faceting for all marks that
          * use the exact same data (===)
          */
-        data: DataRecord[];
+        data: DataRecord<any>[];
         x: ChannelAccessor;
         y: ChannelAccessor;
     }>;
@@ -432,22 +438,28 @@ export type PlotOptions = {
 
 export type GenericMarkOptions = Record<string | symbol, any>;
 
-export type DataRecord = Record<string | symbol, RawValue> & {
+export type DataRecord<T = Record<string | symbol, RawValue>> = T & {
     ___orig___?: RawValue | [RawValue, RawValue];
 };
 
-export type ResolvedDataRecord = Partial<Record<ScaledChannelName, any>> & {
-    datum: DataRecord;
+export type ResolvedDataRecord<T = Record<string | symbol, RawValue>> = Partial<
+    Record<ScaledChannelName, any>
+> & {
+    datum: DataRecord<T>;
 };
 
-export type ScaledDataRecord = Partial<
+export type ScaledDataRecord<T = Record<string | symbol, RawValue>> = Partial<
     Record<ScaledChannelName, number | string | boolean | undefined>
 > & {
-    datum: DataRecord;
+    datum: DataRecord<T>;
     valid: Boolean;
 };
 
-export type DataRow = DataRecord | RawValue | [number, number] | null;
+export type DataRow<T = Record<string | symbol, RawValue>> =
+    | DataRecord<T>
+    | RawValue
+    | [number, number]
+    | null;
 
 export type PlotScale = {
     type: ScaleType;
@@ -512,9 +524,18 @@ export type MarkerOptions = {
 
 export type PlotScales = Record<ScaleName, PlotScale>;
 
-export type ChannelAccessor = RawValue | ((d: DataRow) => RawValue) | null | undefined;
+export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
+    | RawValue
+    | keyof T
+    | ((d: DataRow<T>) => RawValue)
+    | null
+    | undefined;
 
-export type ConstantAccessor<T> = T | ((d: DataRow) => T) | null | undefined;
+export type ConstantAccessor<T, D = Record<string | symbol, RawValue>> =
+    | T
+    | ((d: D) => T)
+    | null
+    | undefined;
 
 export type PlotState = {
     width: number;
@@ -604,7 +625,7 @@ type FacetState = {
  * Test if the given data record is visible in the current facet.
  */
 type TestFacetFunction = (
-    datum: DataRecord,
+    datum: DataRecord<any>,
     channels: Record<ChannelName, ChannelAccessor>
 ) => boolean;
 
@@ -617,50 +638,50 @@ export type FacetContext = {
     getFacetState: () => FacetState;
 };
 
-export type LinkableMarkProps = {
+export type LinkableMarkProps<T> = {
     /**
      * if set, the mark element will be wrapped in a <a> link element
      */
-    href?: ConstantAccessor<string>;
+    href?: ConstantAccessor<string, T>;
     /**
      * the relationship of the target object to the link object (e.g. "noopener")
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#rel
      */
-    rel?: ConstantAccessor<string>;
+    rel?: ConstantAccessor<string, T>;
     /**
      * the link target mime type, e.g. "text/csv"
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#type
      */
-    type?: ConstantAccessor<string>;
+    type?: ConstantAccessor<string, T>;
     /**
      * the target of the link, e.g. "_blank" or "_self"
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target
      */
-    target?: ConstantAccessor<'_self' | '_blank' | '_parent' | '_top' | string>;
+    target?: ConstantAccessor<'_self' | '_blank' | '_parent' | '_top' | string, T>;
     /**
      * if set to true, the link will be downloaded instead of navigating to it
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
      */
-    download?: ConstantAccessor<boolean>;
+    download?: ConstantAccessor<boolean, T>;
     // allow data-sveltekit-* attributes on the link element, e.g. data-sveltekit-reload
     [key: `data-sveltekit-${string}`]: string | boolean;
 };
 
-export type BaseMarkProps = Partial<{
+export type BaseMarkProps<T> = Partial<{
     /**
      * Filter the data without modifying the inferred scales
      */
-    filter?: ConstantAccessor<boolean>;
+    filter?: ConstantAccessor<boolean, T>;
     facet?: 'auto' | 'include' | 'exclude';
-    fx: ChannelAccessor;
-    fy: ChannelAccessor;
-    dx: ConstantAccessor<number>;
-    dy: ConstantAccessor<number>;
-    fill: ConstantAccessor<string>;
-    fillOpacity: ConstantAccessor<number>;
+    fx: ChannelAccessor<T>;
+    fy: ChannelAccessor<T>;
+    dx: ConstantAccessor<number, T>;
+    dy: ConstantAccessor<number, T>;
+    fill: ConstantAccessor<string, T>;
+    fillOpacity: ConstantAccessor<number, T>;
     sort:
         | string
-        | ConstantAccessor<RawValue>
+        | ConstantAccessor<RawValue, T>
         | ((a: RawValue, b: RawValue) => number)
         | {
               /** sort data using an already defined channel */
@@ -668,20 +689,20 @@ export type BaseMarkProps = Partial<{
               /** sort order */
               order?: 'ascending' | 'descending';
           };
-    stroke: ConstantAccessor<string>;
-    strokeWidth: ConstantAccessor<number>;
-    strokeOpacity: ConstantAccessor<number>;
-    strokeLinejoin: ConstantAccessor<CSS.Property.StrokeLinejoin>;
-    strokeLinecap: ConstantAccessor<CSS.Property.StrokeLinecap>;
-    strokeMiterlimit: ConstantAccessor<number>;
-    opacity: ConstantAccessor<number>;
-    strokeDasharray: ConstantAccessor<string>;
-    strokeDashoffset: ConstantAccessor<number>;
-    mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode>;
+    stroke: ConstantAccessor<string, T>;
+    strokeWidth: ConstantAccessor<number, T>;
+    strokeOpacity: ConstantAccessor<number, T>;
+    strokeLinejoin: ConstantAccessor<CSS.Property.StrokeLinejoin, T>;
+    strokeLinecap: ConstantAccessor<CSS.Property.StrokeLinecap, T>;
+    strokeMiterlimit: ConstantAccessor<number, T>;
+    opacity: ConstantAccessor<number, T>;
+    strokeDasharray: ConstantAccessor<string, T>;
+    strokeDashoffset: ConstantAccessor<number, T>;
+    mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode, T>;
     clipPath: string;
-    imageFilter: ConstantAccessor<string>;
-    shapeRendering: ConstantAccessor<CSS.Property.ShapeRendering>;
-    paintOrder: ConstantAccessor<string>;
+    imageFilter: ConstantAccessor<string, T>;
+    shapeRendering: ConstantAccessor<CSS.Property.ShapeRendering, T>;
+    paintOrder: ConstantAccessor<string, T>;
     onclick?: MouseEventHandler<SVGPathElement>;
     ondblclick?: MouseEventHandler<SVGPathElement>;
     onmouseup?: MouseEventHandler<SVGPathElement>;
@@ -716,7 +737,7 @@ export type BaseMarkProps = Partial<{
      * if you want to give your mark element an extra CSS class
      */
     class: string | null;
-    cursor: ConstantAccessor<CSS.Property.Cursor>;
+    cursor: ConstantAccessor<CSS.Property.Cursor, T>;
 }>;
 
 export type BorderRadius =
@@ -728,12 +749,12 @@ export type BorderRadius =
           bottomLeft?: number;
       };
 
-export type BaseRectMarkProps = {
-    inset?: ConstantAccessor<number>;
-    insetLeft?: ConstantAccessor<number>;
-    insetTop?: ConstantAccessor<number>;
-    insetRight?: ConstantAccessor<number>;
-    insetBottom?: ConstantAccessor<number>;
+export type BaseRectMarkProps<T> = {
+    inset?: ConstantAccessor<number, T>;
+    insetLeft?: ConstantAccessor<number, T>;
+    insetTop?: ConstantAccessor<number, T>;
+    insetRight?: ConstantAccessor<number, T>;
+    insetBottom?: ConstantAccessor<number, T>;
     borderRadius?: BorderRadius;
 };
 
@@ -895,168 +916,168 @@ export type PlotDefaults = {
     /**
      * default props for area marks, applied to area, areaX, and areaY marks
      */
-    area: Partial<Omit<AreaMarkProps, IgnoreDefaults>>;
+    area: Partial<Omit<ComponentProps<typeof Area>, IgnoreDefaults>>;
     /**
      * default props for areaX marks
      */
-    areaX: Partial<Omit<AreaMarkProps, IgnoreDefaults>>;
+    areaX: Partial<Omit<ComponentProps<typeof AreaX>, IgnoreDefaults>>;
     /**
      * default props for areaY marks
      */
-    areaY: Partial<Omit<AreaMarkProps, IgnoreDefaults>>;
+    areaY: Partial<Omit<ComponentProps<typeof AreaY>, IgnoreDefaults>>;
     /**
      * default props for arrow marks
      */
-    arrow: Partial<Omit<ArrowMarkProps, IgnoreDefaults>>;
+    arrow: Partial<Omit<ComponentProps<typeof Arrow>, IgnoreDefaults>>;
     /**
      * default props for axis marks, applied to both axisX and axisY marks
      */
     axis: Partial<
         Omit<
-            AxisXMarkProps,
+            ComponentProps<typeof AxisX>,
             'data' | 'facet' | ChannelName | 'facetAnchor' | 'labelAnchor' | 'anchor'
         > & { implicit: boolean }
     >;
     /**
      * default props for axisX marks
      */
-    axisX: Partial<Omit<AxisXMarkProps, IgnoreDefaults> & { implicit: boolean }>;
+    axisX: Partial<Omit<ComponentProps<typeof AxisX>, IgnoreDefaults> & { implicit: boolean }>;
     /**
      * default props for axisY marks
      */
-    axisY: Partial<Omit<AxisYMarkProps, IgnoreDefaults> & { implicit: boolean }>;
+    axisY: Partial<Omit<ComponentProps<typeof AxisY>, IgnoreDefaults> & { implicit: boolean }>;
     /**
      * default props for bar marks, applied to both barX and barY marks
      */
-    bar: Partial<Omit<BarXMarkProps, IgnoreDefaults>>;
+    bar: Partial<Omit<ComponentProps<typeof BarX>, IgnoreDefaults>>;
     /**
      * default props for barX marks
      */
-    barX: Partial<Omit<BarXMarkProps, IgnoreDefaults>>;
+    barX: Partial<Omit<ComponentProps<typeof BarX>, IgnoreDefaults>>;
     /**
      * default props for barY marks
      */
-    barY: Partial<Omit<BarXMarkProps, IgnoreDefaults>>;
+    barY: Partial<Omit<ComponentProps<typeof BarY>, IgnoreDefaults>>;
     /**
      * default props for box marks, applied to boxX and boxY marks
      */
-    box: Partial<Omit<BoxXMarkProps, IgnoreDefaults>>;
+    box: Partial<Omit<ComponentProps<typeof BoxX>, IgnoreDefaults>>;
     /**
      * default props for boxX marks
      */
-    boxX: Partial<Omit<BoxXMarkProps, IgnoreDefaults>>;
+    boxX: Partial<Omit<ComponentProps<typeof BoxX>, IgnoreDefaults>>;
     /**
      * default props for boxY marks
      */
-    boxY: Partial<Omit<BoxYMarkProps, IgnoreDefaults>>;
+    boxY: Partial<Omit<ComponentProps<typeof BoxY>, IgnoreDefaults>>;
     /**
      * default props for brush marks, applied to brush, brushX and brushY marks
      */
-    brush: Partial<Omit<BrushMarkProps, IgnoreDefaults | 'limitDimension'>>;
+    brush: Partial<Omit<ComponentProps<typeof Brush>, IgnoreDefaults | 'limitDimension'>>;
     /**
      * default props for brushX marks
      */
-    brushX: Partial<Omit<BrushXMarkProps, IgnoreDefaults>>;
+    brushX: Partial<Omit<ComponentProps<typeof BrushX>, IgnoreDefaults>>;
     /**
      * default props for brushY marks
      */
-    brushY: Partial<Omit<BrushYMarkProps, IgnoreDefaults>>;
+    brushY: Partial<Omit<ComponentProps<typeof BrushY>, IgnoreDefaults>>;
     /**
      * default props for cell marks
      */
-    cell: Partial<Omit<CellMarkProps, IgnoreDefaults>>;
+    cell: Partial<Omit<ComponentProps<typeof Cell>, IgnoreDefaults>>;
     /**
      * default props for dot marks
      */
-    dot: Partial<Omit<DotMarkProps, IgnoreDefaults>>;
+    dot: Partial<Omit<ComponentProps<typeof Dot>, IgnoreDefaults>>;
     /**
      * default props for frame marks
      */
-    frame: Partial<FrameMarkProps & { implicit: boolean }>;
+    frame: Partial<ComponentProps<typeof Frame> & { implicit: boolean }>;
     /**
      * default props for geo marks
      */
-    geo: Partial<Omit<GeoMarkProps, IgnoreDefaults>>;
+    geo: Partial<Omit<ComponentProps<typeof Geo>, IgnoreDefaults>>;
     /**
      * default props for graticule marks
      */
-    graticule: Partial<Omit<GraticuleMarkProps, IgnoreDefaults>>;
+    graticule: Partial<Omit<ComponentProps<typeof Graticule>, IgnoreDefaults>>;
     /**
      * default props for grid marks, applied to both gridX and gridY marks
      */
-    grid: Partial<Omit<GridXMarkProps, IgnoreDefaults> & { implicit: boolean }>;
+    grid: Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>;
     /**
      * default props for gridX marks
      */
-    gridX: Partial<Omit<GridXMarkProps, IgnoreDefaults> & { implicit: boolean }>;
+    gridX: Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>;
     /**
      * default props for gridY marks
      */
-    gridY: Partial<Omit<GridYMarkProps, IgnoreDefaults> & { implicit: boolean }>;
+    gridY: Partial<Omit<ComponentProps<typeof GridY>, IgnoreDefaults> & { implicit: boolean }>;
     /**
      * default props for line marks
      */
-    line: Partial<Omit<LineMarkProps, IgnoreDefaults>>;
+    line: Partial<Omit<ComponentProps<typeof Line>, IgnoreDefaults>>;
     /**
      * default props for link marks
      */
-    link: Partial<Omit<LinkMarkProps, IgnoreDefaults>>;
+    link: Partial<Omit<ComponentProps<typeof Link>, IgnoreDefaults>>;
     /**
      * default props for pointer marks
      */
-    pointer: Partial<Omit<PointerMarkProps, IgnoreDefaults>>;
+    pointer: Partial<Omit<ComponentProps<typeof Pointer>, IgnoreDefaults>>;
     /**
      * default props for rect marks, applied to rect and rectX marks
      */
-    rect: Partial<Omit<RectMarkProps, IgnoreDefaults>>;
+    rect: Partial<Omit<ComponentProps<typeof Rect>, IgnoreDefaults>>;
     /**
      * default props for rectX marks
      */
-    rectX: Partial<Omit<RectXMarkProps, IgnoreDefaults>>;
+    rectX: Partial<Omit<ComponentProps<typeof RectX>, IgnoreDefaults>>;
     /**
      * default props for rectY marks
      */
-    rectY: Partial<Omit<RectYMarkProps, IgnoreDefaults>>;
+    rectY: Partial<Omit<ComponentProps<typeof RectY>, IgnoreDefaults>>;
     /**
      * default props for rule marks
      */
-    rule: Partial<Omit<RuleXMarkProps, IgnoreDefaults>>;
+    rule: Partial<Omit<ComponentProps<typeof RuleX>, IgnoreDefaults>>;
     /**
      * default props for rule marks
      */
-    ruleX: Partial<Omit<RuleXMarkProps, IgnoreDefaults>>;
+    ruleX: Partial<Omit<ComponentProps<typeof RuleX>, IgnoreDefaults>>;
     /**
      * default props for rule marks
      */
-    ruleY: Partial<Omit<RuleYMarkProps, IgnoreDefaults>>;
+    ruleY: Partial<Omit<ComponentProps<typeof RuleY>, IgnoreDefaults>>;
     /**
      * default props for sphere marks
      */
-    sphere: Partial<SphereMarkProps>;
+    sphere: Partial<ComponentProps<typeof Sphere>>;
     /**
      * default props for spike marks
      */
-    spike: Partial<Omit<SpikeMarkProps, IgnoreDefaults>>;
+    spike: Partial<Omit<ComponentProps<typeof Spike>, IgnoreDefaults>>;
     /**
      * default props for text marks
      */
-    text: Partial<Omit<TextMarkProps, IgnoreDefaults>>;
+    text: Partial<Omit<ComponentProps<typeof Text>, IgnoreDefaults>>;
     /**
      * default props for tick marks, applied to tickX and tickY marks
      */
-    tick: Partial<Omit<TickXMarkProps, IgnoreDefaults>>;
+    tick: Partial<Omit<ComponentProps<typeof TickX>, IgnoreDefaults>>;
     /**
      * default props for tickX marks
      */
-    tickX: Partial<Omit<TickXMarkProps, IgnoreDefaults>>;
+    tickX: Partial<Omit<ComponentProps<typeof TickX>, IgnoreDefaults>>;
     /**
      * default props for tickY marks
      */
-    tickY: Partial<Omit<TickYMarkProps, IgnoreDefaults>>;
+    tickY: Partial<Omit<ComponentProps<typeof TickY>, IgnoreDefaults>>;
     /**
      * default props for vector marks
      */
-    vector: Partial<Omit<VectorMarkProps, IgnoreDefaults>>;
+    vector: Partial<Omit<ComponentProps<typeof Vector>, IgnoreDefaults>>;
 };
 
 export type MapIndexObject = {

@@ -23,9 +23,11 @@ export const load: PageServerLoad = async ({ fetch }) => {
                     'languages',
                     'penguins',
                     'riaa',
+                    'seattle',
                     'stateage',
                     'tdf',
                     'rightwing',
+                    'simpsons',
                     'stocks',
                     'unemployment',
                     'sftemp'

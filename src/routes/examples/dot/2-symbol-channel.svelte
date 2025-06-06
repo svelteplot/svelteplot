@@ -2,10 +2,13 @@
     export let title = 'Symbol channel';
 </script>
 
-<script>
+<script lang="ts">
     import { Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    import type { ExamplesData } from '../types';
+    let { penguins } = $derived(
+        page.data.data
+    ) as ExamplesData;
 </script>
 
 <Plot

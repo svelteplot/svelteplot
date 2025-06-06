@@ -1,7 +1,31 @@
 <!-- @component
 Helper component for rendering rectangular marks in SVG
 -->
-<script lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
+    interface RectPathProps {
+        datum: ScaledDataRecord<Datum>;
+        class: string | null;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        options: BaseRectMarkProps<Datum> & BaseMarkProps<Datum>;
+        /**
+         * By default, the `inset` property is applied to all four insets. Mark components
+         * can tweak this behavior for insetTop and insetBottom by setting the
+         * useInsetAsFallbackVertically prop to false.
+         */
+        useInsetAsFallbackVertically?: boolean;
+        /**
+         * By default, the `inset` property is applied to all four insets. Mark components
+         * can tweak this behavior for insetLeft and insetRight by setting the
+         * useInsetAsFallbackHorizontally prop to false.
+         */
+        useInsetAsFallbackHorizontally?: boolean;
+        usedScales: UsedScales;
+        fallbackStyle?: 'fill' | 'stroke';
+    }
+
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
     import type {
@@ -10,7 +34,8 @@ Helper component for rendering rectangular marks in SVG
         BorderRadius,
         ScaledDataRecord,
         UsedScales,
-        PlotContext
+        PlotContext,
+        DataRecord
     } from 'svelteplot/types';
     import { addEventHandlers } from './events';
     import { getContext } from 'svelte';
@@ -28,29 +53,7 @@ Helper component for rendering rectangular marks in SVG
         useInsetAsFallbackHorizontally = true,
         usedScales,
         fallbackStyle = 'fill'
-    }: {
-        datum: ScaledDataRecord;
-        class: string | null;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        options: BaseRectMarkProps & BaseMarkProps;
-        /**
-         * By default, the `inset` property is applied to all four insets. Mark components
-         * can tweak this behavior for insetTop and insetBottom by setting the
-         * useInsetAsFallbackVertically prop to false.
-         */
-        useInsetAsFallbackVertically?: boolean;
-        /**
-         * By default, the `inset` property is applied to all four insets. Mark components
-         * can tweak this behavior for insetLeft and insetRight by setting the
-         * useInsetAsFallbackHorizontally prop to false.
-         */
-        useInsetAsFallbackHorizontally?: boolean;
-        usedScales: UsedScales;
-        fallbackStyle?: 'fill' | 'stroke';
-    } = $props();
+    }: RectPathProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

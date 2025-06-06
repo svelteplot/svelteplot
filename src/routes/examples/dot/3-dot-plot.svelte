@@ -2,10 +2,13 @@
     export const title = 'Dot plot';
 </script>
 
-<script>
+<script lang="ts">
     import { Plot, Dot, GridY } from 'svelteplot';
     import { page } from '$app/state';
-    let { languages } = $derived(page.data.data);
+    import type { ExamplesData } from '../types';
+    let { languages } = $derived(
+        page.data.data
+    ) as ExamplesData;
 </script>
 
 <Plot
