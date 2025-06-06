@@ -5,18 +5,11 @@
 <script lang="ts">
     import { Plot, Cell, Text } from 'svelteplot';
     import { page } from '$app/state';
+    import type { ExamplesData } from '../types';
 
-    let { simpsons } = $derived(page.data.data) as {
-        simpsons: {
-            episode: string;
-            season: string;
-            /**
-             * the imdb rating of the episode
-             */
-            imdb_rating: number;
-            title: string;
-        }[];
-    };
+    let { simpsons } = $derived(
+        page.data.data
+    ) as ExamplesData;
 </script>
 
 <Plot

@@ -527,7 +527,7 @@ export type PlotScales = Record<ScaleName, PlotScale>;
 export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
     | RawValue
     | keyof T
-    | ((d: DataRow<T>) => RawValue)
+    | ((d: T) => RawValue)
     | null
     | undefined;
 
@@ -677,7 +677,7 @@ export type BaseMarkProps<T> = Partial<{
     fy: ChannelAccessor<T>;
     dx: ConstantAccessor<number, T>;
     dy: ConstantAccessor<number, T>;
-    fill: ConstantAccessor<string, T>;
+    fill: ChannelAccessor<T>;
     fillOpacity: ConstantAccessor<number, T>;
     sort:
         | string
@@ -689,13 +689,13 @@ export type BaseMarkProps<T> = Partial<{
               /** sort order */
               order?: 'ascending' | 'descending';
           };
-    stroke: ConstantAccessor<string, T>;
+    stroke: ChannelAccessor<T>;
     strokeWidth: ConstantAccessor<number, T>;
     strokeOpacity: ConstantAccessor<number, T>;
     strokeLinejoin: ConstantAccessor<CSS.Property.StrokeLinejoin, T>;
     strokeLinecap: ConstantAccessor<CSS.Property.StrokeLinecap, T>;
     strokeMiterlimit: ConstantAccessor<number, T>;
-    opacity: ConstantAccessor<number, T>;
+    opacity: ChannelAccessor<T>;
     strokeDasharray: ConstantAccessor<string, T>;
     strokeDashoffset: ConstantAccessor<number, T>;
     mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode, T>;

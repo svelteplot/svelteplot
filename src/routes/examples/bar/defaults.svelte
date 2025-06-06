@@ -18,5 +18,5 @@
 </script>
 
 <Plot>
-    <BarX data={[1, 2, 3, 4, 5, 6]} />
+    <BarX data={[1, 2, 3, 4, 5, 6]} fill={(d) => d} />
 </Plot>
