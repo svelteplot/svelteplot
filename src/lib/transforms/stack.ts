@@ -26,7 +26,7 @@ import { filter } from './filter.js';
 import { sort } from './sort.js';
 
 const GROUP = Symbol('group');
-const FACET = Symbol('group');
+const FACET = Symbol('facet');
 
 const DEFAULT_STACK_OPTIONS: StackOptions = {
     order: null,
@@ -104,13 +104,16 @@ function stackXY(
         // first we group the dataset by facets to avoid stacking of rows that are
         // in separate panels
         const groups = d3Groups(resolvedData, (d) => d[FACET]);
+
         for (const [, facetData] of groups) {
             // now we index the data on the second dimension, e.g. over x
             // when stacking over y
-            const indexed = index(
-                facetData,
-                (d) => d[`__${secondDim}`],
-                (d) => d[GROUP]
+            const indexed = Array.from(
+                d3Groups(
+                    facetData,
+                    (d) => d[`__${secondDim}`]
+                    // (d) => d[GROUP]
+                ).values()
             );
 
             const stackOrder = (series: number[][]) => {
