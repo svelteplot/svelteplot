@@ -127,6 +127,6 @@
         "es-toolkit": "^1.39.3",
         "fast-equals": "^5.2.2",
         "merge-deep": "^3.0.3",
-        "svelte": "5.34.6"
+        "svelte": "5.34.7"
     }
 }
