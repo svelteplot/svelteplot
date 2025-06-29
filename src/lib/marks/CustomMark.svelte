@@ -32,7 +32,6 @@
     let plot = $derived(getPlotState());
 
     import Mark from 'svelteplot/Mark.svelte';
-    import { r } from 'svelte-highlight/languages';
 
     let { data = [{} as Datum], children: customMark, ...options }: CustomMarkProps = $props();
 
