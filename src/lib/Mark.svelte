@@ -11,7 +11,7 @@
                 {
                     mark: Mark<GenericMarkOptions>;
                     usedScales: ReturnType<typeof getUsedScales>;
-                    scaledData: ScaledDataRecord[];
+                    scaledData: ScaledDataRecord<Datum>[];
                 }
             ]
         >;

@@ -14,9 +14,9 @@
 
 <Plot
     grid
-    height={400}
-    x={{ domain: [30, 62] }}
-    y={{ domain: [13, 21.9] }}>
+    inset={10}
+    color={{ legend: true }}
+    r={{ range: [0.4, 1.4], zero: false }}>
     <defs>
         <symbol
             id="spiral"
@@ -32,16 +32,17 @@
     <CustomMark
         data={penguins}
         x="culmen_length_mm"
-        y="culmen_depth_mm">
-        {#snippet children({ datum })}
+        y="culmen_depth_mm"
+        fill="species"
+        r="body_mass_g">
+        {#snippet children({ record, usedScales })}
             <use
+                transform={`translate(${record.x}, ${record.y}) scale(${record.r})`}
                 href="#spiral"
                 x="-12"
                 y="-12"
-                color={datum.species === 'Adelie'
-                    ? 'var(--svp-red)'
-                    : 'var(--svp-blue)'}
-                ><title>{datum.species}</title></use>
+                color={record.fill}
+                ><title>{record.datum.species}</title></use>
         {/snippet}
     </CustomMark>
 </Plot>

@@ -6,8 +6,15 @@
     interface CustomMarkProps extends BaseMarkProps<Datum> {
         data: Datum[];
         x?: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
-        children: Snippet<[{ datum: Datum; x: number; y: number }]>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
+        r?: ChannelAccessor<Datum>;
+        children: Snippet<
+            [{ record: ScaledDataRecord<Datum>; index: number; usedScales: UsedScales }]
+        >;
     }
 
     import { getContext } from 'svelte';
@@ -15,36 +22,33 @@
         PlotContext,
         DataRecord,
         ChannelAccessor,
-        BaseMarkProps
+        BaseMarkProps,
+        ScaledDataRecord,
+        UsedScales
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
-
+    import { sort } from '$lib/index.js';
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { projectXY } from '$lib/helpers/scales.js';
-    import { isValid } from '$lib/helpers/index.js';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
+    import { r } from 'svelte-highlight/languages';
 
-    let {
-        data = [{} as Datum],
-        x,
-        y,
-        children,
-        class: className = null
-    }: CustomMarkProps = $props();
+    let { data = [{} as Datum], children: customMark, ...options }: CustomMarkProps = $props();
+
+    const args = $derived(sort({ data, ...options })) as CustomMarkProps;
 </script>
 
-<GroupMultiple class="g-custom-mark {className || ''}" length={className ? 2 : data.length}>
-    {#each data as datum, i (i)}
-        {@const x_ = resolveChannel<Datum>('x', datum, { x, y })}
-        {@const y_ = resolveChannel<Datum>('y', datum, { x, y })}
-        {#if isValid(x_) && isValid(y_)}
-            {@const [px, py] = projectXY(plot.scales, x_, y_)}
-            <g transform="translate({px}, {py})">
-                {@render children({ datum, x: px, y: py })}
-            </g>
-        {/if}
-    {/each}
-</GroupMultiple>
+<Mark
+    type="custom"
+    required={['x', 'y']}
+    channels={['x', 'y', 'r', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
+    {...args}>
+    {#snippet children({ scaledData, usedScales })}
+        {#each scaledData as datum, i (i)}
+            {#if datum.valid}
+                {@render customMark({ record: datum, index: i, usedScales })}
+            {/if}
+        {/each}
+    {/snippet}
+</Mark>

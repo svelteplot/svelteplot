@@ -13,6 +13,7 @@ export type MarkType =
     | 'barX'
     | 'barY'
     | 'cell'
+    | 'custom'
     | 'dot'
     | 'vector'
     | 'frame'

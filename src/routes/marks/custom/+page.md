@@ -14,9 +14,8 @@ title: Custom marks
 
 <Plot
     grid
-    height={400}
-    x={{ domain: [30, 62] }}
-    y={{ domain: [13, 21.9] }}>
+    inset={10}
+    r={{ zero: false, range: [0.4, 1.2] }}>
     <defs>
         <symbol
             id="spiral"
@@ -24,7 +23,7 @@ title: Custom marks
             height="24"
             viewBox="-12 -12 24 24">
             <Spiral
-                stroke="var(--svp-red)"
+                stroke="currentColor"
                 finalRadius={10}
                 duration={4} />
         </symbol>
@@ -32,31 +31,23 @@ title: Custom marks
     <CustomMark
         data={penguins}
         x="culmen_length_mm"
-        y="culmen_depth_mm">
-        {#snippet children({ datum })}
-            <use href="#spiral" x="-12" y="-12" />
+        y="culmen_depth_mm"
+        fill="species"
+        r="body_mass_g">
+        {#snippet children({ record, usedScales })}
+            <use
+                transform={`translate(${record.x}, ${record.y}) scale(${record.r})`}
+                href="#spiral"
+                x="-12"
+                y="-12"
+                color={record.fill}
+                ><title>{record.datum.species}</title></use>
         {/snippet}
     </CustomMark>
 </Plot>
 ```
 
-```svelte
-<Plot
-    grid
-    height={400}
-    x={{ domain: [31, 62] }}
-    y={{ domain: [13, 21.9] }}>
-    <CustomMark
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm">
-        {#snippet children({ datum })}
-            <!-- Spiral is your own component -->
-            <Spiral stroke="red" />
-        {/snippet}
-    </CustomMark>
-</Plot>
-```
+see [example](/examples/custom/custom-svg)
 
 ## CustomMarkHTML
 
