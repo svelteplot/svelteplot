@@ -519,7 +519,20 @@
                 {/if}
             </FacetGrid>
         </svg>
-        {#if overlay}<div class="plot-overlay">{@render overlay?.()}</div>{/if}
+        {#if overlay}<div class="plot-overlay">
+                {@render overlay?.({
+                    width,
+                    height,
+                    options: plotOptions,
+                    scales: plotState.scales,
+                    mapXY,
+                    hasProjection,
+                    hasExplicitAxisX,
+                    hasExplicitAxisY,
+                    hasExplicitGridX,
+                    hasExplicitGridY
+                })}
+            </div>{/if}
     </div>
     {#if footer}
         <figcaption class="plot-footer">
