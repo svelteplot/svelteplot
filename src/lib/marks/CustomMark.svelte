@@ -4,7 +4,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface CustomMarkProps extends BaseMarkProps<Datum> {
-        data: Datum[];
+        data?: Datum[];
         x?: ChannelAccessor<Datum>;
         x1?: ChannelAccessor<Datum>;
         x2?: ChannelAccessor<Datum>;
@@ -12,9 +12,10 @@
         y1?: ChannelAccessor<Datum>;
         y2?: ChannelAccessor<Datum>;
         r?: ChannelAccessor<Datum>;
-        children: Snippet<
+        mark?: Snippet<
             [{ record: ScaledDataRecord<Datum>; index: number; usedScales: UsedScales }]
         >;
+        marks?: Snippet<[{ records: ScaledDataRecord<Datum>[]; usedScales: UsedScales }]>;
     }
 
     import { getContext } from 'svelte';
@@ -24,30 +25,45 @@
         ChannelAccessor,
         BaseMarkProps,
         ScaledDataRecord,
-        UsedScales
+        UsedScales,
+        ScaledChannelName
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
     import { sort } from '$lib/index.js';
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
 
     import Mark from 'svelteplot/Mark.svelte';
 
-    let { data = [{} as Datum], children: customMark, ...options }: CustomMarkProps = $props();
+    let { data = [{} as Datum], mark, marks, ...options }: CustomMarkProps = $props();
 
     const args = $derived(sort({ data, ...options })) as CustomMarkProps;
+
+    const channels: ScaledChannelName[] = [
+        'x',
+        'x1',
+        'x2',
+        'y',
+        'y1',
+        'y2',
+        'r',
+        'fill',
+        'stroke',
+        'opacity',
+        'fillOpacity',
+        'strokeOpacity'
+    ];
 </script>
 
-<Mark
-    type="custom"
-    required={['x', 'y']}
-    channels={['x', 'y', 'r', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
-    {...args}>
+<Mark type="custom" required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
     {#snippet children({ scaledData, usedScales })}
-        {#each scaledData as datum, i (i)}
-            {#if datum.valid}
-                {@render customMark({ record: datum, index: i, usedScales })}
-            {/if}
-        {/each}
+        {#if marks}
+            {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}
+        {/if}
+        {#if mark}
+            {#each scaledData as datum, i (i)}
+                {#if datum.valid}
+                    {@render mark({ record: datum, index: i, usedScales })}
+                {/if}
+            {/each}
+        {/if}
     {/snippet}
 </Mark>

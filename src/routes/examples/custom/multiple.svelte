@@ -1,5 +1,5 @@
 <script module>
-    export const title = 'Custom SVG marks';
+    export const title = 'Multiple SVG marks';
 </script>
 
 <script lang="ts">
@@ -35,7 +35,7 @@
         y="culmen_depth_mm"
         fill="species"
         r="body_mass_g">
-        {#snippet children({ record, usedScales })}
+        {#snippet children({ record })}
             <use
                 transform={`translate(${record.x}, ${record.y}) scale(${record.r})`}
                 href="#spiral"
