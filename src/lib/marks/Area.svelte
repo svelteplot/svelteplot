@@ -41,6 +41,7 @@
         RawValue
     } from '../types/index.js';
     import type { StackOptions } from '$lib/transforms/stack.js';
+    import { addEventHandlers } from './helpers/events';
 
     let markProps: AreaMarkProps = $props();
 
@@ -135,6 +136,11 @@
                                 class={['svelteplot-area', className, styleClass]}
                                 clip-path={options.clipPath}
                                 d={areaPath(areaData)}
+                                use:addEventHandlers={{
+                                    getPlotState,
+                                    options,
+                                    datum: datum.datum
+                                }}
                                 {style}
                                 >{#if title}<title>{title}</title>{/if}</path>
                         </Anchor>
