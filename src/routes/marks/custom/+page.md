@@ -2,7 +2,7 @@
 title: Custom marks
 ---
 
-## CustomMark
+You can use the custom mark to render your own marks. You can pass data to the custom mark and use the plot scales. Let's say we want to render our own symbols instead of using the [dot mark](/marks/dot):
 
 ```svelte live
 <script>
@@ -12,50 +12,94 @@ title: Custom marks
     let { penguins } = $derived(page.data.data);
 </script>
 
-<Plot
-    grid
-    height={400}
-    x={{ domain: [30, 62] }}
-    y={{ domain: [13, 21.9] }}>
-    <defs>
-        <symbol
-            id="spiral"
-            width="24"
-            height="24"
-            viewBox="-12 -12 24 24">
-            <Spiral
-                stroke="var(--svp-red)"
-                finalRadius={10}
-                duration={4} />
-        </symbol>
-    </defs>
+<Plot grid inset={10}>
     <CustomMark
         data={penguins}
         x="culmen_length_mm"
-        y="culmen_depth_mm">
-        {#snippet children({ datum })}
-            <use href="#spiral" x="-12" y="-12" />
+        y="culmen_depth_mm"
+        stroke="species">
+        {#snippet mark({ record })}
+            <g
+                transform="translate({[
+                    record.x,
+                    record.y
+                ]})">
+                <path
+                    d="M-3,-3L3,3 M3,-3L-3,3 M-4,0H4 M0,-4V4"
+                    stroke={record.stroke} />
+            </g>
         {/snippet}
     </CustomMark>
 </Plot>
 ```
 
 ```svelte
-<Plot
-    grid
-    height={400}
-    x={{ domain: [31, 62] }}
-    y={{ domain: [13, 21.9] }}>
+<CustomMark
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    stroke="species">
+    {#snippet mark({ record })}
+        <g transform="translate({[record.x, record.y]})">
+            <path
+                d="M-3,-3L3,3 M3,-3L-3,3 M-4,0H4 M0,-4V4"
+                stroke={record.stroke} />
+        </g>
+    {/snippet}
+</CustomMark>
+```
+
+We can also pass the `marks` (plural) snippet to draw all symbols at once:
+
+```svelte
+<CustomMark
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm">
+    {#snippet marks({ records })}
+        <polyline
+            points={records
+                .map((r) => [r.x, r.y])
+                .join(' ')} />
+    {/snippet}
+</CustomMark>
+```
+
+```svelte live
+<script>
+    import { Plot, Dot, CustomMark } from 'svelteplot';
+    import Spiral from '$lib/ui/Spiral.svelte';
+    import { page } from '$app/state';
+    let { penguins } = $derived(page.data.data);
+</script>
+
+<Plot grid inset={10}>
     <CustomMark
         data={penguins}
         x="culmen_length_mm"
         y="culmen_depth_mm">
-        {#snippet children({ datum })}
-            <!-- Spiral is your own component -->
-            <Spiral stroke="red" />
+        {#snippet marks({ records })}
+            <polyline
+                stroke="currentColor"
+                fill="none"
+                points={records
+                    .map((r) => [r.x, r.y])
+                    .join(' ')} />
         {/snippet}
     </CustomMark>
 </Plot>
+```
+
+see [example](/examples/custom/multiple)
+
+## CustomMark
+
+```svelte
+<CustomMark {data} {...channels}>
+    {#snippet mark({ record })}
+        <!-- custom svg markup here -->
+    {/snippet}
+</CustomMark>
 ```
 
 ## CustomMarkHTML
@@ -176,54 +220,3 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
 - x
 - y
 - frameAnchor (see [Text](/marks/text) mark)
-
-## mapXY
-
-Another way to use custom marks is to position them yourself using the `mapXY` method:
-
-```svelte live
-<script>
-    import { Plot, Dot, CustomMarkHTML } from 'svelteplot';
-
-    const data = [
-        { val1: 8, val2: -8 },
-        { val1: 2, val2: 8 },
-        { val1: 5, val2: -6 },
-        { val1: 7, val2: 4 }
-    ];
-</script>
-
-<Plot
-    height={300}
-    grid
-    x={{ domain: [0, 10] }}
-    y={{ domain: [-20, 20] }}
-    inset={40}>
-    {#snippet children({ mapXY })}
-        {#each data as { val1, val2 }}
-            {@const { x, y } = mapXY(val1, val2)}
-            <g transform="translate({x},{y})">
-                <circle r={9} opacity={0.4} fill="red" />
-            </g>
-        {/each}
-    {/snippet}
-</Plot>
-```
-
-```svelte
-<Plot
-    height={300}
-    grid
-    x={{ domain: [0, 10] }}
-    y={{ domain: [-20, 20] }}
-    inset={40}>
-    {#snippet children({ mapXY })}
-        {#each data as { val1, val2 }}
-            {@const { x, y } = mapXY(val1, val2)}
-            <g transform="translate({x},{y})">
-                <circle r={9} opacity={0.4} fill="red" />
-            </g>
-        {/each}
-    {/snippet}
-</Plot>
-```

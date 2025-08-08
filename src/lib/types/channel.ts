@@ -39,4 +39,8 @@ export type ScaledChannelName =
     | 'y1'
     | 'y2';
 
+export type ScaledChannelType<T extends ScaledChannelName> = T extends 'fill' | 'stroke' | 'symbol'
+    ? string
+    : number;
+
 export type ChannelName = ScaledChannelName | 'z' | 'sort' | 'filter' | 'interval';

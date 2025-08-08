@@ -4,10 +4,18 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface CustomMarkProps extends BaseMarkProps<Datum> {
-        data: Datum[];
+        data?: Datum[];
         x?: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
-        children: Snippet<[{ datum: Datum; x: number; y: number }]>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
+        r?: ChannelAccessor<Datum>;
+        mark?: Snippet<
+            [{ record: ScaledDataRecord<Datum>; index: number; usedScales: UsedScales }]
+        >;
+        marks?: Snippet<[{ records: ScaledDataRecord<Datum>[]; usedScales: UsedScales }]>;
     }
 
     import { getContext } from 'svelte';
@@ -15,36 +23,47 @@
         PlotContext,
         DataRecord,
         ChannelAccessor,
-        BaseMarkProps
+        BaseMarkProps,
+        ScaledDataRecord,
+        UsedScales,
+        ScaledChannelName
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
+    import { sort } from '$lib/index.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    import Mark from 'svelteplot/Mark.svelte';
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { projectXY } from '$lib/helpers/scales.js';
-    import { isValid } from '$lib/helpers/index.js';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    let { data = [{} as Datum], mark, marks, ...options }: CustomMarkProps = $props();
 
-    let {
-        data = [{} as Datum],
-        x,
-        y,
-        children,
-        class: className = null
-    }: CustomMarkProps = $props();
+    const args = $derived(sort({ data, ...options })) as CustomMarkProps;
+
+    const channels: ScaledChannelName[] = [
+        'x',
+        'x1',
+        'x2',
+        'y',
+        'y1',
+        'y2',
+        'r',
+        'fill',
+        'stroke',
+        'opacity',
+        'fillOpacity',
+        'strokeOpacity'
+    ];
 </script>
 
-<GroupMultiple class="g-custom-mark {className || ''}" length={className ? 2 : data.length}>
-    {#each data as datum, i (i)}
-        {@const x_ = resolveChannel<Datum>('x', datum, { x, y })}
-        {@const y_ = resolveChannel<Datum>('y', datum, { x, y })}
-        {#if isValid(x_) && isValid(y_)}
-            {@const [px, py] = projectXY(plot.scales, x_, y_)}
-            <g transform="translate({px}, {py})">
-                {@render children({ datum, x: px, y: py })}
-            </g>
+<Mark type="custom" required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
+    {#snippet children({ scaledData, usedScales })}
+        {#if marks}
+            {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}
         {/if}
-    {/each}
-</GroupMultiple>
+        {#if mark}
+            {#each scaledData as datum, i (i)}
+                {#if datum.valid}
+                    {@render mark({ record: datum, index: i, usedScales })}
+                {/if}
+            {/each}
+        {/if}
+    {/snippet}
+</Mark>
