@@ -35,7 +35,7 @@
         y="culmen_depth_mm"
         fill="species"
         r="body_mass_g">
-        {#snippet children({ record })}
+        {#snippet mark({ record })}
             <use
                 transform={`translate(${record.x}, ${record.y}) scale(${record.r})`}
                 href="#spiral"
