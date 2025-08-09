@@ -36,6 +36,4 @@ Since the filter transform only affects the mark’s index and not the channel v
 </Plot>
 ```
 
-[fork](https://svelte.dev/playground/50337f4963264dcb9d4b8cf7c80702b2?version=latest)
-
-TODO(@gka): Fork repl and replace link
+[fork](https://svelte.dev/playground/2500feb83e8f42819dc1b4cfe9c8b1f7?version=latest)
