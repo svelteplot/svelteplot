@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, test } from 'vitest';
 import { render } from '@testing-library/svelte';
 import DotTest from './dot.test.svelte';
 import { getTranslate } from './utils';
 import { symbol, symbolCircle } from 'd3-shape';
+import { tick } from 'svelte';
 
 const testData = [
     { x: 10, y: 20, value: 5 },
@@ -23,7 +24,6 @@ describe('Dot mark', () => {
                 }
             }
         });
-
         const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
         expect(dots.length).toBe(2);
         const circle5 = symbol(symbolCircle).size(5 ** 2 * Math.PI)();
@@ -81,5 +81,28 @@ describe('Dot mark', () => {
         expect(dots.length).toBe(2);
         expect(dots[0].style.fill).toBe('blue');
         expect(dots[1].style.fill).toBe('red');
+    });
+
+    it('update data', async () => {
+        let props = $state({
+            plotArgs: {},
+            dotArgs: {
+                data: testData,
+                x: 'x',
+                y: 'y',
+                r: 5,
+                fill: 'red'
+            }
+        });
+        const { container } = render(DotTest, { props });
+        const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
+        expect(dots.length).toBe(2);
+
+        props.dotArgs.data = [...testData, { x: 20, y: 30, value: 15 }];
+
+        await tick();
+
+        const newDots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
+        expect(newDots.length).toBe(3);
     });
 });
