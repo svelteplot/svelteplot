@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, test } from 'vitest';
 import { render } from '@testing-library/svelte';
 import DotTest from './dot.test.svelte';
 import { getTranslate } from './utils';
@@ -23,7 +23,6 @@ describe('Dot mark', () => {
                 }
             }
         });
-
         const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
         expect(dots.length).toBe(2);
         const circle5 = symbol(symbolCircle).size(5 ** 2 * Math.PI)();

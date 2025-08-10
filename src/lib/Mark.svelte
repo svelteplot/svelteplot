@@ -158,7 +158,7 @@
     let prevResolvedData: ResolvedDataRecord[] = [];
 
     $effect(() => {
-        if (isDifferent(resolvedData, prevResolvedData)) {
+        if (isDifferent(data, mark.data) || isDifferent(resolvedData, prevResolvedData)) {
             prevResolvedData = resolvedData;
             // data has changed
             mark.data = data;
