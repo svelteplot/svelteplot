@@ -1,5 +1,7 @@
 <script module lang="ts">
     export const title = 'Histogram with a topline';
+    export const repl =
+        'https://svelte.dev/playground/42919d4eb5d84d1ca3a0d6c7028eea0d?version=latest';
 </script>
 
 <script lang="ts">
@@ -9,25 +11,29 @@
         Plot,
         RectY,
         binX,
-        CustomMark,
-        stackY
+        CustomMark
     } from 'svelteplot';
 </script>
 
-<Plot height={300} y={{ zero: true }}>
+<Plot y={{ zero: true }}>
     {@const binned = binX(
         { data: olympians, x: 'weight' },
         { y: 'count', interval: 3 }
     )}
     <RectY {...binned} opacity={0.2} />
-    <CustomMark {...stackY(binned)}>
+    <CustomMark {...binned}>
         {#snippet marks({ records })}
             <path
-                d="M{records[0].x1},{records[0].y1} {records
-                    .map((r) => `V${r.y2}H${r.x2}`)
-                    .join(' ')}"
-                stroke="currentColor"
-                fill="none" />
+                d="M{records[0].x1},{records[0].y} {records
+                    .map((r) => `V${r.y}H${r.x2}`)
+                    .join(' ')}" />
         {/snippet}
     </CustomMark>
 </Plot>
+
+<style>
+    path {
+        stroke: currentcolor;
+        fill: none;
+    }
+</style>
