@@ -66,18 +66,18 @@ function bollinger(values: number[], N: number, K: number[]) {
     // compute sum and square of sums
     for (let n = Math.min(N - 1, values.length); i < n; ++i) {
         const value = values[i];
-        (sum += value), (sumSquared += value ** 2);
+        ((sum += value), (sumSquared += value ** 2));
     }
     for (let n = values.length, m = bands.length; i < n; ++i) {
         const value = values[i];
-        (sum += value), (sumSquared += value ** 2);
+        ((sum += value), (sumSquared += value ** 2));
         const mean = sum / N;
         const deviation = Math.sqrt((sumSquared - sum ** 2 / N) / (N - 1));
         for (let j = 0; j < K.length; ++j) {
             bands[j][i] = mean + deviation * K[j];
         }
         const value0 = values[i - N + 1];
-        (sum -= value0), (sumSquared -= value0 ** 2);
+        ((sum -= value0), (sumSquared -= value0 ** 2));
     }
     return bands;
 }

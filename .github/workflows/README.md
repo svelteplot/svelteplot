@@ -47,7 +47,6 @@ The tilde prefix ("~") is used to avoid conflicts with existing directories in t
 Before these workflows can function properly, you need to:
 
 1. **Enable GitHub Pages** for your repository:
-
     - Go to repository Settings > Pages
     - Set up GitHub Pages to deploy from GitHub Actions
     - Make sure the repository has the necessary permissions (pages: write, id-token: write)

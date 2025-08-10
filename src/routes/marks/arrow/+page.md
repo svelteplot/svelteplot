@@ -268,14 +268,12 @@ The Arrow mark offers various customization options to control appearance and be
 **Arrow Style and Shape**
 
 - **bend** - Controls the curvature of the arrow in degrees:
-
     - Set to a number (e.g., `30`) for a specific bend angle
     - Set to `true` for a default bend of 22.5°
     - Set to `0` or `false` for a straight arrow
     - Positive values curve clockwise, negative values curve counterclockwise
 
 - **sweep** - Controls the direction of the bend:
-
     - `1` (default) - Standard direction
     - `0` - No bending (straight line regardless of bend angle)
     - `-1` - Reverse direction
