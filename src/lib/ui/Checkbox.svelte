@@ -2,9 +2,10 @@
     let { label, value = $bindable(), ...restProps } = $props();
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<label class="checkbox"
-    ><input type="checkbox" bind:checked={value} {...restProps} /> {@html label}</label>
+<label class="checkbox">
+    <input type="checkbox" bind:checked={value} {...restProps} />
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+    {@html label}</label>
 
 <style>
     label.checkbox + :global(label.checkbox) {
