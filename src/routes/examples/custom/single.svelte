@@ -16,16 +16,16 @@
 
 <Plot grid>
     <CustomMark x={40} y={16}>
-        {#snippet children({ record })}
+        {#snippet mark({ record })}
             <g
                 transform="translate({record.x}, {record.y})">
                 <circle
-                    r={60}
+                    r={20}
                     opacity={0.2}
                     fill={record.fill} />
                 <circle
                     r={80}
-                    opacity={0.2}
+                    opacity={0.1}
                     fill={record.fill} />
             </g>
         {/snippet}
