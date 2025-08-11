@@ -135,6 +135,26 @@ The interval transform may be used to convert a single value in x or y (or both)
 
 ## Rect
 
+The rect mark supports the following channels:
+
+- **data** - Array of data objects to be rendered as rectangles
+- **x1** - Channel accessor for left edge x coordinate
+- **x2** - Channel accessor for right edge x coordinate
+- **y1** - Channel accessor for bottom edge y coordinate
+- **y2** - Channel accessor for top edge y coordinate
+- **x** - Channel accessor for x position (used with interval transform)
+- **y** - Channel accessor for y position (used with interval transform)
+- **interval** - Number or string to convert single x/y values into ranges
+
+Aside from the default mark styling properties you can adjust the appearance of the rectangles using these props:
+
+- **inset** - Inset all sides of rectangles by this amount
+- **insetLeft** - Inset left side of rectangles
+- **insetRight** - Inset right side of rectangles
+- **insetTop** - Inset top side of rectangles
+- **insetBottom** - Inset bottom side of rectangles
+- **borderRadius** - Border radius for rounded corners, either a number or an object with `{ topLeft, topRight, bottomLeft, bottomRight }`.
+
 ## RectX
 
 RectX can be used for range annotations:
