@@ -14,11 +14,16 @@ const styleProps: Partial<Record<MarkStyleProps, string | null>> = {
     blend: 'mix-blend-mode',
     clipPath: 'clip-path',
     mask: 'mask',
+    fontFamily: 'font-family',
     fontSize: 'font-size',
-    fontWeight: 'font-weight',
     fontStyle: 'font-style',
+    fontWeight: 'font-weight',
     textAnchor: 'text-anchor',
     fontVariant: 'font-variant',
+    letterSpacing: 'letter-spacing',
+    textDecoration: 'text-decoration',
+    textTransform: 'text-transform',
+    wordSpacing: 'word-spacing',
     cursor: 'cursor',
     pointerEvents: 'pointer-events'
 };
