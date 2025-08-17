@@ -32,7 +32,12 @@ export function isSnippet(value: unknown): value is Snippet {
 }
 
 export function isValid(value: RawValue | undefined): value is number | Date | string {
-    return value !== null && value !== undefined && !Number.isNaN(value);
+    return (
+        value !== null &&
+        value !== undefined &&
+        !Number.isNaN(value) &&
+        (typeof value !== 'number' || Number.isFinite(value))
+    );
 }
 
 export function maybeData(data: DataRecord[]): DataRecord[] {
