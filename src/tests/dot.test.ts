@@ -81,4 +81,50 @@ describe('Dot mark', () => {
         expect(dots[0].style.fill).toBe('blue');
         expect(dots[1].style.fill).toBe('red');
     });
+
+    it('no dx and dy offsets', () => {
+        const { container } = render(DotTest, {
+            props: {
+                plotArgs: {},
+                dotArgs: {
+                    data: testData,
+                    x: 'x',
+                    y: 'y',
+                    r: 5
+                }
+            }
+        });
+        const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
+        expect(dots.length).toBe(2);
+
+        const positions = Array.from(dots).map(getTranslate);
+        expect(positions).toStrictEqual([
+            [1, 95],
+            [96, 5]
+        ]);
+    });
+
+    it('dx and dy offsets', () => {
+        const { container } = render(DotTest, {
+            props: {
+                plotArgs: {},
+                dotArgs: {
+                    data: testData,
+                    x: 'x',
+                    y: 'y',
+                    r: 5,
+                    dx: 5,
+                    dy: 5
+                }
+            }
+        });
+        const dots = container.querySelectorAll('g.dot > path') as NodeListOf<SVGPathElement>;
+        expect(dots.length).toBe(2);
+
+        const positions = Array.from(dots).map(getTranslate);
+        expect(positions).toStrictEqual([
+            [6, 100],
+            [101, 10]
+        ]);
+    });
 });

@@ -270,9 +270,9 @@
 
                     // apply dx/dy transform
                     out[channel] =
-                        scale === 'x' && Number.isFinite(scaled) ? (scaled as number) + dx : scaled;
-                    out[channel] =
-                        scale === 'y' && Number.isFinite(scaled) ? (scaled as number) + dy : scaled;
+                        Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
+                            ? scaled + (scale === 'x' ? dx : dy)
+                            : scaled;
                 } else if (defaults[channel]) {
                     out[channel] = defaults[channel];
                 }
