@@ -26,7 +26,7 @@
     import { recordizeY, sort } from '$lib/index.js';
     import { resolveChannel } from '../helpers/resolve.js';
 
-    import { isValid } from '../helpers/isValid.js';
+    import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
 
     let markProps: CellMarkProps = $props();
