@@ -1,4 +1,4 @@
-import { coalesce, isObject, omit } from './index.js';
+import { coalesce, isObject, isValid, omit } from './index.js';
 import { describe, it, expect } from 'vitest';
 
 describe('coalesce', () => {
@@ -30,6 +30,19 @@ describe('isObject', () => {
         expect(isObject(123)).toBe(false);
         expect(isObject('string')).toBe(false);
         expect(isObject(true)).toBe(false);
+    });
+});
+
+describe('isValid', () => {
+    it('should return true if the input is an object', () => {
+        expect(isValid(123)).toBe(true);
+        expect(isValid('string')).toBe(true);
+        expect(isValid(new Date())).toBe(true);
+        expect(isValid(null)).toBe(false);
+        expect(isValid(undefined)).toBe(false);
+        expect(isValid(NaN)).toBe(false);
+        expect(isValid(Infinity)).toBe(false);
+        expect(isValid(-Infinity)).toBe(false);
     });
 });
 

@@ -34,7 +34,7 @@
     } from '../types/index.js';
     import { recordizeY } from '$lib/index.js';
     import { projectX, projectY } from '../helpers/scales.js';
-    import { isValid } from '../helpers/isValid.js';
+    import { isValid } from '../helpers/index.js';
     import { testFilter, parseInset } from '$lib/helpers/index.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');

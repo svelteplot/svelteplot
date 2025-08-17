@@ -2,7 +2,7 @@ import { CHANNEL_SCALE } from '$lib/constants.js';
 import isDataRecord from '$lib/helpers/isDataRecord.js';
 import isRawValue from '$lib/helpers/isRawValue.js';
 import type { MarkStyleProps, PlotState, ScaledDataRecord } from '$lib/types/index.js';
-import { isValid } from './isValid.js';
+import { isValid } from './index.js';
 
 import type {
     ScaleName,

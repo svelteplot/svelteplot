@@ -32,7 +32,6 @@
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
     import Anchor from './helpers/Anchor.svelte';
-    import type { D } from 'vitest/dist/chunks/reporters.d.DL9pg5DB.js';
 
     const DEFAULTS = {
         ...getContext<PlotDefaults>('svelteplot/_defaults').dot
