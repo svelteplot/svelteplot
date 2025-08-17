@@ -41,10 +41,13 @@ export type MarkStyleProps =
     | 'blend'
     | 'fill'
     | 'fillOpacity'
+    | 'fontFamily'
     | 'fontWeight'
     | 'fontVariant'
     | 'fontSize'
     | 'fontStyle'
+    | 'letterSpacing'
+    | 'wordSpacing'
     | 'stroke'
     | 'strokeWidth'
     | 'strokeOpacity'
@@ -57,6 +60,8 @@ export type MarkStyleProps =
     | 'radius'
     | 'symbol'
     | 'textAnchor'
+    | 'textTransform'
+    | 'textDecoration'
     | 'width';
 
 import type { MouseEventHandler } from 'svelte/elements';

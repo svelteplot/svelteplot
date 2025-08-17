@@ -4,17 +4,27 @@
 -->
 
 <script lang="ts" generics="Datum extends DataRecord">
+    import type * as CSS from 'csstype';
+
     interface TextMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
-        data: Datum[];
-        x: ChannelAccessor<Datum>;
-        y: ChannelAccessor<Datum>;
+        data?: Datum[];
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
         children?: Snippet;
         text: ConstantAccessor<string | null | false | undefined, Datum>;
         title?: ConstantAccessor<string, Datum>;
         /**
          * the font size of the text
          */
-        fontSize?: ConstantAccessor<number, Datum>;
+        fontFamily?: ConstantAccessor<CSS.Property.FontFamily, Datum>;
+        fontSize?: ConstantAccessor<CSS.Property.FontSize, Datum>;
+        fontWeight?: ConstantAccessor<CSS.Property.FontWeight, Datum>;
+        fontStyle?: ConstantAccessor<CSS.Property.FontStyle, Datum>;
+        fontVariant?: ConstantAccessor<CSS.Property.FontVariant, Datum>;
+        letterSpacing?: ConstantAccessor<CSS.Property.LetterSpacing, Datum>;
+        wordSpacing?: ConstantAccessor<CSS.Property.WordSpacing, Datum>;
+        textTransform?: ConstantAccessor<CSS.Property.TextTransform, Datum>;
+        textDecoration?: ConstantAccessor<CSS.Property.TextDecoration, Datum>;
         /**
          * if you want to apply class names to individual text elements
          */
@@ -62,7 +72,7 @@
 
     const DEFAULTS = {
         fontSize: 12,
-        fontWeight: 500,
+        c: 500,
         strokeWidth: 1.6,
         frameAnchor: 'center',
         lineHeight: 1.1,
