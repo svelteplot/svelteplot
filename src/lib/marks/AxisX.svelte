@@ -209,7 +209,9 @@
             )}
             x={plot.options.marginLeft +
                 plot.plotWidth * (titleAlign === 'right' ? 1 : titleAlign === 'center' ? 0.5 : 0)}
-            y={anchor === 'top' ? 13 : plot.height - 13}
+            y={anchor === 'top'
+                ? (options.titleFontSize || 11) + 5
+                : plot.height - (options.titleFontSize || 11) - 5}
             class="axis-x-title"
             dominant-baseline={anchor === 'top' ? 'auto' : 'hanging'}>{useTitle}</text>
     {/if}
