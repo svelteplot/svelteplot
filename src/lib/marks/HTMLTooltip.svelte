@@ -27,7 +27,10 @@
     let tooltipY = $state();
 
     function onMouseMove(evt: MouseEvent) {
-        const pt = tree.find(evt.layerX, evt.layerY, 25);
+        const plotRect = plot.body.getBoundingClientRect();
+        let relativeX = evt.clientX - plotRect.left;
+        let relativeY = evt.clientY - plotRect.top;
+        const pt = tree.find(relativeX, relativeY, 25);
         if (pt) {
             tooltipX = resolveChannel('x', pt, { x, y, r });
             tooltipY = resolveChannel('y', pt, { x, y, r });

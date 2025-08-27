@@ -50,7 +50,10 @@
     let selectedData = $state([]);
 
     function onMouseMove(evt: MouseEvent) {
-        updateSelection(evt.layerX, evt.layerY);
+        const plotRect = plot.body.getBoundingClientRect();
+        let relativeX = evt.clientX - plotRect.left;
+        let relativeY = evt.clientY - plotRect.top;
+        updateSelection(relativeX, relativeY);
     }
 
     function onTouchMove(evt: TouchEvent) {
