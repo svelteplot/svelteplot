@@ -1,10 +1,12 @@
 <script lang="ts" generics="Datum extends DataRow">
     interface PointerMarkProps {
         data: Datum[];
-        children: Snippet<[{ data: Datum[] }]>;
+        children?: Snippet<[{ data: Datum[] }]>;
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
         z?: ChannelAccessor<Datum>;
+        fx?: ChannelAccessor<Datum>;
+        fy?: ChannelAccessor<Datum>;
         /**
          * maximum cursor distance to select data points
          */
@@ -29,6 +31,7 @@
     import { projectXY } from '$lib/helpers/scales.js';
     import isDataRecord from '$lib/helpers/isDataRecord.js';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+    import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -48,6 +51,8 @@
         x,
         y,
         z,
+        fx,
+        fy,
         maxDistance = 15,
         tolerance = Number.NEGATIVE_INFINITY,
         onupdate = null
@@ -109,12 +114,14 @@
         };
     });
 
-    const groups = $derived(
-        z != null ? d3Groups(data, (d) => resolveChannel('z', d, { x, z })) : [[null, data]]
-    );
+    const groups = $derived.by(() => {
+        const groups = [];
+        groupFacetsAndZ(data, { x, y, z, fx, fy }, (d) => groups.push(d));
+        return groups;
+    });
 
     const trees = $derived(
-        groups.map(([, items]) =>
+        groups.map((items) =>
             quadtree()
                 .x(x != null ? (d) => d[POINTER_X] : () => 0)
                 .y(y != null ? (d) => d[POINTER_Y] : () => 0)
