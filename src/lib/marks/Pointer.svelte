@@ -28,6 +28,9 @@
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
+    const POINTER_X = Symbol('pointerX');
+    const POINTER_Y = Symbol('pointerY');
+
     let markProps: PointerMarkProps = $props();
 
     const DEFAULTS = {
@@ -102,8 +105,8 @@
     const trees = $derived(
         groups.map(([, items]) =>
             quadtree()
-                .x(x != null ? (d) => d.__pointerX : () => 0)
-                .y(y != null ? (d) => d.__pointerY : () => 0)
+                .x(x != null ? (d) => d[POINTER_X] : () => 0)
+                .y(y != null ? (d) => d[POINTER_Y] : () => 0)
                 .addAll(
                     items?.map((d) => {
                         const [px, py] = projectXY(
@@ -115,8 +118,8 @@
                         );
                         return {
                             ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
-                            __pointerX: px,
-                            __pointerY: py
+                            [POINTER_X]: px,
+                            [POINTER_Y]: py
                         };
                     }) ?? []
                 )
