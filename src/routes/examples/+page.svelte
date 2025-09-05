@@ -114,7 +114,7 @@
                                 page
                                     .replace(
                                         './',
-                                        'examples/'
+                                        './examples/'
                                     )
                                     .replace('.svelte', '')
                             )}>{pages[page].title}</a>

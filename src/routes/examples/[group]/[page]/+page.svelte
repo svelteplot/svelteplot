@@ -83,9 +83,8 @@
 
     {#if pages[plotKey].repl}
         <p>
-            <a
-                href={resolve(pages[plotKey].repl)}
-                target="_blank"
+            <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+            <a href={pages[plotKey].repl} target="_blank"
                 >Open in Svelte playground</a>
         </p>
     {/if}
