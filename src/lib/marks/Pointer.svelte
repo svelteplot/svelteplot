@@ -52,27 +52,21 @@
 
     let selectedData = $state([]);
 
-    function onMouseMove(evt: MouseEvent) {
-        updateSelection(evt.layerX, evt.layerY);
-    }
-
-    function onTouchMove(evt: TouchEvent) {
-        if (evt.touches) {
-            const rect = (evt.target as HTMLElement).getBoundingClientRect();
-            const pageTop = window.scrollY || document.documentElement.scrollTop;
-            const ox = rect.left;
-            const oy = rect.top + pageTop;
-
-            const touch = evt.touches[0] || evt.changedTouches[0];
-            if (touch) {
-                const ex = touch.pageX - ox;
-                const ey = touch.pageY - oy;
-                updateSelection(ex, ey);
-            }
+    function onPointerMove(evt: MouseEvent) {
+        let facetEl = evt.target as SVGElement;
+        while (facetEl && !facetEl.classList.contains('facet')) {
+            facetEl = facetEl.parentElement;
         }
+        const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
+
+        const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
+        const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
+
+        // console.log({ relativeX, relativeY }, evt);
+        updateSelection(relativeX, relativeY);
     }
 
-    function onMouseLeave() {
+    function onPointerLeave() {
         selectedData = [];
         if (onupdate) onupdate(selectedData);
     }
@@ -87,14 +81,12 @@
     }
 
     $effect(() => {
-        plot.body?.addEventListener('mousemove', onMouseMove);
-        plot.body?.addEventListener('mouseleave', onMouseLeave);
-        plot.body?.addEventListener('touchmove', onTouchMove);
+        plot.body?.addEventListener('pointermove', onPointerMove);
+        plot.body?.addEventListener('pointerleave', onPointerLeave);
 
         return () => {
-            plot.body?.removeEventListener('mousemove', onMouseMove);
-            plot.body?.removeEventListener('mouseleave', onMouseLeave);
-            plot.body?.removeEventListener('touchmove', onTouchMove);
+            plot.body?.removeEventListener('pointermove', onPointerMove);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
         };
     });
 
