@@ -21,8 +21,8 @@ type SimpsonsRow = {
 type PenguinsRow = {
     species: string;
     island: string;
-    bill_length_mm: number;
-    bill_depth_mm: number;
+    culmen_length_mm: number;
+    culmen_depth_mm: number;
     flipper_length_mm: number;
     body_mass_g: number;
 };
