@@ -8,6 +8,7 @@
     const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
 
     import { getContext } from 'svelte';
+    import { resolve } from '$app/paths';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -49,8 +50,9 @@
 
 {#if plotKey}
     <div class="breadcrumb">
-        <a href="/examples">Examples</a> <span>/</span>
-        <a href="/examples/{page.params.group}"
+        <a href={resolve('/examples')}>Examples</a>
+        <span>/</span>
+        <a href={resolve(`/examples/${page.params.group}`)}
             >{pages[parentPage].title}</a>
     </div>
     <h1 class="page-title">{mod.title}</h1>
@@ -81,7 +83,9 @@
 
     {#if pages[plotKey].repl}
         <p>
-            <a href={pages[plotKey].repl} target="_blank"
+            <a
+                href={resolve(pages[plotKey].repl)}
+                target="_blank"
                 >Open in Svelte playground</a>
         </p>
     {/if}

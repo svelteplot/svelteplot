@@ -24,6 +24,7 @@
     import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
     import { getContext } from 'svelte';
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
+    import { resolve } from '$app/paths';
     const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
 
     const pages = import.meta.glob('./**/*.svelte', {
@@ -96,7 +97,7 @@
     {#each Object.entries(paths) as [group, groupPages] (group)}
         <div>
             <h3>
-                <a href="/examples/{group}"
+                <a href={resolve(`/examples/${group}`)}
                     >{pages[
                         groupPages.find((p) =>
                             p.endsWith('/_index.svelte')
@@ -109,10 +110,14 @@
                     .filter((p) => !p.endsWith('/_index.svelte')) as page (page)}
                     <li>
                         <a
-                            href={page
-                                .replace('./', 'examples/')
-                                .replace('.svelte', '')}
-                            >{pages[page].title}</a>
+                            href={resolve(
+                                page
+                                    .replace(
+                                        './',
+                                        'examples/'
+                                    )
+                                    .replace('.svelte', '')
+                            )}>{pages[page].title}</a>
                     </li>
                 {/each}
             </ul>

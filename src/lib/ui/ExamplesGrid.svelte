@@ -1,10 +1,11 @@
 <script>
+    import { resolve } from '$app/paths';
     let { examples } = $props();
 </script>
 
 <div class="list">
     {#each examples as page, i (i)}
-        <a href={page.url}>
+        <a href={resolve(page.url)}>
             <div>
                 {#if page.screenshot}
                     <img src={page.screenshot} alt={page.title} />{/if}

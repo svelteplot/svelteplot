@@ -1,4 +1,6 @@
 <script module>
+    import { resolve } from '$app/paths';
+
     export const title = 'Pointer';
 </script>
 
@@ -6,5 +8,5 @@
 
 <p>
     Here are examples related to the <a
-        href="/marks/pointer">Pointer</a> mark.
+        href={resolve('/marks/pointer')}>Pointer</a> mark.
 </p>

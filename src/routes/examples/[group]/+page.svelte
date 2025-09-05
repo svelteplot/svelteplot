@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
     import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
@@ -79,7 +80,7 @@
 
 {#if subPages.length}
     {#if indexKey}
-        <a href="/examples">Examples</a>
+        <a href={resolve('/examples')}>Examples</a>
         <indexMod.default />
 
         <ExamplesGrid {examples} />
