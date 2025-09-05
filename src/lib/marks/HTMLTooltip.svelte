@@ -26,7 +26,7 @@
     let tooltipX = $state();
     let tooltipY = $state();
 
-    function onMouseMove(evt: MouseEvent) {
+    function onPointerMove(evt: MouseEvent) {
         const pt = tree.find(evt.layerX, evt.layerY, 25);
         if (pt) {
             tooltipX = resolveChannel('x', pt, { x, y, r });
@@ -37,15 +37,17 @@
         }
     }
 
+    function onPointerLeave() {
+        datum = false;
+    }
+
     $effect(() => {
-        // plot.body?.addEventListener('mouseenter', onMouseEnter);
-        // plot.body?.addEventListener('mouseleave', onMouseLeave);
-        plot.body?.addEventListener('mousemove', onMouseMove);
+        plot.body?.addEventListener('pointerleave', onPointerLeave);
+        plot.body?.addEventListener('pointermove', onPointerMove);
 
         return () => {
-            // plot.body?.removeEventListener('mouseenter', onMouseEnter);
-            // plot.body?.removeEventListener('mouseleave', onMouseLeave);
-            plot.body?.removeEventListener('mousemove', onMouseMove);
+            plot.body?.removeEventListener('mouseleave', onPointerLeave);
+            plot.body?.removeEventListener('pointermove', onPointerMove);
         };
     });
 
