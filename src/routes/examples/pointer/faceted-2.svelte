@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Faceted Pointer (2)';
+    export const repl =
+        'https://svelte.dev/playground/5b5a1383b5124896bd5fa1c6b7a2ada6?version=latest';
 </script>
 
 <script lang="ts">

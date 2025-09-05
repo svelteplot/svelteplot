@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Grouped pointer tooltips';
+    export const repl =
+        'https://svelte.dev/playground/dbef67909e854ed38f53d30671353f2c?version=latest';
 </script>
 
 <script lang="ts">
