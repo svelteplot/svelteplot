@@ -64,6 +64,14 @@
             transform="translate({useFacetX ? facetXScale(facetX) : 0}, {useFacetY
                 ? facetYScale(facetY)
                 : 0})">
+            <!-- facets need invisible rect -->
+            <rect
+                x={plot.options.marginLeft}
+                y={plot.options.marginTop}
+                width={facetWidth}
+                height={facetHeight}
+                fill="transparent"
+                pointer-events="all" />
             <Facet
                 fx={facetX}
                 fy={facetY}

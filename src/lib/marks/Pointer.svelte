@@ -10,6 +10,11 @@
          */
         maxDistance?: number;
         /**
+         * tolerance for considering points as "the same" when sharing x or y values
+         * defaults to 0 pixel
+         */
+        tolerance?: number;
+        /**
          * called whenever the selection changes
          * @param data
          */
@@ -28,6 +33,9 @@
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
+    const POINTER_X = Symbol('pointerX');
+    const POINTER_Y = Symbol('pointerY');
+
     let markProps: PointerMarkProps = $props();
 
     const DEFAULTS = {
@@ -41,6 +49,7 @@
         y,
         z,
         maxDistance = 15,
+        tolerance = Number.NEGATIVE_INFINITY,
         onupdate = null
     }: PointerMarkProps = $derived({
         ...DEFAULTS,
@@ -49,27 +58,21 @@
 
     let selectedData = $state([]);
 
-    function onMouseMove(evt: MouseEvent) {
-        updateSelection(evt.layerX, evt.layerY);
-    }
-
-    function onTouchMove(evt: TouchEvent) {
-        if (evt.touches) {
-            const rect = (evt.target as HTMLElement).getBoundingClientRect();
-            const pageTop = window.scrollY || document.documentElement.scrollTop;
-            const ox = rect.left;
-            const oy = rect.top + pageTop;
-
-            const touch = evt.touches[0] || evt.changedTouches[0];
-            if (touch) {
-                const ex = touch.pageX - ox;
-                const ey = touch.pageY - oy;
-                updateSelection(ex, ey);
-            }
+    function onPointerMove(evt: MouseEvent) {
+        let facetEl = evt.target as SVGElement;
+        while (facetEl && !facetEl.classList.contains('facet')) {
+            facetEl = facetEl.parentElement;
         }
+        const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
+
+        const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
+        const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
+
+        // console.log({ relativeX, relativeY }, evt);
+        updateSelection(relativeX, relativeY);
     }
 
-    function onMouseLeave() {
+    function onPointerLeave() {
         selectedData = [];
         if (onupdate) onupdate(selectedData);
     }
@@ -79,19 +82,30 @@
         const points = trees.map((tree) =>
             tree.find(x != null ? ex : 0, y != null ? ey : 0, maxDistance)
         );
-        selectedData = points.filter((d) => d != null);
+        // also include other points that share the same x or y value
+        const otherPoints = trees.flatMap((tree, i) => {
+            return tree
+                .data()
+                .filter((d) => d !== points[i])
+                .filter(
+                    (d) =>
+                        (!isFinite(d[POINTER_X]) ||
+                            Math.abs(d[POINTER_X] - points[i]?.[POINTER_X]) < tolerance) &&
+                        (!isFinite(d[POINTER_Y]) ||
+                            Math.abs(d[POINTER_Y] - points[i]?.[POINTER_Y]) < tolerance)
+                );
+        });
+        selectedData = [...points, ...otherPoints].filter((d) => d != null);
         if (onupdate) onupdate(selectedData);
     }
 
     $effect(() => {
-        plot.body?.addEventListener('mousemove', onMouseMove);
-        plot.body?.addEventListener('mouseleave', onMouseLeave);
-        plot.body?.addEventListener('touchmove', onTouchMove);
+        plot.body?.addEventListener('pointermove', onPointerMove);
+        plot.body?.addEventListener('pointerleave', onPointerLeave);
 
         return () => {
-            plot.body?.removeEventListener('mousemove', onMouseMove);
-            plot.body?.removeEventListener('mouseleave', onMouseLeave);
-            plot.body?.removeEventListener('touchmove', onTouchMove);
+            plot.body?.removeEventListener('pointermove', onPointerMove);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
         };
     });
 
@@ -102,8 +116,8 @@
     const trees = $derived(
         groups.map(([, items]) =>
             quadtree()
-                .x(x != null ? (d) => d.__pointerX : () => 0)
-                .y(y != null ? (d) => d.__pointerY : () => 0)
+                .x(x != null ? (d) => d[POINTER_X] : () => 0)
+                .y(y != null ? (d) => d[POINTER_Y] : () => 0)
                 .addAll(
                     items?.map((d) => {
                         const [px, py] = projectXY(
@@ -115,8 +129,8 @@
                         );
                         return {
                             ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
-                            __pointerX: px,
-                            __pointerY: py
+                            [POINTER_X]: px,
+                            [POINTER_Y]: py
                         };
                     }) ?? []
                 )
