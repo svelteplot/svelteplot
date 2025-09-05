@@ -1,5 +1,5 @@
 <script module>
-    export const title = 'Faceted Pointer';
+    export const title = 'Faceted Pointer (1)';
 </script>
 
 <script lang="ts">

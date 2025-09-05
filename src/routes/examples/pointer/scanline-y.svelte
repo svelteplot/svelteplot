@@ -18,7 +18,11 @@
 
 <Plot marginRight={20}>
     <Line data={aapl} x="Date" y="Close" opacity={0.6} />
-    <Pointer data={aapl} y="Close" maxDistance={30}>
+    <Pointer
+        data={aapl}
+        y="Close"
+        maxDistance={30}
+        tolerance={0.5}>
         {#snippet children({ data })}
             <RuleY {data} y="Close" opacity={0.2} />
             <Text
