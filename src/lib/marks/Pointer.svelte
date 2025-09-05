@@ -10,6 +10,11 @@
          */
         maxDistance?: number;
         /**
+         * tolerance for considering points as "the same" when sharing x or y values
+         * defaults to 0 pixel
+         */
+        tolerance?: number;
+        /**
          * called whenever the selection changes
          * @param data
          */
@@ -44,6 +49,7 @@
         y,
         z,
         maxDistance = 15,
+        tolerance = Number.NEGATIVE_INFINITY,
         onupdate = null
     }: PointerMarkProps = $derived({
         ...DEFAULTS,
@@ -76,7 +82,20 @@
         const points = trees.map((tree) =>
             tree.find(x != null ? ex : 0, y != null ? ey : 0, maxDistance)
         );
-        selectedData = points.filter((d) => d != null);
+        // also include other points that share the same x or y value
+        const otherPoints = trees.flatMap((tree, i) => {
+            return tree
+                .data()
+                .filter((d) => d !== points[i])
+                .filter(
+                    (d) =>
+                        (!isFinite(d[POINTER_X]) ||
+                            Math.abs(d[POINTER_X] - points[i]?.[POINTER_X]) < tolerance) &&
+                        (!isFinite(d[POINTER_Y]) ||
+                            Math.abs(d[POINTER_Y] - points[i]?.[POINTER_Y]) < tolerance)
+                );
+        });
+        selectedData = [...points, ...otherPoints].filter((d) => d != null);
         if (onupdate) onupdate(selectedData);
     }
 
