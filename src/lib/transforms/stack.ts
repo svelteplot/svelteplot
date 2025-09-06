@@ -19,7 +19,7 @@ import {
     stackOrderNone,
     stackOffsetDiverging
 } from 'd3-shape';
-import { index, union, sum, groups as d3Groups } from 'd3-array';
+import { index, union, sum, groups as d3Groups, extent, min } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
@@ -203,6 +203,13 @@ export function stackMarimekko<T>(
 ) {
     const out: T[] = [];
     const { data, x, y, value, ...rest } = sort(filter(args));
+
+    if (data == null) throw new Error('stackMarimekko: missing data');
+    if (x == null) throw new Error('stackMarimekko: missing x channel');
+    if (y == null) throw new Error('stackMarimekko: missing y channel');
+    if (value == null) throw new Error('stackMarimekko: missing value channel');
+    if (min(data, (d) => resolveProp(d[value], d)) < 0)
+        throw new Error('stackMarimekko: negative values not supported');
     groupFacetsAndZ(data, { ...rest }, (data) => {
         const total = sum(data, (d) => d[value]);
         let xPos = 0;

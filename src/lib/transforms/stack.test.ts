@@ -113,6 +113,7 @@ describe('stack marimekko', () => {
         const { data, ...channels } = stackMarimekko({
             data: sales,
             x: 'product',
+            y: 'company',
             fx: 'company',
             value: 'sales'
         });
@@ -133,6 +134,7 @@ describe('stack marimekko', () => {
         const { data, ...channels } = stackMarimekko({
             data: sales,
             x: 'product',
+            y: 'company',
             fy: 'company',
             value: 'sales'
         });
@@ -211,5 +213,16 @@ describe('stack marimekko', () => {
         expect(res[2].y).toStrictEqual([0, 10, 20]);
         expect(res[3].x).toStrictEqual([90, 105, 120]);
         expect(res[3].y).toStrictEqual([20, 25, 30]);
+    });
+
+    it('marimekko with negative values throws error', () => {
+        expect(() =>
+            stackMarimekko({
+                data: sales.map((d) => ({ ...d, sales: d.id === 'p/A' ? -10 : d.sales })),
+                x: 'product',
+                y: 'sales',
+                value: 'sales'
+            })
+        ).toThrowError('stackMarimekko: negative values not supported');
     });
 });
