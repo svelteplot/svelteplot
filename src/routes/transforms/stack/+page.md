@@ -161,12 +161,12 @@ Replaces **x** with **x1** and **x2** for horizontal→ stacks grouped on **y**
 
 Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x**.
 
-## stackMarimekko
+## stackMosaic
 
-A marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMarimekko` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
+A mosaic or Marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMosaic` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
 
 ```js
-stackMarimekko(
+stackMosaic(
     {
         data: sales,
         x: 'market',
@@ -186,7 +186,7 @@ stackMarimekko(
         Plot,
         Rect,
         Text,
-        stackMarimekko
+        stackMosaic
     } from 'svelteplot';
     import { Checkbox } from '$lib/ui';
     import { page } from '$app/state';
@@ -201,7 +201,7 @@ stackMarimekko(
     let sortValue = $state(false);
 
     const stacked = $derived(
-        stackMarimekko(
+        stackMosaic(
             {
                 data: sales,
                 x: 'market',

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { stackMarimekko } from './stack.js';
+import { stackMosaic } from './stack.js';
 import type { DataRecord } from '$lib/types/index.js';
 
 const sales: DataRecord[] = [
@@ -9,7 +9,7 @@ const sales: DataRecord[] = [
     { id: 'l/B', product: 'laptop', company: 'B', sales: 50 }
 ];
 
-describe('stack marimekko', () => {
+describe('stack mosaic', () => {
     const simplify = (d: DataRecord, channels) => {
         const {
             [channels.x]: xv,
@@ -26,8 +26,8 @@ describe('stack marimekko', () => {
         };
     };
 
-    it('marimekko stacking', () => {
-        const { data, ...channels } = stackMarimekko({
+    it('mosaic stacking', () => {
+        const { data, ...channels } = stackMosaic({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -55,8 +55,8 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([40, 65, 90]);
     });
 
-    it('marimekko stacking x percent', () => {
-        const { data, ...channels } = stackMarimekko(
+    it('mosaic stacking x percent', () => {
+        const { data, ...channels } = stackMosaic(
             {
                 data: sales,
                 x: 'product',
@@ -82,8 +82,8 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([40, 65, 90]);
     });
 
-    it('marimekko stacking y percent', () => {
-        const { data, ...channels } = stackMarimekko(
+    it('mosaic stacking y percent', () => {
+        const { data, ...channels } = stackMosaic(
             {
                 data: sales,
                 x: 'product',
@@ -109,8 +109,8 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([4 / 9, 6.5 / 9, 1]);
     });
 
-    it('marimekko faceted along x', () => {
-        const { data, ...channels } = stackMarimekko({
+    it('mosaic faceted along x', () => {
+        const { data, ...channels } = stackMosaic({
             data: sales,
             x: 'product',
             y: 'company',
@@ -130,8 +130,8 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([0, 25, 50]);
     });
 
-    it('marimekko faceted along y', () => {
-        const { data, ...channels } = stackMarimekko({
+    it('mosaic faceted along y', () => {
+        const { data, ...channels } = stackMosaic({
             data: sales,
             x: 'product',
             y: 'company',
@@ -154,8 +154,8 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([0, 25, 50]);
     });
 
-    it('marimekko + filter', () => {
-        const { data, ...channels } = stackMarimekko({
+    it('mosaic + filter', () => {
+        const { data, ...channels } = stackMosaic({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -182,8 +182,8 @@ describe('stack marimekko', () => {
         expect(res[2].y).toStrictEqual([0, 25, 50]);
     });
 
-    it('marimekko sorting', () => {
-        const { data, ...channels } = stackMarimekko({
+    it('mosaic sorting', () => {
+        const { data, ...channels } = stackMosaic({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -215,14 +215,14 @@ describe('stack marimekko', () => {
         expect(res[3].y).toStrictEqual([20, 25, 30]);
     });
 
-    it('marimekko with negative values throws error', () => {
+    it('mosaic with negative values throws error', () => {
         expect(() =>
-            stackMarimekko({
+            stackMosaic({
                 data: sales.map((d) => ({ ...d, sales: d.id === 'p/A' ? -10 : d.sales })),
                 x: 'product',
                 y: 'sales',
                 value: 'sales'
             })
-        ).toThrowError('stackMarimekko: negative values not supported');
+        ).toThrowError('stackMosaic: negative values not supported');
     });
 });

@@ -177,14 +177,14 @@ function applyDefaults(opts: Partial<StackOptions>): StackOptions {
     return { ...DEFAULT_STACK_OPTIONS, ...opts };
 }
 
-const X = Symbol('x'),
-    X1 = Symbol('x1'),
-    X2 = Symbol('x2');
-const Y = Symbol('y'),
-    Y1 = Symbol('y1'),
-    Y2 = Symbol('y2');
+const X = Symbol('x');
+const X1 = Symbol('x1');
+const X2 = Symbol('x2');
+const Y = Symbol('y');
+const Y1 = Symbol('y1');
+const Y2 = Symbol('y2');
 
-export function stackMarimekko<T>(
+export function stackMosaic<T>(
     args: {
         data: T[];
         x: ChannelAccessor<T>;
@@ -204,12 +204,12 @@ export function stackMarimekko<T>(
     const out: T[] = [];
     const { data, x, y, value, ...rest } = sort(filter(args));
 
-    if (data == null) throw new Error('stackMarimekko: missing data');
-    if (x == null) throw new Error('stackMarimekko: missing x channel');
-    if (y == null) throw new Error('stackMarimekko: missing y channel');
-    if (value == null) throw new Error('stackMarimekko: missing value channel');
+    if (data == null) throw new Error('stackMosaic: missing data');
+    if (x == null) throw new Error('stackMosaic: missing x channel');
+    if (y == null) throw new Error('stackMosaic: missing y channel');
+    if (value == null) throw new Error('stackMosaic: missing value channel');
     if (min(data, (d) => resolveProp(d[value], d)) < 0)
-        throw new Error('stackMarimekko: negative values not supported');
+        throw new Error('stackMosaic: negative values not supported');
     groupFacetsAndZ(data, { ...rest }, (data) => {
         const total = sum(data, (d) => d[value]);
         let xPos = 0;

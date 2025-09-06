@@ -21,5 +21,5 @@ export {
 export { shiftX, shiftY } from './shift.js';
 
 export { sort, shuffle, reverse } from './sort.js';
-export { stackX, stackY, stackMarimekko } from './stack.js';
+export { stackX, stackY, stackMosaic } from './stack.js';
 export { windowX, windowY } from './window.js';
