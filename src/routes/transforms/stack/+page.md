@@ -164,7 +164,7 @@ Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x*
 ## stackMosaicX
 
 :::info
-added in 0.4.1
+added in 0.4.0
 :::
 
 A mosaic or Marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMosaic` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
@@ -262,6 +262,10 @@ Channels:
 - **filter**: Optional. A function to filter the data before stacking.
 
 ## stackMosaicY
+
+:::info
+added in 0.4.0
+:::
 
 Like `stackMosaicX`, but for vertical stacks where the height of each bar is proportional to its total value.
 
