@@ -9,7 +9,7 @@
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
     import type { PlotContext, BaseMarkProps, RawValue, PlotDefaults } from '../types/index.js';
-    import { resolveChannel, resolveStyles } from '../helpers/resolve.js';
+    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
@@ -70,6 +70,8 @@
                     {@const x2_ = resolveChannel('x2', tick, options)}
                     {@const x1 = options.x1 != null ? plot.scales.x.fn(x1_) : 0}
                     {@const x2 = options.x2 != null ? plot.scales.x.fn(x2_) : plot.facetWidth}
+                    {@const dx = +resolveProp(options?.dx, tick, 0)}
+                    {@const dy = +resolveProp(options?.dy, tick, 0)}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         { datum: { [RAW_VALUE]: tick } },
@@ -81,7 +83,7 @@
                     <line
                         {style}
                         class={styleClass}
-                        transform="translate({plot.options.marginLeft},{y})"
+                        transform="translate({plot.options.marginLeft + dx},{y + dy})"
                         {x1}
                         {x2} />
                 {/if}
