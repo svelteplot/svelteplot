@@ -19,9 +19,7 @@ describe('GridY mark', () => {
                 }
             }
         });
-        const gridLines = container.querySelectorAll(
-            'g.grid-y > line'
-        ) as NodeListOf<SVGLineElement>;
+        const gridLines = container.querySelectorAll('g.grid-y > line');
         expect(gridLines.length).toBe(3);
         expect(gridLines[0].style.strokeDasharray).toBe('5, 5');
         expect(gridLines[0].style.stroke).toBe('#008000');
@@ -44,17 +42,13 @@ describe('GridY mark', () => {
         const { container } = render(GridYTest, {
             props
         });
-        const gridLines = container.querySelectorAll(
-            'g.grid-y > line'
-        ) as NodeListOf<SVGLineElement>;
+        const gridLines = container.querySelectorAll('g.grid-y > line');
         expect(gridLines[0].getAttribute('transform')).toBe('translate(1,95)');
 
         props.gridArgs.dx = 10;
         await tick();
 
-        const gridLines2 = container.querySelectorAll(
-            'g.grid-y > line'
-        ) as NodeListOf<SVGLineElement>;
+        const gridLines2 = container.querySelectorAll('g.grid-y > line');
         expect(gridLines2[0].getAttribute('transform')).toBe('translate(11,95)');
 
         const dy = vi.fn(() => -20);
@@ -62,9 +56,7 @@ describe('GridY mark', () => {
         props.gridArgs.dy = dy;
         await tick();
 
-        const gridLines3 = container.querySelectorAll(
-            'g.grid-y > line'
-        ) as NodeListOf<SVGLineElement>;
+        const gridLines3 = container.querySelectorAll('g.grid-y > line');
         expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,75)');
         expect(dy).toHaveBeenCalled();
     });
