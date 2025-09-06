@@ -271,7 +271,7 @@ function stackMosaic<T>(
         });
     });
 
-    return { ...rest, data: out, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
+    return { ...rest, fx, fy, data: out, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
 }
 
 export function stackMosaicX<T>(args, opts) {
