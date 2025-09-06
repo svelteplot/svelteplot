@@ -22,6 +22,7 @@ import {
 import { index, union, sum, groups as d3Groups } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
+import { sort } from './sort.js';
 
 const GROUP = Symbol('group');
 const FACET = Symbol('group');
@@ -184,16 +185,10 @@ const Y = Symbol('y'),
     Y2 = Symbol('y2');
 
 export function stackMarimekko<T>(
-    {
-        data,
-        x,
-        y,
-        value,
-        ...rest
-    }: {
+    args: {
         data: T[];
         x: ChannelAccessor<T>;
-        y?: ChannelAccessor<T>; // this is actually not used
+        y: ChannelAccessor<T>; // this is actually not used
         value: ChannelAccessor<T>;
         fx?: ChannelAccessor<T>;
         fy?: ChannelAccessor<T>;
@@ -207,45 +202,43 @@ export function stackMarimekko<T>(
     } = {}
 ) {
     const out: T[] = [];
-    if (rest.filter) {
-        const d = filter({ data, ...rest });
-        data = d.data;
-    }
-
+    const { data, x, y, value, ...rest } = sort(filter(args));
     groupFacetsAndZ(data, { ...rest }, (data) => {
         const total = sum(data, (d) => d[value]);
         let xPos = 0;
 
-        const grouped = d3Groups(data, (d) => resolveProp(d[x], d)).flatMap(([k, items]) => {
+        const grouped = d3Groups(data, (d) => resolveProp(d[x], d));
+        const yOrder = new Map(grouped[0][1].map((d, i) => [d[y], i]));
+        const flat = grouped.flatMap(([k, items], i) => {
             const groupValue = sum(items, (d) => resolveProp(d[value], d));
-            const x1 = xPos,
-                x2 = xPos + groupValue;
+            const x1 = xPos;
+            const x2 = xPos + groupValue;
             xPos = x2;
-
             let yPos = 0;
-            return items.map((d) => {
-                const y1 = yPos,
-                    y2 = yPos + resolveProp(d[value], d);
-                yPos = y2;
+            return (!i ? items : items.sort((a, b) => yOrder.get(a[y]) - yOrder.get(b[y]))).map(
+                (d) => {
+                    const y1 = yPos,
+                        y2 = yPos + resolveProp(d[value], d);
+                    yPos = y2;
 
-                const normX1 = xOpt?.percent ? x1 / total : x1;
-                const normX2 = xOpt?.percent ? x2 / total : x2;
-                const normY1 = yOpt?.percent ? y1 / groupValue : y1;
-                const normY2 = yOpt?.percent ? y2 / groupValue : y2;
+                    const normX1 = xOpt?.percent ? x1 / total : x1;
+                    const normX2 = xOpt?.percent ? x2 / total : x2;
+                    const normY1 = yOpt?.percent ? y1 / groupValue : y1;
+                    const normY2 = yOpt?.percent ? y2 / groupValue : y2;
 
-                return {
-                    ...d,
-                    [X1]: normX1,
-                    [X2]: normX2,
-                    [Y1]: normY1,
-                    [Y2]: normY2,
-                    [X]: (normX1 + normX2) / 2,
-                    [Y]: (normY1 + normY2) / 2
-                };
-            });
+                    return {
+                        ...d,
+                        [X1]: normX1,
+                        [X2]: normX2,
+                        [Y1]: normY1,
+                        [Y2]: normY2,
+                        [X]: (normX1 + normX2) / 2,
+                        [Y]: (normY1 + normY2) / 2
+                    };
+                }
+            );
         });
-
-        out.push(...grouped);
+        out.push(...flat);
     });
 
     return { ...rest, data: out, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };

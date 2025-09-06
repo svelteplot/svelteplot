@@ -44,16 +44,13 @@ describe('stack marimekko', () => {
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 90
-        expect(res[0].id).toBe('p/A');
+        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 15, 30]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
-        expect(res[1].id).toBe('p/B');
         expect(res[1].x).toStrictEqual([0, 15, 30]);
         expect(res[1].y).toStrictEqual([10, 20, 30]);
-        expect(res[2].id).toBe('l/A');
         expect(res[2].x).toStrictEqual([30, 75, 120]);
         expect(res[2].y).toStrictEqual([0, 20, 40]);
-        expect(res[3].id).toBe('l/B');
         expect(res[3].x).toStrictEqual([30, 75, 120]);
         expect(res[3].y).toStrictEqual([40, 65, 90]);
     });
@@ -74,16 +71,13 @@ describe('stack marimekko', () => {
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 25%     |  total: 75%
-        expect(res[0].id).toBe('p/A');
+        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 0.125, 0.25]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
-        expect(res[1].id).toBe('p/B');
         expect(res[1].x).toStrictEqual([0, 0.125, 0.25]);
         expect(res[1].y).toStrictEqual([10, 20, 30]);
-        expect(res[2].id).toBe('l/A');
         expect(res[2].x).toStrictEqual([0.25, 0.625, 1]);
         expect(res[2].y).toStrictEqual([0, 20, 40]);
-        expect(res[3].id).toBe('l/B');
         expect(res[3].x).toStrictEqual([0.25, 0.625, 1]);
         expect(res[3].y).toStrictEqual([40, 65, 90]);
     });
@@ -104,16 +98,13 @@ describe('stack marimekko', () => {
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 90
-        expect(res[0].id).toBe('p/A');
+        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 15, 30]);
         expect(res[0].y).toStrictEqual([0, 1 / 6, 1 / 3]);
-        expect(res[1].id).toBe('p/B');
         expect(res[1].x).toStrictEqual([0, 15, 30]);
         expect(res[1].y).toStrictEqual([1 / 3, 2 / 3, 1]);
-        expect(res[2].id).toBe('l/A');
         expect(res[2].x).toStrictEqual([30, 75, 120]);
         expect(res[2].y).toStrictEqual([0, 2 / 9, 4 / 9]);
-        expect(res[3].id).toBe('l/B');
         expect(res[3].x).toStrictEqual([30, 75, 120]);
         expect(res[3].y).toStrictEqual([4 / 9, 6.5 / 9, 1]);
     });
@@ -187,5 +178,38 @@ describe('stack marimekko', () => {
         expect(res[1].y).toStrictEqual([10, 20, 30]);
         expect(res[2].x).toStrictEqual([30, 55, 80]);
         expect(res[2].y).toStrictEqual([0, 25, 50]);
+    });
+
+    it('marimekko sorting', () => {
+        const { data, ...channels } = stackMarimekko({
+            data: sales,
+            x: 'product',
+            y: 'sales',
+            value: 'sales',
+            sort: { channel: '-value' }
+        });
+
+        expect(channels).toBeDefined();
+        expect(data).toHaveLength(sales.length);
+        expect(channels.x).toBeDefined();
+        expect(channels.y).toBeDefined();
+
+        const res = data.map((d) => simplify(d, channels));
+
+        // total: 30     |  total: 90
+
+        // laptop/B (50) | phone/B (20)
+        // laptop/A (40) | phone/B (10)
+        // ------------------------------
+        // total: 90     | total: 30
+        expect(res.map((d) => d.id)).toStrictEqual(['l/B', 'l/A', 'p/B', 'p/A']);
+        expect(res[0].x).toStrictEqual([0, 45, 90]);
+        expect(res[0].y).toStrictEqual([0, 25, 50]);
+        expect(res[1].x).toStrictEqual([0, 45, 90]);
+        expect(res[1].y).toStrictEqual([50, 70, 90]);
+        expect(res[2].x).toStrictEqual([90, 105, 120]);
+        expect(res[2].y).toStrictEqual([0, 10, 20]);
+        expect(res[3].x).toStrictEqual([90, 105, 120]);
+        expect(res[3].y).toStrictEqual([20, 25, 30]);
     });
 });

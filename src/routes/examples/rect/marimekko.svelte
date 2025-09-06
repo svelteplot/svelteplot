@@ -22,6 +22,7 @@
 
     let xPercent = $state(true);
     let yPercent = $state(true);
+    let sortValue = $state(false);
 
     const stacked = $derived(
         stackMarimekko(
@@ -29,7 +30,8 @@
                 data: sales,
                 x: 'market',
                 y: 'segment',
-                value: 'value'
+                value: 'value',
+                ...(sortValue ? { sort: 'value' } : {})
             },
             {
                 x: { percent: xPercent },
@@ -45,6 +47,7 @@
 <Checkbox
     bind:value={yPercent}
     label="stack y percentages" />
+<Checkbox bind:value={sortValue} label="sort by value" />
 
 <Plot
     frame
