@@ -12,7 +12,6 @@
         Text,
         stackMosaicX
     } from 'svelteplot';
-    import { Checkbox } from '$lib/ui';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
@@ -20,39 +19,26 @@
         page.data.data
     ) as ExamplesData;
 
-    let xPercent = $state(true);
-    let yPercent = $state(true);
-    let sortValue = $state(false);
-
     const stacked = $derived(
         stackMosaicX(
             {
                 data: sales,
                 x: 'market',
                 y: 'segment',
-                value: 'value',
-                ...(sortValue ? { sort: 'value' } : {})
+                value: 'value'
             },
             {
-                x: { percent: xPercent },
-                y: { percent: yPercent }
+                x: { percent: true },
+                y: { percent: true }
             }
         )
     );
 </script>
 
-<Checkbox
-    bind:value={xPercent}
-    label="stack x percentages" />
-<Checkbox
-    bind:value={yPercent}
-    label="stack y percentages" />
-<Checkbox bind:value={sortValue} label="sort by value" />
-
 <Plot
     frame
-    x={{ percent: xPercent }}
-    y={{ percent: yPercent }}
+    x={{ percent: true }}
+    y={{ percent: true }}
     marginTop={15}
     marginRight={15}>
     <Rect
