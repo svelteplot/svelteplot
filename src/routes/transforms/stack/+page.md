@@ -160,3 +160,95 @@ Replaces **x** with **x1** and **x2** for horizontal→ stacks grouped on **y**
 ## stackY
 
 Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x**.
+
+## stackMarimekko
+
+A marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMarimekko` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
+
+```js
+stackMarimekko(
+    {
+        data: sales,
+        x: 'market',
+        y: 'segment',
+        value: 'value'
+    },
+    {
+        x: { percent: true },
+        y: { percent: false }
+    }
+);
+```
+
+```svelte live
+<script lang="ts">
+    import {
+        Plot,
+        Rect,
+        Text,
+        stackMarimekko
+    } from 'svelteplot';
+    import { Checkbox } from '$lib/ui';
+    import { page } from '$app/state';
+    import type { ExamplesData } from '../types';
+
+    const { sales } = $derived(
+        page.data.data
+    ) as ExamplesData;
+
+    let xPercent = $state(true);
+    let yPercent = $state(true);
+    let sortValue = $state(false);
+
+    const stacked = $derived(
+        stackMarimekko(
+            {
+                data: sales,
+                x: 'market',
+                y: 'segment',
+                value: 'value',
+                ...(sortValue ? { sort: 'value' } : {})
+            },
+            {
+                x: { percent: xPercent },
+                y: { percent: yPercent }
+            }
+        )
+    );
+</script>
+
+<Checkbox
+    bind:value={xPercent}
+    label="stack x percentages" />
+<Checkbox
+    bind:value={yPercent}
+    label="stack y percentages" />
+<Checkbox bind:value={sortValue} label="sort by value" />
+
+<Plot
+    frame
+    x={{ percent: xPercent }}
+    y={{ percent: yPercent }}
+    marginTop={15}
+    marginRight={15}>
+    <Rect
+        {...stacked}
+        inset={0.5}
+        opacity={0.5}
+        fill="segment" />
+    <Text
+        {...stacked}
+        fontSize={9}
+        text={(d) =>
+            [d.market, d.segment, d.value].join('\n')} />
+</Plot>
+```
+
+Channels:
+
+- **data**: The input data array.
+- **x**: The name of the categorical variable to group by on the x-axis.
+- **y**: The name of the categorical variable to group by on the y-axis.
+- **value**: The name of the quantitative variable to use for the size of each segment.
+- **sort**: Optional. If 'value', sorts the x groups by total value descending.
+- **filter**: Optional. A function to filter the data before stacking.
