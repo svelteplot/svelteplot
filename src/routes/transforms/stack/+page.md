@@ -163,6 +163,10 @@ Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x*
 
 ## stackMosaicX
 
+:::info
+added in 0.4.1
+:::
+
 A mosaic or Marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMosaic` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
 
 ```js
