@@ -228,6 +228,8 @@ stackMosaicX(
 <Plot
     x={{ percent: xPercent }}
     y={{ percent: yPercent }}
+    height={500}
+    marginBottom={50}
     marginTop={15}
     marginRight={15}>
     <Rect
@@ -243,6 +245,8 @@ stackMosaicX(
             [d.market, d.segment, d.value].join('\n')} />
 </Plot>
 ```
+
+[Fork](https://svelte.dev/playground/8426ef943f63404d8efd40831667ff9e?version=latest)
 
 Channels:
 
