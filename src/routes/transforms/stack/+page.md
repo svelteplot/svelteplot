@@ -226,14 +226,14 @@ stackMosaic(
 <Checkbox bind:value={sortValue} label="sort by value" />
 
 <Plot
-    frame
     x={{ percent: xPercent }}
     y={{ percent: yPercent }}
     marginTop={15}
     marginRight={15}>
     <Rect
         {...stacked}
-        inset={0.5}
+        borderRadius={2}
+        inset={1}
         opacity={0.5}
         fill="segment" />
     <Text
