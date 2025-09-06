@@ -10,7 +10,7 @@
         Plot,
         Rect,
         Text,
-        stackMosaic
+        stackMosaicX
     } from 'svelteplot';
     import { Checkbox } from '$lib/ui';
     import { page } from '$app/state';
@@ -25,7 +25,7 @@
     let sortValue = $state(false);
 
     const stacked = $derived(
-        stackMosaic(
+        stackMosaicX(
             {
                 data: sales,
                 x: 'market',

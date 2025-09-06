@@ -1,5 +1,5 @@
 <script module lang="ts">
-    export const title = 'Faceted marimekko chart';
+    export const title = 'Faceted mosaic chart';
     export const sortKey = 99;
     // export const repl =
     // 'https://svelte.dev/playground/7a6b0ae12c624ffeb52448adac644b5b?version=5.33.18';
@@ -12,7 +12,7 @@
         Rect,
         Dot,
         Text,
-        stackMarimekko
+        stackMosaicX
     } from 'svelteplot';
     import { Checkbox } from '$lib/ui';
     import { page } from '$app/state';
@@ -23,7 +23,7 @@
     ) as ExamplesData;
 
     const stacked = $derived(
-        stackMarimekko(
+        stackMosaicX(
             {
                 data: sales2,
                 x: 'market',
@@ -43,7 +43,11 @@
     x={{ percent: true }}
     marginTop={15}
     marginRight={15}>
-    <Rect {...stacked} inset={0.5} fill="segment" />
+    <Rect
+        {...stacked}
+        inset={0.5}
+        fx="quarter"
+        fill="segment" />
     {#snippet overlay()}
         <HTMLTooltip {...stacked} r={5}>
             {#snippet children({ datum })}
