@@ -6,8 +6,8 @@ import { groups as d3Groups } from 'd3-array';
  * Groups the data by the fx, fy and z channels and calls the reduce function
  * for each group. Returns the new channels to be added in the transform.
  */
-export function groupFacetsAndZ(
-    items: DataRecord[],
+export function groupFacetsAndZ<T>(
+    items: T[],
     channels: Channels,
     reduce: (items: DataRecord[]) => any
 ) {
