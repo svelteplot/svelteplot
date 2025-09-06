@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { stackMosaic } from './stack.js';
+import { stackMosaicX, stackMosaicY } from './stack.js';
 import type { DataRecord } from '$lib/types/index.js';
 
 const sales: DataRecord[] = [
@@ -9,7 +9,7 @@ const sales: DataRecord[] = [
     { id: 'l/B', product: 'laptop', company: 'B', sales: 50 }
 ];
 
-describe('stack mosaic', () => {
+describe('stackMosaicX', () => {
     const simplify = (d: DataRecord, channels) => {
         const {
             [channels.x]: xv,
@@ -27,7 +27,7 @@ describe('stack mosaic', () => {
     };
 
     it('mosaic stacking', () => {
-        const { data, ...channels } = stackMosaic({
+        const { data, ...channels } = stackMosaicX({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -56,7 +56,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic stacking x percent', () => {
-        const { data, ...channels } = stackMosaic(
+        const { data, ...channels } = stackMosaicX(
             {
                 data: sales,
                 x: 'product',
@@ -83,7 +83,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic stacking y percent', () => {
-        const { data, ...channels } = stackMosaic(
+        const { data, ...channels } = stackMosaicX(
             {
                 data: sales,
                 x: 'product',
@@ -110,7 +110,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic faceted along x', () => {
-        const { data, ...channels } = stackMosaic({
+        const { data, ...channels } = stackMosaicX({
             data: sales,
             x: 'product',
             y: 'company',
@@ -131,7 +131,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic faceted along y', () => {
-        const { data, ...channels } = stackMosaic({
+        const { data, ...channels } = stackMosaicX({
             data: sales,
             x: 'product',
             y: 'company',
@@ -155,7 +155,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic + filter', () => {
-        const { data, ...channels } = stackMosaic({
+        const { data, ...channels } = stackMosaicX({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -183,7 +183,7 @@ describe('stack mosaic', () => {
     });
 
     it('mosaic sorting', () => {
-        const { data, ...channels } = stackMosaic({
+        const { data, ...channels } = stackMosaicX({
             data: sales,
             x: 'product',
             y: 'sales',
@@ -217,12 +217,58 @@ describe('stack mosaic', () => {
 
     it('mosaic with negative values throws error', () => {
         expect(() =>
-            stackMosaic({
+            stackMosaicX({
                 data: sales.map((d) => ({ ...d, sales: d.id === 'p/A' ? -10 : d.sales })),
                 x: 'product',
                 y: 'sales',
                 value: 'sales'
             })
         ).toThrowError('stackMosaic: negative values not supported');
+    });
+});
+
+describe('stackMosaicY', () => {
+    const simplify = (d: DataRecord, channels) => {
+        const {
+            [channels.x]: xv,
+            [channels.x1]: x1v,
+            [channels.x2]: x2v,
+            [channels.y]: yv,
+            [channels.y1]: y1v,
+            [channels.y2]: y2v
+        } = d;
+        return {
+            ...d,
+            x: [x1v, xv, x2v],
+            y: [y1v, yv, y2v]
+        };
+    };
+    it('mosaic stacking', () => {
+        const { data, ...channels } = stackMosaicY({
+            data: sales,
+            x: 'sales',
+            y: 'product',
+            value: 'sales'
+        });
+
+        expect(channels).toBeDefined();
+        expect(data).toHaveLength(sales.length);
+        expect(channels.x).toBeDefined();
+        expect(channels.y).toBeDefined();
+
+        const res = data.map((d) => simplify(d, channels));
+        // phone/A (10)  |  laptop/A (40)
+        // phone/B (20)  |  laptop/B (50)
+        // ------------------------------
+        // total: 30     |  total: 90
+        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
+        expect(res[0].x).toStrictEqual([0, 5, 10]);
+        expect(res[0].y).toStrictEqual([0, 15, 30]);
+        expect(res[1].x).toStrictEqual([10, 20, 30]);
+        expect(res[1].y).toStrictEqual([0, 15, 30]);
+        expect(res[2].x).toStrictEqual([0, 20, 40]);
+        expect(res[2].y).toStrictEqual([30, 75, 120]);
+        expect(res[3].x).toStrictEqual([40, 65, 90]);
+        expect(res[3].y).toStrictEqual([30, 75, 120]);
     });
 });
