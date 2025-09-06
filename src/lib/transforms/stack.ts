@@ -192,7 +192,7 @@ export function stackMarimekko<T>(
     }: {
         data: T[];
         x: ChannelAccessor<T>;
-        y: ChannelAccessor<T>; // this is actually not used
+        y?: ChannelAccessor<T>; // this is actually not used
         value: ChannelAccessor<T>;
         fx?: ChannelAccessor<T>;
         fy?: ChannelAccessor<T>;
