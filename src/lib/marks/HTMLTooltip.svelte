@@ -38,7 +38,7 @@
         while (facetEl && !facetEl.classList.contains('facet')) {
             facetEl = facetEl.parentElement;
         }
-        const facetIndex = +(facetEl.dataset?.facet ?? 0);
+        const facetIndex = +(facetEl?.dataset?.facet ?? 0);
         const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
 
         facetOffsetX = facetRect.left - plotRect.left - plot.options.marginLeft;
