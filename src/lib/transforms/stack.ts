@@ -20,6 +20,7 @@ import {
     stackOffsetDiverging
 } from 'd3-shape';
 import { index, union, sum, groups as d3Groups } from 'd3-array';
+import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 
 const GROUP = Symbol('group');
 const FACET = Symbol('group');
@@ -181,38 +182,66 @@ const Y = Symbol('y'),
     Y1 = Symbol('y1'),
     Y2 = Symbol('y2');
 
-export function stackMarimekko({ data, x, y, value, ...rest }, { x: xOpt, y: yOpt } = {}) {
-    const total = sum(data, (d) => d[value]);
-    let xPos = 0;
+export function stackMarimekko<T>(
+    {
+        data,
+        x,
+        y,
+        value,
+        ...rest
+    }: {
+        data: T[];
+        x: ChannelAccessor<T>;
+        y: ChannelAccessor<T>;
+        value: ChannelAccessor<T>;
+        fx?: ChannelAccessor<T>;
+        fy?: ChannelAccessor<T>;
+    },
+    {
+        x: xOpt,
+        y: yOpt
+    }: {
+        x?: { percent?: boolean };
+        y?: { percent?: boolean };
+    } = {}
+) {
+    const out: T[] = [];
 
-    const grouped = d3Groups(data, (d) => d[x]).flatMap(([k, items]) => {
-        const groupValue = sum(items, (d) => d[value]);
-        const x1 = xPos,
-            x2 = xPos + groupValue;
-        xPos = x2;
+    groupFacetsAndZ(data, { ...rest }, (data) => {
+        const total = sum(data, (d) => d[value]);
+        let xPos = 0;
 
-        let yPos = 0;
-        return items.map((d) => {
-            const y1 = yPos,
-                y2 = yPos + d[value];
-            yPos = y2;
+        const grouped = d3Groups(data, (d) => d[x]).flatMap(([k, items]) => {
+            const groupValue = sum(items, (d) => d[value]);
+            const x1 = xPos,
+                x2 = xPos + groupValue;
+            xPos = x2;
 
-            const normX1 = xOpt?.percent ? x1 / total : x1;
-            const normX2 = xOpt?.percent ? x2 / total : x2;
-            const normY1 = yOpt?.percent ? y1 / groupValue : y1;
-            const normY2 = yOpt?.percent ? y2 / groupValue : y2;
+            let yPos = 0;
+            return items.map((d) => {
+                const y1 = yPos,
+                    y2 = yPos + d[value];
+                yPos = y2;
 
-            return {
-                ...d,
-                [X1]: normX1,
-                [X2]: normX2,
-                [Y1]: normY1,
-                [Y2]: normY2,
-                [X]: (normX1 + normX2) / 2,
-                [Y]: (normY1 + normY2) / 2
-            };
+                const normX1 = xOpt?.percent ? x1 / total : x1;
+                const normX2 = xOpt?.percent ? x2 / total : x2;
+                const normY1 = yOpt?.percent ? y1 / groupValue : y1;
+                const normY2 = yOpt?.percent ? y2 / groupValue : y2;
+
+                return {
+                    ...d,
+                    [X1]: normX1,
+                    [X2]: normX2,
+                    [Y1]: normY1,
+                    [Y2]: normY2,
+                    [X]: (normX1 + normX2) / 2,
+                    [Y]: (normY1 + normY2) / 2
+                };
+            });
         });
+
+        out.push(...grouped);
     });
 
-    return { ...rest, data: grouped, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
+    return { ...rest, data: out, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
 }
