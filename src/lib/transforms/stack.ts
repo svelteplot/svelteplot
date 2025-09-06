@@ -21,6 +21,7 @@ import {
 } from 'd3-shape';
 import { index, union, sum, groups as d3Groups } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
+import { filter } from './filter.js';
 
 const GROUP = Symbol('group');
 const FACET = Symbol('group');
@@ -206,6 +207,10 @@ export function stackMarimekko<T>(
     } = {}
 ) {
     const out: T[] = [];
+    if (rest.filter) {
+        const d = filter({ data, ...rest });
+        data = d.data;
+    }
 
     groupFacetsAndZ(data, { ...rest }, (data) => {
         const total = sum(data, (d) => d[value]);

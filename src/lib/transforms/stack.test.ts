@@ -160,4 +160,32 @@ describe('stack marimekko', () => {
         expect(res[3].x).toStrictEqual([20, 45, 70]);
         expect(res[3].y).toStrictEqual([0, 25, 50]);
     });
+
+    it('marimekko + filter', () => {
+        const { data, ...channels } = stackMarimekko({
+            data: sales,
+            x: 'product',
+            y: 'sales',
+            value: 'sales',
+            filter: (d) => d.id !== 'l/A'
+        });
+
+        expect(channels).toBeDefined();
+        expect(data).toHaveLength(sales.length - 1);
+        expect(channels.x).toBeDefined();
+        expect(channels.y).toBeDefined();
+
+        const res = data.map((d) => simplify(d, channels));
+        // phone/A (10)  |
+        // phone/B (20)  |  laptop/B (50)
+        // ------------------------------
+        // total: 30     |  total: 50
+        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/B']);
+        expect(res[0].x).toStrictEqual([0, 15, 30]);
+        expect(res[0].y).toStrictEqual([0, 5, 10]);
+        expect(res[1].x).toStrictEqual([0, 15, 30]);
+        expect(res[1].y).toStrictEqual([10, 20, 30]);
+        expect(res[2].x).toStrictEqual([30, 55, 80]);
+        expect(res[2].y).toStrictEqual([0, 25, 50]);
+    });
 });
