@@ -145,6 +145,13 @@ type SalesRow = {
     value: number;
 };
 
+type QuarterlySalesRow = {
+    market: string;
+    segment: string;
+    quarter: string;
+    value: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];
@@ -160,6 +167,7 @@ export type ExamplesData = {
     riaa: RiaaRow[];
     metros: MetrosRow[];
     sales: SalesRow[];
+    sales2: QuarterlySalesRow[];
     wind: WindRow[];
     election: ElectionRow[];
 };
