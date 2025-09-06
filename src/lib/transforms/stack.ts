@@ -19,7 +19,7 @@ import {
     stackOrderNone,
     stackOffsetDiverging
 } from 'd3-shape';
-import { index, union, groups as d3Groups } from 'd3-array';
+import { index, union, sum, groups as d3Groups } from 'd3-array';
 
 const GROUP = Symbol('group');
 const FACET = Symbol('group');
@@ -172,4 +172,47 @@ function applyDefaults(opts: Partial<StackOptions>): StackOptions {
         return { ...DEFAULT_STACK_OPTIONS, order: 'inside-out', ...opts };
     }
     return { ...DEFAULT_STACK_OPTIONS, ...opts };
+}
+
+const X = Symbol('x'),
+    X1 = Symbol('x1'),
+    X2 = Symbol('x2');
+const Y = Symbol('y'),
+    Y1 = Symbol('y1'),
+    Y2 = Symbol('y2');
+
+export function stackMarimekko({ data, x, y, value, ...rest }, { x: xOpt, y: yOpt } = {}) {
+    const total = sum(data, (d) => d[value]);
+    let xPos = 0;
+
+    const grouped = d3Groups(data, (d) => d[x]).flatMap(([k, items]) => {
+        const groupValue = sum(items, (d) => d[value]);
+        const x1 = xPos,
+            x2 = xPos + groupValue;
+        xPos = x2;
+
+        let yPos = 0;
+        return items.map((d) => {
+            const y1 = yPos,
+                y2 = yPos + d[value];
+            yPos = y2;
+
+            const normX1 = xOpt?.percent ? x1 / total : x1;
+            const normX2 = xOpt?.percent ? x2 / total : x2;
+            const normY1 = yOpt?.percent ? y1 / groupValue : y1;
+            const normY2 = yOpt?.percent ? y2 / groupValue : y2;
+
+            return {
+                ...d,
+                [X1]: normX1,
+                [X2]: normX2,
+                [Y1]: normY1,
+                [Y2]: normY2,
+                [X]: (normX1 + normX2) / 2,
+                [Y]: (normY1 + normY2) / 2
+            };
+        });
+    });
+
+    return { ...rest, data: grouped, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
 }

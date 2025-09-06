@@ -139,6 +139,12 @@ interface USAtlas extends TopoJSON.Topology {
     transform: TopoJSON.Transform;
 }
 
+type SalesRow = {
+    market: string;
+    segment: string;
+    value: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];
@@ -153,6 +159,7 @@ export type ExamplesData = {
     beagle: BeagleRow[];
     riaa: RiaaRow[];
     metros: MetrosRow[];
+    sales: SalesRow[];
     wind: WindRow[];
     election: ElectionRow[];
 };
