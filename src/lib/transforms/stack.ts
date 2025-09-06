@@ -1,5 +1,5 @@
 import isDataRecord from '$lib/helpers/isDataRecord.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
+import { resolveChannel, resolveProp } from '$lib/helpers/resolve.js';
 import type {
     ChannelAccessor,
     ScaledChannelName,
@@ -192,7 +192,7 @@ export function stackMarimekko<T>(
     }: {
         data: T[];
         x: ChannelAccessor<T>;
-        y: ChannelAccessor<T>;
+        y: ChannelAccessor<T>; // this is actually not used
         value: ChannelAccessor<T>;
         fx?: ChannelAccessor<T>;
         fy?: ChannelAccessor<T>;
@@ -211,8 +211,8 @@ export function stackMarimekko<T>(
         const total = sum(data, (d) => d[value]);
         let xPos = 0;
 
-        const grouped = d3Groups(data, (d) => d[x]).flatMap(([k, items]) => {
-            const groupValue = sum(items, (d) => d[value]);
+        const grouped = d3Groups(data, (d) => resolveProp(d[x], d)).flatMap(([k, items]) => {
+            const groupValue = sum(items, (d) => resolveProp(d[value], d));
             const x1 = xPos,
                 x2 = xPos + groupValue;
             xPos = x2;
@@ -220,7 +220,7 @@ export function stackMarimekko<T>(
             let yPos = 0;
             return items.map((d) => {
                 const y1 = yPos,
-                    y2 = yPos + d[value];
+                    y2 = yPos + resolveProp(d[value], d);
                 yPos = y2;
 
                 const normX1 = xOpt?.percent ? x1 / total : x1;

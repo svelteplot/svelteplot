@@ -22,9 +22,6 @@
         page.data.data
     ) as ExamplesData;
 
-    let xPercent = $state(true);
-    let yPercent = $state(true);
-
     const stacked = $derived(
         stackMarimekko(
             {
@@ -35,31 +32,18 @@
                 value: 'value'
             },
             {
-                x: { percent: xPercent },
-                y: { percent: yPercent }
+                x: { percent: true }
             }
         )
     );
 </script>
 
-<Checkbox
-    bind:value={xPercent}
-    label="stack x percentages" />
-<Checkbox
-    bind:value={yPercent}
-    label="stack y percentages" />
-
 <Plot
-    frame
-    x={{ percent: xPercent }}
-    y={{ percent: yPercent }}
+    color={{ legend: true }}
+    x={{ percent: true }}
     marginTop={15}
     marginRight={15}>
-    <Rect
-        {...stacked}
-        inset={0.5}
-        opacity={0.5}
-        fill="segment" />
+    <Rect {...stacked} inset={0.5} fill="segment" />
     {#snippet overlay()}
         <HTMLTooltip {...stacked} r={5}>
             {#snippet children({ datum })}
