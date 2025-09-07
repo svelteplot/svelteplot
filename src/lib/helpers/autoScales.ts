@@ -302,7 +302,7 @@ export function autoScaleColor({
         }
     }
     if (!fn) {
-        console.warn('color problem', type);
+        console.error('color problem', type);
         // problem
         fn = () => 'red';
         fn.range = () => ['red'];

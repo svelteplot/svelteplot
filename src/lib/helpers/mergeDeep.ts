@@ -1,7 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ObjectType = { [key: string]: any };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isObject(item: any): item is ObjectType {
     return item && typeof item === 'object' && !Array.isArray(item);
 }
