@@ -116,6 +116,8 @@
     const lineHeight = $derived(
         textLines.length > 1 ? (resolveProp(args.lineHeight, d.datum) ?? 1.2) : 0
     );
+
+    const rotate = $derived(+resolveProp(args.rotate, d.datum, 0));
 </script>
 
 {#if textLines.length > 1}
@@ -134,7 +136,7 @@
                       : 0) *
                     computedFontSize *
                     lineHeight
-        )})"
+        )}) rotate({rotate})"
         >{#each textLines as line, l (l)}<tspan
                 x="0"
                 dy={l ? computedFontSize * lineHeight : 0}
@@ -146,7 +148,7 @@
     <text
         class={[textClassName, styleClass]}
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
-        transform="translate({Math.round(x + dx)},{Math.round(y + dy)})"
+        transform="translate({Math.round(x + dx)},{Math.round(y + dy)}) rotate({rotate})"
         {style}
         >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
 {/if}

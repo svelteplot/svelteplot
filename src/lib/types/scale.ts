@@ -34,7 +34,7 @@ export type ScaleOptions = {
      * Reverse the scale.
      */
     reverse: boolean;
-    label?: string;
+    label?: string | false;
     interval?: string | number;
     // quantitative scales
     clamp: boolean;

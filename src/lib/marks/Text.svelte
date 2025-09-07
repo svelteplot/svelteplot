@@ -49,6 +49,10 @@
             | 'bottom-right',
             Datum
         >;
+        /**
+         * rotate text by angle in degrees
+         */
+        rotate: ConstantAccessor<number, Datum>;
     }
 
     import { getContext, type Snippet } from 'svelte';
@@ -59,14 +63,11 @@
         ConstantAccessor,
         ChannelAccessor,
         PlotDefaults,
-        TransformArg,
-        RawValue,
         LinkableMarkProps
     } from '../types/index.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
     import { sort } from '$lib/index.js';
-    import Anchor from './helpers/Anchor.svelte';
 
     import MultilineText from './helpers/MultilineText.svelte';
 

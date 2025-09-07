@@ -4,6 +4,7 @@
     $effect(() => {
         const content = document.querySelector('.content');
         if (content) {
+            // headline version links
             content
                 .querySelectorAll('h1 + .admonition-info, h2 + .admonition-info')
                 .forEach((el) => {
@@ -24,6 +25,22 @@
                         header?.appendChild(a);
                     }
                 });
+            // inline version links
+            content.querySelectorAll('em').forEach((el) => {
+                if (el.innerText.startsWith('added in')) {
+                    const version = el.innerText.replace('added in ', '').trim();
+                    const parent = el.parentElement;
+                    el.remove();
+                    const a = document.createElement('a');
+                    a.innerHTML = `<span class="admonition-content">^${version}</span>`;
+                    a.target = '_blank';
+                    a.title = `Added in version ${version}`;
+                    a.classList.add('version-link');
+                    a.classList.add('admonition-info');
+                    a.href = `https://github.com/svelteplot/svelteplot/releases/tag/v${version}`;
+                    parent?.appendChild(a);
+                }
+            });
         }
     });
 </script>
