@@ -7,8 +7,8 @@ import { randomLcg } from 'd3-random';
 export const SORT_KEY = Symbol('sortKey');
 export const IS_SORTED = Symbol('isSorted');
 
-export function sort(
-    { data, ...channels }: TransformArg<DataRecord>,
+export function sort<T>(
+    { data, ...channels }: TransformArg<T>,
     options: { reverse?: boolean } = {}
 ) {
     if (!Array.isArray(data)) return { data, ...channels };

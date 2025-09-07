@@ -59,6 +59,9 @@
     {#each fyValues as facetY, j (j)}
         <g
             class="facet"
+            data-facet-x={i}
+            data-facet-y={j}
+            data-facet={i * fyValues.length + j}
             fill="currentColor"
             style:display={emptyFacets.get(facetX)?.get(facetY) ? 'none' : 'block'}
             transform="translate({useFacetX ? facetXScale(facetX) : 0}, {useFacetY

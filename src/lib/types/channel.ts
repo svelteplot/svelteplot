@@ -1,8 +1,8 @@
 import type { ConstantAccessor, RawValue } from './index.js';
 
-export type Channels = Record<
+export type Channels<T> = Record<
     string,
-    ChannelAccessor | ConstantAccessor<string | number | boolean | symbol>
+    ChannelAccessor<T> | ConstantAccessor<T, string | number | boolean | symbol>
 >;
 
 export type ChannelAccessor<T = Record<string | symbol, RawValue>> =

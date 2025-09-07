@@ -133,6 +133,7 @@ You can position text either using [frameAnchor](#frame-anchor) or using _x_ and
 - **lineHeight** - expressed as factor of font size, default 1.1
 - **class** - CSS class name to applied to the `<g>` around all texts
 - **textClass** - CSS class to be applied to each `<text>` element, can be a function of data
+- **rotate** - rotation angle in degrees _added in 0.4.0_
 
 ### Frame anchor
 
