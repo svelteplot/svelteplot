@@ -19,12 +19,12 @@ SveltePlot is a visualization framework based on the [layered grammar of graphic
 ### Core Dependencies
 
 - **Svelte 5.x**: Component framework with modern reactivity
-- **SvelteKit**: Application framework for routing and SSR
 - **TypeScript**: Type safety and developer experience
 - **D3.js ecosystem**: Data manipulation and mathematical utilities
     - `d3-array`, `d3-scale`, `d3-shape`, `d3-color`, `d3-interpolate`, etc.
 - **Vite**: Build tool and development server
 - **Vitest**: Unit testing framework
+- **SvelteKit**: Application framework for routing and SSR (for docs)
 
 ### Development Tools
 
@@ -142,7 +142,7 @@ All marks follow consistent patterns:
 - Use generic types for flexible data handling
 - Define strict interfaces for component props
 - Export types from `src/lib/types/index.ts`
-- Follow D3.js naming conventions for familiar APIs
+- Follow Observable Plot and D3 naming conventions for familiar APIs
 
 ### Data Processing
 
@@ -191,11 +191,11 @@ test('transforms data correctly', () => {
 
 ```bash
 pnpm install                    # Install dependencies
+pnpm run lint                  # Check code quality
+pnpm run test                  # Run test suite
+pnpm run check                 # Type checking
 pnpm run dev                   # Start development server
 pnpm run build                 # Build library
-pnpm run test                  # Run test suite
-pnpm run lint                  # Check code quality
-pnpm run check                 # Type checking
 ```
 
 ### Adding New Marks
@@ -222,7 +222,6 @@ pnpm run check                 # Type checking
 
 - Use `$derived` for reactive computations
 - Avoid unnecessary DOM updates
-- Implement virtual scrolling for large datasets
 - Use D3.js utilities for efficient data processing
 
 #### Type Safety
@@ -265,7 +264,7 @@ const renderPlot = (marks: any[]) =>
 
 ### Coverage Expectations
 
-- Maintain > 90% code coverage
+- Increase test coverage to > 90%
 - Test error conditions and edge cases
 - Verify reactive updates work correctly
 - Test with various data types and shapes
