@@ -11,6 +11,7 @@
         stroke?: string;
         fillOpacity?: number;
         strokeOpacity?: number;
+        opacity?: number;
         automatic?: boolean;
         inset?: number;
         insetLeft?: number;
@@ -29,6 +30,7 @@
     } from '../types/index.js';
     import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
+    import { resolveProp } from 'svelteplot/helpers/resolve';
 
     let markProps: FrameMarkProps = $props();
 
@@ -46,6 +48,7 @@
         class: className,
         fill,
         stroke,
+        opacity,
         fillOpacity,
         strokeOpacity,
         ...options
@@ -53,6 +56,9 @@
         ...DEFAULTS,
         ...markProps
     });
+
+    const dx = $derived(resolveProp(options.dx, null, 0) || 0);
+    const dy = $derived(resolveProp(options.dy, null, 0) || 0);
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -62,13 +68,13 @@
     {#snippet children({ usedScales })}
         <RectPath
             class={className}
-            datum={{ fill, stroke, fillOpacity, strokeOpacity, datum: {}, valid: true }}
-            x={plot.options.marginLeft}
-            y={plot.options.marginTop}
+            datum={{ fill, stroke, fillOpacity, strokeOpacity, opacity, datum: {}, valid: true }}
+            x={plot.options.marginLeft + dx}
+            y={plot.options.marginTop + dy}
             width={plot.facetWidth}
             height={plot.facetHeight}
             {usedScales}
             fallbackStyle="stroke"
-            options={{ ...options, fill, stroke, fillOpacity, strokeOpacity }} />
+            options={{ ...options, fill, stroke, fillOpacity, opacity, strokeOpacity }} />
     {/snippet}
 </Mark>
