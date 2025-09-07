@@ -211,8 +211,8 @@
                 valid: true
             };
             // compute dx/dy
-            const dx = Number(resolveProp<number>(options.dx, out.datum, 0));
-            const dy = Number(resolveProp<number>(options.dy, out.datum, 0));
+            out.dx = Number(resolveProp<number>(options.dx, out.datum, 0));
+            out.dy = Number(resolveProp<number>(options.dy, out.datum, 0));
 
             // special handling if there's a projection, e.g. a line mark
             if (plot.scales.projection && mark.type !== 'geo') {
@@ -271,7 +271,7 @@
                     // apply dx/dy transform
                     out[channel] =
                         Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
-                            ? scaled + (scale === 'x' ? dx : dy)
+                            ? scaled + (scale === 'x' ? out.dx : out.dy)
                             : scaled;
                 } else if (defaults[channel]) {
                     out[channel] = defaults[channel];

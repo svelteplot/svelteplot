@@ -177,8 +177,6 @@
                 {#each scaledData as d, i (i)}
                     {@const r = resolveChannel('r', d.datum, { r: 3, ...args })}
                     {#if d.valid && isValid(r)}
-                        {@const dx = +resolveProp(args.dx, d.datum, 0)}
-                        {@const dy = +resolveProp(args.dx, d.datum, 0)}
                         {@const [style, styleClass] = resolveStyles(
                             plot,
                             d,
@@ -193,7 +191,7 @@
                         )}
                         <path
                             d={shapePath(shape, d.length, r)}
-                            transform="translate({d.x + dx}, {d.y + dy}) rotate({resolveProp(
+                            transform="translate({d.x}, {d.y}) rotate({resolveProp(
                                 args.rotate,
                                 d.datum,
                                 0

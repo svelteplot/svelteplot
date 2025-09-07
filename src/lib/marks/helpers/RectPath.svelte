@@ -58,8 +58,6 @@ Helper component for rendering rectangular marks in SVG
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const dx = $derived(+(resolveProp(options.dx, datum?.datum, 0) as number));
-    const dy = $derived(+(resolveProp(options.dy, datum?.datum, 0) as number));
     const inset = $derived(+(resolveProp(options.inset, datum?.datum, 0) as number));
     const insetLeft = $derived(
         +(resolveProp(
@@ -108,7 +106,7 @@ Helper component for rendering rectangular marks in SVG
 <Anchor {options} datum={datum?.datum}>
     {#if hasBorderRadius}
         <path
-            transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
+            transform="translate({x + insetLeft},{y + insetBottom})"
             d={roundedRect(
                 0,
                 0,
@@ -125,7 +123,7 @@ Helper component for rendering rectangular marks in SVG
             }} />
     {:else}
         <rect
-            transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
+            transform="translate({x + insetLeft},{y + insetBottom})"
             width={width - insetLeft - insetRight}
             height={height - insetTop - insetBottom}
             class={[styleClass, className]}
