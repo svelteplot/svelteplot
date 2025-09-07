@@ -8,6 +8,17 @@ export default [
             'no-console': ['error', { allow: ['error'] }]
         }
     },
+    // Ensure TypeScript files (including names like *.svelte.ts) use the TS parser
+    {
+        files: ['**/*.ts', '**/*.mts', '**/*.cts']
+        ,
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                sourceType: 'module'
+            }
+        }
+    },
     ...svelte.configs.recommended,
     {
         files: ['**/*.svelte', '*.svelte'],
@@ -44,5 +55,18 @@ export default [
             'pnpm-lock.yaml',
             'package-lock.json'
         ]
+    },
+    // Treat test files named *.svelte.ts as plain TypeScript tests
+    {
+        files: ['**/*.svelte.ts', '*.svelte.ts'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                sourceType: 'module'
+            }
+        },
+        rules: {
+            'svelte/*': 'off'
+        }
     }
 ];

@@ -17,7 +17,7 @@
          * the font size of the text
          */
         fontFamily?: ConstantAccessor<CSS.Property.FontFamily, Datum>;
-        fontSize?: ConstantAccessor<CSS.Property.FontSize, Datum>;
+        fontSize?: ConstantAccessor<CSS.Property.FontSize | number, Datum>;
         fontWeight?: ConstantAccessor<CSS.Property.FontWeight, Datum>;
         fontStyle?: ConstantAccessor<CSS.Property.FontStyle, Datum>;
         fontVariant?: ConstantAccessor<CSS.Property.FontVariant, Datum>;
@@ -46,7 +46,8 @@
             | 'top-left'
             | 'bottom-left'
             | 'top-right'
-            | 'bottom-right',
+            | 'bottom-right'
+            | 'middle',
             Datum
         >;
         /**
@@ -75,7 +76,7 @@
         fontSize: 12,
         c: 500,
         strokeWidth: 1.6,
-        frameAnchor: 'center',
+        frameAnchor: 'middle' as const,
         lineHeight: 1.1,
         rotate: 0,
         ...getContext<PlotDefaults>('svelteplot/_defaults').text

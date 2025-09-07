@@ -334,7 +334,7 @@ export function createScale<T extends ScaleOptions>(
             domain = domainFromInterval(domain, scaleOptions.interval, name);
         } else {
             if (markTypes.size > 0) {
-                console.warn(
+                console.error(
                     'Setting interval via axis options is only supported for ordinal scales'
                 );
             }

@@ -70,9 +70,6 @@
               ]
     );
 
-    const dx = $derived(+resolveProp(args.dx, d.datum, 0));
-    const dy = $derived(+resolveProp(args.dy, d.datum, 0));
-
     const [style, styleClass] = $derived(
         resolveStyles(
             plot,
@@ -126,9 +123,8 @@
         bind:this={textElement}
         class={[textClassName]}
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
-        transform="translate({Math.round(x + dx)},{Math.round(
-            y +
-                dy -
+        transform="translate({Math.round(x)},{Math.round(
+            y -
                 (lineAnchor === 'bottom'
                     ? textLines.length - 1
                     : lineAnchor === 'middle'
@@ -148,7 +144,7 @@
     <text
         class={[textClassName, styleClass]}
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
-        transform="translate({Math.round(x + dx)},{Math.round(y + dy)}) rotate({rotate})"
+        transform="translate({Math.round(x)},{Math.round(y)}) rotate({rotate})"
         {style}
         >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
 {/if}

@@ -118,7 +118,6 @@ export function reduceOutputs(
                     if (typeof channels[k] === 'string') {
                         // the named reducer is applied to a column name, so we can use a combination
                         // of both as axis labels, e.g. MEAN(weight)
-                        // eslint-disable-next-line no-irregular-whitespace
                         newChannels[`__${k}_origField`] = `${reducerName} ( ${channels[k]} )`;
                     } else {
                         newChannels[`__${k}_origField`] = reducerName;
