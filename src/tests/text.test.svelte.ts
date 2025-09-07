@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import TextTest from './text.test.svelte';
 import { getTranslate } from './utils';
+import { tick } from 'svelte';
 
 const testData = [
     { x: 10, y: 20, label: 'First', value: 5 },
@@ -26,7 +27,7 @@ describe('Text mark', () => {
         expect(texts.length).toBe(2);
         expect(texts[0].textContent).toBe('First');
         expect(texts[1].textContent).toBe('Second');
-        
+
         // Check positioning
         const positions = Array.from(texts).map(getTranslate);
         expect(positions[0]).not.toStrictEqual(positions[1]);
@@ -85,7 +86,7 @@ describe('Text mark', () => {
 
         const text = container.querySelector('g.text > text') as SVGTextElement;
         expect(text).not.toBeNull();
-        
+
         // For multiline text, it should contain tspan elements
         const tspans = text.querySelectorAll('tspan');
         expect(tspans.length).toBe(3);
@@ -155,7 +156,7 @@ describe('Text mark', () => {
 
         const text = container.querySelector('g.text > text') as SVGTextElement;
         expect(text).not.toBeNull();
-        expect(text.className.baseVal).toContain('custom-text-class');
+        expect(text.classList).toContain('custom-text-class');
     });
 
     it('adds title attribute for tooltips', () => {
@@ -179,38 +180,50 @@ describe('Text mark', () => {
         expect(title?.textContent).toBe('This is a tooltip');
     });
 
-    it('applies dx and dy offsets', () => {
-        const { container } = render(TextTest, {
-            props: {
-                plotArgs: {},
-                textArgs: {
-                    data: [{ x: 50, y: 50 }],
-                    x: 'x',
-                    y: 'y',
-                    text: 'Offset Text',
-                    dx: 10,
-                    dy: 5
-                }
+    it('applies dx and dy offsets', async () => {
+        let props = $state({
+            plotArgs: {},
+            textArgs: {
+                data: [{ x: 50, y: 50 }],
+                x: 'x',
+                y: 'y',
+                text: 'Offset Text',
+                dx: 0,
+                dy: 0
             }
         });
+        const { container } = render(TextTest, { props });
 
         const text = container.querySelector('g.text > text') as SVGTextElement;
         expect(text).not.toBeNull();
-        
+
         // Simply verify that the transform attribute contains the expected translate values
         // The exact positioning depends on scaling, but dx/dy should be applied
         const transform = text.getAttribute('transform');
-        expect(transform).toContain('translate(');
-        
-        // Since we can't easily predict exact scaling, let's just verify the offsets exist
-        // by checking the structure is as expected
-        expect(transform).toBeTruthy();
+        // extract translate part
+        const [tx1, ty1] = (transform || '')
+            .match(/translate\(([^)]+)\)/)?.[1]
+            .split(',')
+            .map(parseFloat) || [0, 0];
+
+        props.textArgs.dx = 10;
+        props.textArgs.dy = -5;
+
+        await tick(); // wait for Svelte reactivity
+
+        const transform2 = text.getAttribute('transform');
+        const [tx2, ty2] = (transform2 || '')
+            .match(/translate\(([^)]+)\)/)?.[1]
+            .split(',')
+            .map(parseFloat) || [0, 0];
+        expect(tx2).toBeCloseTo(tx1 + 10);
+        expect(ty2).toBeCloseTo(ty1 - 5);
     });
 
     it('handles different line anchors', () => {
         const lineAnchors = ['top', 'middle', 'bottom'] as const;
-        
-        lineAnchors.forEach(anchor => {
+
+        lineAnchors.forEach((anchor) => {
             const { container } = render(TextTest, {
                 props: {
                     plotArgs: {},
@@ -226,18 +239,25 @@ describe('Text mark', () => {
 
             const text = container.querySelector('g.text > text') as SVGTextElement;
             expect(text).not.toBeNull();
-            
+
             const dominantBaseline = text.getAttribute('dominant-baseline');
-            const expectedBaseline = anchor === 'top' ? 'hanging' : 
-                                   anchor === 'middle' ? 'central' : 'auto';
+            const expectedBaseline =
+                anchor === 'top' ? 'hanging' : anchor === 'middle' ? 'central' : 'auto';
             expect(dominantBaseline).toBe(expectedBaseline);
         });
     });
 
     it('handles different frame anchors', () => {
-        const frameAnchors = ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const;
-        
-        frameAnchors.forEach(anchor => {
+        const frameAnchors = [
+            'top-left',
+            'top-right',
+            'middle',
+            'bottom-left',
+            'bottom-right'
+        ] as const;
+        const positions = ['1,5', '96,5', '49,50', '1,95', '96,95'] as const;
+
+        frameAnchors.forEach((anchor, i) => {
             const { container } = render(TextTest, {
                 props: {
                     plotArgs: {},
@@ -251,10 +271,10 @@ describe('Text mark', () => {
 
             const text = container.querySelector('g.text > text') as SVGTextElement;
             expect(text).not.toBeNull();
-            
+
             // Frame anchor affects text positioning when x,y are not specified
             const transform = text.getAttribute('transform');
-            expect(transform).toContain('translate');
+            expect(transform).toContain(`translate(${positions[i]})`);
         });
     });
 
@@ -268,18 +288,18 @@ describe('Text mark', () => {
                     y: 'y',
                     text: 'label',
                     fontSize: (d: any) => d.value + 10,
-                    fill: (d: any) => d.value > 7 ? 'red' : 'blue'
+                    fill: (d: any) => (d.value > 7 ? 'red' : 'blue')
                 }
             }
         });
 
         const texts = container.querySelectorAll('g.text > text') as NodeListOf<SVGTextElement>;
         expect(texts.length).toBe(2);
-        
+
         // First item (value: 5) should be blue, fontSize 15
         expect(texts[0].style.fontSize).toBe('15px');
         expect(texts[0].style.fill).toBe('blue');
-        
+
         // Second item (value: 10) should be red, fontSize 20
         expect(texts[1].style.fontSize).toBe('20px');
         expect(texts[1].style.fill).toBe('red');
@@ -347,7 +367,7 @@ describe('Text mark', () => {
         });
 
         const texts = container.querySelectorAll('g.text > text') as NodeListOf<SVGTextElement>;
-        
+
         // Should render all text elements even with empty/null values
         expect(texts.length).toBe(3);
         expect(texts[0].textContent).toBe('Valid');
@@ -372,10 +392,10 @@ describe('Text mark', () => {
 
         const text = container.querySelector('g.text > text') as SVGTextElement;
         expect(text).not.toBeNull();
-        
+
         const tspans = text.querySelectorAll('tspan');
         expect(tspans.length).toBe(2);
-        
+
         // Second tspan should have dy based on fontSize * lineHeight
         const secondTspan = tspans[1];
         const dy = secondTspan.getAttribute('dy');
