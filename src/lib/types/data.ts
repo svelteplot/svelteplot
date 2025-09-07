@@ -2,9 +2,7 @@ import type { ScaledChannelName, ScaledChannelType } from './channel.js';
 
 export type RawValue = number | Date | boolean | string | symbol;
 
-export type DataRecord<T = Record<string | symbol, RawValue>> = T & {
-    ___orig___?: RawValue | [RawValue, RawValue];
-};
+export type DataRecord<T = Record<string | symbol, RawValue>> = T;
 
 export type ResolvedDataRecord<T = Record<string | symbol, RawValue>> = Partial<
     Record<ScaledChannelName, any>
