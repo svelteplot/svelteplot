@@ -52,7 +52,7 @@
         /**
          * rotate text by angle in degrees
          */
-        rotate: ConstantAccessor<number, Datum>;
+        rotate?: ConstantAccessor<number, Datum>;
     }
 
     import { getContext, type Snippet } from 'svelte';
@@ -77,6 +77,7 @@
         strokeWidth: 1.6,
         frameAnchor: 'center',
         lineHeight: 1.1,
+        rotate: 0,
         ...getContext<PlotDefaults>('svelteplot/_defaults').text
     };
 
