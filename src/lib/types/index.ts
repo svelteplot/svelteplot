@@ -54,8 +54,8 @@ export type ConstantAccessor<T, D = Record<string | symbol, RawValue>> =
     | null
     | undefined;
 
-export type TransformArg<K> = Channels & BaseMarkProps<K> & { data: K[] };
-export type MapArg<K> = Channels & { data: K[] };
+export type TransformArg<T> = Channels<T> & BaseMarkProps<T> & { data: T[] };
+export type MapArg<T> = Channels<T> & { data: T[] };
 
 export type TransformArgsRow = Partial<Channels> & { data: DataRow[] };
 export type TransformArgsRecord = Partial<Channels> & { data: DataRecord[] };

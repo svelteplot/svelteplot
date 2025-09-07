@@ -1,4 +1,11 @@
-import type { ChannelAccessor, ChannelName, DataRecord, RawValue } from '$lib/types/index.js';
+import type {
+    ChannelAccessor,
+    ChannelName,
+    Channels,
+    ConstantAccessor,
+    DataRecord,
+    RawValue
+} from '$lib/types/index.js';
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks.js';
@@ -16,10 +23,13 @@ export function coalesce(...args: (RawValue | undefined | null)[]) {
     return null; // Return null if all arguments are null or undefined
 }
 
-export function testFilter(datum: DataRecord, options: Record<ChannelName, ChannelAccessor>) {
+export function testFilter<T>(datum: T, options: Channels<T>) {
     return (
         options.filter == null ||
-        resolveProp(options.filter, datum?.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum)
+        resolveProp(
+            options.filter as ConstantAccessor<T>,
+            isObject(datum) && datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum
+        )
     );
 }
 
@@ -45,7 +55,7 @@ export function maybeData(data: DataRecord[]): DataRecord[] {
     return data;
 }
 
-export function isObject(option: object | RawValue): option is object {
+export function isObject<T>(option: object | T): option is object {
     // doesn't work with Proxies
     return (
         typeof option === 'object' && !isDate(option) && !Array.isArray(option) && option !== null

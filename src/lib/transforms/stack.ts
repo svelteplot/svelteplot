@@ -6,7 +6,8 @@ import type {
     DataRow,
     DataRecord,
     TransformArg,
-    ChannelName
+    ChannelName,
+    Channels
 } from '$lib/types/index.js';
 import {
     stack,
@@ -200,7 +201,7 @@ function stackMosaic<T>(
         value: ChannelAccessor<T>;
         fx?: ChannelAccessor<T>;
         fy?: ChannelAccessor<T>;
-    },
+    } & Channels<T>,
     { outer, inner }: { outer: 'x' | 'y'; inner: 'x' | 'y' },
     {
         x: xOpt,
@@ -220,7 +221,7 @@ function stackMosaic<T>(
     if (min(filtered, (d) => resolveProp(d[value], d)) < 0)
         throw new Error('stackMosaic: negative values not supported');
 
-    groupFacetsAndZ(filtered, restArgs, (data) => {
+    groupFacetsAndZ<T>(filtered, restArgs, (data) => {
         const total = sum(data, (d) => resolveProp(d[value], d));
         let outerPos = 0;
 
