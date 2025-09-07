@@ -127,6 +127,7 @@
         "es-toolkit": "^1.39.10",
         "fast-equals": "^5.2.2",
         "merge-deep": "^3.0.3",
-        "svelte": "5.38.7"
+        "svelte": "5.38.7",
+        "vite-plugin-pwa": "^1.0.3"
     }
 }
