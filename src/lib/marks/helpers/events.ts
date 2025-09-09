@@ -94,7 +94,7 @@ export function addEventHandlers(
                         if (!(facetEl.parentElement instanceof SVGElement)) break;
                         facetEl = facetEl.parentElement;
                     }
-                    const facetRect = (facetEl?.firstChild ?? body).getBoundingClientRect();
+                    const facetRect = (facetEl?.firstElementChild ?? body).getBoundingClientRect();
                     const relativeX =
                         origEvent.clientX - facetRect.left + (options.marginLeft ?? 0);
                     const relativeY = origEvent.clientY - facetRect.top + (options.marginTop ?? 0);
