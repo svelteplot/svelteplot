@@ -152,4 +152,34 @@ describe('Arrow mark', () => {
         const mainPath = arrows[0];
         expect(mainPath).not.toBeNull();
     });
+
+    it('sort arrows', () => {
+        const data = [
+            { id: 'red', from: 1, to: 2 },
+            { id: 'green', from: 3, to: 5 },
+            { id: 'blue', from: 2, to: 4 }
+        ];
+
+        const { container } = render(ArrowTest, {
+            props: {
+                data,
+                x1: 'id',
+                x2: 'id',
+                y1: 'from',
+                y2: 'to',
+                stroke: 'id',
+                sort: { channel: 'y1' }
+            }
+        });
+
+        const arrows = container.querySelectorAll('g.arrow > g > path');
+        expect(arrows.length).toBe(data.length);
+        const strokes = Array.from(arrows).map((a) => a.style.stroke);
+
+        expect(strokes).toEqual(['red', 'blue', 'green']);
+
+        const x = Array.from(arrows).map((a) => +a.getAttribute('d')?.substring(1).split(',')[0]);
+        expect(x[0]).toBeLessThan(x[1]);
+        expect(x[1]).toBeLessThan(x[2]);
+    });
 });
