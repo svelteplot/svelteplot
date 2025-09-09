@@ -23,9 +23,9 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
+
         // Check that lines are rendered
-        ticks.forEach(tick => {
+        ticks.forEach((tick) => {
             expect(tick.tagName).toBe('line');
             expect(tick.getAttribute('x1')).not.toBeNull();
             expect(tick.getAttribute('x2')).not.toBeNull();
@@ -46,9 +46,9 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
+
         // With tickLength = 20, when x1 === x2, tick extends tickLength/2 in each direction
-        ticks.forEach(tick => {
+        ticks.forEach((tick) => {
             const x1 = parseFloat(tick.getAttribute('x1') || '0');
             const x2 = parseFloat(tick.getAttribute('x2') || '0');
             if (x1 === x2) {
@@ -71,12 +71,10 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
+
         // Check that ticks have different transforms (different y positions)
-        const transforms = Array.from(ticks).map(tick => 
-            tick.getAttribute('transform') || ''
-        );
-        
+        const transforms = Array.from(ticks).map((tick) => tick.getAttribute('transform') || '');
+
         // All transforms should be different (different y positions)
         const uniqueTransforms = new Set(transforms);
         expect(uniqueTransforms.size).toBe(3);
@@ -97,9 +95,9 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
+
         // Check that transforms include the dx/dy offsets
-        ticks.forEach(tick => {
+        ticks.forEach((tick) => {
             const transform = tick.getAttribute('transform') || '';
             expect(transform).toMatch(/translate\(\d+\.?\d*, \d+\.?\d*\)/);
         });
@@ -108,7 +106,7 @@ describe('TickY mark', () => {
     it('handles band scale with x channel', () => {
         const { container } = render(TickYTest, {
             props: {
-                plotArgs: { 
+                plotArgs: {
                     x: { type: 'band', domain: ['A', 'B'] }
                 },
                 tickArgs: {
@@ -121,14 +119,14 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
+
         // With band scale, ticks should have different x positions
-        const xPositions = Array.from(ticks).map(tick => {
+        const xPositions = Array.from(ticks).map((tick) => {
             const x1 = parseFloat(tick.getAttribute('x1') || '0');
             const x2 = parseFloat(tick.getAttribute('x2') || '0');
             return [x1, x2];
         });
-        
+
         // Check that we have different x positions for different bands
         expect(xPositions.length).toBe(3);
     });
@@ -148,8 +146,8 @@ describe('TickY mark', () => {
 
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(3);
-        
-        ticks.forEach(tick => {
+
+        ticks.forEach((tick) => {
             const style = tick.getAttribute('style') || '';
             expect(style).toContain('stroke: blue');
             expect(style).toContain('stroke-opacity: 0.8');
