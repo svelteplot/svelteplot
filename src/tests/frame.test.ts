@@ -13,12 +13,12 @@ describe('Frame mark', () => {
 
         const frame = container.querySelector('rect.frame') as SVGRectElement;
         expect(frame).toBeTruthy();
-        
+
         // Check positioning and dimensions
         expect(frame.getAttribute('width')).toBe('95');
         expect(frame.getAttribute('height')).toBe('90');
         expect(frame.getAttribute('transform')).toBe('translate(1,5)');
-        
+
         // Check styling
         expect(frame.style.fill).toBe('none');
         expect(frame.style.stroke).toBe('currentColor');
@@ -40,6 +40,51 @@ describe('Frame mark', () => {
         const frame = container.querySelector('rect.frame') as SVGRectElement;
         expect(frame.style.fill).toBe('red');
         expect(frame.style.stroke).toBe('blue');
+    });
+
+    it('applies no stroke if fill is set', () => {
+        const { container } = render(FrameTest, {
+            props: {
+                plotArgs: {},
+                frameArgs: {
+                    fill: 'red'
+                }
+            }
+        });
+
+        const frame = container.querySelector('rect.frame') as SVGRectElement;
+        expect(frame.style.fill).toBe('red');
+        expect(frame.style.stroke).toBe('none');
+    });
+
+    it('fill = true -> currentColor', () => {
+        const { container } = render(FrameTest, {
+            props: {
+                plotArgs: {},
+                frameArgs: {
+                    fill: true
+                }
+            }
+        });
+
+        const frame = container.querySelector('rect.frame') as SVGRectElement;
+        expect(frame.style.fill).toBe('currentColor');
+        expect(frame.style.stroke).toBe('none');
+    });
+
+    it('stroke = true -> currentColor', () => {
+        const { container } = render(FrameTest, {
+            props: {
+                plotArgs: {},
+                frameArgs: {
+                    stroke: true
+                }
+            }
+        });
+
+        const frame = container.querySelector('rect.frame') as SVGRectElement;
+        expect(frame.style.stroke).toBe('currentColor');
+        expect(frame.style.fill).toBe('none');
     });
 
     it('applies opacity settings', () => {
@@ -69,7 +114,7 @@ describe('Frame mark', () => {
         });
 
         const frame = container.querySelector('rect.frame') as SVGRectElement;
-        
+
         // With inset=10, the frame should be smaller and positioned further from edges
         // Original frame is at translate(1,5) with width=95, height=90
         // With inset=10, it should be at translate(11,15) with width=75, height=70
@@ -92,7 +137,7 @@ describe('Frame mark', () => {
         });
 
         const frame = container.querySelector('rect.frame') as SVGRectElement;
-        
+
         // Frame should be positioned with specific insets
         // Original: translate(1,5) width=95 height=90
         // With insetLeft=5, insetTop=3, insetRight=10, insetBottom=7:
@@ -130,28 +175,13 @@ describe('Frame mark', () => {
         });
 
         const frame = container.querySelector('rect.frame') as SVGRectElement;
-        
+
         // Frame should scale with plot size
         // With larger plot, frame should be larger too
         const width = parseInt(frame.getAttribute('width') || '0');
         const height = parseInt(frame.getAttribute('height') || '0');
         expect(width).toBeGreaterThan(95); // Larger than default 100px plot
         expect(height).toBeGreaterThan(90);
-    });
-
-    it('handles automatic property', () => {
-        const { container } = render(FrameTest, {
-            props: {
-                plotArgs: {},
-                frameArgs: {
-                    automatic: false
-                }
-            }
-        });
-
-        const frame = container.querySelector('rect.frame') as SVGRectElement;
-        expect(frame).toBeTruthy();
-        // The frame should still render even when automatic is false
     });
 
     it('combines fill, stroke and opacity', () => {
@@ -168,7 +198,7 @@ describe('Frame mark', () => {
         });
 
         const frame = container.querySelector('rect.frame') as SVGRectElement;
-        
+
         expect(frame.style.fill).toBe('rgba(255, 0, 0, 0.3)');
         expect(frame.style.stroke).toBe('#0000ff');
         expect(frame.style.fillOpacity).toBe('0.8');
