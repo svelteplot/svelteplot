@@ -132,7 +132,7 @@ function invertScale(scale: PlotScale, position: number) {
         const domain = scale.fn.domain();
         const eachBand = scale.fn.step();
         const extent = range[1] - range[0];
-        const posInRange = ((position - range[0]) / extent) * Math.abs(extent);
+        const posInRange = (position - range[0]) * Math.sign(extent);
         const index = Math.floor(posInRange / eachBand);
         return domain[index];
     }
