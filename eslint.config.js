@@ -10,8 +10,7 @@ export default [
     },
     // Ensure TypeScript files (including names like *.svelte.ts) use the TS parser
     {
-        files: ['**/*.ts', '**/*.mts', '**/*.cts']
-        ,
+        files: ['**/*.ts', '**/*.mts', '**/*.cts'],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
