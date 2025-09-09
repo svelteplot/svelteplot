@@ -4,7 +4,9 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface ArrowMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         data: Datum[];
-        sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
+        sort?:
+            | ConstantAccessor<RawValue>
+            | { channel: 'stroke' | 'fill' | 'x1' | 'y1' | 'x2' | 'y2' };
         x1: ChannelAccessor<Datum>;
         y1: ChannelAccessor<Datum>;
         x2: ChannelAccessor<Datum>;
@@ -52,6 +54,7 @@
     import { replaceChannels } from '$lib/transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { sort } from 'svelteplot/transforms/sort.js';
 
     let markProps: ArrowMarkProps = $props();
 
@@ -74,16 +77,13 @@
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const sorted = $derived(
-        options.sort
-            ? maybeData(data).toSorted((a, b) =>
-                  resolveChannel('sort', a, options) > resolveChannel('sort', b, options) ? 1 : -1
-              )
-            : maybeData(data)
-    );
-
     const args: ArrowMarkProps = $derived(
-        replaceChannels({ data: sorted, ...options }, { y: ['y1', 'y2'], x: ['x1', 'x2'] })
+        sort(
+            replaceChannels(
+                { data: maybeData(data), ...options },
+                { y: ['y1', 'y2'], x: ['x1', 'x2'] }
+            )
+        )
     );
 </script>
 
