@@ -28,18 +28,12 @@ Helper component for rendering rectangular marks in SVG
 
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
-    import type {
-        BaseMarkProps,
-        BaseRectMarkProps,
-        BorderRadius,
-        ScaledDataRecord,
-        UsedScales,
-        PlotContext,
-        DataRecord
-    } from '$lib/index.js';
     import { addEventHandlers } from './events.js';
     import { getContext } from 'svelte';
     import Anchor from './Anchor.svelte';
+    import type { BaseMarkProps, BaseRectMarkProps, BorderRadius } from 'svelteplot/types/mark.js';
+    import type { DataRecord, ScaledDataRecord } from 'svelteplot/types/data.js';
+    import type { PlotContext, UsedScales } from 'svelteplot/types/index.js';
 
     let {
         datum,

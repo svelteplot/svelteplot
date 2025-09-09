@@ -82,20 +82,33 @@ export function addEventHandlers(
     for (const [eventName, eventHandler] of Object.entries(events)) {
         if (eventHandler) {
             const wrappedHandler = (origEvent: Event) => {
-                const { scales } = getPlotState();
-                if (origEvent.layerX !== undefined) {
+                const { scales, body, options } = getPlotState();
+                if (origEvent instanceof MouseEvent || origEvent instanceof PointerEvent) {
+                    let facetEl = origEvent.target as SVGElement;
+                    while (
+                        facetEl &&
+                        !facetEl.classList.contains('facet') &&
+                        facetEl.parentElement
+                    ) {
+                        // ensure that parentElement is SVGElement
+                        if (!(facetEl.parentElement instanceof SVGElement)) break;
+                        facetEl = facetEl.parentElement;
+                    }
+                    const facetRect = (facetEl?.firstElementChild ?? body).getBoundingClientRect();
+                    const relativeX =
+                        origEvent.clientX - facetRect.left + (options.marginLeft ?? 0);
+                    const relativeY = origEvent.clientY - facetRect.top + (options.marginTop ?? 0);
+
                     if (scales.projection) {
-                        const [x, y] = scales.projection.invert([
-                            origEvent.layerX,
-                            origEvent.layerY
-                        ]);
+                        const [x, y] = scales.projection.invert([relativeX, relativeY]);
                         origEvent.dataX = x;
                         origEvent.dataY = y;
                     } else {
-                        origEvent.dataX = invertScale(scales.x, origEvent.layerX);
-                        origEvent.dataY = invertScale(scales.y, origEvent.layerY);
+                        origEvent.dataX = invertScale(scales.x, relativeX);
+                        origEvent.dataY = invertScale(scales.y, relativeY);
                     }
                 }
+
                 eventHandler(
                     origEvent,
                     datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
@@ -121,10 +134,13 @@ export function addEventHandlers(
 
 function invertScale(scale: PlotScale, position: number) {
     if (scale.type === 'band') {
-        // invert band scale since scaleBand doesn't have an invert function
+        const range = scale.fn.range();
+        const domain = scale.fn.domain();
         const eachBand = scale.fn.step();
-        const index = Math.floor(position / eachBand);
-        return scale.fn.domain()[index];
+        const extent = range[1] - range[0];
+        const posInRange = (position - range[0]) * Math.sign(extent);
+        const index = Math.floor(posInRange / eachBand);
+        return domain[index];
     }
     return scale.fn.invert ? scale.fn.invert(position) : undefined;
 }
