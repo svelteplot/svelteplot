@@ -74,8 +74,8 @@ You can use the explicit frame and grid marks to create ggplot style charts:
     const { aapl } = $derived(page.data.data);
 </script>
 
-<Plot testid="frame-demo" inset={10}>
-    <Frame fill="#eaeaea" stroke="none" />
+<Plot inset={10}>
+    <Frame fill="#eaeaea" />
     <GridX stroke="#fff" strokeOpacity={1} />
     <GridY stroke="#fff" strokeOpacity={1} />
     <Line data={aapl} x="Date" y="Close" stroke="#222" />
