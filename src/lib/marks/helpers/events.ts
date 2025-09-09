@@ -85,7 +85,13 @@ export function addEventHandlers(
                 const { scales, body, options } = getPlotState();
                 if (origEvent instanceof MouseEvent || origEvent instanceof PointerEvent) {
                     let facetEl = origEvent.target as SVGElement;
-                    while (facetEl && !facetEl.classList.contains('facet')) {
+                    while (
+                        facetEl &&
+                        !facetEl.classList.contains('facet') &&
+                        facetEl.parentElement
+                    ) {
+                        // ensure that parentElement is SVGElement
+                        if (!(facetEl.parentElement instanceof SVGElement)) break;
                         facetEl = facetEl.parentElement;
                     }
                     const facetRect = (facetEl?.firstChild ?? body).getBoundingClientRect();
