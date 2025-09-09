@@ -54,7 +54,7 @@
     import { replaceChannels } from '$lib/transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import { sort } from 'svelteplot/transforms/sort.js';
+    import { sort } from '$lib/transforms/sort.js';
 
     let markProps: ArrowMarkProps = $props();
 
