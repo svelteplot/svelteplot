@@ -208,7 +208,9 @@ export function resolveStyles(
         ...getBaseStylesObject(datum?.datum, channels),
         fill: 'none',
         stroke: 'none',
-        ...(defaultColorProp && channels[oppositeColor[defaultColorProp]] == null
+        ...(defaultColorProp &&
+        (channels[oppositeColor[defaultColorProp]] == null ||
+            channels[oppositeColor[defaultColorProp]] === 'none')
             ? { [defaultColorProp]: 'currentColor' }
             : {}),
         ...Object.fromEntries(
@@ -232,6 +234,8 @@ export function resolveStyles(
                         ) {
                             return [cssAttr, plot.options.color.unknown];
                         }
+                    } else if ((key === 'fill' || key === 'stroke') && value === true) {
+                        return [cssAttr, 'currentColor'];
                     }
                     return [cssAttr, value];
                 })

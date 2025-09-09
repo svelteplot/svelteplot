@@ -33,9 +33,9 @@
     let markProps: FrameMarkProps = $props();
 
     const DEFAULTS: FrameMarkProps = {
-        fill: 'none',
+        fill: undefined,
         class: 'frame',
-        stroke: 'currentColor',
+        stroke: undefined,
         fillOpacity: 1,
         strokeOpacity: 1,
         ...getContext<PlotDefaults>('svelteplot/_defaults').frame
@@ -68,7 +68,7 @@
             width={plot.facetWidth}
             height={plot.facetHeight}
             {usedScales}
-            fallbackStyle="stroke"
+            fallbackStyle={fill == null || fill === 'none' ? 'stroke' : 'fill'}
             options={{ ...options, fill, stroke, fillOpacity, strokeOpacity }} />
     {/snippet}
 </Mark>
