@@ -153,7 +153,7 @@ describe('Arrow mark', () => {
         expect(mainPath).not.toBeNull();
     });
 
-    it.only('sort arrows', () => {
+    it('sort arrows', () => {
         const data = [
             { id: 'red', from: 1, to: 2 },
             { id: 'green', from: 3, to: 5 },
