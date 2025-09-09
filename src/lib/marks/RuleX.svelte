@@ -52,15 +52,13 @@
                 {@const inset = resolveProp(args.inset, d.datum, 0)}
                 {@const insetTop = resolveProp(args.insetTop, d.datum, 0)}
                 {@const insetBottom = resolveProp(args.insetBottom, d.datum, 0)}
-                {@const dx = resolveProp(args.dx, d.datum, 0)}
-                {@const dy = resolveProp(args.dy, d.datum, 0)}
                 {@const [style, styleClass] = resolveStyles(plot, d, args, 'stroke', usedScales)}
                 <line
-                    transform="translate({d.x + dx}, {dy})"
+                    transform="translate({d.x}, 0)"
                     {style}
                     class={[styleClass]}
-                    y1={(inset || insetTop) + (d.y1 != null ? d.y1 : plot.options.marginTop)}
-                    y2={(d.y2 != null ? d.y2 : plot.facetHeight + plot.options.marginTop) -
+                    y1={(inset || insetTop) + (d.y1 != null ? d.y1 : plot.options.marginTop + d.dy)}
+                    y2={(d.y2 != null ? d.y2 : plot.facetHeight + plot.options.marginTop + d.dy) -
                         (inset || insetBottom)} />
             {/each}
         </GroupMultiple>

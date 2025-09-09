@@ -13,6 +13,8 @@ export type ResolvedDataRecord<T = Record<string | symbol, RawValue>> = Partial<
 export type ScaledDataRecord<T = Record<string | symbol, RawValue>> = Partial<{
     [K in ScaledChannelName]?: ScaledChannelType<K>;
 }> & {
+    dx: number;
+    dy: number;
     datum: DataRecord<T>;
     valid: Boolean;
 };

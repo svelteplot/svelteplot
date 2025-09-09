@@ -48,9 +48,9 @@ export type MarkerOptions = {
     marker?: boolean | MarkerShape | Snippet;
 };
 
-export type ConstantAccessor<T, D = Record<string | symbol, RawValue>> =
-    | T
-    | ((d: D) => T)
+export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
+    | K
+    | ((d: T) => K)
     | null
     | undefined;
 

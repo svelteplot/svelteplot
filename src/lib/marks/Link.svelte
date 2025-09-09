@@ -157,8 +157,6 @@
         <g class={['link', className]} data-use-x={usedScales.x ? 1 : 0}>
             {#each scaledData as d, i (i)}
                 {#if d.valid || true}
-                    {@const dx = resolveProp(args.dx, d.datum, 0)}
-                    {@const dy = resolveProp(args.dx, d.datum, 0)}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         d,
@@ -196,8 +194,7 @@
                         text={text ? resolveProp(text, d.datum) : null}
                         startOffset={resolveProp(args.textStartOffset, d.datum, '50%')}
                         {textStyle}
-                        {textStyleClass}
-                        transform={dx || dy ? `translate(${dx}, ${dy})` : null} />
+                        {textStyleClass} />
                 {/if}
             {/each}
         </g>

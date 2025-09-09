@@ -19,11 +19,11 @@ import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
 
 type ChannelAlias = { channel: ScaledChannelName };
 
-export function resolveProp<T>(
-    accessor: ConstantAccessor<T>,
+export function resolveProp<K, T>(
+    accessor: ConstantAccessor<K, T>,
     datum: DataRecord | null,
-    _defaultValue: T | null = null
-): T | typeof _defaultValue {
+    _defaultValue: K | null = null
+): K | typeof _defaultValue {
     if (typeof accessor === 'function') {
         // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
         // "recordized" by the recordize transform. We want to hide this wrapping to the user
@@ -36,7 +36,7 @@ export function resolveProp<T>(
         datum &&
         datum[accessor] !== undefined
     ) {
-        return datum[accessor] as T;
+        return datum[accessor] as K;
     }
 
     return isRawValue(accessor) ? accessor : _defaultValue;
