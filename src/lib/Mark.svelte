@@ -135,11 +135,12 @@
     const resolvedData: ResolvedDataRecord<Datum>[] = $derived(
         data
             .map((d, i) => ({ ...d, [INDEX]: i }))
-            .flatMap((row) => {
+            .flatMap((row, index) => {
                 const channels = options as Record<ChannelName, ChannelAccessor<Datum>>;
                 if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
                 const out: ResolvedDataRecord<Datum> = {
-                    datum: row
+                    datum: row,
+                    index
                 };
                 for (const [channel] of Object.entries(CHANNEL_SCALE) as [
                     ScaledChannelName,
@@ -208,6 +209,7 @@
         resolvedData.flatMap((row) => {
             const out: ScaledDataRecord<Datum> = {
                 datum: row.datum,
+                index: row[INDEX],
                 valid: true
             };
             // compute dx/dy
