@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { describe, it, vi, expect } from 'vitest';
+import { render, fireEvent } from '@testing-library/svelte';
 import BarXTest from './barX.test.svelte';
 import { getPathDims, getRectDims } from './utils';
+import { tick } from 'svelte';
 
 const testData = [
     {
@@ -144,5 +145,33 @@ describe('BarX mark', () => {
         expect(yAxisLabels.length).toBe(6);
         const labels = Array.from(yAxisLabels).map((d) => d.textContent);
         expect(labels.sort()).toEqual(['2019', '2020', '2021', '2022', '2023', '2024']);
+    });
+
+    it('emits correct events after updating data', async () => {
+        const checkDatum = vi.fn();
+
+        const props = $state({
+            plotArgs: {},
+            barArgs: {
+                data: [1, 2, 3, 4, 5],
+                onclick: (evt: MouseEvent, datum: any) => checkDatum(datum)
+            }
+        });
+
+        const { container } = render(BarXTest, { props });
+        const bars = container.querySelectorAll('g.bar-x > rect') as NodeListOf<SVGRectElement>;
+        expect(bars.length).toBe(5);
+
+        await fireEvent.click(bars[2]);
+        expect(checkDatum).toHaveBeenCalledTimes(1);
+        expect(checkDatum).toHaveBeenCalledWith(3);
+
+        props.barArgs.data = [10, 20, 30, 40, 50];
+        await tick();
+
+        await fireEvent.click(bars[2]);
+
+        expect(checkDatum).toHaveBeenCalledTimes(2);
+        expect(checkDatum).toHaveBeenCalledWith(30);
     });
 });
