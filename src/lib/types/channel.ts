@@ -17,7 +17,7 @@ export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
 export type ChannelValue<T = Record<string | symbol, RawValue>> =
     | RawValue
     | keyof T
-    | ((d: T) => RawValue)
+    | ((d: T, index: number) => RawValue)
     | null
     | undefined;
 

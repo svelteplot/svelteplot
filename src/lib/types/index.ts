@@ -50,15 +50,15 @@ export type MarkerOptions = {
 
 export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
     | K
-    | ((d: T) => K)
+    | ((d: T, index: number) => K)
     | null
     | undefined;
 
 export type TransformArg<T> = Channels<T> & BaseMarkProps<T> & { data: T[] };
 export type MapArg<T> = Channels<T> & { data: T[] };
 
-export type TransformArgsRow = Partial<Channels> & { data: DataRow[] };
-export type TransformArgsRecord = Partial<Channels> & { data: DataRecord[] };
+export type TransformArgsRow<T extends RawValue & object> = Partial<Channels<T>> & { data: T[] };
+export type TransformArgsRecord<T extends object> = Partial<Channels<T>> & { data: T[] };
 
 export type AutoMarginStores = {
     autoMarginTop: Writable<Map<string, number>>;
