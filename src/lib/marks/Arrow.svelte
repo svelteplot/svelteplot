@@ -131,11 +131,11 @@
                     )}
                     <g
                         class={[className]}
-                        use:addEventHandlers={{
+                        {@attach addEventHandlers({
                             getPlotState,
-                            options: args,
-                            datum: d.datum
-                        }}>
+                            options,
+                            datum: d?.datum
+                        })}>
                         {#if options.onmouseenter || options.onclick}
                             <!-- add invisible path in bg for easier mouse access -->
                             <path

@@ -34,6 +34,7 @@ Helper component for rendering rectangular marks in SVG
     import type { BaseMarkProps, BaseRectMarkProps, BorderRadius } from 'svelteplot/types/mark.js';
     import type { DataRecord, ScaledDataRecord } from 'svelteplot/types/data.js';
     import type { PlotContext, UsedScales } from 'svelteplot/types/index.js';
+    import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
 
     let {
         datum,
@@ -110,11 +111,11 @@ Helper component for rendering rectangular marks in SVG
             )}
             class={[styleClass, className]}
             {style}
-            use:addEventHandlers={{
+            {@attach addEventHandlers({
                 getPlotState,
                 options,
                 datum: datum?.datum
-            }} />
+            })} />
     {:else}
         <rect
             transform="translate({x + insetLeft},{y + insetBottom})"
@@ -122,10 +123,10 @@ Helper component for rendering rectangular marks in SVG
             height={height - insetTop - insetBottom}
             class={[styleClass, className]}
             {style}
-            use:addEventHandlers={{
+            {@attach addEventHandlers({
                 getPlotState,
                 options,
                 datum: datum?.datum
-            }} />
+            })} />
     {/if}
 </Anchor>

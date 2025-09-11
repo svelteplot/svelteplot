@@ -95,7 +95,11 @@
     {transform}
     class={className}
     stroke-width={strokeWidth_}
-    use:addEventHandlers={{ getPlotState, options: mark.options, datum }}>
+    {@attach addEventHandlers({
+        getPlotState,
+        options: mark.options,
+        datum: datum
+    })}>
     {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, marker] (key)}
         {@const markerId = `marker-${key === 'all' ? '' : `${key}-`}${id}`}
         {#if isSnippet(marker)}
@@ -122,7 +126,11 @@
         marker-end={markerEnd || marker ? `url(#marker-${markerEnd ? 'end-' : ''}${id})` : null}
         {d}
         {style}
-        use:addEventHandlers={{ getPlotState, options: mark.options, datum }} />
+        {@attach addEventHandlers({
+            getPlotState,
+            options: mark.options,
+            datum: datum
+        })} />
     {#if text}
         <!-- since textPath.side is not yet supported, we have to use an invisible
             path in order to keep the text from turning upside down -->

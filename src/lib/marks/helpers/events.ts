@@ -1,8 +1,9 @@
-import type { BaseMarkProps, DataRecord, PlotScale, PlotState } from '$lib/types/index.js';
+import type { BaseMarkProps, DataRecord, DataRow, PlotScale, PlotState } from '$lib/types/index.js';
 import type { MouseEventHandler } from 'svelte/elements';
 import { pick } from 'es-toolkit';
 import { RAW_VALUE } from '$lib/transforms/recordize.js';
 import { INDEX } from '$lib/constants.js';
+import type { Attachment } from 'svelte/attachments';
 
 // Extend the MouseEvent type to include the properties we're using
 declare global {
@@ -37,14 +38,15 @@ export function clientToLayerCoordinates(
     return [event.clientX - plotBodyRect.left, event.clientY - plotBodyRect.top];
 }
 
-export function addEventHandlers(
-    node: SVGElement,
-    {
-        options,
-        datum,
-        getPlotState
-    }: { options: BaseMarkProps; datum: DataRecord; getPlotState: () => PlotState }
-) {
+export function addEventHandlers<T extends DataRow>({
+    options,
+    datum,
+    getPlotState
+}: {
+    options: BaseMarkProps<T>;
+    datum: DataRecord;
+    getPlotState: () => PlotState;
+}): Attachment {
     const events = pick(options, [
         'onclick',
         'oncontextmenu',
@@ -77,58 +79,62 @@ export function addEventHandlers(
         'onwheel'
     ]);
 
-    const listeners = new Map<string, MouseEventHandler<SVGElement>>();
-    // attach event handlers
-    for (const [eventName, eventHandler] of Object.entries(events)) {
-        if (eventHandler) {
-            const wrappedHandler = (origEvent: Event) => {
-                const { scales, body, options } = getPlotState();
-                if (origEvent instanceof MouseEvent || origEvent instanceof PointerEvent) {
-                    let facetEl = origEvent.target as SVGElement;
-                    while (
-                        facetEl &&
-                        !facetEl.classList.contains('facet') &&
-                        facetEl.parentElement
-                    ) {
-                        // ensure that parentElement is SVGElement
-                        if (!(facetEl.parentElement instanceof SVGElement)) break;
-                        facetEl = facetEl.parentElement;
-                    }
-                    const facetRect = (facetEl?.firstElementChild ?? body).getBoundingClientRect();
-                    const relativeX =
-                        origEvent.clientX - facetRect.left + (options.marginLeft ?? 0);
-                    const relativeY = origEvent.clientY - facetRect.top + (options.marginTop ?? 0);
+    return (node: Element) => {
+        const listeners = new Map<string, MouseEventHandler<SVGElement>>();
+        // attach event handlers
+        for (const [eventName, eventHandler] of Object.entries(events)) {
+            if (eventHandler) {
+                const wrappedHandler = (origEvent: Event) => {
+                    const { scales, body, options } = getPlotState();
+                    if (origEvent instanceof MouseEvent || origEvent instanceof PointerEvent) {
+                        let facetEl = origEvent.target as SVGElement;
+                        while (
+                            facetEl &&
+                            !facetEl.classList.contains('facet') &&
+                            facetEl.parentElement
+                        ) {
+                            // ensure that parentElement is SVGElement
+                            if (!(facetEl.parentElement instanceof SVGElement)) break;
+                            facetEl = facetEl.parentElement;
+                        }
+                        const facetRect = (
+                            facetEl?.firstElementChild ?? body
+                        ).getBoundingClientRect();
+                        const relativeX =
+                            origEvent.clientX - facetRect.left + (options.marginLeft ?? 0);
+                        const relativeY =
+                            origEvent.clientY - facetRect.top + (options.marginTop ?? 0);
 
-                    if (scales.projection) {
-                        const [x, y] = scales.projection.invert([relativeX, relativeY]);
-                        origEvent.dataX = x;
-                        origEvent.dataY = y;
-                    } else {
-                        origEvent.dataX = invertScale(scales.x, relativeX);
-                        origEvent.dataY = invertScale(scales.y, relativeY);
+                        if (scales.projection) {
+                            const [x, y] = scales.projection.invert([relativeX, relativeY]);
+                            origEvent.dataX = x;
+                            origEvent.dataY = y;
+                        } else {
+                            origEvent.dataX = invertScale(scales.x, relativeX);
+                            origEvent.dataY = invertScale(scales.y, relativeY);
+                        }
                     }
-                }
 
-                eventHandler(
-                    origEvent,
-                    datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
-                    datum[INDEX]
-                );
-            };
-            listeners.set(eventName, wrappedHandler);
-            node.addEventListener(eventName.substring(2), wrappedHandler);
+                    eventHandler(
+                        origEvent,
+                        datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
+                        datum[INDEX]
+                    );
+                };
+                listeners.set(eventName, wrappedHandler);
+                node.addEventListener(eventName.substring(2), wrappedHandler);
+            }
         }
-    }
-    if (events.onclick || events.onmousedown || events.onmouseup) {
-        // force role button
-        node.setAttribute('role', 'button');
-    }
-    return {
-        destroy() {
+        if (events.onclick || events.onmousedown || events.onmouseup) {
+            // force role button
+            node.setAttribute('role', 'button');
+        }
+
+        return () => {
             for (const [eventName, handler] of listeners.entries()) {
                 node.removeEventListener(eventName.substring(2), handler);
             }
-        }
+        };
     };
 }
 

@@ -111,11 +111,11 @@
                                 d={path(geometry)}
                                 {style}
                                 class={[styleClass]}
-                                use:addEventHandlers={{
+                                {@attach addEventHandlers({
                                     getPlotState,
                                     options: args,
-                                    datum: d.datum
-                                }}>
+                                    datum: d?.datum
+                                })}>
                                 {#if title}<title>{title}</title>{/if}
                             </path>
                         </Anchor>

@@ -136,11 +136,11 @@
                                 class={['svelteplot-area', className, styleClass]}
                                 clip-path={options.clipPath}
                                 d={areaPath(areaData)}
-                                use:addEventHandlers={{
+                                {@attach addEventHandlers({
                                     getPlotState,
                                     options,
-                                    datum: datum.datum
-                                }}
+                                    datum: datum?.datum
+                                })}
                                 {style}
                                 >{#if title}<title>{title}</title>{/if}</path>
                         </Anchor>
