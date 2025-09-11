@@ -26,6 +26,7 @@ describe('Plot component', () => {
         expect(svg).toBeDefined();
         expect(svg?.getAttribute('width')).toBe('100');
         expect(svg?.getAttribute('height')).toBe('100');
+        expect(svg?.getAttribute('font-family')).toBe(null);
     });
 
     it('plot with title', () => {

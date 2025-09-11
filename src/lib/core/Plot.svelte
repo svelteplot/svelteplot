@@ -499,8 +499,7 @@
             width={fixedWidth || width}
             {height}
             fill="currentColor"
-            viewBox="0 0 {width} {height}"
-            font-family="system-ui, sans-serif">
+            viewBox="0 0 {width} {height}">
             {@render facetAxes?.()}
             <FacetGrid marks={explicitMarks}>
                 {#if children}
