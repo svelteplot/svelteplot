@@ -107,11 +107,11 @@
                                     styleClass
                                 ]}
                                 {style}
-                                use:addEventHandlers={{
+                                {@attach addEventHandlers({
                                     getPlotState,
                                     options: args,
-                                    datum: d.datum
-                                }} />
+                                    datum: d?.datum
+                                })} />
                         </Anchor>
                     {/if}
                 {/each}

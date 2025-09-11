@@ -201,11 +201,11 @@
                                   ? `translate(0, ${d.length})`
                                   : `translate(0, ${d.length / 2})`}"
                             {style}
-                            use:addEventHandlers={{
+                            {@attach addEventHandlers({
                                 getPlotState,
                                 options: args,
-                                datum: d.datum
-                            }}
+                                datum: d?.datum
+                            })}
                             class={[styleClass]} />
                     {/if}
                 {/each}
