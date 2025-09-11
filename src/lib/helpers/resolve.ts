@@ -1,4 +1,4 @@
-import { CHANNEL_SCALE } from '$lib/constants.js';
+import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
 import isDataRecord from '$lib/helpers/isDataRecord.js';
 import isRawValue from '$lib/helpers/isRawValue.js';
 import type { MarkStyleProps, PlotState, ScaledDataRecord } from '$lib/types/index.js';
@@ -30,7 +30,7 @@ export function resolveProp<K, T>(
         // so we're passing the original value to accessor functions instead of our wrapped record
         return datum == null
             ? accessor()
-            : accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
+            : accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum, datum[INDEX]);
     } else if (
         (typeof accessor === 'string' || typeof accessor === 'symbol') &&
         datum &&
@@ -78,7 +78,6 @@ export function resolveChannel<T>(
     const accessor: ChannelAccessor | ChannelAlias =
         channel === 'z' ? channels.z || channels.fill || channels.stroke : channels[channel];
     const channelOptions = toChannelOption(channel, accessor);
-
     if (channelOptions.channel) {
         return resolveChannel(channelOptions.channel, datum, channels);
     }
@@ -98,7 +97,7 @@ function resolve(
             // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
             // "recordized" by the recordize transform. We want to hide this wrapping to the user
             // so we're passing the original value to accessor functions instead of our wrapped record
-            return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
+            return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum, datum?.[INDEX]);
         // use accessor string
         if (
             (typeof accessor === 'string' || typeof accessor === 'symbol') &&
@@ -117,7 +116,7 @@ function resolve(
     } else {
         // return single value or accessor
         return typeof accessor === 'function'
-            ? accessor(datum)
+            ? accessor(datum, datum?.[INDEX])
             : accessor !== null && isRawValue(accessor)
               ? accessor
               : !Array.isArray(datum) && (scale === 'x' || scale === 'y')
