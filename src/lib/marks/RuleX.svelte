@@ -3,7 +3,7 @@
 -->
 <script lang="ts" generics="Datum = DataRecord | RawValue">
     interface RuleXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
-        data: Datum[];
+        data?: Datum[];
         x?: ChannelAccessor<Datum>;
         y1?: ChannelAccessor<Datum>;
         y2?: ChannelAccessor<Datum>;
