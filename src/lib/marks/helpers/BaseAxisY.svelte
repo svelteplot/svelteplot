@@ -6,10 +6,14 @@
     import type {
         AutoMarginStores,
         ConstantAccessor,
+        DataRecord,
         PlotState,
         RawValue,
+        ScaledDataRecord,
         ScaleType
-    } from 'svelteplot/types/index.js';
+    } from '$lib/types/index.js';
+    import { RAW_VALUE } from '$lib/transforms/recordize';
+    import { INDEX } from '$lib/constants';
 
     type BaseAxisYProps = {
         scaleFn: (d: RawValue) => number;
@@ -61,13 +65,14 @@
 
     const positionedTicks = $derived.by(() => {
         let tickObjects = ticks.map((tick, i) => {
+            const datum = { [RAW_VALUE]: tick, [INDEX]: i };
             return {
-                value: tick,
+                ...datum,
                 hidden: false,
-                dx: +resolveProp(options.dx, tick, 0),
-                dy: +resolveProp(options.dy, tick, 0),
+                dx: +resolveProp(options.dx, datum, 0),
+                dy: +resolveProp(options.dy, datum, 0),
                 y: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
-                text: tickFormat(tick),
+                text: tickFormat(tick, i),
                 element: null as SVGTextElement | null
             };
         });
@@ -107,11 +112,11 @@
                 max(
                     positionedTicks.map((tick, i) => {
                         if (
-                            resolveProp(options.textAnchor, tick.value, outsideTextAnchor) !==
+                            resolveProp(options.textAnchor, tick, outsideTextAnchor) !==
                             outsideTextAnchor
                         )
                             return 0;
-                        if (tick.hidden || !testFilter(tick.value, options)) return 0;
+                        if (tick.hidden || !testFilter(tick, options)) return 0;
                         if (tickTexts[i]) return tickTexts[i].getBoundingClientRect().width;
                         return 0;
                     }) as number[]
@@ -150,11 +155,11 @@
 
 <g class="axis-y">
     {#each positionedTicks as tick, t (t)}
-        {#if testFilter(tick.value, options) && !tick.hidden}
-            {@const tickClass_ = resolveProp(tickClass, tick.value)}
+        {#if testFilter(tick, options) && !tick.hidden}
+            {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const [textStyle, textClass] = resolveStyles(
                 plot,
-                tick,
+                { datum: tick },
                 {
                     fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                     ...options,
@@ -173,7 +178,7 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        tick,
+                        { datum: tick },
                         options,
                         'stroke',
                         { y: true },
