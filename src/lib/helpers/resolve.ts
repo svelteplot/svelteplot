@@ -15,7 +15,7 @@ import type {
     ConstantAccessor
 } from '../types/index.js';
 import { getBaseStylesObject } from './getBaseStyles.js';
-import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+import { RAW_VALUE } from '$lib/transforms/recordize.js';
 
 type ChannelAlias = { channel: ScaledChannelName };
 

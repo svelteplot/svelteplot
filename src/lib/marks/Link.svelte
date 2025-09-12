@@ -48,7 +48,6 @@
         PlotDefaults
     } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { maybeData } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
     import { replaceChannels } from '$lib/transforms/rename.js';
@@ -57,6 +56,8 @@
     import { maybeCurve } from '$lib/helpers/curves.js';
     import { geoPath } from 'd3-geo';
     import { pick } from 'es-toolkit';
+    import { sort } from 'svelteplot/transforms/sort.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
 
     let markProps: LinkMarkProps = $props();
     const DEFAULTS = {
@@ -77,17 +78,13 @@
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
 
-    const sorted = $derived(
-        options.sort
-            ? maybeData(data).toSorted((a, b) =>
-                  resolveChannel('sort', a, options) > resolveChannel('sort', b, options) ? 1 : -1
-              )
-            : maybeData(data)
-    );
-
     const args = $derived(
         replaceChannels(
-            { data: sorted, stroke: 'currentColor', ...options },
+            sort({
+                data: indexData(data),
+                stroke: 'currentColor',
+                ...options
+            }),
             { y: ['y1', 'y2'], x: ['x1', 'x2'] }
         )
     );

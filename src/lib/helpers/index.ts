@@ -44,11 +44,6 @@ export function isValid(value: RawValue | undefined): value is number | Date | s
     );
 }
 
-export function maybeData(data: DataRecord[]): DataRecord[] {
-    // if (data.type === 'FeatureCollection') return data.features;
-    return data;
-}
-
 export function isObject<T>(option: object | T): option is object {
     // doesn't work with Proxies
     return (

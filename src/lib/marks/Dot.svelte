@@ -28,7 +28,7 @@
     import { sort } from '$lib/index.js';
     import Mark from '../Mark.svelte';
     import DotCanvas from './helpers/DotCanvas.svelte';
-    import { maybeData, isValid } from '$lib/helpers/index.js';
+    import { isValid } from '$lib/helpers/index.js';
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
     import Anchor from './helpers/Anchor.svelte';
@@ -58,7 +58,7 @@
         // todo: move sorting to Mark
         sort(
             recordizeXY({
-                data: maybeData(data),
+                data,
                 // sort by descending radius by default
                 ...(options.r ? { sort: { channel: '-r' } } : {}),
                 ...options,
