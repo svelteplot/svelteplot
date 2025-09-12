@@ -40,9 +40,9 @@ describe('GridX mark', () => {
             }
         });
         const gridLines = container.querySelectorAll('g.grid-x > line');
-        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,5)');
-        expect(gridLines[1].getAttribute('transform')).toBe('translate(21,5)');
-        expect(gridLines[2].getAttribute('transform')).toBe('translate(96,5)');
+        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,0)');
+        expect(gridLines[1].getAttribute('transform')).toBe('translate(21,0)');
+        expect(gridLines[2].getAttribute('transform')).toBe('translate(96,0)');
         expect(gridLines.length).toBe(3);
     });
 
@@ -63,13 +63,13 @@ describe('GridX mark', () => {
             props
         });
         const gridLines = container.querySelectorAll('g.grid-x > line');
-        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,5)');
+        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,0)');
 
         props.gridArgs.dx = 10;
         await tick();
 
         const gridLines2 = container.querySelectorAll('g.grid-x > line');
-        expect(gridLines2[0].getAttribute('transform')).toBe('translate(11,5)');
+        expect(gridLines2[0].getAttribute('transform')).toBe('translate(11,0)');
 
         const dy = vi.fn(() => 20);
 
@@ -77,7 +77,7 @@ describe('GridX mark', () => {
         await tick();
 
         const gridLines3 = container.querySelectorAll('g.grid-x > line');
-        expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,25)');
+        expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,20)');
         expect(dy).toHaveBeenCalled();
     });
 

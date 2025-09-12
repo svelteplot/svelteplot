@@ -43,13 +43,13 @@ describe('GridY mark', () => {
             props
         });
         const gridLines = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,95)');
+        expect(gridLines[0].getAttribute('transform')).toBe('translate(0,95)');
 
         props.gridArgs.dx = 10;
         await tick();
 
         const gridLines2 = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines2[0].getAttribute('transform')).toBe('translate(11,95)');
+        expect(gridLines2[0].getAttribute('transform')).toBe('translate(10,95)');
 
         const dy = vi.fn(() => -20);
 
@@ -57,7 +57,7 @@ describe('GridY mark', () => {
         await tick();
 
         const gridLines3 = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,75)');
+        expect(gridLines3[0].getAttribute('transform')).toBe('translate(10,75)');
         expect(dy).toHaveBeenCalled();
     });
 
