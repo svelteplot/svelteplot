@@ -30,7 +30,7 @@
     import { quadtree } from 'd3-quadtree';
     import { projectXY } from '$lib/helpers/scales.js';
     import isDataRecord from '$lib/helpers/isDataRecord.js';
-    import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+    import { indexData, RAW_VALUE } from 'svelteplot/transforms/recordize.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
@@ -116,7 +116,7 @@
 
     const groups = $derived.by(() => {
         const groups = [];
-        groupFacetsAndZ(data, { x, y, z, fx, fy }, (d) => groups.push(d));
+        groupFacetsAndZ(indexData(data), { x, y, z, fx, fy }, (d) => groups.push(d));
         return groups;
     });
 

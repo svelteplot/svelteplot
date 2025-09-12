@@ -48,13 +48,14 @@
         PlotDefaults
     } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { coalesce, maybeData, maybeNumber } from '../helpers/index.js';
+    import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
     import { replaceChannels } from '$lib/transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { sort } from '$lib/transforms/sort.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
 
     let markProps: ArrowMarkProps = $props();
 
@@ -80,7 +81,7 @@
     const args: ArrowMarkProps = $derived(
         sort(
             replaceChannels(
-                { data: maybeData(data), ...options },
+                { data: indexData(data), ...options },
                 { y: ['y1', 'y2'], x: ['x1', 'x2'] }
             )
         )

@@ -43,13 +43,13 @@ describe('GridY mark', () => {
             props
         });
         const gridLines = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,95)');
+        expect(gridLines[0].getAttribute('transform')).toBe('translate(0,95)');
 
         props.gridArgs.dx = 10;
         await tick();
 
         const gridLines2 = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines2[0].getAttribute('transform')).toBe('translate(11,95)');
+        expect(gridLines2[0].getAttribute('transform')).toBe('translate(10,95)');
 
         const dy = vi.fn(() => -20);
 
@@ -57,7 +57,32 @@ describe('GridY mark', () => {
         await tick();
 
         const gridLines3 = container.querySelectorAll('g.grid-y > line');
-        expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,75)');
+        expect(gridLines3[0].getAttribute('transform')).toBe('translate(10,75)');
         expect(dy).toHaveBeenCalled();
+    });
+
+    it('passes index to accessor functions', () => {
+        const x1 = vi.fn((d, i) => d + i);
+        const stroke = vi.fn((d, i) => 'gray');
+        render(GridYTest, {
+            props: {
+                plotArgs: {
+                    x: { domain: [0, 10] }
+                },
+                gridArgs: {
+                    data: [0, 5, 10],
+                    x1,
+                    stroke
+                }
+            }
+        });
+        expect(x1).toHaveBeenCalled();
+        expect(x1.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(x1.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(x1.mock.calls[2]).toStrictEqual([10, 2]);
+        expect(stroke).toHaveBeenCalled();
+        expect(stroke.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(stroke.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(stroke.mock.calls[2]).toStrictEqual([10, 2]);
     });
 });

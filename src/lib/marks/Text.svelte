@@ -71,6 +71,7 @@
     import { sort } from '$lib/index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
+    import { indexData } from 'svelteplot/transforms/recordize';
 
     const DEFAULTS = {
         fontSize: 12,
@@ -95,7 +96,7 @@
 
     const args = $derived(
         sort({
-            data,
+            data: indexData(data),
             ...options
         })
     ) as TextMarkProps;

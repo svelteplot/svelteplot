@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import AxisXTest from './axisX.test.svelte';
 import { getTranslate } from './utils';
@@ -213,5 +213,45 @@ describe('AxisX mark', () => {
         ticks.sort((a, b) => getTranslate(a)[0] - getTranslate(b)[0]);
         const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
         expect(tickValues).toStrictEqual(['C', 'A', 'B']);
+    });
+
+    it('passes index to accessor functions', () => {
+        const checkIndex = vi.fn((d) => d);
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: { width: 500, x: { domain: [0, 100] } },
+                axisArgs: {
+                    tickFontSize: (d, i) => checkIndex(i) + 5
+                }
+            }
+        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBe(6);
+        expect(checkIndex.mock.calls[0]).toStrictEqual([0]);
+        expect(checkIndex.mock.calls[1]).toStrictEqual([1]);
+        const fontSizes = ticks.map((t) => t.querySelector('text')?.style.fontSize);
+        expect(fontSizes).toStrictEqual(['5px', '6px', '7px', '8px', '9px', '10px']);
+    });
+
+    it('passes index to tickFormat functions', () => {
+        const checkIndex = vi.fn((d) => String(d));
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: { width: 500, x: { domain: [0, 100] } },
+                axisArgs: {
+                    tickFormat: (d, i) => checkIndex(i)
+                }
+            }
+        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBe(6);
+        expect(checkIndex.mock.calls[0]).toStrictEqual([0]);
+        expect(checkIndex.mock.calls[1]).toStrictEqual([1]);
+        const fontSizes = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(fontSizes).toStrictEqual(['0', '1', '2', '3', '4', '5']);
     });
 });

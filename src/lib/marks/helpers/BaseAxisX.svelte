@@ -9,11 +9,14 @@
         ConstantAccessor,
         PlotState,
         RawValue,
+        ScaledDataRecord,
         ScaleType
     } from 'svelteplot/types/index.js';
     import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import { max } from 'd3-array';
     import { randomId, testFilter } from '$lib/helpers/index.js';
+    import { INDEX } from 'svelteplot/constants';
+    import { RAW_VALUE } from 'svelteplot/transforms/recordize';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
@@ -76,11 +79,12 @@
     const positionedTicks = $derived.by(() => {
         let tickObjects = removeIdenticalLines(
             ticks.map((tick, i) => {
+                const datum = { [RAW_VALUE]: tick, [INDEX]: i };
                 return {
-                    value: tick,
+                    ...datum,
                     hidden: false,
-                    dx: +resolveProp(options.dx, tick, 0),
-                    dy: +resolveProp(options.dy, tick, 0),
+                    dx: +resolveProp(options.dx, datum, 0),
+                    dy: +resolveProp(options.dy, datum, 0),
                     x: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
                     text: splitTick(tickFormat(tick, i)),
                     element: null as SVGTextElement | null
@@ -101,7 +105,7 @@
                 }
             }
         }
-        return tickObjects;
+        return tickObjects as ScaledDataRecord[];
     });
 
     $effect(() => {
@@ -114,11 +118,11 @@
                 max(
                     positionedTicks.map((tick, i) => {
                         if (
-                            resolveProp(options.anchor, tick.value, outsideTextAnchor) !==
+                            resolveProp(options.anchor, tick, outsideTextAnchor) !==
                             outsideTextAnchor
                         )
                             return 0;
-                        if (tick.hidden || !testFilter(tick.value, options)) return 0;
+                        if (tick.hidden || !testFilter(tick, options)) return 0;
                         if (tickTextElements[i])
                             return tickTextElements[i].getBoundingClientRect().height;
                         return 0;
@@ -148,8 +152,9 @@
 
 <g class="axis-x">
     {#each positionedTicks as tick, t (t)}
-        {#if testFilter(tick.value, options) && !tick.hidden}
-            {@const tickClass_ = resolveProp(tickClass, tick.value)}
+        {#if testFilter(tick, options) && !tick.hidden}
+            {@const tickClass_ = resolveProp(tickClass, tick)}
+            {@const tickFontSize_ = +resolveProp(tickFontSize, tick, 10)}
             <g
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.x + tick.dx}, {tickY + tick.dy})"
@@ -157,7 +162,7 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        tick,
+                        { datum: tick },
                         options,
                         'stroke',
                         { x: true },
@@ -174,15 +179,15 @@
                     {@const prevTextLines = t && positionedTicks[t - 1].text}
 
                     {@const moveDown =
-                        (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize * 0.35 : 0)) *
+                        (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize_ * 0.35 : 0)) *
                         (anchor === 'bottom' ? 1 : -1)}
                     {@const [textStyle, textClass] = resolveStyles(
                         plot,
-                        tick,
+                        { datum: tick },
                         {
                             fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                             ...options,
-                            fontSize: tickFontSize,
+                            fontSize: tickFontSize_,
                             stroke: null
                         },
                         'fill',

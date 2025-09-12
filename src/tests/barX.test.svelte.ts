@@ -3,6 +3,7 @@ import { render, fireEvent } from '@testing-library/svelte';
 import BarXTest from './barX.test.svelte';
 import { getPathDims, getRectDims } from './utils';
 import { tick } from 'svelte';
+import { INDEX } from 'svelteplot/constants';
 
 const testData = [
     {
@@ -173,5 +174,39 @@ describe('BarX mark', () => {
 
         expect(checkDatum).toHaveBeenCalledTimes(2);
         expect(checkDatum).toHaveBeenCalledWith(30);
+    });
+
+    it('accessor functions receive index', () => {
+        const xIndex = vi.fn();
+        const fillIndex = vi.fn();
+        const dxIndex = vi.fn();
+        render(BarXTest, {
+            props: {
+                plotArgs: {},
+                barArgs: {
+                    data: timeseries,
+                    x: (d, index) => {
+                        xIndex(index);
+                        return d.value;
+                    },
+                    fill: (d, index) => {
+                        fillIndex(index);
+                        return 'steelblue';
+                    },
+                    dx: (x, index) => {
+                        dxIndex(index);
+                        return 0;
+                    },
+                    y: 'year'
+                }
+            }
+        });
+        expect(xIndex).toHaveBeenCalled();
+        expect(xIndex.mock.calls[0]).toStrictEqual([0]);
+        expect(xIndex.mock.calls[1]).toStrictEqual([1]);
+        expect(xIndex.mock.calls[2]).toStrictEqual([2]);
+        expect(fillIndex.mock.calls[2]).toStrictEqual([2]);
+        expect(dxIndex.mock.calls[1]).toStrictEqual([1]);
+        expect(dxIndex.mock.calls[3]).toStrictEqual([3]);
     });
 });

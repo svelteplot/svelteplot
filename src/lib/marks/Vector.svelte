@@ -44,8 +44,9 @@
     import { sort } from '$lib/index.js';
     import Mark from '../Mark.svelte';
     //import DotCanvas from './helpers/DotCanvas.svelte';
-    import { maybeData, testFilter, isValid } from '$lib/helpers/index.js';
+    import { isValid } from '$lib/helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
 
     const defaultRadius = 3.5;
 
@@ -145,7 +146,7 @@
 
     const args = $derived(
         sort({
-            data: maybeData(data),
+            data: indexData(data),
             // sort by descending radius by default
             ...options
         })

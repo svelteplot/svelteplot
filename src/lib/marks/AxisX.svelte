@@ -39,7 +39,7 @@
             | 'auto'
             | Intl.DateTimeFormatOptions
             | Intl.NumberFormatOptions
-            | ((d: RawValue) => string);
+            | ((d: RawValue, i: number) => string);
         tickClass?: ConstantAccessor<string, Datum>;
         /** ticks is a shorthand for defining data, tickCount or interval */
         ticks?: number | string | Datum[];

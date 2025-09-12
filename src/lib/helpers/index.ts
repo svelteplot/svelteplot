@@ -24,13 +24,7 @@ export function coalesce(...args: (RawValue | undefined | null)[]) {
 }
 
 export function testFilter<T>(datum: T, options: Channels<T>) {
-    return (
-        options.filter == null ||
-        resolveProp(
-            options.filter as ConstantAccessor<T>,
-            isObject(datum) && datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum
-        )
-    );
+    return options.filter == null || resolveProp(options.filter as ConstantAccessor<T>, datum);
 }
 
 export function randomId() {
@@ -48,11 +42,6 @@ export function isValid(value: RawValue | undefined): value is number | Date | s
         !Number.isNaN(value) &&
         (typeof value !== 'number' || Number.isFinite(value))
     );
-}
-
-export function maybeData(data: DataRecord[]): DataRecord[] {
-    // if (data.type === 'FeatureCollection') return data.features;
-    return data;
 }
 
 export function isObject<T>(option: object | T): option is object {

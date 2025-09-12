@@ -5,14 +5,25 @@
     interface GridXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         data?: Datum[];
         automatic?: boolean;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
     }
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
-    import type { PlotContext, BaseMarkProps, RawValue, PlotDefaults } from '../types/index.js';
+    import type {
+        PlotContext,
+        BaseMarkProps,
+        RawValue,
+        PlotDefaults,
+        DataRecord,
+        ChannelAccessor
+    } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
+    import isDataRecord from '$lib/helpers/isDataRecord';
+    import { INDEX } from '$lib/constants';
 
     let markProps: GridXMarkProps = $props();
 
@@ -37,8 +48,8 @@
         Math.max(3, Math.round(plot.facetWidth / plot.options.x.tickSpacing))
     );
 
-    const ticks: RawValue[] = $derived(
-        data.length > 0
+    const ticks: DataRecord[] = $derived(
+        (data.length > 0
             ? // use custom tick values if user passed any as prop
               data
             : // use custom scale tick values if user passed any as plot scale option
@@ -50,6 +61,9 @@
                   plot.scales.x.fn,
                   autoTickCount
               )
+        ).map((d, i) =>
+            isDataRecord(d) ? { ...d, [INDEX]: i } : { [RAW_VALUE]: d, [INDEX]: i }
+        ) as DataRecord[]
     );
 </script>
 
@@ -64,17 +78,21 @@
             {#each ticks as tick, t (t)}
                 {#if testFilter(tick, options)}
                     {@const x =
-                        plot.scales.x.fn(tick) +
+                        plot.scales.x.fn(tick[RAW_VALUE]) +
                         (plot.scales.x.type === 'band' ? plot.scales.x.fn.bandwidth() * 0.5 : 0)}
                     {@const y1_ = resolveChannel('y1', tick, options)}
                     {@const y2_ = resolveChannel('y2', tick, options)}
                     {@const dx = +resolveProp(options?.dx, tick, 0)}
                     {@const dy = +resolveProp(options?.dy, tick, 0)}
-                    {@const y1 = options.y1 != null ? plot.scales.y.fn(y1_) : 0}
-                    {@const y2 = options.y2 != null ? plot.scales.y.fn(y2_) : plot.facetHeight}
+                    {@const y1 =
+                        options.y1 != null ? plot.scales.y.fn(y1_) : plot.options.marginTop}
+                    {@const y2 =
+                        options.y2 != null
+                            ? plot.scales.y.fn(y2_)
+                            : plot.options.marginTop + plot.facetHeight}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
-                        { datum: { [RAW_VALUE]: tick } },
+                        { datum: tick },
                         options,
                         'stroke',
                         usedScales,
@@ -82,7 +100,7 @@
                     )}
                     <line
                         class={styleClass}
-                        transform="translate({x + dx},{plot.options.marginTop + dy})"
+                        transform="translate({x + dx},{dy})"
                         {style}
                         {y1}
                         {y2} />
