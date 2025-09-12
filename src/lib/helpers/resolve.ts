@@ -225,17 +225,18 @@ export function resolveStyles(
                         isValid(value as RawValue) || key === 'fill' || key === 'stroke'
                 )
                 .map(([key, cssAttr, value]) => {
-                    if (useScale[key as ScaledChannelName]) {
-                        if (
-                            value == undefined &&
-                            (key === 'fill' || key === 'stroke') &&
-                            plot.options.color.unknown
-                        ) {
-                            return [cssAttr, plot.options.color.unknown];
+                    if (key === 'stroke')
+                        if (useScale[key as ScaledChannelName]) {
+                            if (
+                                value == undefined &&
+                                (key === 'fill' || key === 'stroke') &&
+                                plot.options.color.unknown
+                            ) {
+                                return [cssAttr, plot.options.color.unknown];
+                            }
+                        } else if ((key === 'fill' || key === 'stroke') && value === true) {
+                            return [cssAttr, 'currentColor'];
                         }
-                    } else if ((key === 'fill' || key === 'stroke') && value === true) {
-                        return [cssAttr, 'currentColor'];
-                    }
                     return [cssAttr, value];
                 })
         )
