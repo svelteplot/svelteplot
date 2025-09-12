@@ -89,6 +89,36 @@ In the following bar chart, we put two grids, one below the bars and one above:
 </Plot>
 ```
 
+You can use the **x1**, **x2**, **y1**, and **y2** options to limit the grid lines to a specific range:
+
+```svelte live
+<script>
+    import { Plot, Line, GridY } from 'svelteplot';
+    import { page } from '$app/state';
+    let { aapl } = $derived(page.data.data);
+</script>
+
+<Plot>
+    <GridY
+        x1={aapl[0].Date}
+        x2={(value) =>
+            aapl.find((d) => Math.abs(d.Close - value) < 1)
+                ?.Date} />
+    <Line data={aapl} x="Date" y="Close" />
+</Plot>
+```
+
+```svelte
+<Plot>
+    <GridY
+        x1={aapl[0].Date}
+        x2={(value) =>
+            aapl.find((d) => Math.abs(d.Close - value) < 1)
+                ?.Date} />
+    <Line data={aapl} x="Date" y="Close" />
+</Plot>
+```
+
 The automatic ticks can be customized using the **tickSpacing** option:
 
 ```svelte
