@@ -5,10 +5,18 @@
     interface GridYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         data?: Datum[];
         automatic?: boolean;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
     }
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
-    import type { PlotContext, BaseMarkProps, RawValue, PlotDefaults } from '../types/index.js';
+    import type {
+        PlotContext,
+        BaseMarkProps,
+        RawValue,
+        PlotDefaults,
+        ChannelAccessor
+    } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
@@ -68,8 +76,12 @@
                         (plot.scales.y.type === 'band' ? plot.scales.y.fn.bandwidth() * 0.5 : 0)}
                     {@const x1_ = resolveChannel('x1', tick, options)}
                     {@const x2_ = resolveChannel('x2', tick, options)}
-                    {@const x1 = options.x1 != null ? plot.scales.x.fn(x1_) : 0}
-                    {@const x2 = options.x2 != null ? plot.scales.x.fn(x2_) : plot.facetWidth}
+                    {@const x1 =
+                        options.x1 != null ? plot.scales.x.fn(x1_) : plot.options.marginLeft}
+                    {@const x2 =
+                        options.x2 != null
+                            ? plot.scales.x.fn(x2_)
+                            : plot.options.marginLeft + plot.facetWidth}
                     {@const dx = +resolveProp(options?.dx, tick, 0)}
                     {@const dy = +resolveProp(options?.dy, tick, 0)}
                     {@const [style, styleClass] = resolveStyles(
@@ -83,7 +95,7 @@
                     <line
                         {style}
                         class={styleClass}
-                        transform="translate({plot.options.marginLeft + dx},{y + dy})"
+                        transform="translate({dx},{y + dy})"
                         {x1}
                         {x2} />
                 {/if}

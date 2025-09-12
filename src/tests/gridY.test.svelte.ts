@@ -60,4 +60,29 @@ describe('GridY mark', () => {
         expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,75)');
         expect(dy).toHaveBeenCalled();
     });
+
+    it('passes index to accessor functions', () => {
+        const x1 = vi.fn((d, i) => d + i);
+        const stroke = vi.fn((d, i) => 'gray');
+        render(GridYTest, {
+            props: {
+                plotArgs: {
+                    x: { domain: [0, 10] }
+                },
+                gridArgs: {
+                    data: [0, 5, 10],
+                    x1,
+                    stroke
+                }
+            }
+        });
+        expect(x1).toHaveBeenCalled();
+        expect(x1.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(x1.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(x1.mock.calls[2]).toStrictEqual([10, 2]);
+        expect(stroke).toHaveBeenCalled();
+        expect(stroke.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(stroke.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(stroke.mock.calls[2]).toStrictEqual([10, 2]);
+    });
 });

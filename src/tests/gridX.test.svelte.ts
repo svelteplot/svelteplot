@@ -19,11 +19,31 @@ describe('GridX mark', () => {
                 }
             }
         });
-        const gridLines = container.querySelectorAll('g.grid-x > line');
+        const gridLines = container.querySelectorAll(
+            'g.grid-x > line'
+        ) as NodeListOf<SVGLineElement>;
         expect(gridLines.length).toBe(3);
         expect(gridLines[0].style.strokeDasharray).toBe('5, 5');
         expect(gridLines[0].style.stroke).toBe('#008000');
         expect(gridLines[0].style.strokeOpacity).toBe('0.5');
+    });
+
+    it('plot domain from grid data', () => {
+        const { container } = render(GridXTest, {
+            props: {
+                plotArgs: {
+                    y: { domain: [0, 10] }
+                },
+                gridArgs: {
+                    data: [1, 5, 20]
+                }
+            }
+        });
+        const gridLines = container.querySelectorAll('g.grid-x > line');
+        expect(gridLines[0].getAttribute('transform')).toBe('translate(1,5)');
+        expect(gridLines[1].getAttribute('transform')).toBe('translate(21,5)');
+        expect(gridLines[2].getAttribute('transform')).toBe('translate(96,5)');
+        expect(gridLines.length).toBe(3);
     });
 
     it('simple x grid with dx and dy', async () => {
@@ -59,5 +79,30 @@ describe('GridX mark', () => {
         const gridLines3 = container.querySelectorAll('g.grid-x > line');
         expect(gridLines3[0].getAttribute('transform')).toBe('translate(11,25)');
         expect(dy).toHaveBeenCalled();
+    });
+
+    it('passes index to accessor functions', () => {
+        const y1 = vi.fn((d, i) => d + i);
+        const stroke = vi.fn((d, i) => 'gray');
+        render(GridXTest, {
+            props: {
+                plotArgs: {
+                    y: { domain: [0, 10] }
+                },
+                gridArgs: {
+                    data: [0, 5, 10],
+                    y1,
+                    stroke
+                }
+            }
+        });
+        expect(y1).toHaveBeenCalled();
+        expect(y1.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(y1.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(y1.mock.calls[2]).toStrictEqual([10, 2]);
+        expect(stroke).toHaveBeenCalled();
+        expect(stroke.mock.calls[0]).toStrictEqual([0, 0]);
+        expect(stroke.mock.calls[1]).toStrictEqual([5, 1]);
+        expect(stroke.mock.calls[2]).toStrictEqual([10, 2]);
     });
 });
