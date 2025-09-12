@@ -2,7 +2,8 @@
     Creates a vertical box plot for visualizing data distribution with quartiles and outliers
 -->
 <script lang="ts" generics="Datum extends DataRecord">
-    interface BoxYMarkProps extends Pick<BaseMarkProps<Datum>, 'class'> {
+    interface BoxYMarkProps
+        extends Pick<BaseMarkProps<Datum>, 'class' | 'fill' | 'stroke' | 'fx' | 'fy'> {
         data: Datum[];
         x: ChannelAccessor;
         y: ChannelAccessor;

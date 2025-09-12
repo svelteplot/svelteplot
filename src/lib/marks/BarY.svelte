@@ -42,7 +42,6 @@
     const plot = $derived(getPlotState());
 
     const DEFAULTS = {
-        fill: 'currentColor',
         ...getContext<PlotDefaults>('svelteplot/_defaults').bar,
         ...getContext<PlotDefaults>('svelteplot/_defaults').barY
     };
