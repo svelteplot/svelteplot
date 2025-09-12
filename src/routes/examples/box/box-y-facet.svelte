@@ -1,5 +1,6 @@
 <script module>
-    export const title = 'BoxY';
+    export const title = 'BoxY (faceted)';
+    export const sortKey = 20;
 </script>
 
 <script lang="ts">
@@ -18,6 +19,7 @@
         x="species"
         y="flipper_length_mm"
         fill="species"
+        fx="sex"
         tickMinMax
         tickMedian={{
             stroke: 'var(--svelteplot-bg)',

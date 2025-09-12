@@ -1,9 +1,10 @@
 <script module>
-    export const title = 'BoxY';
+    export const title = 'BoxX (faceted)';
+    export const sortKey = 20;
 </script>
 
 <script lang="ts">
-    import { Plot, BoxY } from 'svelteplot';
+    import { Plot, BoxX } from 'svelteplot';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
@@ -12,12 +13,17 @@
     ) as ExamplesData;
 </script>
 
-<Plot grid>
-    <BoxY
+<Plot
+    height={400}
+    y={{ grid: true }}
+    x={{ insetLeft: 5, insetRight: 5 }}>
+    <BoxX
         data={penguins}
-        x="species"
-        y="flipper_length_mm"
-        fill="species"
+        x="flipper_length_mm"
+        y="species"
+        fy="sex"
+        stroke="sex"
+        fill="sex"
         tickMinMax
         tickMedian={{
             stroke: 'var(--svelteplot-bg)',

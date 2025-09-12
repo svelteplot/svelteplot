@@ -1,5 +1,7 @@
 <script module>
-    export const title = 'BoxX (horizontal)';
+    export const title = 'BoxX';
+    export const description =
+        "Box plot of Olympic athletes' weights across different sports.";
 </script>
 
 <script lang="ts">
@@ -7,16 +9,22 @@
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
-    let { penguins } = $derived(page.data.data) as ExamplesData;
+    let { olympians } = $derived(
+        page.data.data
+    ) as ExamplesData;
 </script>
 
-<Plot x={{ grid: true }}>
+<Plot
+    inset={10}
+    x={{
+        axis: 'both',
+        grid: true,
+        type: 'log'
+    }}>
     <BoxX
-        data={penguins}
-        x="flipper_length_mm"
-        y="species"
-        tickMinMax
-        dot={{ fill: true }}
-        bar={{ fill: 'var(--svelteplot-bg)', stroke: 'currentColor' }} />
+        data={olympians}
+        x="weight"
+        y="sport"
+        bar={{ fillOpacity: 0.5 }}
+        tickMinMax />
 </Plot>
-
