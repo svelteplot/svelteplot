@@ -13,3 +13,4 @@ test-results
 .sveltepress
 *.tgz
 /src/routes/demo
+/static/__vr
