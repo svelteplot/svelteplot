@@ -399,7 +399,7 @@ export function inferScaleType(
     }
     if (name === 'symbol') return 'ordinal';
     // for positional scales, try to pick a scale that's required by the mark types
-    if ((name === 'x' || name === 'y') && markTypes.size === 1) {
+    if (name === 'x' || name === 'y') {
         if (
             name === 'y' &&
             (markTypes.has('barX') || markTypes.has('tickX') || markTypes.has('cell'))
