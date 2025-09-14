@@ -231,6 +231,9 @@ importers:
       vitest-matchmedia-mock:
         specifier: ^2.0.3
         version: 2.0.3(@types/debug@4.1.12)(@types/node@24.0.1)(jiti@1.21.7)(jsdom@26.1.0)(sass@1.92.0)(terser@5.42.0)(tsx@4.16.5)(yaml@2.8.1)
+      yoctocolors:
+        specifier: ^2.1.2
+        version: 2.1.2
 
 packages:
 
@@ -5113,6 +5116,10 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  yoctocolors@2.1.2:
+    resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
+    engines: {node: '>=18'}
 
   zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
@@ -10876,6 +10883,8 @@ snapshots:
       fd-slicer: 1.1.0
 
   yocto-queue@0.1.0: {}
+
+  yoctocolors@2.1.2: {}
 
   zimmerframe@1.1.2: {}
 

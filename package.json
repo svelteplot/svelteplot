@@ -107,7 +107,8 @@
         "typescript": "^5.9.2",
         "vite": "^6.3.5",
         "vitest": "^3.2.4",
-        "vitest-matchmedia-mock": "^2.0.3"
+        "vitest-matchmedia-mock": "^2.0.3",
+        "yoctocolors": "^2.1.2"
     },
     "types": "./dist/index.d.ts",
     "type": "module",
