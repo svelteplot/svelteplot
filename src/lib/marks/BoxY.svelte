@@ -126,8 +126,6 @@
             })
             .sort((a, b) => b[MEDIAN] - a[MEDIAN])
     );
-
-    $inspect({ boxData });
 </script>
 
 <GroupMultiple class="box-y {className || ''}" length={className ? 2 : grouped.length}>
