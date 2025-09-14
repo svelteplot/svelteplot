@@ -52,7 +52,7 @@ describe('BarY mark', () => {
         expect(bars[0].style.stroke).toBe('none');
     });
 
-    it.only('bars have stroke only if just stroke channel is set', () => {
+    it('bars have stroke only if just stroke channel is set', () => {
         const { container } = render(BarYTest, {
             props: {
                 plotArgs: {},
