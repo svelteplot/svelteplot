@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 import fs from 'fs/promises';
 import path from 'path';
 import puppeteer from 'puppeteer';
@@ -21,7 +22,7 @@ const DIFF_THRESHOLD = parseFloat(process.env.VR_DIFF_THRESHOLD || '0.01');
 
 // Start the development server and return server instance and local URL
 const startServer = () => {
-    console.log('Starting development server...');
+    console.log(dim('Starting development server...'));
     const server = exec('pnpm dev');
 
     return new Promise((resolve) => {
@@ -215,7 +216,9 @@ const main = async () => {
         });
 
         const examplePaths = await uniqueExamplePaths();
-        process.stdout.write(dim(`Found ${examplePaths.length} baseline example(s)\n`));
+        process.stdout.write(
+            greenBright(' ✓ ') + dim(`Found ${examplePaths.length} baseline example(s)\n\n`)
+        );
 
         // ANSI colors for status
         const GREEN = '\x1b[32m';
@@ -229,7 +232,9 @@ const main = async () => {
             await ensureDirectoryExists(latestDir);
 
             // Print progress line and append result when done
-            process.stdout.write(`${gray(' - ')}${route.split('/').slice(1).join('/')}  `);
+            process.stdout.write(
+                `${dim(' - processing ')}${route.split('/').slice(1).join('/')}  `
+            );
 
             let routeFailed = false;
 
