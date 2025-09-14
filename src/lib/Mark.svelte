@@ -265,7 +265,7 @@
                         ? scale === 'x'
                             ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
                             : scale === 'y'
-                              ? projectY(origChannel as 'y' | 'y1' | 'y1', plot.scales, value)
+                              ? projectY(origChannel as 'y' | 'y1' | 'y2', plot.scales, value)
                               : scale === 'color' && !isValid(value)
                                 ? plot.options.color.unknown
                                 : plot.scales[scale].fn(value)
