@@ -20,11 +20,12 @@
         topojson.feature(world, world.objects.countries)
             .features
     );
-    let selected = $state(
+    let selectedName = $state('Germany');
+    const selected = $derived(
         topojson
             .feature(world, world.objects.countries)
             .features.find(
-                (d) => d.properties.name === 'Germany'
+                (d) => d.properties.name === selectedName
             )
     );
     let centroid = $derived(geoCentroid(selected));
@@ -50,6 +51,7 @@
         opacity={0.2}
         fill="currentColor"
         stroke="var(--svelteplot-bg)"
-        onclick={(d, e) => (selected = e)} />
+        onclick={(d, e) =>
+            (selectedName = e.properties.name)} />
     <Geo data={[selected]} />
 </Plot>
