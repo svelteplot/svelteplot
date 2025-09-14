@@ -40,6 +40,7 @@
     import { getUsedScales, projectXY, projectX, projectY } from './helpers/scales.js';
     import { testFilter, isValid } from '$lib/helpers/index.js';
     import { resolveChannel, resolveProp } from './helpers/resolve.js';
+    import { RENAME } from './transforms/rename.js';
 
     let {
         data = [],
@@ -258,11 +259,13 @@
                 if (options?.[channel] != null && out[channel] === undefined) {
                     // resolve value
                     const value = row[channel];
+                    const origChannel = options?.[RENAME]?.[channel] || channel;
+                    console.log('channel', channel, options[RENAME], origChannel, value);
                     const scaled = usedScales[channel]
                         ? scale === 'x'
-                            ? projectX(channel as 'x' | 'x1' | 'x2', plot.scales, value)
+                            ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
                             : scale === 'y'
-                              ? projectY(channel as 'y' | 'y1' | 'y1', plot.scales, value)
+                              ? projectY(origChannel as 'y' | 'y1' | 'y1', plot.scales, value)
                               : scale === 'color' && !isValid(value)
                                 ? plot.options.color.unknown
                                 : plot.scales[scale].fn(value)
