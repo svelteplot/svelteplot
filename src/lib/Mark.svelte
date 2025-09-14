@@ -259,8 +259,8 @@
                 if (options?.[channel] != null && out[channel] === undefined) {
                     // resolve value
                     const value = row[channel];
+                    // if this channel was renamed, use the original channel for scaling
                     const origChannel = options?.[RENAME]?.[channel] || channel;
-                    console.log('channel', channel, options[RENAME], origChannel, value);
                     const scaled = usedScales[channel]
                         ? scale === 'x'
                             ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
