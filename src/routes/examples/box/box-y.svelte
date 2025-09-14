@@ -7,17 +7,15 @@
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
-    let { penguins } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { mpg } = $derived(page.data.data) as ExamplesData;
 </script>
 
-<Plot grid>
+<Plot grid x={{ type: 'band' }} inset={10}>
     <BoxY
-        data={penguins}
-        x="species"
-        y="flipper_length_mm"
-        fill="species"
+        data={mpg}
+        x="class"
+        y="hwy"
+        fill="class"
         tickMinMax
         tickMedian={{
             stroke: 'var(--svelteplot-bg)',
