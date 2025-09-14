@@ -34,7 +34,6 @@ Helper component for rendering rectangular marks in SVG
     import type { BaseMarkProps, BaseRectMarkProps, BorderRadius } from 'svelteplot/types/mark.js';
     import type { DataRecord, ScaledDataRecord } from 'svelteplot/types/data.js';
     import type { PlotContext, UsedScales } from 'svelteplot/types/index.js';
-    import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
 
     let {
         datum,
@@ -47,7 +46,7 @@ Helper component for rendering rectangular marks in SVG
         useInsetAsFallbackVertically = true,
         useInsetAsFallbackHorizontally = true,
         usedScales,
-        fallbackStyle = 'fill'
+        fallbackStyle
     }: RectPathProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
@@ -94,7 +93,13 @@ Helper component for rendering rectangular marks in SVG
                 ) > 0)
     );
     const [style, styleClass] = $derived(
-        resolveStyles(plot, datum, options, fallbackStyle, usedScales)
+        resolveStyles(
+            plot,
+            datum,
+            options,
+            !fallbackStyle ? (options.stroke && !options.fill ? 'stroke' : 'fill') : fallbackStyle,
+            usedScales
+        )
     );
 </script>
 

@@ -36,6 +36,39 @@ describe('BarY mark', () => {
         ]);
     });
 
+    it('bars are filled by default', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {},
+                barArgs: {
+                    data: [1, 2, 4]
+                }
+            }
+        });
+
+        const bars = container.querySelectorAll('g.bar-y > rect') as NodeListOf<SVGRectElement>;
+        expect(bars.length).toBe(3);
+        expect(bars[0].style.fill).toBe('currentColor');
+        expect(bars[0].style.stroke).toBe('none');
+    });
+
+    it('bars have stroke only if just stroke channel is set', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {},
+                barArgs: {
+                    data: [1, 2, 4],
+                    stroke: 'currentColor'
+                }
+            }
+        });
+
+        const bars = container.querySelectorAll('g.bar-y > rect') as NodeListOf<SVGRectElement>;
+        expect(bars.length).toBe(3);
+        expect(bars[0].style.fill).toBe('none');
+        expect(bars[0].style.stroke).toBe('currentColor');
+    });
+
     it('stacked bar chart', () => {
         // Mock data similar to bundlesizes in the example
         const data = [
