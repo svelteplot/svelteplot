@@ -21,15 +21,22 @@ describe('TickX mark', () => {
             }
         });
 
-        const ticks = container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>;
+        const ticks = Array.from(
+            container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>
+        );
+
         expect(ticks.length).toBe(3);
 
-        // Check that lines are rendered
-        ticks.forEach((tick) => {
-            expect(tick.tagName).toBe('line');
-            expect(tick.getAttribute('y1')).not.toBeNull();
-            expect(tick.getAttribute('y2')).not.toBeNull();
-        });
+        const translate = ticks.map((tick) => getTranslate(tick));
+        expect(translate).toEqual([
+            [11, 0],
+            [48.5, 0],
+            [86, 0]
+        ]);
+        const y1 = ticks.map((tick) => parseFloat(tick.getAttribute('y1')));
+        expect(y1).toEqual([0, 0, 0]);
+        const y2 = ticks.map((tick) => parseFloat(tick.getAttribute('y2')));
+        expect(y2).toEqual([95, 95, 95]);
     });
 
     it('renders ticks with custom tick length', () => {
@@ -44,18 +51,13 @@ describe('TickX mark', () => {
             }
         });
 
-        const ticks = container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>;
-        expect(ticks.length).toBe(3);
-
-        // With tickLength = 20, when y1 === y2, tick extends tickLength/2 in each direction
-        ticks.forEach((tick) => {
-            const y1 = parseFloat(tick.getAttribute('y1') || '0');
-            const y2 = parseFloat(tick.getAttribute('y2') || '0');
-            if (y1 === y2) {
-                // This means we have a point tick using the tickLength
-                expect(Math.abs(y2 - y1)).toBe(0); // They should be equal for point ticks
-            }
-        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>
+        );
+        const y1 = ticks.map((tick) => parseFloat(tick.getAttribute('y1')));
+        expect(y1).toEqual([0, 0, 0]);
+        const y2 = ticks.map((tick) => parseFloat(tick.getAttribute('y2')));
+        expect(y2).toEqual([95, 95, 95]);
     });
 
     it('positions ticks correctly on x axis', () => {
