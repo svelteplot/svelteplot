@@ -372,6 +372,7 @@ const main = async () => {
     if (failures.length > 0) {
         process.exitCode = 1;
     }
+    server.kill();
 };
 
 main().catch((e) => {

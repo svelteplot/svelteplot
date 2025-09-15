@@ -25,22 +25,7 @@
 
 <path
     d={pathD}
-    class="rotating"
     style:animation-duration="{duration}s"
     stroke="currentColor"
     fill="none"
     {...restProps} />
-
-<style>
-    @keyframes rotating {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-    .rotating {
-        animation: rotating 2s linear infinite;
-    }
-</style>
