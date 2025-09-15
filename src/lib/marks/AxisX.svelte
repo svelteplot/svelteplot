@@ -14,6 +14,7 @@
         PlotDefaults,
         ChannelName
     } from '../types/index.js';
+    import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
     import { derived } from 'svelte/store';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
@@ -22,7 +23,7 @@
     interface AxisXMarkProps
         extends Omit<
             BaseMarkProps<Datum>,
-            'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
         > {
         data?: Datum[];
         automatic?: boolean;
@@ -49,6 +50,8 @@
         tickCount?: number;
         /** approximate number of pixels between generated ticks */
         tickSpacing?: number;
+        /** text anchor for axis labels */
+        textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
     }
 
     let markProps: AxisXMarkProps = $props();
@@ -58,6 +61,7 @@
         tickPadding: 3,
         tickFontSize: 11,
         titleFontSize: 11,
+        textAnchor: 'middle',
         opacity: 0.8,
         anchor: 'bottom',
         ...getContext<PlotDefaults>('svelteplot/_defaults').axis,

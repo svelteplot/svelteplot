@@ -14,6 +14,7 @@
         ChannelName,
         ConstantAccessor
     } from '../types/index.js';
+    import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
@@ -21,7 +22,7 @@
     interface AxisYMarkProps
         extends Omit<
             BaseMarkProps<Datum>,
-            'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
         > {
         data?: Datum[];
         automatic?: boolean;
