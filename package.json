@@ -12,6 +12,7 @@
         "preview": "vite preview",
         "test": "npm run test:unit",
         "test:visual": "node scripts/visual-regression.js",
+        "vr:report": "node scripts/vr-report.js",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --check src && eslint src",
