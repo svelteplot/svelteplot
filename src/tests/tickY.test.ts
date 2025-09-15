@@ -20,64 +20,20 @@ describe('TickY mark', () => {
                 }
             }
         });
-
-        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
+        const ticks = Array.from(
+            container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>
+        );
         expect(ticks.length).toBe(3);
-
-        // Check that lines are rendered
-        ticks.forEach((tick) => {
-            expect(tick.tagName).toBe('line');
-            expect(tick.getAttribute('x1')).not.toBeNull();
-            expect(tick.getAttribute('x2')).not.toBeNull();
-        });
-    });
-
-    it('renders ticks with custom tick length', () => {
-        const { container } = render(TickYTest, {
-            props: {
-                plotArgs: {},
-                tickArgs: {
-                    data: testData,
-                    y: 'y',
-                    tickLength: 20
-                }
-            }
-        });
-
-        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
-        expect(ticks.length).toBe(3);
-
-        // With tickLength = 20, when x1 === x2, tick extends tickLength/2 in each direction
-        ticks.forEach((tick) => {
-            const x1 = parseFloat(tick.getAttribute('x1') || '0');
-            const x2 = parseFloat(tick.getAttribute('x2') || '0');
-            if (x1 === x2) {
-                // This means we have a point tick using the tickLength
-                expect(Math.abs(x2 - x1)).toBe(0); // They should be equal for point ticks
-            }
-        });
-    });
-
-    it('positions ticks correctly on y axis', () => {
-        const { container } = render(TickYTest, {
-            props: {
-                plotArgs: { y: { domain: [0, 30] } },
-                tickArgs: {
-                    data: testData,
-                    y: 'y'
-                }
-            }
-        });
-
-        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
-        expect(ticks.length).toBe(3);
-
-        // Check that ticks have different transforms (different y positions)
-        const transforms = Array.from(ticks).map((tick) => tick.getAttribute('transform') || '');
-
-        // All transforms should be different (different y positions)
-        const uniqueTransforms = new Set(transforms);
-        expect(uniqueTransforms.size).toBe(3);
+        const translate = ticks.map((tick) => getTranslate(tick));
+        expect(translate).toEqual([
+            [0, 85],
+            [0, 50],
+            [0, 15]
+        ]);
+        const x1 = ticks.map((tick) => parseFloat(tick.getAttribute('x1')));
+        expect(x1).toEqual([1, 1, 1]);
+        const x2 = ticks.map((tick) => parseFloat(tick.getAttribute('x2')));
+        expect(x2).toEqual([100, 100, 100]);
     });
 
     it('applies dx and dy offsets', () => {
@@ -93,42 +49,16 @@ describe('TickY mark', () => {
             }
         });
 
-        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
+        const ticks = Array.from(
+            container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>
+        );
         expect(ticks.length).toBe(3);
-
-        // Check that transforms include the dx/dy offsets
-        ticks.forEach((tick) => {
-            const transform = tick.getAttribute('transform') || '';
-            expect(transform).toMatch(/translate\(\d+\.?\d*, \d+\.?\d*\)/);
-        });
-    });
-
-    it('handles band scale with x channel', () => {
-        const { container } = render(TickYTest, {
-            props: {
-                plotArgs: {
-                    x: { type: 'band', domain: ['A', 'B'] }
-                },
-                tickArgs: {
-                    data: testData,
-                    y: 'y',
-                    x: 'x'
-                }
-            }
-        });
-
-        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
-        expect(ticks.length).toBe(3);
-
-        // With band scale, ticks should have different x positions
-        const xPositions = Array.from(ticks).map((tick) => {
-            const x1 = parseFloat(tick.getAttribute('x1') || '0');
-            const x2 = parseFloat(tick.getAttribute('x2') || '0');
-            return [x1, x2];
-        });
-
-        // Check that we have different x positions for different bands
-        expect(xPositions.length).toBe(3);
+        const translate = ticks.map((tick) => getTranslate(tick));
+        expect(translate).toEqual([
+            [5, 85 + 10],
+            [5, 50 + 10],
+            [5, 15 + 10]
+        ]);
     });
 
     it('applies stroke styling', () => {
