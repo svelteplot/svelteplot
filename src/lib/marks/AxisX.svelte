@@ -52,8 +52,6 @@
         tickSpacing?: number;
         /** text anchor for axis labels */
         textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
-        /** inline CSS styles */
-        style?: string;
     }
 
     let markProps: AxisXMarkProps = $props();
@@ -63,6 +61,7 @@
         tickPadding: 3,
         tickFontSize: 11,
         titleFontSize: 11,
+        textAnchor: 'middle',
         opacity: 0.8,
         anchor: 'bottom',
         ...getContext<PlotDefaults>('svelteplot/_defaults').axis,

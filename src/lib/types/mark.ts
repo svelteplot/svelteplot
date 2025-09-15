@@ -138,7 +138,11 @@ export type BaseMarkProps<T> = Partial<{
     /**
      * if you want to give your mark element an extra CSS class
      */
-    class: string | null;
+    class?: string;
+    /**
+     * if you want to give your mark element an extra inline style
+     */
+    style?: string;
     cursor: ConstantAccessor<CSS.Property.Cursor, T>;
 }>;
 

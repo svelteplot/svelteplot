@@ -51,8 +51,6 @@
         tickCount?: number;
         /** approximate number of pixels between generated ticks */
         tickSpacing?: number;
-        /** inline CSS styles */
-        style?: string;
     }
 
     let markProps: AxisYMarkProps = $props();
