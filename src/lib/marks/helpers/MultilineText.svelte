@@ -55,18 +55,18 @@
             : [
                   args.x != null
                       ? d.x
-                      : isLeft
-                        ? plot.options.marginLeft
-                        : isRight
-                          ? plot.options.marginLeft + plot.facetWidth
-                          : plot.options.marginLeft + plot.facetWidth * 0.5,
+                      : (isLeft
+                            ? plot.options.marginLeft
+                            : isRight
+                              ? plot.options.marginLeft + plot.facetWidth
+                              : plot.options.marginLeft + plot.facetWidth * 0.5) + (d.dx ?? 0),
                   args.y != null
                       ? d.y
-                      : isTop
-                        ? plot.options.marginTop
-                        : isBottom
-                          ? plot.options.marginTop + plot.facetHeight
-                          : plot.options.marginTop + plot.facetHeight * 0.5
+                      : (isTop
+                            ? plot.options.marginTop
+                            : isBottom
+                              ? plot.options.marginTop + plot.facetHeight
+                              : plot.options.marginTop + plot.facetHeight * 0.5) + (d.dy ?? 0)
               ]
     );
 

@@ -399,7 +399,7 @@ export function inferScaleType(
     }
     if (name === 'symbol') return 'ordinal';
     // for positional scales, try to pick a scale that's required by the mark types
-    if ((name === 'x' || name === 'y') && markTypes.size === 1) {
+    if (name === 'x' || name === 'y') {
         if (
             name === 'y' &&
             (markTypes.has('barX') || markTypes.has('tickX') || markTypes.has('cell'))
@@ -415,7 +415,7 @@ export function inferScaleType(
     if (dataValues.length === 1) return 'point';
     if (dataValues.every(isNumberOrNull)) return name === 'r' ? 'sqrt' : 'linear';
     if (dataValues.every(isDateOrNull)) return 'time';
-    if (dataValues.every(isStringOrNull)) return markTypes.has('arrow') ? 'point' : 'band';
+    if (dataValues.every(isStringOrNull)) return 'point';
     return 'linear';
 }
 

@@ -19,14 +19,8 @@
         }
     >;
 
-    const screenshots = import.meta.glob(
-        '/static/examples/**/*.png',
-        {
-            eager: true,
-            import: 'default',
-            query: '?url'
-        }
-    );
+    // Screenshots are under `static/examples` (Vite publicDir).
+    // Do not import from publicDir; construct URLs directly.
 
     const indexKey = $derived(
         Object.keys(pages).find(
@@ -63,17 +57,14 @@
                 page,
                 title: pages[page].title,
                 url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: screenshots[
-                    page
-                        .replace(
-                            /^..\//,
-                            '/static/examples/'
-                        )
+                screenshot: resolve(
+                    `/examples/${page
+                        .replace(/^..\//, '')
                         .replace(
                             '.svelte',
                             $isDark ? '.dark.png' : '.png'
-                        )
-                ]?.replace('/static', '')
+                        )}`
+                )
             }))
     );
 </script>

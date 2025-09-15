@@ -45,15 +45,6 @@
         (d) => d.split('/')[1]
     );
 
-    const screenshots = import.meta.glob(
-        '/static/examples/**/*.png',
-        {
-            eager: true,
-            import: 'default',
-            query: '?url'
-        }
-    );
-
     const examples = $derived(
         showcase
             .map((url) =>
@@ -65,17 +56,14 @@
                 page,
                 title: pages[page].title,
                 url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: screenshots[
-                    page
-                        .replace(
-                            /^.\//,
-                            '/static/examples/'
-                        )
+                screenshot: resolve(
+                    `/examples/${page
+                        .replace(/^..\//, '')
                         .replace(
                             '.svelte',
                             $isDark ? '.dark.png' : '.png'
-                        )
-                ]?.replace('/static', '')
+                        )}`
+                )
             }))
     );
 

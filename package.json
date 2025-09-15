@@ -11,6 +11,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "test": "npm run test:unit",
+        "test:visual": "node scripts/visual-regression.js",
+        "vr:report": "node scripts/vr-report.js",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --check src && eslint src",
@@ -106,7 +108,8 @@
         "typescript": "^5.9.2",
         "vite": "^6.3.5",
         "vitest": "^3.2.4",
-        "vitest-matchmedia-mock": "^2.0.3"
+        "vitest-matchmedia-mock": "^2.0.3",
+        "yoctocolors": "^2.1.2"
     },
     "types": "./dist/index.d.ts",
     "type": "module",
