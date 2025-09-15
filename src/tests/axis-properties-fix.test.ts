@@ -1,12 +1,12 @@
 /**
  * Test case demonstrating the fix for issue #202
- * 
+ *
  * Before the fix, these AxisX and AxisY properties would cause TypeScript errors:
  * - AxisX.fill
- * - AxisX.textAnchor  
+ * - AxisX.textAnchor
  * - AxisX.style
  * - AxisY.fill
- * 
+ *
  * And users had to use the workaround: {...{} as any}
  */
 
@@ -26,7 +26,11 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
     }
 
     // AxisX interface (fill no longer excluded)
-    interface AxisXMarkProps extends Omit<BaseMarkProps<any>, 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'> {
+    interface AxisXMarkProps
+        extends Omit<
+            BaseMarkProps<any>,
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+        > {
         data?: any[];
         tickSize?: number;
         tickPadding?: number;
@@ -35,7 +39,11 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
     }
 
     // AxisY interface (fill no longer excluded, has its own textAnchor)
-    interface AxisYMarkProps extends Omit<BaseMarkProps<any>, 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'> {
+    interface AxisYMarkProps
+        extends Omit<
+            BaseMarkProps<any>,
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+        > {
         data?: any[];
         tickSize?: number;
         tickPadding?: number;
@@ -69,7 +77,7 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
         textAnchor: 'end',
         title: '',
         style: `color: ${styles.fontColor};`,
-        fill: styles.lineColor  // This was causing TypeScript error before
+        fill: styles.lineColor // This was causing TypeScript error before
     };
 
     // Test AxisX with the properties mentioned in the issue
@@ -77,9 +85,9 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
         tickSize: 6,
         tickPadding: 4,
         tickFontSize: styles.fontSize,
-        textAnchor: 'middle',  // This was causing TypeScript error before
-        style: `color: ${styles.fontColor};`,  // This was causing TypeScript error before
-        fill: styles.lineColor  // This was causing TypeScript error before
+        textAnchor: 'middle', // This was causing TypeScript error before
+        style: `color: ${styles.fontColor};`, // This was causing TypeScript error before
+        fill: styles.lineColor // This was causing TypeScript error before
     };
 
     // Test that we can assign these props without TypeScript compilation errors
