@@ -22,7 +22,7 @@
     interface AxisXMarkProps
         extends Omit<
             BaseMarkProps<Datum>,
-            'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
         > {
         data?: Datum[];
         automatic?: boolean;
