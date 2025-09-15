@@ -197,7 +197,7 @@
             )}
             x={anchor === 'left' ? 0 : plot.width}
             y={5}
-            class="axis-x-title"
+            class="axis-y-title"
             dominant-baseline="hanging">{useTitle}</text>
     {/if}
     {#if showAxis}
