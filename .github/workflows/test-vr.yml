@@ -2,16 +2,14 @@ name: Run visual regression tests
 
 # Run only after the main test workflow completes successfully
 on:
-    workflow_run:
-        workflows: ["Run Tests"]
-        types: [completed]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
     test:
-        # Only proceed if the triggering workflow concluded successfully
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
-
         steps:
             - name: Checkout tested commit
               uses: actions/checkout@v4
@@ -34,6 +32,9 @@ jobs:
 
             - name: Install dependencies
               run: pnpm install
+
+            - name: Run Vitest tests
+              run: pnpm test
 
             - name: Run visual regression tests
               run: pnpm test:visual
