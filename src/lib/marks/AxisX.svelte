@@ -14,6 +14,7 @@
         PlotDefaults,
         ChannelName
     } from '../types/index.js';
+    import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
     import { derived } from 'svelte/store';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
@@ -49,6 +50,10 @@
         tickCount?: number;
         /** approximate number of pixels between generated ticks */
         tickSpacing?: number;
+        /** text anchor for axis labels */
+        textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
+        /** inline CSS styles */
+        style?: string;
     }
 
     let markProps: AxisXMarkProps = $props();

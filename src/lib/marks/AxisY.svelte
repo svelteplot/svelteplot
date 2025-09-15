@@ -14,6 +14,7 @@
         ChannelName,
         ConstantAccessor
     } from '../types/index.js';
+    import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
@@ -50,6 +51,8 @@
         tickCount?: number;
         /** approximate number of pixels between generated ticks */
         tickSpacing?: number;
+        /** inline CSS styles */
+        style?: string;
     }
 
     let markProps: AxisYMarkProps = $props();

@@ -140,14 +140,6 @@ export type BaseMarkProps<T> = Partial<{
      */
     class: string | null;
     cursor: ConstantAccessor<CSS.Property.Cursor, T>;
-    /**
-     * text anchor for text elements
-     */
-    textAnchor: ConstantAccessor<CSS.Property.TextAnchor, T>;
-    /**
-     * inline CSS styles
-     */
-    style: string;
 }>;
 
 export type LinkableMarkProps<T> = {
