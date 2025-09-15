@@ -3,4 +3,3 @@
 </script>
 
 <h1>Tick mark examples</h1>
-
