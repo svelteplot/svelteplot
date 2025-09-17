@@ -60,12 +60,12 @@ const STACK_OFFSET: Record<StackOffset, Function | null> = {
     normalize: stackOffsetExpand
 };
 
-function stackXY(
+function stackXY<T>(
     byDim: 'x' | 'y',
-    data: DataRow[],
-    channels: Partial<Record<ScaledChannelName, ChannelAccessor>>,
+    data: T[],
+    channels: Channels<T>,
     options: StackOptions
-) {
+): TransformArg<T> {
     // we need to stack the data for each facet separately
     const groupFacetsBy = [
         channels.fx != null ? 'fx' : null,
@@ -111,8 +111,8 @@ function stackXY(
             const indexed = Array.from(
                 d3Groups(
                     facetData,
-                    (d) => d[`__${secondDim}`]
-                    // (d) => d[GROUP]
+                    (d) => d[`__${secondDim}`],
+                    (d) => d[GROUP]
                 ).values()
             );
 
@@ -163,14 +163,17 @@ function stackXY(
     return { data, ...channels };
 }
 
-export function stackY<T>({ data, ...channels }: T, opts: Partial<StackOptions> = {}): T {
+export function stackY<T>(
+    { data, ...channels }: TransformArg<T>,
+    opts: Partial<StackOptions> = {}
+): TransformArg<T> {
     return stackXY('y', data, channels, applyDefaults(opts));
 }
 
-export function stackX(
-    { data, ...channels }: TransformArg,
+export function stackX<T>(
+    { data, ...channels }: TransformArg<T>,
     opts: Partial<StackOptions> = {}
-): TransformArg {
+): TransformArg<T> {
     return stackXY('x', data, channels, applyDefaults(opts));
 }
 
