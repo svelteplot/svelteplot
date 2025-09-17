@@ -25,6 +25,15 @@ import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
 
+const S = {
+    x: Symbol('x'),
+    x1: Symbol('x1'),
+    x2: Symbol('x2'),
+    y: Symbol('y'),
+    y1: Symbol('y1'),
+    y2: Symbol('y2')
+} as const;
+
 const GROUP = Symbol('group');
 const FACET = Symbol('facet');
 
@@ -87,7 +96,7 @@ function stackXY<T>(
         // resolve all channels for easier computation below
         const resolvedData = data.map((d) => ({
             ...(isDataRecord(d) ? d : { __orig: d }),
-            [`__${secondDim}`]: resolveChannel(secondDim, d, channels),
+            [S[secondDim]]: resolveChannel(secondDim, d, channels),
             [GROUP]: groupBy === true ? 'G' : resolveChannel(groupBy, d, channels),
             [FACET]:
                 groupFacetsBy.length > 0
@@ -95,7 +104,7 @@ function stackXY<T>(
                           .map((channel) => String(resolveChannel(channel, d, channels)))
                           .join('---')
                     : 'F',
-            [`__${byDim}`]: resolveChannel(byDim, d, channels)
+            [S[byDim]]: resolveChannel(byDim, d, channels)
         })) as DataRecord[];
 
         // the final data ends up here
@@ -108,12 +117,10 @@ function stackXY<T>(
         for (const [, facetData] of groups) {
             // now we index the data on the second dimension, e.g. over x
             // when stacking over y
-            const indexed = Array.from(
-                d3Groups(
-                    facetData,
-                    (d) => d[`__${secondDim}`],
-                    (d) => d[GROUP]
-                ).values()
+            const indexed = index(
+                facetData,
+                (d) => d[S[secondDim]],
+                (d) => d[GROUP]
             );
 
             const stackOrder = (series: number[][]) => {
@@ -126,7 +133,7 @@ function stackXY<T>(
                 .order(stackOrder)
                 .offset(STACK_OFFSET[options.offset])
                 .keys(union(facetData.map((d) => d[GROUP]) as string[]))
-                .value(([, group], key) => (group.get(key) ? group.get(key)[`__${byDim}`] : 0))(
+                .value(([, group], key) => (group.get(key) ? group.get(key)[S[byDim]] : 0))(
                 indexed
             );
 
@@ -141,7 +148,11 @@ function stackXY<T>(
                             // cleanup our internal keys
                             delete datum[GROUP];
                             delete datum[FACET];
-                            return { ...datum, [`__${byLow}`]: d[0], [`__${byHigh}`]: d[1] };
+                            return {
+                                ...datum,
+                                [S[byLow]]: d[0],
+                                [S[byHigh]]: d[1]
+                            };
                         });
                 })
                 .flat(1);
@@ -157,7 +168,7 @@ function stackXY<T>(
             ...(typeof channels[byDim] === 'string' && !channels[`__${byDim}_origField`]
                 ? { [`__${byDim}_origField`]: channels[byDim] }
                 : {}),
-            ...{ [byLow]: `__${byLow}`, [byHigh]: `__${byHigh}` }
+            ...{ [byLow]: S[byLow], [byHigh]: S[byHigh] }
         };
     }
     return { data, ...channels };
@@ -183,13 +194,6 @@ function applyDefaults(opts: Partial<StackOptions>): StackOptions {
     }
     return { ...DEFAULT_STACK_OPTIONS, ...opts };
 }
-
-const X = Symbol('x');
-const X1 = Symbol('x1');
-const X2 = Symbol('x2');
-const Y = Symbol('y');
-const Y1 = Symbol('y1');
-const Y2 = Symbol('y2');
 
 function stackMosaic<T>(
     {
@@ -233,10 +237,10 @@ function stackMosaic<T>(
 
         const outerChannel = outer === 'x' ? x : y;
         const innerChannel = inner === 'x' ? x : y;
-        const outerSym1 = outer === 'x' ? X1 : Y1;
-        const outerSym2 = outer === 'x' ? X2 : Y2;
-        const innerSym1 = inner === 'x' ? X1 : Y1;
-        const innerSym2 = inner === 'x' ? X2 : Y2;
+        const outerSym1 = outer === 'x' ? S.x1 : S.y1;
+        const outerSym2 = outer === 'x' ? S.x2 : S.y2;
+        const innerSym1 = inner === 'x' ? S.x1 : S.y1;
+        const innerSym2 = inner === 'x' ? S.x2 : S.y2;
         const outerOpt = outer === 'x' ? xOpt : yOpt;
         const innerOpt = inner === 'x' ? xOpt : yOpt;
 
@@ -271,14 +275,25 @@ function stackMosaic<T>(
                 result[outerSym2] = normO2;
                 result[innerSym1] = normI1;
                 result[innerSym2] = normI2;
-                result[X] = (result[X1] + result[X2]) / 2;
-                result[Y] = (result[Y1] + result[Y2]) / 2;
+                result[S.x] = (result[S.x1] + result[S.x2]) / 2;
+                result[S.y] = (result[S.y1] + result[S.y2]) / 2;
                 out.push(result);
             });
         });
     });
 
-    return { ...rest, fx, fy, data: out, x: X, x1: X1, x2: X2, y: Y, y1: Y1, y2: Y2 };
+    return {
+        ...rest,
+        fx,
+        fy,
+        data: out,
+        x: S.x,
+        x1: S.x1,
+        x2: S.x2,
+        y: S.y,
+        y1: S.y1,
+        y2: S.y2
+    };
 }
 
 export function stackMosaicX<T>(args, opts) {

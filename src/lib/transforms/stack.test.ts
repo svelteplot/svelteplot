@@ -1,6 +1,135 @@
 import { describe, it, expect } from 'vitest';
-import { stackMosaicX, stackMosaicY } from './stack.js';
+import { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
 import type { DataRecord } from '$lib/types/index.js';
+
+describe('stackY transform', () => {
+    const data: DataRecord[] = [
+        { year: 1, category: 'A', value: 10 },
+        { year: 1, category: 'B', value: 20 },
+        { year: 2, category: 'A', value: 30 },
+        { year: 2, category: 'B', value: 40 }
+    ];
+
+    it('basic stacking', () => {
+        const { data: stackedData, ...channels } = stackY({
+            data,
+            x: 'year',
+            fill: 'category',
+            y: 'value'
+        });
+        expect(stackedData).toHaveLength(data.length);
+        expect(channels.x).toBeDefined();
+        expect(channels.y1).toBeDefined();
+        expect(channels.y2).toBeDefined();
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x],
+            y1: d[channels.y1],
+            y2: d[channels.y2],
+            fill: d[channels.fill]
+        }));
+        expect(result).toEqual([
+            { x: 1, y1: 0, y2: 10, fill: 'A' },
+            { x: 2, y1: 0, y2: 30, fill: 'A' },
+            { x: 1, y1: 10, y2: 30, fill: 'B' },
+            { x: 2, y1: 30, y2: 70, fill: 'B' }
+        ]);
+    });
+
+    it('centered stacking', () => {
+        const { data: stackedData, ...channels } = stackY(
+            {
+                data,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { offset: 'center' }
+        );
+        expect(stackedData).toHaveLength(data.length);
+        expect(channels.x).toBeDefined();
+        expect(channels.y1).toBeDefined();
+        expect(channels.y2).toBeDefined();
+        const result = stackedData.map((d) => ({
+            x: d[channels.x],
+            y1: d[channels.y1],
+
+            y2: d[channels.y2],
+            fill: d[channels.fill]
+        }));
+        expect(result).toEqual([
+            { x: 1, y1: -15, y2: -5, fill: 'A' },
+            { x: 2, y1: -35, y2: -5, fill: 'A' },
+            { x: 1, y1: -5, y2: 15, fill: 'B' },
+            { x: 2, y1: -5, y2: 35, fill: 'B' }
+        ]);
+    });
+
+    it('normalized stacking', () => {
+        const { data: stackedData, ...channels } = stackY(
+            {
+                data,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { offset: 'normalize' }
+        );
+        expect(stackedData).toHaveLength(data.length);
+        expect(channels.x).toBeDefined();
+        expect(channels.y1).toBeDefined();
+        expect(channels.y2).toBeDefined();
+        const result = stackedData.map((d) => ({
+            x: d[channels.x],
+            y1: d[channels.y1],
+
+            y2: d[channels.y2],
+            fill: d[channels.fill]
+        }));
+        expect(result).toEqual([
+            { x: 1, y1: 0, y2: 0.3333333333333333, fill: 'A' },
+            { x: 2, y1: 0, y2: 0.42857142857142855, fill: 'A' },
+            { x: 1, y1: 0.3333333333333333, y2: 1, fill: 'B' },
+            { x: 2, y1: 0.42857142857142855, y2: 1, fill: 'B' }
+        ]);
+    });
+});
+
+describe('stackX transform', () => {
+    const data: DataRecord[] = [
+        { year: 1, category: 'A', value: 10 },
+        { year: 1, category: 'B', value: 20 },
+        { year: 2, category: 'A', value: 30 },
+        { year: 2, category: 'B', value: 40 }
+    ];
+
+    it('basic stacking', () => {
+        const { data: stackedData, ...channels } = stackX({
+            data,
+            y: 'year',
+            fill: 'category',
+            x: 'value',
+            value: 'value'
+        });
+        expect(stackedData).toHaveLength(data.length);
+        expect(channels.y).toBeDefined();
+        expect(channels.x1).toBeDefined();
+        expect(channels.x2).toBeDefined();
+
+        const result = stackedData.map((d) => ({
+            y: d[channels.y],
+            x1: d[channels.x1],
+            x2: d[channels.x2],
+            fill: d[channels.fill]
+        }));
+        expect(result).toEqual([
+            { y: 1, x1: 0, x2: 10, fill: 'A' },
+            { y: 2, x1: 0, x2: 30, fill: 'A' },
+            { y: 1, x1: 10, x2: 30, fill: 'B' },
+            { y: 2, x1: 30, x2: 70, fill: 'B' }
+        ]);
+    });
+});
 
 const sales: DataRecord[] = [
     { id: 'p/A', product: 'phone', company: 'A', sales: 10 },
