@@ -12,12 +12,12 @@
     marginLeft={60}
     x={{ label: 'Frequency →' }}
     y={{ label: undefined }}
-    color={{ legend: true }}>
+    color={{ legend: true, scheme: 'reds' }}>
     <BarX
         data={penguins}
         y="species"
+        fill="body_mass_g"
+        sort="body_mass_g"
         x={1}
-        stack={{ offset: 'normalize' }}
-        fill="island"
         insetLeft={1} />
 </Plot>
