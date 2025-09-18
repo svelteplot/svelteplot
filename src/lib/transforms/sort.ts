@@ -38,6 +38,10 @@ export function sort<T>(
                               | Date
                               | string
                       }))
+                      .map((d) => ({
+                          ...d,
+                          [SORT_KEY]: isNaN(d[SORT_KEY]) ? Number.POSITIVE_INFINITY : d[SORT_KEY]
+                      }))
                       .toSorted(
                           (a, b) =>
                               (a[SORT_KEY] > b[SORT_KEY] ? 1 : a[SORT_KEY] < b[SORT_KEY] ? -1 : 0) *
