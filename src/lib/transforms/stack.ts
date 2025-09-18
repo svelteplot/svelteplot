@@ -20,10 +20,12 @@ import {
     stackOrderNone,
     stackOffsetDiverging
 } from 'd3-shape';
-import { index, union, sum, groups as d3Groups, extent, min } from 'd3-array';
+import { index, union, sum, groups as d3Groups, extent, min, range } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
+import { INDEX } from 'svelteplot/constants.js';
+import { indexData, RAW_VALUE } from './recordize.js';
 
 const S = {
     x: Symbol('x'),
@@ -94,8 +96,8 @@ function stackXY<T>(
         channels[`${byHigh}`] === undefined
     ) {
         // resolve all channels for easier computation below
-        const resolvedData = data.map((d) => ({
-            ...(isDataRecord(d) ? d : { __orig: d }),
+        const resolvedData = indexData(data).map((d, i) => ({
+            ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
             [S[secondDim]]: resolveChannel(secondDim, d, channels),
             [GROUP]: groupBy === true ? 'G' : resolveChannel(groupBy, d, channels),
             [FACET]:
@@ -115,13 +117,30 @@ function stackXY<T>(
         const groups = d3Groups(resolvedData, (d) => d[FACET]);
 
         for (const [, facetData] of groups) {
+            // console.log('stack: grouped data', facetData);
             // now we index the data on the second dimension, e.g. over x
             // when stacking over y
-            const indexed = index(
-                facetData,
-                (d) => d[S[secondDim]],
-                (d) => d[GROUP]
-            );
+
+            // create a temmporary dataset for stacking
+            let maxKeys = 0;
+            const stackData = d3Groups(facetData, (d) => d[S[secondDim]]).map(([k, items]) => {
+                const values = items
+                    .sort((a, b) => (a[GROUP] > b[GROUP] ? 1 : a[GROUP] < b[GROUP] ? -1 : 0))
+                    .map((d) => ({ i: d[INDEX], v: d[S[byDim]] }));
+                if (values.length > maxKeys) maxKeys = values.length;
+                // values[S[secondDim]] = k;
+                return values;
+            });
+
+            const keys = range(maxKeys);
+
+            // const indexed = index(
+            //     facetData,
+            //     (d) => d[S[secondDim]],
+            //     (d) => d[GROUP]
+            // );
+
+            // console.log('stack: indexed data', indexed);
 
             const stackOrder = (series: number[][]) => {
                 const f = STACK_ORDER[options.order || 'none'];
@@ -132,37 +151,29 @@ function stackXY<T>(
             const series = stack()
                 .order(stackOrder)
                 .offset(STACK_OFFSET[options.offset])
-                .keys(union(facetData.map((d) => d[GROUP]) as string[]))
-                .value(([, group], key) => (group.get(key) ? group.get(key)[S[byDim]] : 0))(
-                indexed
-            );
+                .keys(keys)
+                .value((d, key, i, data) => {
+                    return d[key]?.v;
+                })(stackData);
 
             // and combine it all back into a flat array
             const newData = series
-                .map((values) => {
-                    const groupKey = values.key;
-                    return values
-                        .filter((d) => d.data[1].get(groupKey))
-                        .map((d) => {
-                            const datum = d.data[1].get(groupKey);
-                            // cleanup our internal keys
-                            delete datum[GROUP];
-                            delete datum[FACET];
-                            return {
-                                ...datum,
-                                [S[byLow]]: d[0],
-                                [S[byHigh]]: d[1]
-                            };
-                        });
-                })
-                .flat(1);
-
+                .flatMap((s) => s.map((d) => [d[0], d[1], d.data[s.key]?.i]))
+                .filter((d) => d[2] !== undefined)
+                .map((d) => ({ [S[byLow]]: d[0], [S[byHigh]]: d[1], ...resolvedData[d[2]] }));
+            // .sort((a, b) =>
+            //     a[S[secondDim]] > b[S[secondDim]]
+            //         ? 1
+            //         : a[S[secondDim]] < b[S[secondDim]]
+            //           ? -1
+            //           : 0
+            // );
             // which we then add to the output data
-            out.push(newData);
+            out.push(...newData);
         }
 
         return {
-            data: out.flat(1),
+            data: out,
             ...channels,
             [byDim]: undefined,
             ...(typeof channels[byDim] === 'string' && !channels[`__${byDim}_origField`]

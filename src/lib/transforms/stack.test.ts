@@ -139,21 +139,21 @@ describe('stackY transform', () => {
             { make: 'A', model: 'A2', mpg: 200 },
             { make: 'B', model: 'B1', mpg: 300 },
             { make: 'B', model: 'B2', mpg: 400 },
-            { make: 'B', model: 'B$', mpg: 450 }
+            { make: 'B', model: 'B3', mpg: 450 }
         ];
         const { data: stackedData, ...channels } = stackY({
             data: data3,
             x: 'make',
-            y: 1,
-            fill: 'make'
+            y: 'mpg'
+            // fill: 'make'
         });
-        expect(stackedData).toHaveLength(data3.length);
         const result = stackedData.map((d) => ({
             x: d[channels.x],
             y1: d[channels.y1],
-            y2: d[channels.y2],
-            fill: d[channels.fill]
+            y2: d[channels.y2]
         }));
+        console.log(result);
+        expect(stackedData).toHaveLength(data3.length);
     });
 });
 
