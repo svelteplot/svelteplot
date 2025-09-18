@@ -93,6 +93,68 @@ describe('stackY transform', () => {
             { x: 2, y1: 0.42857142857142855, y2: 1, fill: 'B' }
         ]);
     });
+
+    it('facet stacking', () => {
+        const data2: DataRecord[] = [
+            { year: 1, category: 'A', value: 10, facet: 'X' },
+            { year: 1, category: 'B', value: 20, facet: 'X' },
+            { year: 2, category: 'A', value: 30, facet: 'X' },
+            { year: 2, category: 'B', value: 40, facet: 'X' },
+            { year: 1, category: 'A', value: 15, facet: 'Y' },
+            { year: 1, category: 'B', value: 25, facet: 'Y' },
+            { year: 2, category: 'A', value: 35, facet: 'Y' },
+            { year: 2, category: 'B', value: 45, facet: 'Y' }
+        ];
+
+        const { data: stackedData, ...channels } = stackY({
+            data: data2,
+            x: 'year',
+            fill: 'category',
+            y: 'value',
+            fx: 'facet'
+        });
+        expect(stackedData).toHaveLength(data2.length);
+        const result = stackedData.map((d) => ({
+            x: d[channels.x],
+            y1: d[channels.y1],
+            y2: d[channels.y2],
+            fx: d[channels.fx],
+            fill: d[channels.fill]
+        }));
+        expect(result).toEqual([
+            { x: 1, y1: 0, y2: 10, fx: 'X', fill: 'A' },
+            { x: 2, y1: 0, y2: 30, fx: 'X', fill: 'A' },
+            { x: 1, y1: 10, y2: 30, fx: 'X', fill: 'B' },
+            { x: 2, y1: 30, y2: 70, fx: 'X', fill: 'B' },
+            { x: 1, y1: 0, y2: 15, fx: 'Y', fill: 'A' },
+            { x: 2, y1: 0, y2: 35, fx: 'Y', fill: 'A' },
+            { x: 1, y1: 15, y2: 40, fx: 'Y', fill: 'B' },
+            { x: 2, y1: 35, y2: 80, fx: 'Y', fill: 'B' }
+        ]);
+    });
+
+    it('unit stacking', () => {
+        const data3: DataRecord[] = [
+            { make: 'A', model: 'A1', mpg: 100 },
+            { make: 'A', model: 'A2', mpg: 200 },
+            { make: 'B', model: 'B1', mpg: 300 },
+            { make: 'B', model: 'B2', mpg: 400 },
+            { make: 'B', model: 'B$', mpg: 450 }
+        ];
+        const { data: stackedData, ...channels } = stackY({
+            data: data3,
+            x: 'make',
+            y: 1,
+            fill: 'make'
+        });
+        expect(stackedData).toHaveLength(data3.length);
+        const result = stackedData.map((d) => ({
+            x: d[channels.x],
+            y1: d[channels.y1],
+            y2: d[channels.y2],
+            fill: d[channels.fill]
+        }));
+    });
 });
 
 describe('stackX transform', () => {
