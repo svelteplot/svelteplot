@@ -2,8 +2,6 @@ import isDataRecord from '$lib/helpers/isDataRecord.js';
 import { resolveChannel, resolveProp } from '$lib/helpers/resolve.js';
 import type {
     ChannelAccessor,
-    ScaledChannelName,
-    DataRow,
     DataRecord,
     TransformArg,
     ChannelName,
@@ -20,7 +18,7 @@ import {
     stackOrderNone,
     stackOffsetDiverging
 } from 'd3-shape';
-import { index, union, sum, groups as d3Groups, extent, min, range } from 'd3-array';
+import { sum, groups as d3Groups, min, range } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
@@ -117,30 +115,54 @@ function stackXY<T>(
         const groups = d3Groups(resolvedData, (d) => d[FACET]);
 
         for (const [, facetData] of groups) {
-            // console.log('stack: grouped data', facetData);
-            // now we index the data on the second dimension, e.g. over x
-            // when stacking over y
+            // create a temporary dataset for stacking
+            // If we have a grouping channel (fill/stroke/z), build objects keyed by group value
+            // so that series identities remain consistent across the secondary dimension.
+            // This is required for offsets like 'wiggle' and 'inside-out'.
+            let keys: any[];
+            const groupedBySecondDim = d3Groups(facetData, (d) => d[S[secondDim]]);
+            let stackData: any[];
 
-            // create a temmporary dataset for stacking
-            let maxKeys = 0;
-            const stackData = d3Groups(facetData, (d) => d[S[secondDim]]).map(([k, items]) => {
-                const values = items
-                    .sort((a, b) => (a[GROUP] > b[GROUP] ? 1 : a[GROUP] < b[GROUP] ? -1 : 0))
-                    .map((d) => ({ i: d[INDEX], v: d[S[byDim]] }));
-                if (values.length > maxKeys) maxKeys = values.length;
-                // values[S[secondDim]] = k;
-                return values;
-            });
+            const hasUniqueGroups =
+                groupBy !== true &&
+                groupedBySecondDim.every(([, items]) => {
+                    const groupSet = new Set(items.map((d) => d[GROUP]));
+                    return groupSet.size === items.length;
+                });
 
-            const keys = range(maxKeys);
-
-            // const indexed = index(
-            //     facetData,
-            //     (d) => d[S[secondDim]],
-            //     (d) => d[GROUP]
-            // );
-
-            // console.log('stack: indexed data', indexed);
+            if (groupBy === true || !hasUniqueGroups) {
+                // Unit stacking: map each secondary-dimension bucket to an array of values.
+                // Series are positional (0..N-1) within each bucket.
+                let maxKeys = 0;
+                stackData = groupedBySecondDim.map(([k, items]) => {
+                    const values = items
+                        // keep original order within bucket; no stable series identity across buckets
+                        .map((d) => ({ i: d[INDEX], v: d[S[byDim]] }));
+                    if (values.length > maxKeys) maxKeys = values.length;
+                    return values;
+                });
+                keys = range(maxKeys);
+            } else {
+                // Grouped stacking: keep consistent series identities using the group key
+                const keySet = new Set<any>();
+                stackData = groupedBySecondDim.map(([k, items]) => {
+                    const obj: Record<string | number, { i: number; v: number }> = {};
+                    items.forEach((d) => {
+                        const key = d[GROUP] as any;
+                        // If duplicates exist for the same (secondDim, group) pair, sum values
+                        // and keep the latest index for back-reference.
+                        if (obj[key] == null) obj[key] = { i: d[INDEX], v: d[S[byDim]] } as any;
+                        else
+                            obj[key] = {
+                                i: d[INDEX],
+                                v: obj[key].v + (d[S[byDim]] as number)
+                            } as any;
+                        keySet.add(key);
+                    });
+                    return obj;
+                });
+                keys = Array.from(keySet);
+            }
 
             const stackOrder = (series: number[][]) => {
                 const f = STACK_ORDER[options.order || 'none'];
@@ -150,7 +172,12 @@ function stackXY<T>(
             // now stack the values for each index
             const series = stack()
                 .order(stackOrder)
-                .offset(STACK_OFFSET[options.offset])
+                // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
+                .offset(
+                    groupBy === true && options.offset === 'wiggle'
+                        ? STACK_OFFSET['center']
+                        : STACK_OFFSET[options.offset]
+                )
                 .keys(keys)
                 .value((d, key, i, data) => {
                     return d[key]?.v;
@@ -161,15 +188,11 @@ function stackXY<T>(
                 .flatMap((s) => s.map((d) => [d[0], d[1], d.data[s.key]?.i]))
                 .filter((d) => d[2] !== undefined)
                 .map((d) => ({ [S[byLow]]: d[0], [S[byHigh]]: d[1], ...resolvedData[d[2]] }));
-            // .sort((a, b) =>
-            //     a[S[secondDim]] > b[S[secondDim]]
-            //         ? 1
-            //         : a[S[secondDim]] < b[S[secondDim]]
-            //           ? -1
-            //           : 0
-            // );
-            // which we then add to the output data
+
             out.push(...newData);
+
+            // which we then add to the output data
+            // out.push(...newData);
         }
 
         return {
