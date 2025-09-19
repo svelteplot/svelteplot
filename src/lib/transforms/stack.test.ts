@@ -152,7 +152,6 @@ describe('stackY transform', () => {
             y1: d[channels.y1],
             y2: d[channels.y2]
         }));
-        console.log(result);
         expect(stackedData).toHaveLength(data3.length);
     });
 });
