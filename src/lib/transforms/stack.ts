@@ -179,7 +179,7 @@ function stackXY<T>(
                 )
                 .keys(keys)
                 .value((d, key, i, data) => {
-                    return d[key]?.v;
+                    return d[key]?.v == null ? undefined : d[key]?.v;
                 })(stackData);
 
             // and combine it all back into a flat array

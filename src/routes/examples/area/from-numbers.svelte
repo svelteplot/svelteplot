@@ -9,5 +9,5 @@
 </script>
 
 <Plot grid>
-    <AreaY data={[1.5, 2, 3.5, 2.5, 5.5, 8.5, 6]} />
+    <AreaY data={[1, 3, 2, 4, undefined, 6, 8, 7]} />
 </Plot>

@@ -212,7 +212,7 @@ describe('stackX transform', () => {
     });
 
     it('stacks recordized array', () => {
-        const data = [10, 20, 30, 40];
+        const data = [10, 20, 30, undefined, 40];
         const { data: stackedData, ...channels } = stackX(recordizeX({ data, x1: 0, x2: 0 }));
         const { y, x1, x2 } = channels;
         const result = stackedData.map((d) => ({
@@ -224,7 +224,8 @@ describe('stackX transform', () => {
             { y: 0, x1: 0, x2: 10 },
             { y: 1, x1: 0, x2: 20 },
             { y: 2, x1: 0, x2: 30 },
-            { y: 3, x1: 0, x2: 40 }
+            { y: 3, x1: 0, x2: NaN },
+            { y: 4, x1: 0, x2: 40 }
         ]);
     });
 });

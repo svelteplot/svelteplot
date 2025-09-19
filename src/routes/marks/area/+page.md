@@ -91,7 +91,10 @@ In order to interpolate across undefined values you need to filter them, e.g. us
 
 <Plot grid height={255}>
     <AreaY
-        filter={(d) => d !== undefined}
+        filter={(d) => {
+            console.log(d);
+            return d !== undefined;
+        }}
         canvas={$useCanvas}
         data={[
             1.5,
