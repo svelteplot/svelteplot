@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
 import type { DataRecord } from '$lib/types/index.js';
+import { recordizeX, recordizeY } from './recordize.js';
 
 describe('stackY transform', () => {
     const data: DataRecord[] = [
@@ -154,6 +155,25 @@ describe('stackY transform', () => {
         }));
         expect(stackedData).toHaveLength(data3.length);
     });
+
+    it('stacks recordized array', () => {
+        const data = [10, 20, 30, 40];
+        const { data: stackedData, ...channels } = stackY(
+            recordizeY({ data, x1: null, x2: null, y1: 0, y2: 0 })
+        );
+        const { x, y1, y2 } = channels;
+        const result = stackedData.map((d) => ({
+            x: d[x],
+            y1: d[y1],
+            y2: d[y2]
+        }));
+        expect(result).toEqual([
+            { x: 0, y1: 0, y2: 10 },
+            { x: 1, y1: 0, y2: 20 },
+            { x: 2, y1: 0, y2: 30 },
+            { x: 3, y1: 0, y2: 40 }
+        ]);
+    });
 });
 
 describe('stackX transform', () => {
@@ -188,6 +208,23 @@ describe('stackX transform', () => {
             { y: 2, x1: 0, x2: 30, fill: 'A' },
             { y: 1, x1: 10, x2: 30, fill: 'B' },
             { y: 2, x1: 30, x2: 70, fill: 'B' }
+        ]);
+    });
+
+    it('stacks recordized array', () => {
+        const data = [10, 20, 30, 40];
+        const { data: stackedData, ...channels } = stackX(recordizeX({ data, x1: 0, x2: 0 }));
+        const { y, x1, x2 } = channels;
+        const result = stackedData.map((d) => ({
+            y: d[y],
+            x1: d[x1],
+            x2: d[x2]
+        }));
+        expect(result).toEqual([
+            { y: 0, x1: 0, x2: 10 },
+            { y: 1, x1: 0, x2: 20 },
+            { y: 2, x1: 0, x2: 30 },
+            { y: 3, x1: 0, x2: 40 }
         ]);
     });
 });
