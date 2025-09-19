@@ -144,7 +144,7 @@ function stackXY<T>(
                 keys = range(maxKeys);
             } else {
                 // Grouped stacking: keep consistent series identities using the group key
-                const keySet = new Set<any>();
+                const keySet = new Set<any>(facetData.map((d) => d[GROUP]));
                 stackData = groupedBySecondDim.map(([k, items]) => {
                     const obj: Record<string | number, { i: number; v: number }> = {};
                     items.forEach((d) => {
@@ -157,7 +157,6 @@ function stackXY<T>(
                                 i: d[INDEX],
                                 v: obj[key].v + (d[S[byDim]] as number)
                             } as any;
-                        keySet.add(key);
                     });
                     return obj;
                 });
