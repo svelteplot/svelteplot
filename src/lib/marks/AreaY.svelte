@@ -10,9 +10,10 @@
     import Area from './Area.svelte';
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackY } from '$lib/transforms/stack.js';
-    import { recordizeY } from '$lib/transforms/recordize.js';
+    import { RAW_VALUE, recordizeY } from '$lib/transforms/recordize.js';
     import type { ChannelAccessor, DataRow, PlotDefaults } from '../types/index.js';
     import { getContext, type Component, type ComponentProps } from 'svelte';
+    import { area } from 'd3-shape';
 
     let markProps: AreaYMarkProps = $props();
 

@@ -69,6 +69,7 @@
         numberFormat: {
             style: 'decimal',
             // notation: 'compact',
+            useGrouping: 'min2',
             compactDisplay: 'short'
         },
         markerDotRadius: 3,

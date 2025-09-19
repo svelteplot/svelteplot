@@ -30,7 +30,7 @@ export function resolveProp<K, T>(
         // so we're passing the original value to accessor functions instead of our wrapped record
         return datum == null
             ? accessor()
-            : accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum, datum[INDEX]);
+            : accessor(datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum, datum[INDEX]);
     } else if (
         (typeof accessor === 'string' || typeof accessor === 'symbol') &&
         datum &&

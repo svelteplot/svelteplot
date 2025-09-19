@@ -2,13 +2,16 @@ import { describe, it, expect } from 'vitest';
 import { sort, shuffle } from './sort.js';
 import type { DataRecord } from '$lib/types/index.js';
 
-const data: DataRecord[] = [
-    { A: 1, B: 7 },
-    { A: 5, B: 4 },
-    { A: 3, B: 3 }
+const data: { i: number; A: number; B: number; C: string; D: Date }[] = [
+    { i: 0, A: 1, B: 7, C: 'gamma', D: new Date(2000, 0, 1) },
+    { i: 1, A: 5, B: 4, C: 'alpha', D: new Date(1999, 11, 31) },
+    { i: 2, A: 3, B: 3, C: 'beta', D: new Date(2000, 5, 15) }
 ];
 
-const sortedByA = data.sort((a, b) => a.A - b.A);
+const sortedByA = data.toSorted((a, b) => a.A - b.A);
+const sortedByB = data.toSorted((a, b) => a.B - b.B);
+const sortedByC = data.toSorted((a, b) => a.C.localeCompare(b.C));
+const sortedByD = data.toSorted((a, b) => a.D.getTime() - b.D.getTime());
 
 describe('sort transform', () => {
     it('does not sort if no sort channel is defined', () => {
@@ -28,7 +31,7 @@ describe('sort transform', () => {
     });
 
     it('sort data by channel', () => {
-        expect(sort({ data, x: 'A', sort: { channel: 'x' } }).data).toStrictEqual(sortedByA);
+        expect(sort({ data, x: 'B', sort: { channel: 'x' } }).data).toStrictEqual(sortedByB);
     });
 
     it('sort data by channel descending', () => {
@@ -41,6 +44,14 @@ describe('sort transform', () => {
         expect(sort({ data, y: 'A', sort: { channel: '-y' } }).data).toStrictEqual(
             sortedByA.toReversed()
         );
+    });
+
+    it('sort data by strings', () => {
+        expect(sort({ data, y: 'C', sort: { channel: 'y' } }).data).toStrictEqual(sortedByC);
+    });
+
+    it('sort data by dates', () => {
+        expect(sort({ data, sort: 'D' }).data).toStrictEqual(sortedByD);
     });
 });
 

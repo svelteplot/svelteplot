@@ -4,6 +4,7 @@ import BarXTest from './barX.test.svelte';
 import { getPathDims, getRectDims } from './utils';
 import { tick } from 'svelte';
 import { INDEX } from 'svelteplot/constants';
+import { max } from 'd3-array';
 
 const testData = [
     {
@@ -16,6 +17,13 @@ const testData = [
         low: 4,
         high: 7
     }
+];
+
+const linkedBarsData = [
+    { url: '/marks/line', label: 'Line', value: 5 },
+    { url: '/marks/bar', label: 'Bar', value: 3 },
+    { url: '/marks/dot', label: 'Dot', value: 4 },
+    { url: '/marks/dot', label: 'Rect', value: 2 }
 ];
 
 describe('BarX mark', () => {
@@ -208,5 +216,41 @@ describe('BarX mark', () => {
         expect(fillIndex.mock.calls[2]).toStrictEqual([2]);
         expect(dxIndex.mock.calls[1]).toStrictEqual([1]);
         expect(dxIndex.mock.calls[3]).toStrictEqual([3]);
+    });
+
+    it('bars with hyperlinks', () => {
+        const { container } = render(BarXTest, {
+            props: {
+                plotArgs: {
+                    width: 100
+                },
+                barArgs: {
+                    data: linkedBarsData,
+                    x: 'value',
+                    y: 'label',
+                    href: 'url'
+                }
+            }
+        });
+        const links = container.querySelectorAll('g.bar-x > a') as NodeListOf<SVGAElement>;
+        const bars = container.querySelectorAll('g.bar-x > a > rect') as NodeListOf<SVGRectElement>;
+        const sortedByLabels = linkedBarsData
+            .toSorted((a, b) => (a.label > b.label ? 1 : a.label < b.label ? -1 : 0))
+            .map((d) => d.value);
+
+        const maxValue = Math.max(...sortedByLabels);
+        expect(bars.length).toBe(linkedBarsData.length);
+
+        const barDims = Array.from(bars).map(getRectDims);
+        const maxBarWidth = Math.max(...barDims.map((d) => d.w));
+
+        // check that bars are sorted by label
+        expect(barDims.map((d) => d.w)).toStrictEqual(
+            sortedByLabels.map((m) => (m / maxValue) * maxBarWidth)
+        );
+        // check that links have correct href
+        expect(Array.from(links).map((d) => d.getAttribute('href'))).toStrictEqual(
+            linkedBarsData.toSorted((a, b) => a.label.localeCompare(b.label)).map((d) => d.url)
+        );
     });
 });

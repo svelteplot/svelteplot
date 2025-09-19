@@ -25,7 +25,6 @@ export function sort<T>(
         // if sort is a function that does not take exactly one argument, we treat it
         // as comparator function, as you would pass to array.sort
         const isComparator = typeof channels.sort === 'function' && channels.sort.length !== 1;
-
         // sort data
         return {
             data: isComparator
@@ -38,9 +37,22 @@ export function sort<T>(
                               | Date
                               | string
                       }))
+                      .map((d) => ({
+                          ...d,
+                          [SORT_KEY]:
+                              typeof d[SORT_KEY] === 'number' && !Number.isFinite(d[SORT_KEY])
+                                  ? Number.POSITIVE_INFINITY
+                                  : d[SORT_KEY]
+                      }))
                       .toSorted(
                           (a, b) =>
-                              (a[SORT_KEY] > b[SORT_KEY] ? 1 : a[SORT_KEY] < b[SORT_KEY] ? -1 : 0) *
+                              (typeof a[SORT_KEY] === 'string' && typeof b[SORT_KEY] === 'string'
+                                  ? a[SORT_KEY].localeCompare(b[SORT_KEY])
+                                  : a[SORT_KEY] > b[SORT_KEY]
+                                    ? 1
+                                    : a[SORT_KEY] < b[SORT_KEY]
+                                      ? -1
+                                      : 0) *
                               (options.reverse ||
                               (isDataRecord(sort) && sort?.order === 'descending')
                                   ? -1

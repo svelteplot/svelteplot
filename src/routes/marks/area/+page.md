@@ -91,7 +91,10 @@ In order to interpolate across undefined values you need to filter them, e.g. us
 
 <Plot grid height={255}>
     <AreaY
-        filter={(d) => d !== undefined}
+        filter={(d) => {
+            console.log(d);
+            return d !== undefined;
+        }}
         canvas={$useCanvas}
         data={[
             1.5,
@@ -289,12 +292,18 @@ You can use the **offset** option to create a streamgraph:
     const useCanvas = getContext('useCanvas');
     const { riaa } = $derived($page.data.data);
     let offset = $state('wiggle');
+    let order = $state('inside-out');
 </script>
 
 <Select
     label="offset"
     bind:value={offset}
     options={['none', 'wiggle', 'center', 'normalize']} />
+
+<Select
+    label="order"
+    bind:value={order}
+    options={['none', 'inside-out', 'appearance', 'sum']} />
 
 <Plot
     grid
@@ -311,7 +320,7 @@ You can use the **offset** option to create a streamgraph:
         curve="basis"
         fill="group"
         canvas={$useCanvas}
-        stack={{ offset }} />
+        stack={{ offset, order }} />
 </Plot>
 ```
 

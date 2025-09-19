@@ -26,7 +26,7 @@
             ? plot.options.color.tickFormat
             : Intl.NumberFormat(
                   plot.options.locale,
-                  plot.options.color.tickFormat || DEFAULTS.numberFormat
+                  plot.options.color.tickFormat || { ...DEFAULTS.numberFormat, notation: 'compact' }
               ).format
     );
     const randId = Math.round(Math.random() * 1e6).toFixed(32);
