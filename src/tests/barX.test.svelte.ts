@@ -218,7 +218,7 @@ describe('BarX mark', () => {
         expect(dxIndex.mock.calls[3]).toStrictEqual([3]);
     });
 
-    it.only('bars with hyperlinks', () => {
+    it('bars with hyperlinks', () => {
         const { container } = render(BarXTest, {
             props: {
                 plotArgs: {
