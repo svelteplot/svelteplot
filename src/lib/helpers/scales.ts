@@ -358,6 +358,10 @@ export function createScale<T extends ScaleOptions>(
     });
     const range = fn.range();
 
+    if (name === 'y') {
+        console.log({ domain, range, type });
+    }
+
     return {
         type,
         domain,
