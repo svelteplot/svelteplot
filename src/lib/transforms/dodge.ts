@@ -97,12 +97,6 @@ function dodge(
         // if (sort === undefined && reverse === undefined) options.sort = { channel: '-r' };
     }
     const { fx, fy } = channels;
-    const {
-        facetWidth,
-        facetHeight,
-        options: { marginLeft, marginRight }
-    } = plotState;
-    console.log({ facetWidth, facetHeight, marginLeft, marginRight });
     let [ky, ty] = anchor(plotState);
     const compare = ky ? compareAscending : compareSymmetric;
 
