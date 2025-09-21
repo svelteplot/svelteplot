@@ -82,7 +82,7 @@
         'fillOpacity',
         'strokeOpacity'
     ]}
-    defaults={{ r: 3, symbol: 'circle' }}
+    defaults={{ x: 0, y: 0, r: 3, symbol: 'circle' }}
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
         <g class="dot {className || ''}">
