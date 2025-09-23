@@ -51,7 +51,7 @@
         /** approximate number of pixels between generated ticks */
         tickSpacing?: number;
         /** text anchor for axis labels */
-        textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
+        textAnchor?: ConstantAccessor<CSS.Property.TextAnchor | 'auto', Datum>;
     }
 
     let markProps: AxisXMarkProps = $props();
@@ -61,7 +61,7 @@
         tickPadding: 3,
         tickFontSize: 11,
         titleFontSize: 11,
-        textAnchor: 'middle',
+        textAnchor: 'auto',
         opacity: 0.8,
         anchor: 'bottom',
         ...getContext<PlotDefaults>('svelteplot/_defaults').axis,

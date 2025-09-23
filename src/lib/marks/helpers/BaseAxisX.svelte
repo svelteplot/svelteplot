@@ -35,6 +35,7 @@
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
+            textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
         };
         text: boolean;
         plot: PlotState;
@@ -187,6 +188,15 @@
                         {
                             fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                             ...options,
+                            textAnchor:
+                                options.textAnchor === 'auto'
+                                    ? // automatically adjust text anchor based on rotation
+                                      tickRotate < 0
+                                        ? 'end'
+                                        : tickRotate > 0
+                                          ? 'start'
+                                          : 'middle'
+                                    : options.textAnchor,
                             fontSize: tickFontSize_,
                             stroke: null
                         },
