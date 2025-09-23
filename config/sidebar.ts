@@ -79,6 +79,7 @@ export default {
             collapsible: true,
             items: [
                 { title: 'Bin', to: '/transforms/bin' },
+                { title: 'Dodge', to: '/transforms/dodge' },
                 { title: 'Filter', to: '/transforms/filter' },
                 { title: 'Group', to: '/transforms/group' },
                 { title: 'Interval', to: '/transforms/interval' },
