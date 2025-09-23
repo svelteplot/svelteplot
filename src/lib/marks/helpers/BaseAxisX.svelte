@@ -142,7 +142,6 @@
         }
     });
 
-    $inspect({ options });
 
     $effect(() => {
         // clear margins on destroy
