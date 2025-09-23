@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { afterNavigate } from '$app/navigation';
     import '../app.scss';
 
-    $effect(() => {
+    afterNavigate(() => {
         const content = document.querySelector('.content');
         if (content) {
             // headline version links
