@@ -2,6 +2,7 @@ import { extent, ascending } from 'd3-array';
 
 import {
     isColorOrNull,
+    isDate,
     isDateOrNull,
     isNumberOrNull,
     isNumberOrNullOrNaN,
@@ -296,7 +297,7 @@ export function createScale<T extends ScaleOptions>(
 
     const type: ScaleType =
         scaleOptions.type === 'auto'
-            ? inferScaleType(name, valueArr, markTypes)
+            ? inferScaleType(name, valueArr, markTypes, scaleOptions)
             : scaleOptions.type;
 
     if (VALID_SCALE_TYPES[name] && !VALID_SCALE_TYPES[name].has(type)) {
@@ -381,6 +382,11 @@ function domainFromInterval(domain: RawValue[], interval: string | number, name:
     return name === 'y' ? out.toReversed() : out;
 }
 
+const markTypesWithBandDefault = {
+    x: new Set<MarkType>(['barY', 'cell', 'tickY']),
+    y: new Set<MarkType>(['barX', 'cell', 'tickX'])
+};
+
 /**
  * Infer a scale type based on the scale name, the data values mapped to it and
  * the mark types that are bound to the scale
@@ -388,7 +394,8 @@ function domainFromInterval(domain: RawValue[], interval: string | number, name:
 export function inferScaleType(
     name: ScaleName,
     dataValues: RawValue[],
-    markTypes: Set<MarkType>
+    markTypes: Set<MarkType>,
+    scaleOptions: Partial<ScaleOptions> = {}
 ): ScaleType {
     if (name === 'color') {
         if (!dataValues.length) return 'ordinal';
@@ -398,19 +405,19 @@ export function inferScaleType(
         return 'categorical';
     }
     if (name === 'symbol') return 'ordinal';
-    // for positional scales, try to pick a scale that's required by the mark types
     if (name === 'x' || name === 'y') {
-        if (
-            name === 'y' &&
-            (markTypes.has('barX') || markTypes.has('tickX') || markTypes.has('cell'))
-        )
-            return 'band';
-        if (
-            name === 'x' &&
-            (markTypes.has('barY') || markTypes.has('tickY') || markTypes.has('cell'))
-        )
-            return 'band';
+        // if for a positional scale we may infer the scale type from the scale options
+        if (scaleOptions.nice || scaleOptions.zero) return 'linear';
+        if (scaleOptions.domain && scaleOptions.domain.length === 2) {
+            if (scaleOptions.domain.every(Number.isFinite)) return 'linear';
+            if (scaleOptions.domain.every(isDate)) return 'time';
+        }
     }
+    // for positional scales, try to pick a scale that's required by the mark types
+    if (name === 'y' && Array.from(markTypes).some((d) => markTypesWithBandDefault.y.has(d)))
+        return 'band';
+    if (name === 'x' && Array.from(markTypes).some((d) => markTypesWithBandDefault.x.has(d)))
+        return 'band';
     if (!dataValues.length) return 'linear';
     if (dataValues.length === 1) return 'point';
     if (dataValues.every(isNumberOrNull)) return name === 'r' ? 'sqrt' : 'linear';
