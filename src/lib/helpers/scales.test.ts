@@ -37,6 +37,14 @@ describe('inferScaleType', () => {
         expect(inferScaleType('x', ['x'], new Set())).toBe('point');
         expect(inferScaleType('x', [new Date()], new Set())).toBe('point');
     });
+    it('infers linear scale from scale options is set', () => {
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']))).toBe('band');
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { domain: [0, 100] })).toBe(
+            'linear'
+        );
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { nice: true })).toBe('linear');
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { zero: true })).toBe('linear');
+    });
 });
 
 describe('looksLikeANumber', () => {

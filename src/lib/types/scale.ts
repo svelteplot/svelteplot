@@ -38,7 +38,13 @@ export type ScaleOptions = {
     interval?: string | number;
     // quantitative scales
     clamp: boolean;
+    /**
+     * Extend the domain to nice round numbers (applicable to quantitative scales only)
+     */
     nice: boolean;
+    /**
+     * Include zero in the scale domain (applicable to quantitative scales only)
+     */
     zero: boolean;
     round: boolean;
     percent: boolean;
