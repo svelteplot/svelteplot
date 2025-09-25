@@ -4,15 +4,10 @@
  * Source: https://github.com/vega/vega/blob/f058b099decad9db78301405dd0d2e9d8ba3d51a/packages/vega-statistics/src/regression/ols.js
  */
 
-export function ols(
-  uX: number,
-  uY: number,
-  uXY: number,
-  uX2: number
-): [number, number] {
-  const delta = uX2 - uX * uX,
-    slope = Math.abs(delta) < 1e-24 ? 0 : (uXY - uX * uY) / delta,
-    intercept = uY - slope * uX;
-  
-  return [intercept, slope];
+export function ols(uX: number, uY: number, uXY: number, uX2: number): [number, number] {
+    const delta = uX2 - uX * uX,
+        slope = Math.abs(delta) < 1e-24 ? 0 : (uXY - uX * uY) / delta,
+        intercept = uY - slope * uX;
+
+    return [intercept, slope];
 }
