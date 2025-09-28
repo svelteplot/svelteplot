@@ -68,17 +68,20 @@ import type { MouseEventHandler } from 'svelte/elements';
 import type { ChannelAccessor, ConstantAccessor, DataRecord, RawValue } from './index.js';
 import type * as CSS from 'csstype';
 import type { ScaledChannelName, ScaleName } from './scale.js';
+import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.js';
 
 export type BaseMarkProps<T> = Partial<{
     /**
      * Filter the data without modifying the inferred scales
      */
-    filter?: ConstantAccessor<boolean, T>;
-    facet?: 'auto' | 'include' | 'exclude';
+    filter: ConstantAccessor<boolean, T>;
+    facet: 'auto' | 'include' | 'exclude';
     fx: ChannelAccessor<T>;
     fy: ChannelAccessor<T>;
     dx: ConstantAccessor<number, T>;
     dy: ConstantAccessor<number, T>;
+    dodgeX: DodgeXOptions;
+    dodgeY: DodgeYOptions;
     fill: ChannelAccessor<T>;
     fillOpacity: ConstantAccessor<number, T>;
     sort:
@@ -105,44 +108,44 @@ export type BaseMarkProps<T> = Partial<{
     imageFilter: ConstantAccessor<string, T>;
     shapeRendering: ConstantAccessor<CSS.Property.ShapeRendering, T>;
     paintOrder: ConstantAccessor<string, T>;
-    onclick?: MouseEventHandler<SVGPathElement>;
-    ondblclick?: MouseEventHandler<SVGPathElement>;
-    onmouseup?: MouseEventHandler<SVGPathElement>;
-    onmousedown?: MouseEventHandler<SVGPathElement>;
-    onmouseenter?: MouseEventHandler<SVGPathElement>;
-    onmousemove?: MouseEventHandler<SVGPathElement>;
-    onmouseleave?: MouseEventHandler<SVGPathElement>;
-    onmouseout?: MouseEventHandler<SVGPathElement>;
-    onmouseover?: MouseEventHandler<SVGPathElement>;
-    onpointercancel?: MouseEventHandler<SVGPathElement>;
-    onpointerdown?: MouseEventHandler<SVGPathElement>;
-    onpointerup?: MouseEventHandler<SVGPathElement>;
-    onpointerenter?: MouseEventHandler<SVGPathElement>;
-    onpointerleave?: MouseEventHandler<SVGPathElement>;
-    onpointermove?: MouseEventHandler<SVGPathElement>;
-    onpointerover?: MouseEventHandler<SVGPathElement>;
-    onpointerout?: MouseEventHandler<SVGPathElement>;
-    ondrag?: MouseEventHandler<SVGPathElement>;
-    ondrop?: MouseEventHandler<SVGPathElement>;
-    ondragstart?: MouseEventHandler<SVGPathElement>;
-    ondragenter?: MouseEventHandler<SVGPathElement>;
-    ondragleave?: MouseEventHandler<SVGPathElement>;
-    ondragover?: MouseEventHandler<SVGPathElement>;
-    ondragend?: MouseEventHandler<SVGPathElement>;
-    ontouchstart?: MouseEventHandler<SVGPathElement>;
-    ontouchmove?: MouseEventHandler<SVGPathElement>;
-    ontouchend?: MouseEventHandler<SVGPathElement>;
-    ontouchcancel?: MouseEventHandler<SVGPathElement>;
-    oncontextmenu?: MouseEventHandler<SVGPathElement>;
-    onwheel?: MouseEventHandler<SVGPathElement>;
+    onclick: MouseEventHandler<SVGPathElement>;
+    ondblclick: MouseEventHandler<SVGPathElement>;
+    onmouseup: MouseEventHandler<SVGPathElement>;
+    onmousedown: MouseEventHandler<SVGPathElement>;
+    onmouseenter: MouseEventHandler<SVGPathElement>;
+    onmousemove: MouseEventHandler<SVGPathElement>;
+    onmouseleave: MouseEventHandler<SVGPathElement>;
+    onmouseout: MouseEventHandler<SVGPathElement>;
+    onmouseover: MouseEventHandler<SVGPathElement>;
+    onpointercancel: MouseEventHandler<SVGPathElement>;
+    onpointerdown: MouseEventHandler<SVGPathElement>;
+    onpointerup: MouseEventHandler<SVGPathElement>;
+    onpointerenter: MouseEventHandler<SVGPathElement>;
+    onpointerleave: MouseEventHandler<SVGPathElement>;
+    onpointermove: MouseEventHandler<SVGPathElement>;
+    onpointerover: MouseEventHandler<SVGPathElement>;
+    onpointerout: MouseEventHandler<SVGPathElement>;
+    ondrag: MouseEventHandler<SVGPathElement>;
+    ondrop: MouseEventHandler<SVGPathElement>;
+    ondragstart: MouseEventHandler<SVGPathElement>;
+    ondragenter: MouseEventHandler<SVGPathElement>;
+    ondragleave: MouseEventHandler<SVGPathElement>;
+    ondragover: MouseEventHandler<SVGPathElement>;
+    ondragend: MouseEventHandler<SVGPathElement>;
+    ontouchstart: MouseEventHandler<SVGPathElement>;
+    ontouchmove: MouseEventHandler<SVGPathElement>;
+    ontouchend: MouseEventHandler<SVGPathElement>;
+    ontouchcancel: MouseEventHandler<SVGPathElement>;
+    oncontextmenu: MouseEventHandler<SVGPathElement>;
+    onwheel: MouseEventHandler<SVGPathElement>;
     /**
      * if you want to give your mark element an extra CSS class
      */
-    class?: string;
+    class: string;
     /**
      * if you want to give your mark element an extra inline style
      */
-    style?: string;
+    style: string;
     cursor: ConstantAccessor<CSS.Property.Cursor, T>;
 }>;
 
