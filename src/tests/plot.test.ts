@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, test } from 'vitest';
 import { render } from '@testing-library/svelte';
 import PlotTest from './plot.test.svelte';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -9,8 +9,10 @@ describe('Plot component', () => {
     it('empty plot', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100
+                plotArgs: {
+                    width: 100,
+                    height: 100
+                }
             }
         });
 
@@ -32,7 +34,9 @@ describe('Plot component', () => {
     it('plot with title', () => {
         const { container } = render(PlotTest, {
             props: {
-                title: 'Plot title'
+                plotArgs: {
+                    title: 'Plot title'
+                }
             }
         });
         expect(container.querySelectorAll('.plot-header')).toHaveLength(1);
@@ -46,7 +50,9 @@ describe('Plot component', () => {
     it('plot with subtitle', () => {
         const { container } = render(PlotTest, {
             props: {
-                subtitle: 'Plot subtitle'
+                plotArgs: {
+                    subtitle: 'Plot subtitle'
+                }
             }
         });
         expect(container.querySelectorAll('.plot-header')).toHaveLength(1);
@@ -57,7 +63,9 @@ describe('Plot component', () => {
     it('plot with caption', () => {
         const { container } = render(PlotTest, {
             props: {
-                caption: 'Plot caption'
+                plotArgs: {
+                    caption: 'Plot caption'
+                }
             }
         });
         expect(container.querySelectorAll('.plot-footer')).toHaveLength(1);
@@ -67,9 +75,11 @@ describe('Plot component', () => {
     it('plot with title, subtitle and caption', () => {
         const { container } = render(PlotTest, {
             props: {
-                title: 'Main title',
-                subtitle: 'Subtitle text',
-                caption: 'Caption text'
+                plotArgs: {
+                    title: 'Main title',
+                    subtitle: 'Subtitle text',
+                    caption: 'Caption text'
+                }
             }
         });
         expect(container.querySelectorAll('.plot-header')).toHaveLength(1);
@@ -82,8 +92,10 @@ describe('Plot component', () => {
     it('plot with width and height', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 300,
-                height: 200
+                plotArgs: {
+                    width: 300,
+                    height: 200
+                }
             }
         });
 
@@ -96,9 +108,11 @@ describe('Plot component', () => {
     it('margin settings are applied', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100,
-                margin: { top: 20, right: 20, bottom: 20, left: 20 }
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    margin: { top: 20, right: 20, bottom: 20, left: 20 }
+                }
             }
         });
 
@@ -116,11 +130,13 @@ describe('Plot component', () => {
     it('scale configuration', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100,
-                x: { type: 'linear' },
-                y: { type: 'linear' },
-                color: { type: 'ordinal' }
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    x: { type: 'linear' },
+                    y: { type: 'linear' },
+                    color: { type: 'ordinal' }
+                }
             }
         });
 
@@ -133,8 +149,10 @@ describe('Plot component', () => {
     it('plot size', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 150
+                plotArgs: {
+                    width: 100,
+                    height: 150
+                }
             }
         });
 
@@ -146,16 +164,260 @@ describe('Plot component', () => {
         expect(svg?.getAttribute('width')).toBe('100');
         expect(svg?.getAttribute('height')).toBe('150');
     });
+
+    it('initial margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    frame: true
+                }
+            }
+        });
+
+        // Check for the presence of the background element
+        // Here we're checking that the plot renders with a background property
+        const svg = container.querySelector('svg');
+
+        expect(svg).not.toBeNull();
+        expect(svg?.getAttribute('width')).toBe('100');
+        expect(svg?.getAttribute('height')).toBe('100');
+
+        const rect = container.querySelector('svg rect.frame');
+        expect(rect).not.toBeNull();
+        expect(rect?.getAttribute('transform')).toBe('translate(1,5)');
+        expect(parseInt(rect?.getAttribute('width') as string)).toBe(95);
+        expect(parseInt(rect?.getAttribute('height') as string)).toBe(90);
+    });
+
+    it('plot margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: 10,
+                    width: 100,
+                    height: 100,
+                    frame: true
+                }
+            }
+        });
+
+        // Check for the presence of the background element
+        // Here we're checking that the plot renders with a background property
+        const svg = container.querySelector('svg');
+
+        expect(svg).not.toBeNull();
+        expect(svg?.getAttribute('width')).toBe('100');
+        expect(svg?.getAttribute('height')).toBe('100');
+
+        const rect = container.querySelector('svg rect.frame');
+        expect(rect).not.toBeNull();
+        expect(rect?.getAttribute('transform')).toBe('translate(10,10)');
+        expect(parseInt(rect?.getAttribute('width') as string)).toBe(80);
+        expect(parseInt(rect?.getAttribute('height') as string)).toBe(80);
+    });
+
+    function testMargins(
+        rect: SVGRectElement,
+        margins: { top: number; left: number; bottom: number; right: number }
+    ) {
+        expect(rect).not.toBeNull();
+        expect(rect?.getAttribute('transform')).toBe(`translate(${margins.left},${margins.top})`);
+        expect(parseInt(rect?.getAttribute('width') as string)).toBe(
+            100 - margins.left - margins.right
+        );
+        expect(parseInt(rect?.getAttribute('height') as string)).toBe(
+            100 - margins.top - margins.bottom
+        );
+    }
+
+    it('plot separate margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: { top: 15, left: 5, bottom: 15, right: 20 },
+                    width: 100,
+                    height: 100,
+                    frame: true
+                }
+            }
+        });
+
+        // Check for the presence of the background element
+        // Here we're checking that the plot renders with a background property
+        const svg = container.querySelector('svg');
+
+        expect(svg).not.toBeNull();
+        expect(svg?.getAttribute('width')).toBe('100');
+        expect(svg?.getAttribute('height')).toBe('100');
+
+        testMargins(container.querySelector('svg rect.frame') as SVGRectElement, {
+            top: 15,
+            left: 5,
+            bottom: 15,
+            right: 20
+        });
+    });
+
+    it('plot with directional user-default margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: { top: 10, left: 12, bottom: 14, right: 16 }
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame');
+        testMargins(rect as SVGRectElement, { top: 10, left: 12, bottom: 14, right: 16 });
+    });
+
+    it('plot with uniform user-default margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: 20
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame');
+        testMargins(rect as SVGRectElement, { top: 20, left: 20, bottom: 20, right: 20 });
+    });
+
+    it('directional plot margin overrides directional user-default margins', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: { top: 5 },
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: { top: 10, left: 12, bottom: 14, right: 16 }
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 12, bottom: 14, right: 16 });
+    });
+
+    it('directional plot margin overrides uniform user-default margin', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: { top: 5 },
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: 10
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 10, bottom: 10, right: 10 });
+    });
+
+    it('uniform plot margin overrides uniform user-default margin', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: 5,
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: 10
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 5, bottom: 5, right: 5 });
+    });
+
+    it('uniform plot margin overrides directional user-default margin', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: 5,
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: {
+                    margin: { left: 10 }
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 5, bottom: 5, right: 5 });
+    });
+
+    it('shorthand marginLeft overrides uniform plot margin', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: 5,
+                    marginLeft: 15,
+                    width: 100,
+                    height: 100,
+                    frame: true
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 15, bottom: 5, right: 5 });
+    });
+
+    it('shorthand marginLeft overrides directional plot margin', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: { left: 10, right: 20 },
+                    marginLeft: 15,
+                    width: 100,
+                    height: 100,
+                    frame: true
+                },
+                defaults: { margin: 5 }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame') as SVGRectElement;
+        testMargins(rect, { top: 5, left: 15, bottom: 5, right: 20 });
+    });
 });
 
 describe('Implicit axes', () => {
     it('accepts x axis domain configuration', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100,
-                x: {
-                    domain: [0, 10]
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    x: {
+                        domain: [0, 10]
+                    }
                 }
             }
         });
@@ -173,10 +435,12 @@ describe('Implicit axes', () => {
     it('accepts y axis domain configuration', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100,
-                y: {
-                    domain: [0, 10]
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    y: {
+                        domain: [0, 10]
+                    }
                 }
             }
         });
@@ -194,15 +458,17 @@ describe('Implicit axes', () => {
     it('accepts axis placement configuration', () => {
         const { container } = render(PlotTest, {
             props: {
-                width: 100,
-                height: 100,
-                x: {
-                    domain: [0, 10],
-                    axis: 'top'
-                },
-                y: {
-                    domain: [0, 10],
-                    axis: 'right'
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    x: {
+                        domain: [0, 10],
+                        axis: 'top'
+                    },
+                    y: {
+                        domain: [0, 10],
+                        axis: 'right'
+                    }
                 }
             }
         });

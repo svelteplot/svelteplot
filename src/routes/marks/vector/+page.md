@@ -55,7 +55,7 @@ Here's an example where all arrows point towards the mouse cursor:
 
 <Plot
     inset={10}
-    margins={0}
+    margin={0}
     x={{ axis: false }}
     y={{ axis: false }}
     aspectRatio={1}
@@ -266,7 +266,7 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 
 <Plot
     inset={10}
-    margins={0}
+    margin={0}
     x={{ axis: false }}
     y={{ axis: false }}
     aspectRatio={1}

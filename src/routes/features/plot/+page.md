@@ -180,24 +180,25 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `caption` - a caption to be displayed as `<figcaption>` below the plot
 - `locale` - locale to be used for number and date formatting, e.g. in axis ticks
 
-**Size and margins**
+### Size and margins
 
+- `width` - you can set a fixed width for the plot element, otherwise it will fill 100% of the container width
 - `maxWidth` - you can set the max-width of the plot element to prevent the plot from scaling to the container div width
-- `height`
+- `height` - you can set a fixed height for the plot element, otherwise it will default to 350px or be computed from the plot marks or aspect ratio. Height also accepts a function `(width) => number`
 - `marginTop` - plot margins
 - `marginBottom` - margins
 - `marginLeft` - margins
 - `marginRight` - margins
-- `margin` - shortcut to set all 4 margins to the same value
+- `margin` - shortcut to set all 4 margins to the same value, also accepts objects like `{ top: 10, bottom: 20 }`
 - `inset` - shortcut for setting all insets. To set individual insets, see `x` and `y` scale options.
 
-**Implicit marks**
+### Implicit marks
 
 - `grid` - set this flag to activate implicit grids
 - `axes` - set this flag to activate implicit axes
 - `frame` - set this flag to activate implicit frame
 
-**Scale options**
+### Scale options
 
 - `x` - options for the x scale:
     - `axis`
@@ -256,7 +257,7 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `symbol` also supports:
     - `legend` - whether to show a symbol legend
 
-**Other plot options**
+### Other plot options
 
 - `locale` - locale used for automatic number and date formatting in axis ticks
 - `aspectRatio` - if set, computes height such that a variation in x of one unit corresponds to the given number of pixels as a variation in y of one unit
@@ -270,7 +271,7 @@ List of all plot options you can pass via props on the `<Plot />` component:
     - `x` - accessor for horizontal facets
     - `y` - accessor for vertical facets
 
-**Snippet options**
+### Snippet options
 
 These can be used to add custom markup to different parts of the plot:
 
@@ -419,3 +420,5 @@ SveltePlot provides a lot of convenience features with the unfortunate side-effe
         y="Adj Close" />
 </Plot>
 ```
+
+You can set default plot options, see [Defaults](/features/defaults) for more information.

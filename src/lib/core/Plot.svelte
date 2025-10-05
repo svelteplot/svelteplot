@@ -21,7 +21,8 @@
         PlotScale,
         PlotDefaults,
         PlotState,
-        RawValue
+        RawValue,
+        PlotMargin
     } from '../types/index.js';
     import FacetGrid from './FacetGrid.svelte';
 
@@ -59,6 +60,7 @@
         height: 350,
         initialWidth: 500,
         inset: 0,
+        margin: 'auto',
         colorScheme: 'turbo',
         unknown: '#cccccc99',
 
@@ -122,7 +124,7 @@
         explicitScales: Set<ScaleName>;
         explicitDomains: Set<ScaleName>;
         hasProjection: boolean;
-        margins?: number;
+        margin?: number | 'auto';
         inset?: number;
     };
 
@@ -173,7 +175,7 @@
             explicitScales,
             explicitDomains,
             hasProjection: !!initialOpts.projection,
-            margins: initialOpts.margins,
+            margin: initialOpts.margin,
             inset: initialOpts.inset
         })
     );
@@ -363,6 +365,38 @@
         return mergeDeep<PlotOptions>({}, smartDefaultPlotOptions(opts), initialOpts);
     }
 
+    function maybeMargin(
+        // the margin option provided to the <Plot> component
+        margin: number | 'auto' | PlotMargin | undefined,
+        // direction to extract from the margin object
+        direction: 'left' | 'right' | 'top' | 'bottom',
+        // the margin option defined in the plot defaults
+        defaultValue: PlotMargin | number | 'auto',
+        // automatic margins computed from the marks
+        autoMargins: {
+            left: number;
+            right: number;
+            top: number;
+            bottom: number;
+        }
+    ): number {
+        // direction-specific margin value takes precedence
+        const marginValue =
+            typeof margin === 'object' && margin[direction] != null
+                ? margin[direction]
+                : // use the margin value if it's a number
+                  typeof margin === 'number' || margin === 'auto'
+                  ? margin
+                  : // use direction-specific default value if defined
+                    typeof defaultValue === 'object' && defaultValue[direction] != null
+                    ? defaultValue[direction]
+                    : typeof defaultValue === 'number' || defaultValue === 'auto'
+                      ? defaultValue
+                      : 'auto';
+
+        return marginValue === 'auto' ? autoMargins[direction] : marginValue;
+    }
+
     /**
      * compute smart default options for the plot based on the scales and marks
      */
@@ -370,43 +404,31 @@
         explicitScales,
         explicitDomains,
         hasProjection,
-        margins
+        margin
     }: PlotOptionsParameters): PlotOptions {
         const autoXAxis = explicitScales.has('x') || explicitDomains.has('x');
         const autoYAxis = explicitScales.has('y') || explicitDomains.has('y');
         const isOneDimensional = autoXAxis !== autoYAxis;
         const oneDimX = autoXAxis && !autoYAxis;
         const oneDimY = autoYAxis && !autoXAxis;
+
+        const autoMargins = {
+            left: hasProjection ? 0 : Math.max(maxMarginLeft + 1, 1),
+            right: hasProjection ? 0 : oneDimY ? 0 : Math.max(maxMarginRight + 1, 4),
+            top: hasProjection ? 0 : oneDimX ? 0 : Math.max(5, maxMarginTop),
+            bottom: hasProjection ? 0 : Math.max(5, maxMarginBottom)
+        };
+
         return {
             title: '',
             subtitle: '',
             caption: '',
             height: 'auto',
             // maxWidth: oneDimY ? `${60 * e}px` : undefined,
-            marginLeft: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : Math.max(maxMarginLeft + 1, 1),
-            marginRight: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : oneDimY
-                    ? 0
-                    : Math.max(maxMarginRight + 1, 4),
-            marginTop: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : oneDimX
-                    ? 0
-                    : Math.max(5, maxMarginTop),
-            marginBottom: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : Math.max(5, maxMarginBottom),
+            marginLeft: maybeMargin(margin, 'left', DEFAULTS.margin, autoMargins),
+            marginRight: maybeMargin(margin, 'right', DEFAULTS.margin, autoMargins),
+            marginTop: maybeMargin(margin, 'top', DEFAULTS.margin, autoMargins),
+            marginBottom: maybeMargin(margin, 'bottom', DEFAULTS.margin, autoMargins),
             inset: isOneDimensional ? 10 : DEFAULTS.inset,
             grid: (DEFAULTS.gridX?.implicit ?? false) && (DEFAULTS.gridY?.implicit ?? false),
             axes: (DEFAULTS.axisX?.implicit ?? false) && (DEFAULTS.axisY?.implicit ?? false),

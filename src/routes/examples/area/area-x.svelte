@@ -6,6 +6,8 @@
     import { Plot, AreaX } from 'svelteplot';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
+    import { setContext } from 'svelte';
+
     let { aapl } = $derived(page.data.data) as ExamplesData;
 </script>
 
