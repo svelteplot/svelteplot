@@ -119,7 +119,7 @@ async function generate() {
           <span class="mode">${escapeHtml(r.mode)}</span>
           <span class="status ${statusCls}">[${statusText}]</span>
           <span class="pct">diff=${escapeHtml(pct)} ${mismatch}</span>
-          <div class="actions">
+          <div class="actions" style="display: ${r.status === 'passed' ? 'none' : 'block'}">
             <button class="approve" data-group="${escapeHtml(group)}" data-page="${escapeHtml(page)}">Approve</button>
           </div>
         </div>
@@ -162,6 +162,9 @@ async function generate() {
             el.textContent = 'Approved';
             el.disabled = true;
           });
+          // hide entire section
+          const section = btn.closest('section.case');
+          if (section) section.style.display = 'none';
         } catch (e) {
           btn.disabled = false;
           btn.textContent = original;
