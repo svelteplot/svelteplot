@@ -11,7 +11,7 @@
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackX } from '$lib/transforms/stack.js';
     import { recordizeX } from '$lib/transforms/recordize.js';
-    import type { ChannelAccessor, DataRow, PlotDefaults } from '../types/index.js';
+    import type { ChannelAccessor, DataRow } from '../types/index.js';
     import { type ComponentProps } from 'svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
