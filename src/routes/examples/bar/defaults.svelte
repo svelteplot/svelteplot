@@ -10,8 +10,6 @@
         BarX,
         setPlotDefaults
     } from 'svelteplot';
-    import { setContext } from 'svelte';
-    import { set } from 'es-toolkit/compat';
 
     setPlotDefaults({
         bar: {
