@@ -31,16 +31,16 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { groupX, BarY, TickY, RuleX, Dot } from '$lib/index.js';
     import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { getContext, type ComponentProps } from 'svelte';
-    import type { PlotDefaults } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import type { BaseMarkProps, ChannelAccessor, DataRecord } from 'svelteplot/types';
 
     let markProps: BoxYMarkProps = $props();
 
     const DEFAULTS = {
         tickMedian: true,
         tickMinMax: false,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').box,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').boxY
+        ...getPlotDefaults().box,
+        ...getPlotDefaults().boxY
     };
 
     const {

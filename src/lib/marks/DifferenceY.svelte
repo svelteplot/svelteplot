@@ -50,8 +50,7 @@
         ChannelAccessor,
         CurveName,
         DataRecord,
-        PlotContext,
-        PlotDefaults
+        PlotContext
     } from 'svelteplot/types/index.js';
     import { Line, Area } from '$lib/marks/index.js';
     import { randomId, coalesce } from '$lib/helpers/index.js';
@@ -59,6 +58,7 @@
     import { extent, max, min } from 'd3-array';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { CurveFactory } from 'd3-shape';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
@@ -72,7 +72,7 @@
         negativeFillOpacity: 1,
         curve: 'linear' as CurveName,
         tension: 0,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').differenceY
+        ...getPlotDefaults().differenceY
     };
 
     const {

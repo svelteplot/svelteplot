@@ -42,6 +42,7 @@
     } from '../types/index.js';
     import type { StackOptions } from '$lib/transforms/stack.js';
     import { addEventHandlers } from './helpers/events';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: AreaMarkProps = $props();
 
@@ -49,7 +50,7 @@
         fill: 'currentColor',
         curve: 'linear' as CurveName,
         tension: 0,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').area
+        ...getPlotDefaults().area
     };
 
     const {

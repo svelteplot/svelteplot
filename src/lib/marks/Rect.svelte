@@ -26,17 +26,16 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
-        PlotDefaults,
         LinkableMarkProps
     } from '../types/index.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
-    import { resolveProp } from 'svelteplot/helpers/resolve';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: RectMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').rect
+        ...getPlotDefaults().rect
     };
 
     const {

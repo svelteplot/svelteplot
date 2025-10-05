@@ -9,15 +9,16 @@
 
     import Rect from './Rect.svelte';
     import { intervalY, stackX, recordizeX } from '$lib/index.js';
-    import type { DataRecord, PlotContext, PlotDefaults } from '../types/index.js';
+    import type { DataRecord, PlotContext } from '../types/index.js';
     import { getContext, type ComponentProps } from 'svelte';
     import type { StackOptions } from '$lib/transforms/stack.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: RectXMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').rect,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').rectX
+        ...getPlotDefaults().rect,
+        ...getPlotDefaults().rectX
     };
 
     const {

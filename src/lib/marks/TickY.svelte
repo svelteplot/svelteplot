@@ -29,21 +29,21 @@
         ChannelAccessor,
         DataRow,
         FacetContext,
-        ConstantAccessor,
-        PlotDefaults
+        ConstantAccessor
     } from '../types/index.js';
     import { recordizeY } from '$lib/index.js';
     import { projectX, projectY } from '../helpers/scales.js';
     import { isValid } from '../helpers/index.js';
     import { testFilter, parseInset } from '$lib/helpers/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
 
     let markProps: TickYMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').tick,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').tickY
+        ...getPlotDefaults().tick,
+        ...getPlotDefaults().tickY
     };
     const {
         data = [{}],

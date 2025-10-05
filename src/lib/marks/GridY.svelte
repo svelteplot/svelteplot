@@ -10,23 +10,18 @@
     }
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
-    import type {
-        PlotContext,
-        BaseMarkProps,
-        RawValue,
-        PlotDefaults,
-        ChannelAccessor
-    } from '../types/index.js';
+    import type { PlotContext, BaseMarkProps, RawValue, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: GridYMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').grid,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').gridY
+        ...getPlotDefaults().grid,
+        ...getPlotDefaults().gridY
     };
 
     const {

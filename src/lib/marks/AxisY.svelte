@@ -10,14 +10,13 @@
         BaseMarkProps,
         RawValue,
         FacetContext,
-        PlotDefaults,
         ChannelName,
         ConstantAccessor
     } from '../types/index.js';
-    import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     interface AxisYMarkProps
         extends Omit<
@@ -62,8 +61,8 @@
         opacity: 0.8,
         anchor: 'left',
         textAnchor: 'auto',
-        ...getContext<PlotDefaults>('svelteplot/_defaults').axis,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').axisY
+        ...getPlotDefaults().axis,
+        ...getPlotDefaults().axisY
     };
 
     const {

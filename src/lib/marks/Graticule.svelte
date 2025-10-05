@@ -14,14 +14,14 @@
     }
     import Geo from './Geo.svelte';
     import { geoGraticule } from 'd3-geo';
-    import { getContext } from 'svelte';
-    import type { BaseMarkProps, PlotDefaults } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import type { BaseMarkProps } from '../types/index.js';
 
     let markProps: GraticuleMarkProps = $props();
 
     const DEFAULTS = {
         step: 10,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').graticule
+        ...getPlotDefaults().graticule
     };
 
     const { class: className = '', ...options }: GraticuleMarkProps = $derived({

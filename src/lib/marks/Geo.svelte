@@ -29,7 +29,6 @@
         BaseMarkProps,
         ConstantAccessor,
         LinkableMarkProps,
-        PlotDefaults,
         ChannelAccessor
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
@@ -42,6 +41,7 @@
     import { recordize } from '$lib/transforms/recordize.js';
     import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
     import Anchor from './helpers/Anchor.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -49,7 +49,7 @@
     let markProps: GeoMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').geo
+        ...getPlotDefaults().geo
     };
 
     const {

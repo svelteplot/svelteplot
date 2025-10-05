@@ -16,8 +16,9 @@
         rotate?: ChannelAccessor<Datum>;
     }
     import Vector from './Vector.svelte';
-    import type { ChannelAccessor, DataRecord, PlotDefaults } from '../types/index.js';
-    import { getContext, type ComponentProps } from 'svelte';
+    import type { ChannelAccessor, DataRecord } from '../types/index.js';
+    import { type ComponentProps } from 'svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: SpikeMarkProps = $props();
 
@@ -29,7 +30,7 @@
         stroke: 'currentColor',
         sort: { channel: '-y' },
         shape: 'spike' as const,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').spike
+        ...getPlotDefaults().spike
     };
 
     const { data = [{} as Datum], ...options }: SpikeMarkProps = $derived({

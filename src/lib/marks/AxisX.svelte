@@ -11,14 +11,13 @@
         RawValue,
         ConstantAccessor,
         FacetContext,
-        PlotDefaults,
         ChannelName
     } from '../types/index.js';
     import type * as CSS from 'csstype';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
-    import { derived } from 'svelte/store';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     interface AxisXMarkProps
         extends Omit<
@@ -64,8 +63,8 @@
         textAnchor: 'auto',
         opacity: 0.8,
         anchor: 'bottom',
-        ...getContext<PlotDefaults>('svelteplot/_defaults').axis,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').axisX
+        ...getPlotDefaults().axis,
+        ...getPlotDefaults().axisX
     };
 
     const {

@@ -56,22 +56,22 @@
         rotate?: ConstantAccessor<number, Datum>;
     }
 
-    import { getContext, type Snippet } from 'svelte';
+    import { type Snippet } from 'svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import type {
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        PlotDefaults,
         LinkableMarkProps
     } from '../types/index.js';
-    import { resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import { resolveProp } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
     import { sort } from '$lib/index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
     import { indexData } from 'svelteplot/transforms/recordize';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const DEFAULTS = {
         fontSize: 12,
@@ -80,7 +80,7 @@
         frameAnchor: 'middle' as const,
         lineHeight: 1.1,
         rotate: 0,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').text
+        ...getPlotDefaults().text
     };
 
     let markProps: TextMarkProps = $props();

@@ -33,8 +33,7 @@
         DataRecord,
         BaseMarkProps,
         ChannelAccessor,
-        FacetContext,
-        PlotDefaults
+        FacetContext
     } from '../types/index.js';
 
     import { getContext, type Snippet } from 'svelte';
@@ -47,6 +46,7 @@
     import { isValid } from '$lib/helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const defaultRadius = 3.5;
 
@@ -58,7 +58,7 @@
 
     let markProps: VectorMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').vector
+        ...getPlotDefaults().vector
     };
     const {
         data = [{}],

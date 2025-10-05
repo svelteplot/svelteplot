@@ -35,14 +35,10 @@
     }
     import { getContext } from 'svelte';
     import Rect from '$lib/marks/Rect.svelte';
-    import type {
-        BaseMarkProps,
-        DataRecord,
-        PlotContext,
-        PlotDefaults
-    } from 'svelteplot/types/index.js';
+    import type { BaseMarkProps, DataRecord, PlotContext } from 'svelteplot/types/index.js';
     import { clientToLayerCoordinates } from './helpers/events.js';
     import Frame from '$lib/marks/Frame.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let { brush = $bindable({ enabled: false }), ...markProps }: BrushMarkProps = $props();
 
@@ -52,8 +48,18 @@
         strokeOpacity: 0.6,
         resizeHandleSize: 10,
         constrainToDomain: false,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').brush
+        ...getPlotDefaults().brush
     };
+
+    type Brush = {
+        x1?: number | Date;
+        x2?: number | Date;
+        y1?: number | Date;
+        y2?: number | Date;
+        enabled: boolean;
+    };
+
+    type BrushEvent = MouseEvent & { brush: Brush };
 
     const {
         data = [{} as Datum],
