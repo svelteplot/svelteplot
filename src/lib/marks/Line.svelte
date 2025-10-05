@@ -42,11 +42,12 @@
     import { pick } from 'es-toolkit';
     import LineCanvas from './helpers/LineCanvas.svelte';
 
-    import type { RawValue, PlotDefaults } from 'svelteplot/types/index.js';
+    import type { RawValue } from 'svelteplot/types/index.js';
     import { isValid } from '$lib/helpers/index.js';
     import { sort } from '$lib/transforms/sort.js';
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: LineMarkProps = $props();
 
@@ -56,7 +57,7 @@
         canvas: false,
         class: null,
         lineClass: null,
-        ...getContext<Partial<PlotDefaults>>('svelteplot/_defaults').line
+        ...getPlotDefaults().line
     };
 
     const {

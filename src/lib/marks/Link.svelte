@@ -44,8 +44,7 @@
         CurveName,
         MarkerOptions,
         RawValue,
-        ScaledDataRecord,
-        PlotDefaults
+        ScaledDataRecord
     } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
@@ -58,10 +57,11 @@
     import { pick } from 'es-toolkit';
     import { sort } from 'svelteplot/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: LinkMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').link
+        ...getPlotDefaults().link
     };
     const {
         data = [{} as Datum],

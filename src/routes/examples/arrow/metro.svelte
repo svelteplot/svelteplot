@@ -3,23 +3,23 @@
 </script>
 
 <script lang="ts">
-    import { Plot, Arrow, Text } from 'svelteplot';
+    import {
+        Plot,
+        Arrow,
+        Text,
+        setPlotDefaults
+    } from 'svelteplot';
     import { page } from '$app/state';
-    import { setContext } from 'svelte';
-    import { type PlotDefaults } from 'svelteplot';
     import type { ExamplesData } from '../types';
     let { metros } = $derived(
         page.data.data
     ) as ExamplesData;
 
-    setContext<Partial<PlotDefaults>>(
-        'svelteplot/defaults',
-        {
-            arrow: {
-                headAngle: 45
-            }
+    setPlotDefaults({
+        arrow: {
+            headAngle: 45
         }
-    );
+    });
 
     let hl: false | (typeof metros)[0] = $state(false);
 </script>

@@ -5,10 +5,13 @@
 </script>
 
 <script lang="ts">
-    import { Plot, BarX } from 'svelteplot';
-    import { setContext } from 'svelte';
+    import {
+        Plot,
+        BarX,
+        setPlotDefaults
+    } from 'svelteplot';
 
-    setContext('svelteplot/defaults', {
+    setPlotDefaults({
         bar: {
             borderRadius: 4,
             stroke: 'currentColor',

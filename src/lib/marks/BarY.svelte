@@ -34,16 +34,16 @@
         BaseRectMarkProps,
         ChannelAccessor,
         DataRow,
-        PlotDefaults,
         LinkableMarkProps
     } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').bar,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').barY
+        ...getPlotDefaults().bar,
+        ...getPlotDefaults().barY
     };
 
     let markProps: BarYMarkProps = $props();

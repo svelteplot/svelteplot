@@ -10,14 +10,13 @@
     import Area from './Area.svelte';
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackY } from '$lib/transforms/stack.js';
-    import { RAW_VALUE, recordizeY } from '$lib/transforms/recordize.js';
-    import type { ChannelAccessor, DataRow, PlotDefaults } from '../types/index.js';
-    import { getContext, type Component, type ComponentProps } from 'svelte';
-    import { area } from 'd3-shape';
+    import { recordizeY } from '$lib/transforms/recordize.js';
+    import type { ChannelAccessor, DataRow } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: AreaYMarkProps = $props();
 
-    const DEFAULTS = getContext<PlotDefaults>('svelteplot/_defaults').areaY;
+    const DEFAULTS = getPlotDefaults().areaY;
 
     const { data, stack, ...options }: AreaYMarkProps = $derived({
         ...(markProps.y == undefined ? { y1: 0, y2: 0 } : {}),

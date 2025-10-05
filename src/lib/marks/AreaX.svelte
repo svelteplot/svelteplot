@@ -11,12 +11,13 @@
     import { renameChannels } from '$lib/transforms/rename.js';
     import { stackX } from '$lib/transforms/stack.js';
     import { recordizeX } from '$lib/transforms/recordize.js';
-    import type { ChannelAccessor, DataRow, PlotDefaults } from '../types/index.js';
-    import { getContext, type ComponentProps } from 'svelte';
+    import type { ChannelAccessor, DataRow } from '../types/index.js';
+    import { type ComponentProps } from 'svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: AreaXMarkProps = $props();
 
-    const DEFAULTS = getContext<PlotDefaults>('svelteplot/_defaults').areaX;
+    const DEFAULTS = getPlotDefaults().areaX;
 
     const { data, stack, ...options }: AreaXMarkProps = $derived({
         ...(markProps.x == undefined ? { x1: 0, x2: 0 } : {}),

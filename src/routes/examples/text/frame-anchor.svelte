@@ -5,16 +5,16 @@
 <script lang="ts">
     import { setContext } from 'svelte';
 
-    import { Plot, Text } from 'svelteplot';
-    import type { PlotDefaults } from 'svelteplot';
-    setContext<Partial<PlotDefaults>>(
-        'svelteplot/defaults',
-        {
-            frame: {
-                strokeOpacity: 0.25
-            }
+    import {
+        Plot,
+        setPlotDefaults,
+        Text
+    } from 'svelteplot';
+    setPlotDefaults({
+        frame: {
+            strokeOpacity: 0.25
         }
-    );
+    });
 </script>
 
 <Plot

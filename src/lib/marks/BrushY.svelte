@@ -4,15 +4,15 @@
 -->
 <script lang="ts">
     import Brush from './Brush.svelte';
-    import type { PlotDefaults } from '../types/index.js';
-    import { getContext, type ComponentProps } from 'svelte';
+    import { type ComponentProps } from 'svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     interface BrushYMarkProps extends Omit<ComponentProps<typeof Brush>, 'limitDimension'> {}
 
     let { brush = $bindable({ enabled: false }), ...options }: BrushYMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').brush,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').brushY
+        ...getPlotDefaults().brush,
+        ...getPlotDefaults().brushY
     };
 </script>
 

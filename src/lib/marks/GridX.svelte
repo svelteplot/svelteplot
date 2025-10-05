@@ -14,7 +14,6 @@
         PlotContext,
         BaseMarkProps,
         RawValue,
-        PlotDefaults,
         DataRecord,
         ChannelAccessor
     } from '../types/index.js';
@@ -24,12 +23,13 @@
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
     import isDataRecord from '$lib/helpers/isDataRecord';
     import { INDEX } from '$lib/constants';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: GridXMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').grid,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').gridX
+        ...getPlotDefaults().grid,
+        ...getPlotDefaults().gridX
     };
 
     const {

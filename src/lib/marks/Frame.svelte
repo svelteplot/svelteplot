@@ -25,12 +25,12 @@
         PlotContext,
         BaseRectMarkProps,
         LinkableMarkProps,
-        PlotDefaults,
         DataRecord
     } from '../types/index.js';
     import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
     import { resolveProp } from 'svelteplot/helpers/resolve';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: FrameMarkProps = $props();
 
@@ -40,7 +40,7 @@
         stroke: undefined,
         fillOpacity: 1,
         strokeOpacity: 1,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').frame
+        ...getPlotDefaults().frame
     };
 
     const {

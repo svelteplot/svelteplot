@@ -16,6 +16,7 @@
 
 <script lang="ts">
     import { getContext } from 'svelte';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
 
     type MarkerProps = {
         id: string;
@@ -68,7 +69,7 @@
         }
     };
 
-    const defaultDotRadius = getContext('svelteplot/_defaults').markerDotRadius;
+    const defaultDotRadius = getPlotDefaults().markerDotRadius;
 
     const markerColors = $derived({
         fill: 'none',

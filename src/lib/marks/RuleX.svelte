@@ -22,14 +22,14 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        PlotDefaults,
         RawValue
     } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: RuleXMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').rule,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').ruleX
+        ...getPlotDefaults().rule,
+        ...getPlotDefaults().ruleX
     };
     const {
         data = [{} as Datum],

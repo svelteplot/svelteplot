@@ -8,7 +8,7 @@
     this component. 
 -->
 <script lang="ts">
-    import { getContext, setContext } from 'svelte';
+    import { setContext } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
     import { writable } from 'svelte/store';
 
@@ -29,6 +29,7 @@
     import mergeDeep from '../helpers/mergeDeep.js';
     import { computeScales, projectXY } from '../helpers/scales.js';
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
+    import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
 
     // automatic margins can be applied by the marks, registered
     // with their respective unique identifier as keys
@@ -52,7 +53,7 @@
     const maxMarginBottom = $derived(Math.max(...$autoMarginBottom.values()));
     const maxMarginTop = $derived(Math.max(...$autoMarginTop.values()));
 
-    const USER_DEFAULTS = getContext<Partial<PlotDefaults>>('svelteplot/defaults') || {};
+    const USER_DEFAULTS = getPlotDefaults();
 
     // default settings in the plot and marks can be overwritten by
     // defining the svelteplot/defaults context outside of Plot
@@ -117,7 +118,7 @@
 
     let width = $state(DEFAULTS.initialWidth);
 
-    setContext('svelteplot/_defaults', DEFAULTS);
+    setPlotDefaults(DEFAULTS);
 
     // information that influences the default plot options
     type PlotOptionsParameters = {

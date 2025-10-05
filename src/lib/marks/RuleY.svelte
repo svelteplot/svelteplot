@@ -21,14 +21,14 @@
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
-        ChannelAccessor,
-        PlotDefaults
+        ChannelAccessor
     } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: RuleYMarkProps = $props();
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').rule,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').ruleY
+        ...getPlotDefaults().rule,
+        ...getPlotDefaults().ruleY
     };
     const {
         data = [{} as Datum],

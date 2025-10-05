@@ -47,7 +47,7 @@
         RawValue,
         PlotDefaults
     } from '../types/index.js';
-    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
@@ -56,6 +56,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { sort } from '$lib/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: ArrowMarkProps = $props();
 
@@ -63,7 +64,7 @@
         headAngle: 60,
         headLength: 8,
         inset: 0,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').arrow
+        ...getPlotDefaults().arrow
     };
 
     const {

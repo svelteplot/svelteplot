@@ -19,7 +19,6 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        PlotDefaults,
         LinkableMarkProps
     } from '../types/index.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
@@ -32,9 +31,10 @@
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
     import Anchor from './helpers/Anchor.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').dot
+        ...getPlotDefaults().dot
     };
 
     let markProps: DotMarkProps = $props();

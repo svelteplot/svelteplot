@@ -7,17 +7,17 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { BarX, TickX, RuleY, Dot, groupY } from '$lib/index.js';
     import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { getContext, type ComponentProps } from 'svelte';
-    import type { PlotDefaults } from '../types/index.js';
+    import { type ComponentProps } from 'svelte';
     import type BoxY from './BoxY.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: BoxXMarkProps = $props();
 
     const DEFAULTS = {
         tickMedian: true,
         tickMinMax: false,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').box,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').boxX
+        ...getPlotDefaults().box,
+        ...getPlotDefaults().boxX
     };
 
     const {

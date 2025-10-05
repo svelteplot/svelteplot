@@ -33,14 +33,14 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
-        LinkableMarkProps,
-        PlotDefaults
+        LinkableMarkProps
     } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const DEFAULTS = {
         fill: 'currentColor',
-        ...getContext<PlotDefaults>('svelteplot/_defaults').bar,
-        ...getContext<PlotDefaults>('svelteplot/_defaults').barX
+        ...getPlotDefaults().bar,
+        ...getPlotDefaults().barX
     };
 
     let markProps: BarXMarkProps = $props();

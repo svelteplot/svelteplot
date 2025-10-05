@@ -17,9 +17,7 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
-        PlotDefaults,
-        LinkableMarkProps,
-        MarkType
+        LinkableMarkProps
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
@@ -28,11 +26,12 @@
 
     import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     let markProps: CellMarkProps = $props();
 
     const DEFAULTS = {
-        ...getContext<PlotDefaults>('svelteplot/_defaults').cell
+        ...getPlotDefaults().cell
     };
 
     const {
