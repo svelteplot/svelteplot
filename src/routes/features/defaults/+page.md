@@ -4,15 +4,15 @@ title: Default options
 
 SveltePlot defines internal defaults for a lot of its options so you don't have to worry about them in your day-to-day use. However, sometimes you may want to divert from these defaults for _all_ of the plots on your page.
 
-In this case, you can make use of the `svelteplot/defaults` context.
+In this case, you can make use of the `setPlotDefaults` hook.
 
-If you're using SveltePlot in a SvelteKit project, you can even set the defaults context in your root layout to ensure the same defaults are being used in your entire site.
+If you're using SveltePlot in a SvelteKit project, you can even set the defaults in your root layout to ensure the same defaults are being used in your entire site.
 
 ```svelte title="+layout.svelte"
 <script>
-    import { setContext } from 'svelte';
+    import { setPlotDefaults } from 'svelteplot';
 
-    setContext('svelteplot/defaults', {
+    setPlotDefaults({
         height: 400,
         colorScheme: 'plasma',
         axis: {
@@ -27,7 +27,7 @@ If you're using SveltePlot in a SvelteKit project, you can even set the defaults
 
 ## Global defaults
 
-The defaults context accepts the following options:
+The `setPlotDefaults` hook accepts the following options:
 
 | Name                     | Description                                                                                                                                                            | Unit   | Default                                         |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------- |
@@ -100,12 +100,12 @@ Setting Global and Component Defaults
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
+    import { Plot, Dot, setPlotDefaults } from 'svelteplot';
     import { page } from '$app/state';
-    import { setContext } from 'svelte';
 
     let { penguins } = $derived(page.data.data);
-    setContext('svelteplot/defaults', {
+
+    setPlotDefaults({
         // Global defaults
         inset: 15,
         categoricalColorScheme: [
@@ -137,7 +137,9 @@ Setting Global and Component Defaults
 ```
 
 ```js
-setContext('svelteplot/defaults', {
+import { setPlotDefaults } from 'svelteplot';
+
+setPlotDefaults({
     // Global defaults
     inset: 15,
     categoricalColorScheme: [
@@ -162,12 +164,16 @@ another one
 
 ```svelte live
 <script>
-    import { Plot, BarX, AreaY } from 'svelteplot';
+    import {
+        Plot,
+        BarX,
+        AreaY,
+        setPlotDefaults
+    } from 'svelteplot';
     import { page } from '$app/state';
-    import { setContext } from 'svelte';
 
     let { penguins } = $derived(page.data.data);
-    setContext('svelteplot/defaults', {
+    setPlotDefaults({
         bar: {
             borderRadius: 4,
             stroke: 'currentColor',
@@ -191,7 +197,9 @@ another one
 ```
 
 ```js
-setContext('svelteplot/defaults', {
+import { setPlotDefaults } from 'svelteplot';
+
+setPlotDefaults({
     bar: {
         borderRadius: 4,
         stroke: 'currentColor',
