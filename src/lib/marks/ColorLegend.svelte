@@ -88,7 +88,7 @@
             ).slice(1)}
             <Plot
                 maxWidth="240px"
-                margins={1}
+                margin={1}
                 marginLeft={1}
                 marginRight={1}
                 marginTop={6}
@@ -121,7 +121,7 @@
 
             <Plot
                 maxWidth="240px"
-                margins={1}
+                margin={1}
                 marginLeft={10}
                 marginRight={10}
                 marginTop={6}

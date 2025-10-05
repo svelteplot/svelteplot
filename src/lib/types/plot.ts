@@ -101,6 +101,13 @@ export type PlotContext = {
 
 type IgnoreDefaults = 'data' | 'facet' | ChannelName | 'title' | 'automatic' | 'children';
 
+export type PlotMargin = {
+    top?: number | 'auto';
+    right?: number | 'auto';
+    bottom?: number | 'auto';
+    left?: number | 'auto';
+};
+
 /**
  * these are the default options for the plot marks that can be set using
  * the 'svelteplot/defaults' context.
@@ -114,6 +121,10 @@ export type PlotDefaults = {
      * default plot inset
      */
     inset: number;
+    /**
+     * default plot margin
+     */
+    margin: 'auto' | number | PlotMargin;
     /**
      * default color scheme
      */
@@ -357,9 +368,11 @@ export type PlotOptions = {
      */
     height: 'auto' | number | ((d: number) => number);
     /**
-     * Convenience option for setting all four margins at once, in px.
+     * If margin is set to "auto" (the default), the plot will automatically
+     * compute appropriate margins based on the presence of axes, labels, and
+     * the overall plot size. You can also set a fixed margin value in px.
      */
-    margin: number | { top?: number; right?: number; bottom?: number; left?: number };
+    margin: PlotMargin | number | 'auto';
     /**
      * Left margin of the plot, in px.
      */

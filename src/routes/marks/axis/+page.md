@@ -506,7 +506,7 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 </script>
 
 <Plot
-    margins={10}
+    margin={10}
     marginBottom={40}
     x={{
         domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
@@ -526,7 +526,7 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 
 ```svelte
 <Plot
-    margins={30}
+    margin={30}
     marginBottom={50}
     x={{
         domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]

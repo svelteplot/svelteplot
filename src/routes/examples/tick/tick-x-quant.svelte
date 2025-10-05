@@ -8,6 +8,7 @@
 <script lang="ts">
     import { range } from 'd3-array';
     import { Plot, TickX } from 'svelteplot';
+    import type { PlotContext } from 'svelteplot/types/plot';
 </script>
 
 <Plot y={{ type: 'linear' }} marginRight={10} grid>

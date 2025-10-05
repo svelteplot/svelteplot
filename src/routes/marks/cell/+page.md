@@ -255,7 +255,7 @@ But better to use a RectX here:
 
 <Plot
     padding={0}
-    margins={5}
+    margin={5}
     marginTop={40}
     height={70}
     inset={0}

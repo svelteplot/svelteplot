@@ -491,7 +491,7 @@ With a [spherical projection](/features/projections), line segments become [geod
         inset={3}
         width={40}
         height={25}
-        margins={0}
+        margin={0}
         testid="axis-off">
         <Line data={aapl.slice(-60)} x="Date" y="Close" />
     </Plot> inside a text paragraph or table -- often referred
@@ -515,7 +515,7 @@ With a [spherical projection](/features/projections), line segments become [geod
         inset={3}
         width={40}
         height={25}
-        margins={0}>
+        margin={0}>
         <Line data={aapl.slice(-60)} x="Date" y="Close" />
     </Plot> inside a text paragraph or table -- often referred
     to as sparklines.

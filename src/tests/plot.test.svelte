@@ -1,8 +1,14 @@
 <script lang="ts">
     import { Plot } from '$lib/index.js';
-    import type { ComponentProps } from 'svelte';
+    import { setContext, type ComponentProps } from 'svelte';
+    import type { PlotDefaults } from 'svelteplot/types';
 
-    let args: ComponentProps<typeof Plot> = $props();
+    let {
+        plotArgs,
+        defaults = {}
+    }: { plotArgs: ComponentProps<typeof Plot>; defaults?: Partial<PlotDefaults> } = $props();
+
+    setContext('svelteplot/defaults', defaults);
 </script>
 
-<Plot {...args} />
+<Plot {...plotArgs} />

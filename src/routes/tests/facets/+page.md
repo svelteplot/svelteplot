@@ -51,7 +51,7 @@ Facetted **dot** chart:
         grid
         height={600}
         inset={10}
-        margins={30}
+        margin={30}
         marginTop={35}
         marginBottom={40}
         marginRight={70}>
@@ -255,7 +255,7 @@ Facetted **text** chart
         grid
         height={600}
         inset={10}
-        margins={30}
+        margin={30}
         marginTop={35}
         marginBottom={40}
         marginRight={70}>
