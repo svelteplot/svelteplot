@@ -110,7 +110,7 @@ export type PlotMargin = {
 
 /**
  * these are the default options for the plot marks that can be set using
- * the 'svelteplot/defaults' context.
+ * the setPlotDefaults hook
  */
 export type PlotDefaults = {
     /**

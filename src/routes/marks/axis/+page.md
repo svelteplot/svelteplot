@@ -231,7 +231,7 @@ You can change the defaults for SveltePlot grids by defining the `svelteplot/def
     import { Plot, Line } from 'svelteplot';
     import { setContext } from 'svelte';
 
-    setContext('svelteplot/defaults', {
+    setPlotDefaults({
         tickSize: 0
     });
 
