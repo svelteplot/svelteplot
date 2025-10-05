@@ -6,3 +6,6 @@ export * from './transforms/index.js';
 
 // helpers
 export { formatMonth } from './helpers/formats.js';
+
+// hooks
+export * from './hooks/plotDefaults.js';
