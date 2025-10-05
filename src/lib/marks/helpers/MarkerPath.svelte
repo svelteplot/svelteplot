@@ -2,7 +2,7 @@
     @component
     Helper component for paths with markers and optional text along the path.
 -->
-<script lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
     import Marker, { type MarkerShape } from './Marker.svelte';
     import { isSnippet, randomId } from '$lib/helpers/index.js';
     import { resolveProp } from '$lib/helpers/resolve.js';
@@ -17,12 +17,12 @@
     import { addEventHandlers } from './events.js';
     import { getContext } from 'svelte';
 
-    type MarkerPathProps = BaseMarkProps & {
+    type MarkerPathProps = BaseMarkProps<Datum> & {
         /**
          * the datum associated with this path, usually the first
          * element of the data array group
          */
-        datum: DataRecord;
+        datum: Datum;
         /**
          * the marker shape to use at the start of the path, defaults to
          * circle
@@ -52,7 +52,7 @@
         transform: string;
         color: string;
         strokeWidth: ConstantAccessor<number>;
-        mark: Mark<BaseMarkProps>;
+        mark: Mark<BaseMarkProps<Datum>>;
         scales: PlotScales;
     };
 
