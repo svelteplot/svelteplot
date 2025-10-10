@@ -63,7 +63,7 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
             x="culmen_length_mm"
             y="culmen_depth_mm">
             {#snippet children({ datum })}
-                <div>
+                <div class="tooltip">
                     <div>Species: {datum.species}</div>
                     <div>Island: {datum.island}</div>
                 </div>
@@ -71,6 +71,62 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
         </HTMLTooltip>
     {/snippet}
 </Plot>
+
+<style>
+    .tooltip {
+        background: white;
+        background: var(--svelteplot-tooltip-bg);
+        border: 1px solid #ccc;
+        border-color: var(--svelteplot-tooltip-border);
+        font-size: 12px;
+        padding: 1ex 1em;
+        border-radius: 3px;
+        line-height: 1.2;
+        box-shadow:
+            rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+            rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    }
+</style>
+```
+
+```svelte
+<Plot grid symbol={{ legend: true }}>
+    <Dot
+        data={penguins}
+        x="culmen_length_mm"
+        y="culmen_depth_mm"
+        stroke="species"
+        symbol="species" />
+    {#snippet overlay()}
+        <HTMLTooltip
+            data={penguins}
+            x="culmen_length_mm"
+            y="culmen_depth_mm">
+            {#snippet children({ datum })}
+                <div class="tooltip">
+                    <div>Species: {datum.species}</div>
+                    <div>Island: {datum.island}</div>
+                </div>
+            {/snippet}
+        </HTMLTooltip>
+    {/snippet}
+</Plot>
+
+<style>
+    .tooltip {
+        background: white;
+        background: var(--svelteplot-tooltip-bg);
+        border: 1px solid #ccc;
+        border-color: var(--svelteplot-tooltip-border);
+        font-size: 12px;
+        padding: 1ex 1em;
+        border-radius: 3px;
+        line-height: 1.2;
+        box-shadow:
+            rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+            rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    }
+</style>
 ```
 
 ## SVG Tooltips

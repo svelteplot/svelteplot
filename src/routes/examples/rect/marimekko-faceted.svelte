@@ -51,10 +51,26 @@
     {#snippet overlay()}
         <HTMLTooltip {...stacked} r={5}>
             {#snippet children({ datum })}
-                {datum.market}<br />
-                {datum.segment}<br />
-                {datum.value}
+                <div class="tooltip">
+                    {datum.market}<br />
+                    {datum.segment}<br />
+                    {datum.value}
+                </div>
             {/snippet}
         </HTMLTooltip>
     {/snippet}
 </Plot>
+
+<style>
+    .tooltip {
+        background: var(--svelteplot-tooltip-bg);
+        border-color: var(--svelteplot-tooltip-border);
+        font-size: 12px;
+        padding: 1ex 1em;
+        border-radius: 3px;
+        line-height: 1.2;
+        box-shadow:
+            rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+            rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    }
+</style>
