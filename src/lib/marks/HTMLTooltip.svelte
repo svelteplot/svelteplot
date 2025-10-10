@@ -88,31 +88,19 @@
 </script>
 
 <div
-    class={['tooltip', { hide: !datum }]}
+    class={['svelteplot-tooltip', { hide: !datum }]}
     style:left="{tooltipX ? facetOffsetX + projectX('x', plot.scales, tooltipX) : 0}px"
     style:top="{tooltipY ? facetOffsetY + projectY('y', plot.scales, tooltipY) : 0}px">
-    <div class="tooltip-body">
-        {@render children({ datum })}
-    </div>
+    {@render children({ datum })}
 </div>
 
 <style>
-    div.tooltip {
-        background: white;
-        background: var(--svelteplot-tooltip-bg);
-        border: 1px solid #ccc;
-        border-color: var(--svelteplot-tooltip-border);
-        font-size: 12px;
-        padding: 1ex 1em;
-        border-radius: 3px;
-        line-height: 1.2;
-        box-shadow:
-            rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-            rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    div.svelteplot-tooltip {
         position: absolute;
         pointer-events: none;
-    }
-    .tooltip.hide {
-        display: none;
+
+        &.hide {
+            display: none;
+        }
     }
 </style>
