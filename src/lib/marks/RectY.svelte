@@ -2,7 +2,7 @@
     Convenience wrapper for rectangles oriented along the x axis 
 -->
 <script lang="ts" generics="Datum extends DataRecord">
-    interface RectYMarkProps extends ComponentProps<typeof Rect> {
+    interface RectYMarkProps extends Omit<ComponentProps<typeof Rect>, 'y'> {
         stack?: Partial<StackOptions>;
     }
     import Rect from './Rect.svelte';
