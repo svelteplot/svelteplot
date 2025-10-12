@@ -30,6 +30,7 @@
     import { computeScales, projectXY } from '../helpers/scales.js';
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
     import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
+    import { maybeNumber } from 'svelteplot/helpers/index.js';
 
     // automatic margins can be applied by the marks, registered
     // with their respective unique identifier as keys
@@ -214,7 +215,7 @@
     // - for one-dimensional scales using the x scale we set a fixed height
     // - for y band-scales we use the number of items in the y domain
     const height = $derived(
-        plotOptions.height === 'auto'
+        maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
             ? Math.round(
                   preScales.projection && preScales.projection.aspectRatio
                       ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
@@ -242,7 +243,7 @@
               )
             : typeof plotOptions.height === 'function'
               ? plotOptions.height(plotWidth)
-              : plotOptions.height
+              : maybeNumber(plotOptions.height)
     );
 
     const plotHeight = $derived(height - plotOptions.marginTop - plotOptions.marginBottom);
