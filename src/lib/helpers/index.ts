@@ -51,8 +51,17 @@ export function isObject<T>(option: object | T): option is object {
     );
 }
 
-export function maybeNumber(value: RawValue | null): number | null {
-    return value != null ? +value : null;
+const NUMERIC = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;
+
+export function maybeNumber(value: any): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string') {
+        // only accept numeric strings
+        if (NUMERIC.test(value.trim())) {
+            return parseFloat(value);
+        }
+    }
+    return null;
 }
 
 export const constant =
