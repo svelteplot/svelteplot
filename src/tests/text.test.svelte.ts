@@ -401,4 +401,56 @@ describe('Text mark', () => {
         const dy = secondTspan.getAttribute('dy');
         expect(dy).toBe('30'); // 20 * 1.5
     });
+
+    it('applies textAnchor prop', () => {
+        const textAnchors = ['start', 'middle', 'end'] as const;
+
+        textAnchors.forEach((anchor) => {
+            const { container } = render(TextTest, {
+                props: {
+                    plotArgs: {},
+                    textArgs: {
+                        data: [{ x: 50, y: 50 }],
+                        x: 'x',
+                        y: 'y',
+                        text: `${anchor} anchored`,
+                        textAnchor: anchor
+                    }
+                }
+            });
+
+            const text = container.querySelector('g.text > text') as SVGTextElement;
+            expect(text).not.toBeNull();
+
+            // textAnchor is applied via CSS style
+            const style = text.getAttribute('style');
+            expect(style).toContain(`text-anchor: ${anchor}`);
+        });
+    });
+
+    it('applies textAnchor with function accessor', () => {
+        const { container } = render(TextTest, {
+            props: {
+                plotArgs: {},
+                textArgs: {
+                    data: testData,
+                    x: 'x',
+                    y: 'y',
+                    text: 'label',
+                    textAnchor: (d: any) => (d.value > 7 ? 'end' : 'start')
+                }
+            }
+        });
+
+        const texts = container.querySelectorAll('g.text > text') as NodeListOf<SVGTextElement>;
+        expect(texts.length).toBe(2);
+
+        // First item (value: 5) should have 'start'
+        const style1 = texts[0].getAttribute('style');
+        expect(style1).toContain('text-anchor: start');
+
+        // Second item (value: 10) should have 'end'
+        const style2 = texts[1].getAttribute('style');
+        expect(style2).toContain('text-anchor: end');
+    });
 });
