@@ -26,6 +26,10 @@
         textTransform?: ConstantAccessor<CSS.Property.TextTransform, Datum>;
         textDecoration?: ConstantAccessor<CSS.Property.TextDecoration, Datum>;
         /**
+         * the horizontal text anchor; start, end, or middle
+         */
+        textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
+        /**
          * if you want to apply class names to individual text elements
          */
         textClass?: ConstantAccessor<string, Datum>;
