@@ -15,7 +15,7 @@
 
     let clientWidth = $state(500);
 
-    // Seattle temperatures data
+    // Flip x and y axes based on container width: for narrow containers, use 'y' for horizontal and 'x' for vertical to improve readability.
     const x = $derived(clientWidth < 600 ? 'y' : 'x');
     const y = $derived(clientWidth < 600 ? 'x' : 'y');
 </script>
