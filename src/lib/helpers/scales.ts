@@ -306,7 +306,11 @@ export function createScale<T extends ScaleOptions>(
     }
 
     const isOrdinal =
-        type === 'band' || type === 'point' || type === 'ordinal' || type === 'categorical';
+        type === 'band' ||
+        type === 'point' ||
+        type === 'ordinal' ||
+        type === 'categorical' ||
+        type === 'threshold';
 
     if (isOrdinal && sortOrdinalDomain) {
         valueArr.sort(ascending);
