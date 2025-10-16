@@ -17,6 +17,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
                     'bls',
                     'cars',
                     'co2',
+                    'countries_2020',
                     'crimea',
                     'driving',
                     'election',

@@ -41,6 +41,7 @@
     import { testFilter, isValid } from '$lib/helpers/index.js';
     import { resolveChannel, resolveProp } from './helpers/resolve.js';
     import { RENAME } from './transforms/rename.js';
+    import { dodgeX, dodgeY } from './transforms/dodge.js';
 
     let {
         data = [],
@@ -207,85 +208,98 @@
      * elements to the scales
      */
     const scaledData = $derived(
-        resolvedData.flatMap((row) => {
-            const out: ScaledDataRecord<Datum> = {
-                datum: row.datum,
-                index: row[INDEX],
-                valid: true
-            };
-            // compute dx/dy
-            out.dx = Number(resolveProp<number>(options.dx, out.datum, 0));
-            out.dy = Number(resolveProp<number>(options.dy, out.datum, 0));
+        dodge(
+            resolvedData.flatMap((row) => {
+                const out: ScaledDataRecord<Datum> = {
+                    datum: row.datum,
+                    index: row[INDEX],
+                    valid: true
+                };
+                // compute dx/dy
+                out.dx = Number(resolveProp<number>(options.dx, out.datum, 0));
+                out.dy = Number(resolveProp<number>(options.dy, out.datum, 0));
 
-            // special handling if there's a projection, e.g. a line mark
-            if (plot.scales.projection && mark.type !== 'geo') {
-                for (const suffix of ['', '1', '2']) {
-                    if (
-                        options?.[`x${suffix}`] !== undefined &&
-                        options?.[`y${suffix}`] !== undefined
-                    ) {
-                        // we have two-dimensional accessors
-                        // for the x and y channels
-                        const [x, y] =
-                            mark.type === 'line'
-                                ? [row.x, row.y] // line paths are projected later
-                                : projectXY(
-                                      plot.scales,
-                                      row.x,
-                                      row.y,
-                                      usedScales.x,
-                                      usedScales.y,
-                                      suffix
-                                  );
+                // special handling if there's a projection, e.g. a line mark
+                if (plot.scales.projection && mark.type !== 'geo') {
+                    for (const suffix of ['', '1', '2']) {
+                        if (
+                            options?.[`x${suffix}`] !== undefined &&
+                            options?.[`y${suffix}`] !== undefined
+                        ) {
+                            // we have two-dimensional accessors
+                            // for the x and y channels
+                            const [x, y] =
+                                mark.type === 'line'
+                                    ? [row.x, row.y] // line paths are projected later
+                                    : projectXY(
+                                          plot.scales,
+                                          row.x,
+                                          row.y,
+                                          usedScales.x,
+                                          usedScales.y,
+                                          suffix
+                                      );
 
-                        out[`x${suffix}`] = x;
-                        out[`y${suffix}`] = y;
-                        out.valid =
-                            out.valid &&
-                            isValid(row.x) &&
-                            isValid(row.y) &&
-                            isValid(x) &&
-                            isValid(y);
+                            out[`x${suffix}`] = x;
+                            out[`y${suffix}`] = y;
+                            out.valid =
+                                out.valid &&
+                                isValid(row.x) &&
+                                isValid(row.y) &&
+                                isValid(x) &&
+                                isValid(y);
+                        }
                     }
                 }
-            }
 
-            // iterate over all scaled channels
-            for (const [channel, scale] of Object.entries(CHANNEL_SCALE) as [
-                ScaledChannelName,
-                ScaleName
-            ][]) {
-                // check if the mark has defined an accessor for this channel
-                if (options?.[channel] != null && out[channel] === undefined) {
-                    // resolve value
-                    const value = row[channel];
-                    // if this channel was renamed, use the original channel for scaling
-                    const origChannel = options?.[RENAME]?.[channel] || channel;
-                    const scaled = usedScales[channel]
-                        ? scale === 'x'
-                            ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
-                            : scale === 'y'
-                              ? projectY(origChannel as 'y' | 'y1' | 'y2', plot.scales, value)
-                              : scale === 'color' && !isValid(value)
-                                ? plot.options.color.unknown
-                                : plot.scales[scale].fn(value)
-                        : value;
+                // iterate over all scaled channels
+                for (const [channel, scale] of Object.entries(CHANNEL_SCALE) as [
+                    ScaledChannelName,
+                    ScaleName
+                ][]) {
+                    // check if the mark has defined an accessor for this channel
+                    if (options?.[channel] != null && out[channel] === undefined) {
+                        // resolve value
+                        const value = row[channel];
+                        // if this channel was renamed, use the original channel for scaling
+                        const origChannel = options?.[RENAME]?.[channel] || channel;
+                        const scaled = usedScales[channel]
+                            ? scale === 'x'
+                                ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
+                                : scale === 'y'
+                                  ? projectY(origChannel as 'y' | 'y1' | 'y2', plot.scales, value)
+                                  : scale === 'color' && !isValid(value)
+                                    ? plot.options.color.unknown
+                                    : plot.scales[scale].fn(value)
+                            : value;
 
-                    out.valid = out.valid && (scale === 'color' || isValid(value));
+                        out.valid = out.valid && (scale === 'color' || isValid(value));
 
-                    // apply dx/dy transform
-                    out[channel] =
-                        Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
-                            ? scaled + (scale === 'x' ? out.dx : out.dy)
-                            : scaled;
-                } else if (defaults[channel]) {
-                    out[channel] = defaults[channel];
+                        // apply dx/dy transform
+                        out[channel] =
+                            Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
+                                ? scaled + (scale === 'x' ? out.dx : out.dy)
+                                : scaled;
+                    } else if (defaults[channel]) {
+                        out[channel] = defaults[channel];
+                    }
                 }
-            }
 
-            return [out];
-        })
+                return [out];
+            }),
+            options
+        )
     );
+
+    function dodge<T>(data: ScaledDataRecord<Datum>[], options: BaseMarkProps<T>) {
+        if (options.dodgeX) {
+            return dodgeX({ data, ...options }, plot);
+        }
+        if (options.dodgeY) {
+            return dodgeY({ data, ...options }, plot);
+        }
+        return data;
+    }
 </script>
 
 {#if errors.length}
