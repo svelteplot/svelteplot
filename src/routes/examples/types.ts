@@ -170,4 +170,10 @@ export type ExamplesData = {
     sales2: QuarterlySalesRow[];
     wind: WindRow[];
     election: ElectionRow[];
+    countries_2020: {
+        country: string;
+        year: number;
+        population: number;
+        continent: string;
+    }[];
 };
