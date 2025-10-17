@@ -154,7 +154,7 @@
 </script>
 
 <g class="axis-y">
-    {#each positionedTicks as tick, t (t)}
+    {#each positionedTicks as tick, t (tick[RAW_VALUE])}
         {#if testFilter(tick, options) && !tick.hidden}
             {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const [textStyle, textClass] = resolveStyles(
