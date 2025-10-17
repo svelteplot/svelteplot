@@ -1,12 +1,12 @@
 <script module>
     export const title = 'Min/max rules';
+    export const transforms = ['bin'];
 </script>
 
 <script lang="ts">
     import { Plot, Line, RuleY, binX } from 'svelteplot';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
-    import { max, min } from 'd3-array';
     let { aapl } = $derived(page.data.data) as ExamplesData;
 </script>
 

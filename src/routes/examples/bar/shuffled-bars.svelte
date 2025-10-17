@@ -1,5 +1,6 @@
 <script module>
     export let title = 'Shuffled Bars';
+    export const transforms = ['shuffle'];
 </script>
 
 <script>

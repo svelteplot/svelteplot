@@ -2,6 +2,7 @@
     export const title = 'Stacked RectY';
     export const repl =
         'https://svelte.dev/playground/4db4c6caea4f4329a30c1f18c46ea7d9?version=5.33.18';
+    export const transforms = ['stack'];
 </script>
 
 <script lang="ts">

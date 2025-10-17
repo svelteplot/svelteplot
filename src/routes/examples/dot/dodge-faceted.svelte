@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Faceted beeswarm';
+    export const sortKey = 32;
+    export const transforms = ['dodge'];
 </script>
 
 <script lang="ts">

@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Waterfall-ish';
     export const fullCode = true;
+    export const description =
+        'A bar chart that mimics a waterfall chart by using two y-values for each bar.';
 </script>
 
 <script lang="ts">

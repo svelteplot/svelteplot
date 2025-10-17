@@ -1,5 +1,6 @@
 <script module>
     export const title = 'Streamgraph';
+    export const transforms = ['stack'];
 </script>
 
 <script lang="ts">

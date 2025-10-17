@@ -152,6 +152,17 @@ type QuarterlySalesRow = {
     value: number;
 };
 
+type StocksRow = {
+    Symbol: string;
+    Date: Date;
+    Open: number;
+    High: number;
+    Low: number;
+    Close: number;
+    [`Adj Close`]: number;
+    Volume: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];
@@ -176,4 +187,5 @@ export type ExamplesData = {
         population: number;
         continent: string;
     }[];
+    stocks: StocksRow[];
 };

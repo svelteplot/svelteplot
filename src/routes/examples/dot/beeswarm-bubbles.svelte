@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Beeswarm bubbles';
-    export const sortKey = 20;
+    export const sortKey = 31;
+    export const marks = ['Dot'];
+    export const transforms = ['dodge'];
 </script>
 
 <script lang="ts">

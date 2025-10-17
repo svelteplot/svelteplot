@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Beeswarm plot';
+    export const sortKey = 30;
+    export const transforms = ['dodge'];
 </script>
 
 <script lang="ts">

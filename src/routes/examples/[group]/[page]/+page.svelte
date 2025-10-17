@@ -9,6 +9,7 @@
 
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
+    import { codepenEmbed } from 'svelte-highlight/styles';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -41,6 +42,31 @@
         )
     );
     const mod = $derived(plotKey ? pages[plotKey] : null);
+
+    function cleanCode(code: string) {
+        if (code.includes('<script lang="ts">')) {
+            // filter the code found between script tags to remove import statements,
+            // including multi-line imports
+            const [beforeScript, script, svelte] =
+                code.split(/<\/?script[^>]*>/);
+
+            const cleanedScript = script
+                .split(';')
+                .filter((line) => {
+                    const trimmed = line.trim();
+                    return !(
+                        trimmed.startsWith('import ') ||
+                        trimmed.includes('ExamplesData') ||
+                        trimmed === ''
+                    );
+                })
+                .join(';')
+                .trim();
+
+            return `<scr${'ipt'} lang="ts">\n    // imports etc.\n    ${cleanedScript}\n</scr${'ipt'}>\n\n${svelte.trim()}`;
+        }
+        return code;
+    }
 </script>
 
 <svelte:head>
@@ -67,8 +93,8 @@
         <div class="svp-code-block">
             <HighlightSvelte
                 lang="svelte"
-                code={pagesSrc[plotKey]
-                    .substring(
+                code={cleanCode(
+                    pagesSrc[plotKey].substring(
                         pages[plotKey].fullCode
                             ? pagesSrc[plotKey].indexOf(
                                   '<script lang="ts">'
@@ -77,7 +103,7 @@
                                   '</scr' + 'ipt>'
                               ) + 9
                     )
-                    .trim()} />
+                )} />
         </div>
     </div>
 

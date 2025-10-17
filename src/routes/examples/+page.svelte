@@ -21,11 +21,18 @@
 
 <script lang="ts">
     import { groupBy } from 'es-toolkit';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
+    import {
+        SVELTEPRESS_CONTEXT_KEY,
+        type SveltepressContext
+    } from '@sveltepress/theme-default/context';
     import { getContext } from 'svelte';
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
     import { resolve } from '$app/paths';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
+    import ExamplesPageList from 'svelteplot/ui/ExamplesPageList.svelte';
+
+    const { isDark } = getContext<SveltepressContext>(
+        SVELTEPRESS_CONTEXT_KEY
+    );
 
     const pages = import.meta.glob('./**/*.svelte', {
         eager: true
@@ -35,6 +42,7 @@
             title: string;
             description?: string;
             sortKey?: number;
+            transforms?: string[];
         }
     >;
 
@@ -67,64 +75,35 @@
             }))
     );
 
-    function sortPages(a: string, b: string) {
-        const sortA = pages[a].sortKey ?? 10;
-        const sortB = pages[b].sortKey ?? 10;
-        return sortA - sortB;
-    }
+    const pagesByTransform = $derived(
+        Object.entries(pages).reduce(
+            (acc, [path, mod]) => {
+                if (mod.transforms) {
+                    mod.transforms.forEach((transform) => {
+                        if (!acc[transform]) {
+                            acc[transform] = [];
+                        }
+                        acc[transform].push(path);
+                    });
+                }
+                return acc;
+            },
+            {} as Record<string, string[]>
+        )
+    );
 </script>
 
 <p>
-    Sometimes it's easiest to learn a new framework by
-    digging into examples.
+    It's easiest to learn a new framework by digging into
+    examples.
 </p>
 
 <ExamplesGrid {examples} />
 
-<div class="column-container">
-    {#each Object.entries(paths) as [group, groupPages] (group)}
-        <div>
-            <h3>
-                <a href={resolve(`/examples/${group}`)}
-                    >{pages[
-                        groupPages.find((p) =>
-                            p.endsWith('/_index.svelte')
-                        )
-                    ].title}</a>
-            </h3>
-            <ul>
-                {#each groupPages
-                    .sort(sortPages)
-                    .filter((p) => !p.endsWith('/_index.svelte')) as page (page)}
-                    <li>
-                        <a
-                            href={resolve(
-                                page
-                                    .replace(
-                                        './',
-                                        './examples/'
-                                    )
-                                    .replace('.svelte', '')
-                            )}>{pages[page].title}</a>
-                    </li>
-                {/each}
-            </ul>
-        </div>
-    {/each}
-</div>
+<h2>Organized by marks</h2>
 
-<style>
-    .column-container {
-        columns: 2;
-        column-gap: 1rem;
-        column-fill: balance;
-        > div {
-            padding-top: 1em;
-            break-before: column;
-            break-inside: avoid-column;
-        }
-        h3 {
-            break-before: avoid-column;
-        }
-    }
-</style>
+<ExamplesPageList {paths} {pages} />
+
+<h2>Organized by transforms</h2>
+
+<ExamplesPageList paths={pagesByTransform} {pages} />

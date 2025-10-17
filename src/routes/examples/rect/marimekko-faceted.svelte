@@ -1,6 +1,7 @@
 <script module lang="ts">
     export const title = 'Faceted mosaic chart';
     export const sortKey = 99;
+    export const transforms = ['stack'];
     // export const repl =
     // 'https://svelte.dev/playground/7a6b0ae12c624ffeb52448adac644b5b?version=5.33.18';
 </script>
@@ -10,8 +11,6 @@
         HTMLTooltip,
         Plot,
         Rect,
-        Dot,
-        Text,
         stackMosaicX
     } from 'svelteplot';
     import { Checkbox } from '$lib/ui';

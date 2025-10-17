@@ -1,9 +1,12 @@
 <script module>
     export let title = 'Stacked Unit Chart';
+    export let description =
+        'A stacked unit chart making use of the implicit stack transform in the bar mark.';
+    export const transforms = ['stack'];
 </script>
 
 <script>
-    import { BarX, Plot, RuleX } from 'svelteplot';
+    import { BarX, Plot } from 'svelteplot';
     import { page } from '$app/state';
     import { getContext } from 'svelte';
     import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
