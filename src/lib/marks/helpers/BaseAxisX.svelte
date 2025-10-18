@@ -16,11 +16,9 @@
     } from 'svelteplot/types/index.js';
     import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import { max } from 'd3-array';
-    import { identity, noTransition, randomId, testFilter } from '$lib/helpers/index.js';
+    import { noTransition, randomId, testFilter } from '$lib/helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
-    import { fade } from 'svelte/transition';
-    import Transition from '../../../routes/examples/axis/transition.svelte';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
