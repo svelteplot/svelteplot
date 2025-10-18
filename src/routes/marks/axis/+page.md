@@ -211,11 +211,19 @@ Ordinal axis:
     }} />
 ```
 
-You can change the defaults for SveltePlot grids by defining the `svelteplot/defaults` context:
+You can change the defaults for SveltePlot grids using the `setPlotDefaults` hook:
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+    import {
+        Plot,
+        Line,
+        setPlotDefaults
+    } from 'svelteplot';
+
+    setPlotDefaults({
+        axis: { tickSize: 0 }
+    });
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -228,11 +236,14 @@ You can change the defaults for SveltePlot grids by defining the `svelteplot/def
 
 ```svelte
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { setContext } from 'svelte';
+    import {
+        Plot,
+        Line,
+        setPlotDefaults
+    } from 'svelteplot';
 
     setPlotDefaults({
-        tickSize: 0
+        axis: { tickSize: 0 }
     });
 
     let aapl = [
