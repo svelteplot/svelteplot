@@ -18,6 +18,7 @@
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { identity, noTransition } from 'svelteplot/helpers';
 
     interface AxisXMarkProps
         extends Omit<
@@ -63,6 +64,8 @@
         textAnchor: 'auto',
         opacity: 0.8,
         anchor: 'bottom',
+        tIn: [noTransition, {}],
+        tOut: [noTransition, {}],
         ...getPlotDefaults().axis,
         ...getPlotDefaults().axisX
     };
@@ -236,7 +239,9 @@
             scaleFn={plot.scales.x.fn}
             scaleType={plot.scales.x.type}
             tickFormat={useTickFormat}
-            title={useTitle} />
+            title={useTitle}
+            tIn={DEFAULTS.tIn}
+            tOut={DEFAULTS.tOut} />
     {/if}
 </Mark>
 
