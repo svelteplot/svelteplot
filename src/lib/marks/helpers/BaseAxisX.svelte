@@ -152,7 +152,7 @@
 </script>
 
 <g class="axis-x">
-    {#each positionedTicks as tick, t (t)}
+    {#each positionedTicks as tick, t (tick[RAW_VALUE])}
         {#if testFilter(tick, options) && !tick.hidden}
             {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const tickFontSize_ = +resolveProp(tickFontSize, tick, 10)}
