@@ -9,7 +9,6 @@
 
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
-    import { codepenEmbed } from 'svelte-highlight/styles';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -47,8 +46,9 @@
         if (code.includes('<script lang="ts">')) {
             // filter the code found between script tags to remove import statements,
             // including multi-line imports
-            const [beforeScript, script, svelte] =
-                code.split(/<\/?script[^>]*>/);
+            const [, script, svelte] = code.split(
+                /<\/?script[^>]*>/
+            );
 
             const cleanedScript = script
                 .split(';')
@@ -65,7 +65,7 @@
 
             return `<scr${'ipt'} lang="ts">\n    // imports etc.\n    ${cleanedScript}\n</scr${'ipt'}>\n\n${svelte.trim()}`;
         }
-        return code;
+        return code.trim();
     }
 </script>
 

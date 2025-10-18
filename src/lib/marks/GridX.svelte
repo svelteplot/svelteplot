@@ -19,7 +19,7 @@
     } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
+    import { noTransition, testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
     import isDataRecord from '$lib/helpers/isDataRecord';
     import { INDEX } from '$lib/constants';
@@ -28,6 +28,8 @@
     let markProps: GridXMarkProps = $props();
 
     const DEFAULTS = {
+        tIn: [noTransition, {}],
+        tOut: [noTransition, {}],
         ...getPlotDefaults().grid,
         ...getPlotDefaults().gridX
     };
@@ -65,6 +67,9 @@
             isDataRecord(d) ? { ...d, [INDEX]: i } : { [RAW_VALUE]: d, [INDEX]: i }
         ) as DataRecord[]
     );
+
+    const tInF = $derived(DEFAULTS.tIn?.[0] ?? noTransition);
+    const tOutF = $derived(DEFAULTS.tOut?.[0] ?? noTransition);
 </script>
 
 <Mark
@@ -75,7 +80,7 @@
     {automatic}>
     {#snippet children({ usedScales })}
         <g class="grid-x">
-            {#each ticks as tick, t (t)}
+            {#each ticks as tick (tick[RAW_VALUE])}
                 {#if testFilter(tick, options)}
                     {@const x =
                         plot.scales.x.fn(tick[RAW_VALUE]) +
@@ -99,6 +104,8 @@
                         true
                     )}
                     <line
+                        in:tInF|global={{ ...(DEFAULTS.tIn?.[1] ?? {}) }}
+                        out:tOutF|global={{ ...(DEFAULTS.tOut?.[1] ?? {}) }}
                         class={styleClass}
                         transform="translate({x + dx},{dy})"
                         {style}

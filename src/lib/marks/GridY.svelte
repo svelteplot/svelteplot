@@ -13,13 +13,16 @@
     import type { PlotContext, BaseMarkProps, RawValue, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
+    import { noTransition, testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { uniqBy } from 'es-toolkit';
 
     let markProps: GridYMarkProps = $props();
 
     const DEFAULTS = {
+        tIn: [noTransition, {}],
+        tOut: [noTransition, {}],
         ...getPlotDefaults().grid,
         ...getPlotDefaults().gridY
     };
@@ -54,6 +57,9 @@
                   autoTickCount
               )
     );
+
+    const tInF = $derived(DEFAULTS.tIn?.[0] ?? noTransition);
+    const tOutF = $derived(DEFAULTS.tOut?.[0] ?? noTransition);
 </script>
 
 <Mark
@@ -64,7 +70,7 @@
     {automatic}>
     {#snippet children({ usedScales })}
         <g class="grid-y">
-            {#each ticks as tick, t (t)}
+            {#each ticks as tick (tick)}
                 {#if testFilter(tick, options)}
                     {@const y =
                         plot.scales.y.fn(tick) +
@@ -88,6 +94,8 @@
                         true
                     )}
                     <line
+                        in:tInF|global={{ ...(DEFAULTS.tIn?.[1] ?? {}) }}
+                        out:tOutF|global={{ ...(DEFAULTS.tOut?.[1] ?? {}) }}
                         {style}
                         class={styleClass}
                         transform="translate({dx},{y + dy})"

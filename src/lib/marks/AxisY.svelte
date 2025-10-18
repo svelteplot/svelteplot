@@ -17,6 +17,7 @@
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { noTransition } from 'svelteplot/helpers';
 
     interface AxisYMarkProps
         extends Omit<
@@ -61,6 +62,8 @@
         opacity: 0.8,
         anchor: 'left',
         textAnchor: 'auto',
+        tIn: [noTransition, {}],
+        tOut: [noTransition, {}],
         ...getPlotDefaults().axis,
         ...getPlotDefaults().axisY
     };
@@ -225,7 +228,9 @@
             scaleType={plot.scales.y.type}
             tickFormat={useTickFormat}
             title={useTitle}
-            width={plot.facetWidth} />
+            width={plot.facetWidth}
+            tIn={DEFAULTS.tIn}
+            tOut={DEFAULTS.tOut} />
     {/if}
 </Mark>
 
