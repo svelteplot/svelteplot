@@ -106,7 +106,7 @@
         "typedoc": "^0.28.13",
         "typedoc-plugin-markdown": "^4.9.0",
         "typescript": "^5.9.3",
-        "vite": "^6.3.6",
+        "vite": "^6.4.1",
         "vitest": "^3.2.4",
         "vitest-matchmedia-mock": "^2.0.3",
         "yoctocolors": "^2.1.2"
