@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { describe, it, expect, vi } from 'vitest';
+import { render, fireEvent } from '@testing-library/svelte';
 import LineTest from './line.test.svelte';
 
 describe('Line mark', () => {
@@ -252,5 +252,33 @@ describe('Line mark', () => {
         expect(ds[0]).toBe('M1,95L96,5');
         expect(ds[1]).toBe('M1,5Z');
         expect(ds[2]).toBe('M48.5,5Z');
+    });
+
+    it('correct datum passed to event handler', async () => {
+        const checkDatum = vi.fn();
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { year: 2000, value: 0, category: 'A' },
+                    { year: 2002, value: 2, category: 'B' },
+                    { year: 2005, value: 1, category: 'C' }
+                ],
+                x: 'year',
+                y: 'value',
+                onclick: (event: MouseEvent, datum: any) => checkDatum(datum)
+            }
+        });
+
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
+        expect(lines).toHaveLength(2);
+
+        await fireEvent.click(lines[0]);
+
+        expect(checkDatum).toHaveBeenCalledTimes(1);
+        expect(checkDatum.mock.calls[0]).toEqual([
+            expect.objectContaining({ year: 2000, value: 0, category: 'A' })
+        ]);
     });
 });
