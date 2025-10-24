@@ -216,7 +216,7 @@
                                     markerEnd={args.markerEnd}
                                     marker={args.marker}
                                     strokeWidth={args.strokeWidth}
-                                    datum={lineData[0]}
+                                    datum={lineData[0].datum}
                                     d={pathString}
                                     dInv={text ? linePath(lineData.toReversed()) : null}
                                     color={lineData[0].stroke || 'currentColor'}
@@ -225,7 +225,7 @@
                                     text={text ? resolveProp(text, lineData[0]) : null}
                                     startOffset={resolveProp(
                                         args.textStartOffset,
-                                        lineData[0],
+                                        lineData[0].datum,
                                         '50%'
                                     )}
                                     {textStyle}
