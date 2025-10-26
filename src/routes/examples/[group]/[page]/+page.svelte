@@ -65,7 +65,7 @@
 
             return `<scr${'ipt'} lang="ts">\n    // imports etc.\n    ${cleanedScript}\n</scr${'ipt'}>\n\n${svelte.trim()}`;
         }
-        return code;
+        return code.trim();
     }
 </script>
 
