@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import PlotTest from './plot.test.svelte';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -103,6 +103,29 @@ describe('Plot component', () => {
         expect(svg).toBeDefined();
         expect(svg?.getAttribute('width')).toBe('300');
         expect(svg?.getAttribute('height')).toBe('200');
+    });
+
+    it('plot height as function of width', () => {
+        const height = vi.fn((w: number) => {
+            return w * 0.5;
+        });
+        const { container } = render(PlotTest, {
+            props: {
+                plotArgs: {
+                    margin: 0,
+                    width: 300,
+                    height
+                }
+            }
+        });
+
+        expect(height).toBeCalledTimes(1);
+        expect(height.mock.calls).toStrictEqual([[300]]);
+
+        const svg = container.querySelector('.plot-body svg');
+        expect(svg).toBeDefined();
+        expect(svg?.getAttribute('width')).toBe('300');
+        expect(svg?.getAttribute('height')).toBe('150');
     });
 
     it('margin settings are applied', () => {
