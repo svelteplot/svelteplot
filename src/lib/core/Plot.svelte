@@ -207,6 +207,7 @@
     const yDomainCount = $derived(
         isOneDimensional && explicitScales.has('x') ? 1 : preScales.y.domain.length
     );
+
     // compute the (automatic) height based on various factors:
     // - if the plot used a projection and the projection requires an aspect ratio,
     //   we use it, but adjust for the facet counts
@@ -215,34 +216,34 @@
     // - for one-dimensional scales using the x scale we set a fixed height
     // - for y band-scales we use the number of items in the y domain
     const height = $derived(
-        maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
-            ? Math.round(
-                  preScales.projection && preScales.projection.aspectRatio
-                      ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
-                            yFacetCount +
+        typeof plotOptions.height === 'function'
+            ? plotOptions.height(plotWidth)
+            : maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
+              ? Math.round(
+                    preScales.projection && preScales.projection.aspectRatio
+                        ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
+                              yFacetCount +
+                              plotOptions.marginTop +
+                              plotOptions.marginBottom
+                        : plotOptions.aspectRatio
+                          ? heightFromAspect(
+                                preScales.x,
+                                preScales.y,
+                                plotOptions.aspectRatio,
+                                plotWidth,
+                                plotOptions.marginTop,
+                                plotOptions.marginBottom
+                            )
+                          : ((isOneDimensional && explicitScales.has('x')) || !explicitMarks.length
+                                ? yFacetCount * DEFAULTS.bandScaleHeight
+                                : preScales.y.type === 'band'
+                                  ? yFacetCount * yDomainCount * DEFAULTS.bandScaleHeight
+                                  : preScales.y.type === 'point'
+                                    ? yFacetCount * yDomainCount * DEFAULTS.pointScaleHeight
+                                    : DEFAULTS.height) +
                             plotOptions.marginTop +
                             plotOptions.marginBottom
-                      : plotOptions.aspectRatio
-                        ? heightFromAspect(
-                              preScales.x,
-                              preScales.y,
-                              plotOptions.aspectRatio,
-                              plotWidth,
-                              plotOptions.marginTop,
-                              plotOptions.marginBottom
-                          )
-                        : ((isOneDimensional && explicitScales.has('x')) || !explicitMarks.length
-                              ? yFacetCount * DEFAULTS.bandScaleHeight
-                              : preScales.y.type === 'band'
-                                ? yFacetCount * yDomainCount * DEFAULTS.bandScaleHeight
-                                : preScales.y.type === 'point'
-                                  ? yFacetCount * yDomainCount * DEFAULTS.pointScaleHeight
-                                  : DEFAULTS.height) +
-                          plotOptions.marginTop +
-                          plotOptions.marginBottom
-              )
-            : typeof plotOptions.height === 'function'
-              ? plotOptions.height(plotWidth)
+                )
               : maybeNumber(plotOptions.height)
     );
 
