@@ -105,7 +105,7 @@ describe('Plot component', () => {
         expect(svg?.getAttribute('height')).toBe('200');
     });
 
-    it.only('plot height as function of width', () => {
+    it('plot height as function of width', () => {
         const height = vi.fn((w: number) => {
             return w * 0.5;
         });
