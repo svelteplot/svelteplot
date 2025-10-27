@@ -21,13 +21,6 @@
     const { isDark } = getContext<SveltepressContext>(
         SVELTEPRESS_CONTEXT_KEY
     );
-
-    $inspect(
-        bin(
-            { data: olympians, x: 'weight', y: 'height' },
-            { fill: 'count' }
-        )
-    );
 </script>
 
 <Plot
