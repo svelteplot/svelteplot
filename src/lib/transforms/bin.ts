@@ -35,6 +35,15 @@ type AdditionalOutputChannels = Partial<{
     strokeOpacity: ReducerOption;
 }>;
 
+const CHANNELS = {
+    x: Symbol('x'),
+    x1: Symbol('x1'),
+    x2: Symbol('x2'),
+    y: Symbol('y'),
+    y1: Symbol('y1'),
+    y2: Symbol('y2')
+};
+
 export type BinXOptions = BinBaseOptions &
     AdditionalOutputChannels &
     Partial<{
@@ -179,11 +188,13 @@ export function bin<T>(
     binX.value((d) => resolveChannel('x', d, channels));
     binY.value((d) => resolveChannel('y', d, channels));
 
+    let yThresholds: number[] | Date[] = [];
+
     if (interval) {
         const [xlo, xhi] = extent(data.map((d) => resolveChannel('x', d, channels)));
         const [ylo, yhi] = extent(data.map((d) => resolveChannel('y', d, channels)));
         binX.thresholds(maybeInterval(interval).range(xlo, xhi));
-        binY.thresholds(maybeInterval(interval).range(ylo, yhi));
+        binY.thresholds((yThresholds = maybeInterval(interval).range(ylo, yhi)));
     } else if (thresholds) {
         // when binning in x and y, we need to ensure we are using consistent thresholds
         const t =
@@ -194,9 +205,10 @@ export function bin<T>(
         binX.thresholds(t);
         binY.thresholds(t);
 
-        const yThresholds = binY(data)
+        yThresholds = binY(data)
             .slice(1)
             .map((g) => g.x0);
+
         binY.thresholds(yThresholds);
     }
 
@@ -206,12 +218,12 @@ export function bin<T>(
     let newChannels = {
         inset: 0.5,
         ...channels,
-        x: '__x',
-        x1: '__x1',
-        x2: '__x2',
-        y: '__y',
-        y1: '__y1',
-        y2: '__y2',
+        x: CHANNELS.x,
+        x1: CHANNELS.x1,
+        x2: CHANNELS.x2,
+        y: CHANNELS.y,
+        y1: CHANNELS.y1,
+        y2: CHANNELS.y2,
         __x_origField: typeof channels.x === 'string' ? channels.x : null,
         __y_origField: typeof channels.y === 'string' ? channels.y : null
     };
@@ -227,21 +239,32 @@ export function bin<T>(
     const newData = [];
     binX(data).forEach((groupX) => {
         const newRecordBaseX = {
-            __x1: groupX.x0,
-            __x2: groupX.x1,
-            __x: isDate(groupX.x0)
+            [CHANNELS.x1]: groupX.x0,
+            [CHANNELS.x2]: groupX.x1,
+            [CHANNELS.x]: isDate(groupX.x0)
                 ? new Date(Math.round((groupX.x0.getTime() + groupX.x1.getTime()) * 0.5))
                 : (groupX.x0 + groupX.x1) * 0.5
         };
 
-        binY(groupX).forEach((groupY) => {
+        const [ylo, yhi] = extent(groupX.map((d) => resolveChannel('y', d, channels)));
+
+        const tExtentLo = yThresholds.filter((d) => d < ylo).at(-1);
+        const tExtentHi = yThresholds.filter((d) => d > yhi).at(0);
+
+        binY(groupX).forEach((groupY, i) => {
+            if (groupY.length === 0) return;
+            // The first bin.x0 is always equal to the minimum domain value,
+            // and the last bin.x1 is always equal to the maximum domain value,
+            // therefore we need to align with the thresholds
+            const y1 = groupY.x0 === ylo ? tExtentLo : groupY.x0;
+            const y2 = groupY.x1 === yhi ? tExtentHi : groupY.x1;
             const newRecordBaseY = {
                 ...newRecordBaseX,
-                __y1: groupY.x0,
-                __y2: groupY.x1,
-                __y: isDate(groupY.x0)
-                    ? new Date(Math.round((groupY.x0.getTime() + groupY.x1.getTime()) * 0.5))
-                    : (groupY.x0 + groupY.x1) * 0.5
+                [CHANNELS.y1]: y1,
+                [CHANNELS.y2]: y2,
+                [CHANNELS.y]: isDate(y1)
+                    ? new Date(Math.round((y1.getTime() + y2.getTime()) * 0.5))
+                    : (y1 + y2) * 0.5
             };
 
             const newGroupChannels = groupFacetsAndZ(groupY, channels, (items, itemGroupProps) => {

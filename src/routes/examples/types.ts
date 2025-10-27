@@ -163,6 +163,21 @@ type StocksRow = {
     Volume: number;
 };
 
+type OlympiansRow = {
+    id: number;
+    name: string;
+    nationality: string;
+    sex: 'male' | 'female';
+    date_of_birth: Date;
+    height: number;
+    weight: number;
+    sport: string;
+    gold: number;
+    silver: number;
+    bronze: number;
+    info: string;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];
@@ -188,4 +203,5 @@ export type ExamplesData = {
         continent: string;
     }[];
     stocks: StocksRow[];
+    olympians: OlympiansRow[];
 };
