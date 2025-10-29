@@ -13,6 +13,7 @@ import {
 import { reduceOutputs, type ReducerName } from '$lib/helpers/reduce.js';
 import { groupFacetsAndZ } from '$lib/helpers/group.js';
 import { isDate } from '$lib/helpers/typeChecks.js';
+import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants';
 
 type NamedThresholdsGenerator = 'auto' | 'scott' | 'sturges' | 'freedman-diaconis';
 
@@ -102,10 +103,10 @@ function binBy(byDim: 'x' | 'y', { data, ...channels }, options: BinOptions) {
         [byDim === 'x' ? 'insetLeft' : 'insetTop']: 0.5,
         [byDim === 'x' ? 'insetRight' : 'insetBottom']: 0.5,
         ...channels,
-        [`${byDim}`]: `__${byDim}`,
-        [`${byDim}1`]: `__${byDim}1`,
-        [`${byDim}2`]: `__${byDim}2`,
-        [`__${byDim}_origField`]: typeof channels[byDim] === 'string' ? channels[byDim] : null
+        [`${byDim}`]: CHANNELS[byDim], // `__${byDim}`,
+        [`${byDim}1`]: CHANNELS[`${byDim}1`],
+        [`${byDim}2`]: CHANNELS[`${byDim}2`],
+        [ORIGINAL_NAME_KEYS[byDim]]: typeof channels[byDim] === 'string' ? channels[byDim] : null
     };
 
     const newData = [];
@@ -116,9 +117,9 @@ function binBy(byDim: 'x' | 'y', { data, ...channels }, options: BinOptions) {
 
     (options.cumulative < 0 ? bins.toReversed() : bins).forEach((group) => {
         const itemBinProps: DataRecord = {
-            [`__${byDim}1`]: group.x0,
-            [`__${byDim}2`]: group.x1,
-            [`__${byDim}`]: isDate(group.x0)
+            [CHANNELS[`${byDim}1`]]: group.x0,
+            [CHANNELS[`${byDim}2`]]: group.x1,
+            [CHANNELS[`${byDim}`]]: isDate(group.x0)
                 ? new Date(Math.round((group.x0.getTime() + group.x1.getTime()) * 0.5))
                 : (group.x0 + group.x1) * 0.5
         };
@@ -224,8 +225,8 @@ export function bin<T>(
         y: CHANNELS.y,
         y1: CHANNELS.y1,
         y2: CHANNELS.y2,
-        __x_origField: typeof channels.x === 'string' ? channels.x : null,
-        __y_origField: typeof channels.y === 'string' ? channels.y : null
+        [ORIGINAL_NAME_KEYS.x]: typeof channels.x === 'string' ? channels.x : null,
+        [ORIGINAL_NAME_KEYS.y]: typeof channels.y === 'string' ? channels.y : null
     };
 
     const groupBy = channels.z ? 'z' : channels.fill ? 'fill' : channels.stroke ? 'stroke' : true;

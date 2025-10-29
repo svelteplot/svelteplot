@@ -8,7 +8,7 @@ import {
     isNumberOrNullOrNaN,
     isStringOrNull
 } from './typeChecks.js';
-import { CHANNEL_SCALE, VALID_SCALE_TYPES } from '$lib/constants.js';
+import { CHANNEL_SCALE, ORIGINAL_NAME_KEYS, VALID_SCALE_TYPES } from '$lib/constants.js';
 import { isSymbolOrNull } from './typeChecks.js';
 import { resolveProp, toChannelOption } from './resolve.js';
 import type {
@@ -270,10 +270,10 @@ export function createScale<T extends ScaleOptions>(
                 // special handling of marks using the stackX/stackY transform
                 if (
                     (name === 'x' || name === 'y') &&
-                    mark.options[`__${name}_origField`] &&
-                    !mark.options[`__${name}_origField`].startsWith('__')
+                    mark.options[ORIGINAL_NAME_KEYS[name]] &&
+                    !mark.options[ORIGINAL_NAME_KEYS[name]].startsWith('__')
                 ) {
-                    propNames.add(mark.options[`__${name}_origField`]);
+                    propNames.add(mark.options[ORIGINAL_NAME_KEYS[name]]);
                 }
             } else {
                 // also skip marks without data to prevent exceptions
