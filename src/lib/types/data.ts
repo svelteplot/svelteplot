@@ -1,6 +1,6 @@
 import type { ScaledChannelName, ScaledChannelType } from './channel.js';
 
-export type RawValue = number | Date | boolean | string | symbol;
+export type RawValue = number | Date | boolean | string | symbol | object;
 
 export type DataRecord<T = Record<string | symbol, RawValue>> = T;
 

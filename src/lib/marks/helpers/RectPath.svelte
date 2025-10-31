@@ -81,7 +81,9 @@ Helper component for rendering rectangular marks in SVG
             useInsetAsFallbackVertically ? inset : 0
         ) as number)
     );
-    const borderRadius = $derived((options.borderRadius ?? 0) as BorderRadius);
+    const borderRadius = $derived(
+        resolveProp(options.borderRadius, datum?.datum, 0) as BorderRadius
+    );
     const hasBorderRadius = $derived(
         (typeof borderRadius === 'number' && borderRadius > 0) ||
             (typeof borderRadius === 'object' &&
