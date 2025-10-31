@@ -173,17 +173,17 @@ describe('bin', () => {
         expect(channels.inset).toBe(0.5);
 
         // DEBUG: inspect records during development
-        console.log(
-            binned.map((d) => ({
-                x1: d[channels.x1],
-                x: d[channels.x],
-                x2: d[channels.x2],
-                y1: d[channels.y1],
-                y: d[channels.y],
-                y2: d[channels.y2],
-                c: d[channels.fill]
-            }))
-        );
+        // console.log(
+        //     binned.map((d) => ({
+        //         x1: d[channels.x1],
+        //         x: d[channels.x],
+        //         x2: d[channels.x2],
+        //         y1: d[channels.y1],
+        //         y: d[channels.y],
+        //         y2: d[channels.y2],
+        //         c: d[channels.fill]
+        //     }))
+        // );
 
         // should produce 4 occupied bins
         expect(binned).toHaveLength(4);
