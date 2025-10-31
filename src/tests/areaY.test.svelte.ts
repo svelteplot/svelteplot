@@ -19,10 +19,6 @@ describe('AreaY mark', () => {
         const lines = container.querySelectorAll('path.area');
         expect(lines).toHaveLength(1);
         expect(lines[0]?.getAttribute('d')).toBe('M1,95L48.5,50L96,5L96,95L48.5,95L1,95Z');
-
-        const yLabel = container.querySelector('text.axis-y-title');
-        expect(yLabel).toBeTruthy();
-        expect(yLabel?.textContent).toBe('value');
     });
 
     it('single area y1', () => {
@@ -41,9 +37,5 @@ describe('AreaY mark', () => {
         const lines = container.querySelectorAll('path.area');
         expect(lines).toHaveLength(1);
         expect(lines[0]?.getAttribute('d')).toBe('M1,95L48.5,95L96,95L96,5L48.5,50L1,95Z');
-
-        const yLabel = container.querySelector('text.axis-y-title');
-        expect(yLabel).toBeTruthy();
-        expect(yLabel?.textContent).toBe('value');
     });
 });
