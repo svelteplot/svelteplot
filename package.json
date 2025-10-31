@@ -130,6 +130,6 @@
         "fast-equals": "^5.3.2",
         "interval-tree-1d": "^1.0.4",
         "merge-deep": "^3.0.3",
-        "svelte": "5.41.3"
+        "svelte": "5.43.0"
     }
 }
