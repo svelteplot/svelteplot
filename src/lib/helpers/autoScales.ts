@@ -160,7 +160,32 @@ export function autoScale({
         ...(type === 'band' || type === 'point'
             ? {
                   align: scaleOptions.align,
-                  padding: maybeNumber(coalesce(scaleOptions.padding, plotOptions.padding, 0.15))
+                  ...(type === 'point'
+                      ? {
+                            // point scales don't have paddingInner/Outer, only padding
+                            padding: maybeNumber(
+                                coalesce(scaleOptions.padding, plotOptions.padding, 0.15)
+                            )
+                        }
+                      : {
+                            //   padding: maybeNumber(coalesce(scaleOptions.padding, plotOptions.padding, 0.15)),
+                            paddingInner: maybeNumber(
+                                coalesce(
+                                    scaleOptions.paddingInner,
+                                    scaleOptions.padding,
+                                    plotOptions.padding,
+                                    0.15
+                                )
+                            ),
+                            paddingOuter: maybeNumber(
+                                coalesce(
+                                    scaleOptions.paddingOuter,
+                                    scaleOptions.padding,
+                                    plotOptions.padding,
+                                    0.15
+                                )
+                            )
+                        })
               }
             : {})
     };
