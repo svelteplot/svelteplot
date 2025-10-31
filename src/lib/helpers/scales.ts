@@ -304,12 +304,7 @@ export function createScale<T extends ScaleOptions>(
             ${name}. Valid types are ${[...VALID_SCALE_TYPES[name]].join(', ')}`);
     }
 
-    const isOrdinal =
-        type === 'band' ||
-        type === 'point' ||
-        type === 'ordinal' ||
-        type === 'categorical' ||
-        type === 'threshold';
+    const isOrdinal = isOrdinalScale(type);
 
     if (isOrdinal && sortOrdinalDomain) {
         valueArr.sort(ascending);
@@ -532,5 +527,15 @@ export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: 
             : channel === 'y2' && scales.y.type === 'band'
               ? scales.y.fn.bandwidth()
               : 0)
+    );
+}
+
+export function isOrdinalScale(scaleType: ScaleType) {
+    return (
+        scaleType === 'band' ||
+        scaleType === 'point' ||
+        scaleType === 'ordinal' ||
+        scaleType === 'categorical' ||
+        scaleType === 'threshold'
     );
 }

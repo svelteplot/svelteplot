@@ -32,6 +32,7 @@
     import { addEventHandlers } from './helpers/events.js';
     import Anchor from './helpers/Anchor.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { isOrdinalScale } from 'svelteplot/helpers/scales.js';
 
     const DEFAULTS = {
         ...getPlotDefaults().dot
@@ -60,7 +61,11 @@
             recordizeXY({
                 data,
                 // sort by descending radius by default
-                ...(options.r ? { sort: { channel: '-r' } } : {}),
+                ...(options.r &&
+                !isOrdinalScale(plot.scales.x.type) &&
+                !isOrdinalScale(plot.scales.y.type)
+                    ? { sort: { channel: '-r' } }
+                    : {}),
                 ...options,
                 ...(options.fill === true ? { fill: 'currentColor' } : {})
             })
