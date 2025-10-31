@@ -226,7 +226,8 @@ describe('BarX mark', () => {
                     data: linkedBarsData,
                     x: 'value',
                     y: 'label',
-                    href: 'url'
+                    href: 'url',
+                    sort: { channel: 'y' }
                 }
             }
         });
