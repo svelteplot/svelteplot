@@ -177,8 +177,7 @@ export function createScale<T extends ScaleOptions>(
     let manualActiveMarks = 0;
     const propNames = new Set<string>();
     const uniqueScaleProps = new Set<string | ChannelAccessor>();
-    let sortOrdinalDomain = true;
-
+    let sortOrdinalDomain = plotOptions.sortOrdinalDomains ?? true;
     for (const mark of marks) {
         // we only sort the scale domain alphabetically, if none of the
         // marks that map to it are using the `sort` transform. Note that

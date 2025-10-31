@@ -165,6 +165,10 @@ export type PlotDefaults = {
      */
     markerDotRadius: number;
     /**
+     * if set to true, ordinal domains will be sorted alphabetically
+     */
+    sortOrdinalDomains: boolean;
+    /**
      * default props for area marks, applied to area, areaX, and areaY marks
      */
     area: Partial<Omit<ComponentProps<typeof Area>, IgnoreDefaults>>;
@@ -502,4 +506,8 @@ export type PlotOptions = {
      * pass a @emotion/css function to style plot using dynamic classes
      */
     css: (d: string) => string | undefined;
+    /**
+     * if set to true, ordinal domains will be sorted alphabetically
+     */
+    sortOrdinalDomains: boolean;
 };
