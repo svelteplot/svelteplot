@@ -1,10 +1,8 @@
 import { describe, it, vi, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
 import BarXTest from './barX.test.svelte';
-import { getPathDims, getRectDims } from './utils';
+import { getPathDims, getRectDims, parsePath } from './utils';
 import { tick } from 'svelte';
-import { INDEX } from 'svelteplot/constants';
-import { max } from 'd3-array';
 
 const testData = [
     {
@@ -252,5 +250,27 @@ describe('BarX mark', () => {
         expect(Array.from(links).map((d) => d.getAttribute('href'))).toStrictEqual(
             linkedBarsData.toSorted((a, b) => a.label.localeCompare(b.label)).map((d) => d.url)
         );
+    });
+
+    it('dynamic border radius', () => {
+        const { container } = render(BarXTest, {
+            props: {
+                plotArgs: {},
+                barArgs: {
+                    data: [2, -2],
+                    borderRadius: (d) => (d > 0 ? { topRight: 2 } : { topLeft: 2 })
+                }
+            }
+        });
+
+        const bars = container.querySelectorAll('g.bar-x > path') as NodeListOf<SVGPathElement>;
+        expect(bars.length).toBe(2);
+        const paths = Array.from(bars).map((d) =>
+            parsePath(d)
+                .map((p) => p.code)
+                .join('')
+        );
+        expect(paths[0]).toBe('MHAVHVZ');
+        expect(paths[1]).toBe('MHVHVAZ');
     });
 });

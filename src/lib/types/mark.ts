@@ -193,5 +193,5 @@ export type BaseRectMarkProps<T> = {
     insetTop?: ConstantAccessor<number, T>;
     insetRight?: ConstantAccessor<number, T>;
     insetBottom?: ConstantAccessor<number, T>;
-    borderRadius?: BorderRadius;
+    borderRadius?: ConstantAccessor<BorderRadius, T>;
 };

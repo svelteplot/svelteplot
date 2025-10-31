@@ -38,3 +38,7 @@ export function getPathDims(path: SVGPathElement) {
         strokeWidth: path.style.strokeWidth
     };
 }
+
+export function parsePath(path: SVGPathElement) {
+    return makeAbsolute(parseSVG(path.getAttribute('d')));
+}
