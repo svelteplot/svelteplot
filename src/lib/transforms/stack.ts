@@ -46,11 +46,13 @@ const DEFAULT_STACK_OPTIONS: StackOptions = {
 export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum';
 export type StackOffset = 'none' | 'wiggle' | 'center' | 'normalize' | 'diverging';
 
-export type StackOptions = {
-    offset: null | StackOffset;
-    order: null | StackOrder;
-    reverse: boolean;
-};
+export type StackOptions =
+    | {
+          offset: null | StackOffset;
+          order: null | StackOrder;
+          reverse: boolean;
+      }
+    | false;
 
 const STACK_ORDER: Record<StackOrder, Function> = {
     // null
@@ -75,6 +77,10 @@ function stackXY<T>(
     channels: Channels<T>,
     options: StackOptions
 ): TransformArg<T> {
+    if (options === false) {
+        // no stacking
+        return { data, ...channels };
+    }
     // we need to stack the data for each facet separately
     const groupFacetsBy = [
         channels.fx != null ? 'fx' : null,
@@ -222,6 +228,7 @@ export function stackX<T>(
 }
 
 function applyDefaults(opts: Partial<StackOptions>): StackOptions {
+    if (opts === false) return false;
     if (opts.offset === 'wiggle' && opts.order === undefined) {
         return { ...DEFAULT_STACK_OPTIONS, order: 'inside-out', ...opts };
     }
