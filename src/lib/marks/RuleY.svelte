@@ -24,6 +24,7 @@
         ChannelAccessor
     } from '../types/index.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
 
     let markProps: RuleYMarkProps = $props();
     const DEFAULTS = {
@@ -44,7 +45,11 @@
     const args = $derived(recordizeY({ data, ...options }, { withIndex: false }));
 </script>
 
-<Mark type="ruleY" channels={['y', 'x1', 'x2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
+<Mark
+    type="ruleY"
+    channels={['y', 'x1', 'x2', 'stroke', 'opacity', 'strokeOpacity']}
+    {...markProps}
+    {...args}>
     {#snippet children({ scaledData, usedScales })}
         <GroupMultiple class="rule-y {className || ''}" length={className ? 2 : args.data.length}>
             {#each scaledData as d, i (i)}

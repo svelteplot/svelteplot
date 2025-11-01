@@ -2,6 +2,7 @@ import type { ChannelName, Channels, DataRecord, DataRow, RawValue } from '$lib/
 import { min, max, mode, sum, mean, median, variance, deviation, quantile } from 'd3-array';
 import { resolveChannel } from './resolve.js';
 import { POSITION_CHANNELS } from './index.js';
+import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 
 type ReducerFunc = (group: Iterable<DataRow>) => RawValue;
 type ReducerOption = ReducerName | ReducerFunc;
@@ -118,9 +119,9 @@ export function reduceOutputs(
                     if (typeof channels[k] === 'string') {
                         // the named reducer is applied to a column name, so we can use a combination
                         // of both as axis labels, e.g. MEAN(weight)
-                        newChannels[`__${k}_origField`] = `${reducerName} ( ${channels[k]} )`;
+                        newChannels[ORIGINAL_NAME_KEYS[k]] = `${reducerName} ( ${channels[k]} )`;
                     } else {
-                        newChannels[`__${k}_origField`] = reducerName;
+                        newChannels[ORIGINAL_NAME_KEYS[k]] = reducerName;
                     }
                 }
             }

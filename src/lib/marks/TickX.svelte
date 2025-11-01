@@ -61,7 +61,11 @@
     let testFacet = $derived(getTestFacet());
 </script>
 
-<Mark type="tickX" channels={['x', 'y', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
+<Mark
+    type="tickX"
+    channels={['x', 'y', 'stroke', 'opacity', 'strokeOpacity']}
+    {...markProps}
+    {...args}>
     {#snippet children({ mark, usedScales })}
         <g class="tick-x">
             {#each args.data as datum, i (i)}

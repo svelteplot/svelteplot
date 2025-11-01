@@ -3,24 +3,44 @@ import { render } from '@testing-library/svelte';
 import AreaYTest from './areaY.test.svelte';
 
 describe('AreaY mark', () => {
-    it('simple area (single series)', () => {
+    it('single area y', () => {
         const { container } = render(AreaYTest, {
             props: {
-                plotArgs: {},
                 areaArgs: {
-                    data: [1, 2, 3]
+                    data: [
+                        { x: 0, value: 0 },
+                        { x: 1, value: 1 },
+                        { x: 2, value: 2 }
+                    ],
+                    x: 'x',
+                    y: 'value'
                 }
             }
         });
 
-        const areas = container.querySelectorAll('path.area') as NodeListOf<SVGPathElement>;
-        expect(areas.length).toBe(1);
+        const lines = container.querySelectorAll('path.area');
+        expect(lines).toHaveLength(1);
+        expect(lines[0]?.getAttribute('d')).toBe('M1,95L48.5,50L96,5L96,95L48.5,95L1,95Z');
+    });
 
-        // Expected path for width=100, height=100, axes=false with default scales
-        // Domain is [0, 3] -> y: 0 -> 95, 1 -> 65, 2 -> 35, 3 -> 5
-        // x index positions -> ~1, 48.5, 96
-        const d = areas[0]?.getAttribute('d');
-        expect(d).toBe('M1,65L48.5,35L96,5L96,95L48.5,95L1,95Z');
+    it('single area y1', () => {
+        const { container } = render(AreaYTest, {
+            props: {
+                areaArgs: {
+                    data: [
+                        { x: 0, value: 0 },
+                        { x: 1, value: 1 },
+                        { x: 2, value: 2 }
+                    ],
+                    x: 'x',
+                    y1: 'value'
+                }
+            }
+        });
+
+        const lines = container.querySelectorAll('path.area');
+        expect(lines).toHaveLength(1);
+        expect(lines[0]?.getAttribute('d')).toBe('M1,95L48.5,95L96,95L96,5L48.5,50L1,95Z');
     });
 
     it('two stacked areas (by fill)', () => {

@@ -22,7 +22,7 @@ import { sum, groups as d3Groups, min, range } from 'd3-array';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
-import { INDEX } from 'svelteplot/constants.js';
+import { INDEX, ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 import { indexData, RAW_VALUE } from './recordize.js';
 
 const S = {
@@ -204,8 +204,8 @@ function stackXY<T>(
             data: out,
             ...channels,
             [byDim]: undefined,
-            ...(typeof channels[byDim] === 'string' && !channels[`__${byDim}_origField`]
-                ? { [`__${byDim}_origField`]: channels[byDim] }
+            ...(typeof channels[byDim] === 'string' && !channels[ORIGINAL_NAME_KEYS[byDim]]
+                ? { [ORIGINAL_NAME_KEYS[byDim]]: channels[byDim] }
                 : {}),
             ...{ [byLow]: S[byLow], [byHigh]: S[byHigh] }
         };

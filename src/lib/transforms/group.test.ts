@@ -3,6 +3,7 @@ import { group, groupX, groupY, groupZ } from './group.js';
 import type { DataRecord } from '$lib/types/index.js';
 import { csvParse } from 'd3-dsv';
 import { readFileSync } from 'fs';
+import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 
 const inputData: DataRecord[] = [
     { year: 2000, facet: 'A', value: 10 },
@@ -86,8 +87,8 @@ describe('groupX', () => {
             x: 'year',
             y: '__y',
             y1: '__y1',
-            __y_origField: 'Frequency',
-            __y1_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.y]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.y1]: 'Sum ( value )'
         });
     });
 
@@ -136,8 +137,8 @@ describe('groupY', () => {
             y: 'year',
             x: '__x',
             x1: '__x1',
-            __x_origField: 'Frequency',
-            __x1_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.x]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.x1]: 'Sum ( value )'
         });
     });
 });
@@ -195,8 +196,8 @@ describe('groupZ', () => {
             z: 'year',
             x: '__x',
             y: '__y',
-            __x_origField: 'Frequency',
-            __y_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.x]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.y]: 'Sum ( value )'
         });
     });
 });

@@ -115,6 +115,7 @@
     {data}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     required={['x1', 'y1']}
+    {...markProps}
     {...options}>
     {#snippet children({ mark, usedScales, scaledData })}
         {@const grouped = groupAndSort(scaledData)}
