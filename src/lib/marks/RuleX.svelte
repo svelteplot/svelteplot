@@ -45,7 +45,11 @@
     const args = $derived(recordizeX({ data, ...options }, { withIndex: false }));
 </script>
 
-<Mark type="ruleX" channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
+<Mark
+    type="ruleX"
+    channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']}
+    {...markProps}
+    {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple class="rule-x {className || ''}" length={className ? 2 : scaledData.length}>
             {#each scaledData as d, i (i)}

@@ -31,6 +31,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
 
     let markProps: RectMarkProps = $props();
 
@@ -59,6 +60,7 @@
     type="rect"
     required={[]}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
+    {...markProps}
     {...args}>
     {#snippet children({ usedScales, scaledData })}
         <GroupMultiple class={scaledData.length > 1 ? className : null} length={scaledData.length}>

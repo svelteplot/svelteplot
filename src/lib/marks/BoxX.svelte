@@ -10,6 +10,8 @@
     import { type ComponentProps } from 'svelte';
     import type BoxY from './BoxY.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
+    import { sort } from 'd3-array';
 
     let markProps: BoxXMarkProps = $props();
 
@@ -70,6 +72,8 @@
         ...(fy != null && { fy: FY })
     });
 
+    const sortProps = { [IS_SORTED]: true };
+
     const boxData = $derived(
         grouped
             .map((row) => {
@@ -107,7 +111,15 @@
 </script>
 
 <GroupMultiple class="box-x {className || ''}" length={className ? 2 : grouped.length}>
-    <RuleY data={boxData} y={Y} x1={MIN} x2={P25} {stroke} {...rule || {}} {...facets} />
+    <RuleY
+        data={boxData}
+        y={Y}
+        x1={MIN}
+        x2={P25}
+        {stroke}
+        {...rule || {}}
+        {...facets}
+        {...sortProps} />
     <RuleY data={boxData} y={Y} x1={P75} x2={MAX} {stroke} {...rule || {}} {...facets} />
     <BarX data={boxData} y={Y} x1={P25} x2={P75} {fill} {stroke} {...facets} {...bar || {}} />
     {#if tickMedian}

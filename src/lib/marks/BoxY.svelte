@@ -33,6 +33,7 @@
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import type { BaseMarkProps, ChannelAccessor, DataRecord } from 'svelteplot/types';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
 
     let markProps: BoxYMarkProps = $props();
 
@@ -93,6 +94,8 @@
         ...(fy != null && { fy: FY })
     });
 
+    const sortProps = { [IS_SORTED]: true };
+
     const boxData = $derived(
         grouped
             .map((row) => {
@@ -129,7 +132,15 @@
 </script>
 
 <GroupMultiple class="box-y {className || ''}" length={className ? 2 : grouped.length}>
-    <RuleX data={boxData} x={X} y1={MIN} y2={P25} {stroke} {...rule || {}} {...facets} />
+    <RuleX
+        data={boxData}
+        x={X}
+        y1={MIN}
+        y2={P25}
+        {stroke}
+        {...sortProps}
+        {...rule || {}}
+        {...facets} />
     <RuleX data={boxData} x={X} y1={P75} y2={MAX} {stroke} {...rule || {}} {...facets} />
     <BarY data={boxData} x={X} y1={P25} y2={P75} {fill} {stroke} {...facets} {...bar || {}} />
     {#if tickMedian}
