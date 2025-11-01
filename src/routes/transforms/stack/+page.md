@@ -62,6 +62,39 @@ The [AreaY mark](/marks/area) applies the stackY transform implicitly if you do 
 </Plot>
 ```
 
+You can disable the implicit stacking by setting `y1` and `y2` channels explicitly.
+
+```svelte live
+<script lang="ts">
+    import { Plot, AreaY } from 'svelteplot';
+
+    import { page } from '$app/state';
+    let { crimea } = $derived(page.data.data);
+</script>
+
+<Plot grid color={{ legend: true }}>
+    <AreaY
+        data={crimea}
+        x="date"
+        y1={0}
+        y2="deaths"
+        fill="cause"
+        opacity={0.7} />
+</Plot>
+```
+
+```svelte
+<Plot grid color={{ legend: true }}>
+    <AreaY
+        data={crimea}
+        x="date"
+        y1={0}
+        y2="deaths"
+        fill="cause"
+        opacity={0.7} />
+</Plot>
+```
+
 The stack transform works with any mark that consumes y1 & y2 or x1 & x2, so you can stack rects, too.
 
 ```svelte --live
