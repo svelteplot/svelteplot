@@ -39,6 +39,7 @@ The `setPlotDefaults` hook accepts the following options:
 | _locale_                 | Default locale used in axis ticks etc.                                                                                                                                 | string | `'en-US'`                                       |
 | _numberFormat_           | Default [number format options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options) in axis ticks | object | `{ style: 'decimal', compactDisplay: 'short' }` |
 | _css_                    | For passing an `@emotion/css` instance to your plots                                                                                                                   |        |                                                 |
+| _sortOrdinalDomains_     | Whether to sort ordinal positional domains alphabetically                                                                                                              | bool   | `true`                                          |
 
 ## Mark-specific defaults
 

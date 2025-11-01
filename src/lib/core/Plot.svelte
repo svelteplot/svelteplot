@@ -65,7 +65,7 @@
         margin: 'auto',
         colorScheme: 'turbo',
         unknown: '#cccccc99',
-
+        sortOrdinalDomains: true,
         categoricalColorScheme: 'observable10',
         pointScaleHeight: 18,
         bandScaleHeight: 30,
@@ -365,7 +365,12 @@
         initialOpts: Partial<PlotOptions>,
         opts: PlotOptionsParameters
     ): PlotOptions {
-        return mergeDeep<PlotOptions>({}, smartDefaultPlotOptions(opts), initialOpts);
+        return mergeDeep<PlotOptions>(
+            {},
+            { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains },
+            smartDefaultPlotOptions(opts),
+            initialOpts
+        );
     }
 
     function maybeMargin(

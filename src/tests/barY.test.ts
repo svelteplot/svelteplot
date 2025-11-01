@@ -206,6 +206,96 @@ describe('BarY mark', () => {
         const labels = Array.from(xAxisLabels).map((d) => d.textContent);
         expect(labels.sort()).toEqual(['2019', '2020', '2021', '2022', '2023', '2024']);
     });
+
+    const categoricalData = [
+        { label: 'delta', value: 1 },
+        { label: 'alpha', value: 2 },
+        { label: 'charlie', value: 4 },
+        { label: 'bravo', value: 3 }
+    ];
+
+    it('sorts ordinal domain alphabetically by default', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    axes: true
+                },
+                barArgs: {
+                    data: categoricalData,
+                    x: 'label',
+                    y: 'value'
+                }
+            }
+        });
+        const ticks = Array.from(container.querySelectorAll('svg g.axis-x .tick text'));
+        expect(ticks.length).toBe(4);
+        const tickTexts = ticks.map((t) => t.textContent);
+        expect(tickTexts).toEqual(['alpha', 'bravo', 'charlie', 'delta']);
+    });
+
+    it('does not sort ordinal domain alphabetically if mark is sorted', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    axes: true
+                },
+                barArgs: {
+                    data: categoricalData,
+                    x: 'label',
+                    y: 'value',
+                    sort: 'value'
+                }
+            }
+        });
+        const ticks = Array.from(container.querySelectorAll('svg g.axis-x .tick text'));
+        expect(ticks.length).toBe(4);
+        const tickTexts = ticks.map((t) => t.textContent);
+        expect(tickTexts).toEqual(['delta', 'alpha', 'bravo', 'charlie']);
+    });
+
+    it('ordinal sorted can be disabled via scale option', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    axes: true,
+                    x: { sort: false }
+                },
+                barArgs: {
+                    data: categoricalData,
+                    x: 'label',
+                    y: 'value'
+                }
+            }
+        });
+        const ticks = Array.from(container.querySelectorAll('svg g.axis-x .tick'));
+        expect(ticks.length).toBe(4);
+        const tickTexts = ticks.map((t) => t.textContent);
+        expect(tickTexts).toEqual(['delta', 'alpha', 'charlie', 'bravo']);
+    });
+
+    it('ordinal sorted can be disabled via plot option', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {
+                    width: 100,
+                    axes: true,
+                    sortOrdinalDomains: false
+                },
+                barArgs: {
+                    data: categoricalData,
+                    x: 'label',
+                    y: 'value'
+                }
+            }
+        });
+        const ticks = Array.from(container.querySelectorAll('svg g.axis-x .tick'));
+        expect(ticks.length).toBe(4);
+        const tickTexts = ticks.map((t) => t.textContent);
+        expect(tickTexts).toEqual(['delta', 'alpha', 'charlie', 'bravo']);
+    });
 });
 
 function getRectDims(rect: SVGRectElement) {

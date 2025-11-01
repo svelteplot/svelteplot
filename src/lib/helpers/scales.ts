@@ -177,8 +177,7 @@ export function createScale<T extends ScaleOptions>(
     let manualActiveMarks = 0;
     const propNames = new Set<string>();
     const uniqueScaleProps = new Set<string | ChannelAccessor>();
-    let sortOrdinalDomain = true;
-
+    let sortOrdinalDomain = plotOptions.sortOrdinalDomains ?? true;
     for (const mark of marks) {
         // we only sort the scale domain alphabetically, if none of the
         // marks that map to it are using the `sort` transform. Note that
@@ -305,12 +304,7 @@ export function createScale<T extends ScaleOptions>(
             ${name}. Valid types are ${[...VALID_SCALE_TYPES[name]].join(', ')}`);
     }
 
-    const isOrdinal =
-        type === 'band' ||
-        type === 'point' ||
-        type === 'ordinal' ||
-        type === 'categorical' ||
-        type === 'threshold';
+    const isOrdinal = isOrdinalScale(type);
 
     if (isOrdinal && sortOrdinalDomain) {
         valueArr.sort(ascending);
@@ -533,5 +527,15 @@ export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: 
             : channel === 'y2' && scales.y.type === 'band'
               ? scales.y.fn.bandwidth()
               : 0)
+    );
+}
+
+export function isOrdinalScale(scaleType: ScaleType) {
+    return (
+        scaleType === 'band' ||
+        scaleType === 'point' ||
+        scaleType === 'ordinal' ||
+        scaleType === 'categorical' ||
+        scaleType === 'threshold'
     );
 }
