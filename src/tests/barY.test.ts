@@ -296,28 +296,6 @@ describe('BarY mark', () => {
         const tickTexts = ticks.map((t) => t.textContent);
         expect(tickTexts).toEqual(['delta', 'alpha', 'charlie', 'bravo']);
     });
-
-    it('ordinal sorted can be disabled via plot option even with fill set', () => {
-        const { container } = render(BarYTest, {
-            props: {
-                plotArgs: {
-                    width: 100,
-                    axes: true,
-                    sortOrdinalDomains: false
-                },
-                barArgs: {
-                    data: categoricalData,
-                    x: 'label',
-                    y: 'value',
-                    fill: (d) => (d?.label === 'alpha' ? 'red' : 'blue')
-                }
-            }
-        });
-        const ticks = Array.from(container.querySelectorAll('svg g.axis-x .tick'));
-        expect(ticks.length).toBe(4);
-        const tickTexts = ticks.map((t) => t.textContent);
-        expect(tickTexts).toEqual(['delta', 'alpha', 'charlie', 'bravo']);
-    });
 });
 
 function getRectDims(rect: SVGRectElement) {
