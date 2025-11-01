@@ -14,6 +14,7 @@
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
         stack?: Partial<StackOptions>;
         canvas?: boolean;
+        areaClass?: ConstantAccessor<string, Datum>;
     }
 
     import Mark from '../Mark.svelte';
@@ -37,7 +38,6 @@
         ChannelAccessor,
         ScaledDataRecord,
         LinkableMarkProps,
-        PlotDefaults,
         RawValue
     } from '../types/index.js';
     import type { StackOptions } from '$lib/transforms/stack.js';
@@ -59,6 +59,7 @@
         curve = 'linear' as CurveName,
         tension = 0,
         class: className = '',
+        areaClass,
         canvas = false,
         ...options
     }: AreaMarkProps = $derived({ ...DEFAULTS, ...markProps });
@@ -120,7 +121,7 @@
         {#if canvas}
             <AreaCanvas groupedAreaData={grouped} {mark} {usedScales} {areaPath} />
         {:else}
-            <GroupMultiple length={grouped.length}>
+            <GroupMultiple class={className} length={grouped.length}>
                 {#each grouped as areaData, i (i)}
                     {@const datum = areaData[0]}
                     {#if areaData.length > 0}
@@ -134,7 +135,11 @@
                                 usedScales
                             )}
                             <path
-                                class={['svelteplot-area', className, styleClass]}
+                                class={[
+                                    'area',
+                                    resolveProp(areaClass, areaData[0].datum),
+                                    styleClass
+                                ]}
                                 clip-path={options.clipPath}
                                 d={areaPath(areaData)}
                                 {@attach addEventHandlers({
