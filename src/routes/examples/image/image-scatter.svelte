@@ -1,5 +1,7 @@
 <script module>
     export let title = 'Image scatterplot';
+    export let repl =
+        'https://svelte.dev/playground/3a0886eed9404d9cb1334dcb3ace0fb2?version=5.43.2';
 </script>
 
 <script lang="ts">

@@ -1,3 +1,7 @@
+<!--
+    @component 
+    For showing images positioned at x/y coordinates
+-->
 <script lang="ts" generics="Datum extends DataRecord">
     interface ImageMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
         data: Datum[];
@@ -39,6 +43,7 @@
         height,
         src,
         title,
+        imageClass,
         preserveAspectRatio,
         ...options
     }: ImageMarkProps = $derived({
@@ -55,6 +60,7 @@
         {@const h =
             record.r !== undefined ? record.r * 2 : resolveProp(height || width, record.datum, 20)}
         <image
+            class={resolveProp(imageClass, record.datum, null)}
             href={resolveProp(src, record.datum, '')}
             x={record.x - w * 0.5}
             y={record.y - h * 0.5}
