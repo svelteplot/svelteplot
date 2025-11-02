@@ -63,6 +63,7 @@ export default {
                 { title: 'Frame', to: '/marks/frame' },
                 { title: 'Geo', to: '/marks/geo' },
                 { title: 'Grid', to: '/marks/grid' },
+                { title: 'Image', to: '/marks/image' },
                 { title: 'Line', to: '/marks/line' },
                 { title: 'Link', to: '/marks/link' },
                 { title: 'Pointer', to: '/marks/pointer' },

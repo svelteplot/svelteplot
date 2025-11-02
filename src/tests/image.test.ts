@@ -77,7 +77,9 @@ describe('Image mark', () => {
         });
 
         const links = container.querySelectorAll('a[aria-label="link"]') as NodeListOf<SVGAElement>;
-        const images = container.querySelectorAll('a[aria-label="link"] > image') as NodeListOf<SVGImageElement>;
+        const images = container.querySelectorAll(
+            'a[aria-label="link"] > image'
+        ) as NodeListOf<SVGImageElement>;
 
         expect(links.length).toBe(testData.length);
         expect(images.length).toBe(testData.length);

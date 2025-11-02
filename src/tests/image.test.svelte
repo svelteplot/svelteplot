@@ -12,5 +12,4 @@
 
 <Plot width={100} height={100} axes={false} {...plotArgs}>
     <ImageMark {...imageArgs} />
-  </Plot>
-
+</Plot>
