@@ -28,6 +28,7 @@
     import CustomMark from './CustomMark.svelte';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { sort } from 'svelteplot/transforms';
+    import Anchor from './helpers/Anchor.svelte';
 
     let markProps: ImageMarkProps = $props();
 
@@ -59,15 +60,17 @@
         {@const w = record.r !== undefined ? record.r * 2 : resolveProp(width, record.datum, 20)}
         {@const h =
             record.r !== undefined ? record.r * 2 : resolveProp(height || width, record.datum, 20)}
-        <image
-            class={resolveProp(imageClass, record.datum, null)}
-            href={resolveProp(src, record.datum, '')}
-            x={record.x - w * 0.5}
-            y={record.y - h * 0.5}
-            {preserveAspectRatio}
-            clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
-            width={w}
-            height={h}
-            >{#if title}<title>{resolveProp(title, record.datum, '')}</title>{/if}</image>
+        <Anchor {options} datum={record.datum}>
+            <image
+                class={resolveProp(imageClass, record.datum, null)}
+                href={resolveProp(src, record.datum, '')}
+                x={record.x - w * 0.5}
+                y={record.y - h * 0.5}
+                {preserveAspectRatio}
+                clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
+                width={w}
+                height={h}
+                >{#if title}<title>{resolveProp(title, record.datum, '')}</title>{/if}</image>
+        </Anchor>
     {/snippet}
 </CustomMark>

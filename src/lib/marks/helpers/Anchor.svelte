@@ -1,7 +1,21 @@
-<script>
+<script lang="ts" generics="Datum extends Record<string, any>">
     import { resolveProp } from '$lib/helpers/resolve.js';
+    import type { ConstantAccessor } from 'svelteplot/types';
 
-    let { datum = {}, options = {}, children } = $props();
+    interface AnchorProps {
+        datum?: Datum;
+        options?: {
+            href?: ConstantAccessor<string, Datum>;
+            target?: ConstantAccessor<string, Datum>;
+            rel?: ConstantAccessor<string, Datum>;
+            type?: ConstantAccessor<string, Datum>;
+            download?: ConstantAccessor<string, Datum>;
+            [key: string]: any;
+        };
+        children?: () => any;
+    }
+
+    let { datum = {}, options = {}, children }: AnchorProps = $props();
 
     const href = $derived(resolveProp(options.href, datum, null));
     const target = $derived(resolveProp(options.target, datum, null));
