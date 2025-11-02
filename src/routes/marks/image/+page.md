@@ -47,6 +47,8 @@ The Image mark renders images positioned at x/y coordinates. It’s useful for p
 </Plot>
 ```
 
+_The plot above shows data from [YouGov](https://today.yougov.com/topics/politics/articles-reports/2021/07/27/most-and-least-popular-us-presidents-according-ame) is inspired by [Robert Lesser](https://observablehq.com/@rlesser/when-presidents-fade-away)_
+
 Here’s an example using dodgeY to create a beeswarm of presidential portraits along a time axis:
 
 ```svelte live
