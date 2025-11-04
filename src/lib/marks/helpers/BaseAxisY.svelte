@@ -19,7 +19,7 @@
         scaleFn: (d: RawValue) => number;
         scaleType: ScaleType;
         ticks: RawValue[];
-        tickFormat: (d: RawValue) => string | string[];
+        tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
         anchor: 'left' | 'right';
         lineAnchor: 'top' | 'center' | 'bottom';
         tickSize: number;
@@ -72,7 +72,7 @@
                 dx: +resolveProp(options.dx, datum, 0),
                 dy: +resolveProp(options.dy, datum, 0),
                 y: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
-                text: tickFormat(tick, i),
+                text: tickFormat(tick, i, ticks),
                 element: null as SVGTextElement | null
             };
         });

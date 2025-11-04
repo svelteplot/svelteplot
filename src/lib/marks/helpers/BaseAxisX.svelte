@@ -22,7 +22,7 @@
         scaleFn: (d: RawValue) => number;
         scaleType: ScaleType;
         ticks: RawValue[];
-        tickFormat: (d: RawValue, i: number) => string | string[];
+        tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
         anchor: 'top' | 'bottom';
         tickSize: number;
         tickPadding: number;
@@ -87,7 +87,7 @@
                     dx: +resolveProp(options.dx, datum, 0),
                     dy: +resolveProp(options.dy, datum, 0),
                     x: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
-                    text: splitTick(tickFormat(tick, i)),
+                    text: splitTick(tickFormat(tick, i, ticks)),
                     element: null as SVGTextElement | null
                 };
             })

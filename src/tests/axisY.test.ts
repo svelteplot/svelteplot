@@ -176,4 +176,23 @@ describe('AxisY mark', () => {
         const fontSizes = ticks.map((t) => t.querySelector('text')?.textContent);
         expect(fontSizes).toStrictEqual(['0', '1', '2', '3', '4', '5']);
     });
+
+    it('passes ticks array to tickFormat functions', () => {
+        const checkTicks = vi.fn((d, i, ticks) => String(d));
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { width: 500, y: { domain: [0, 100] } },
+                axisArgs: {
+                    interval: 20,
+                    tickFormat: (d, i, ticks) => checkTicks(d, i, ticks)
+                }
+            }
+        });
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBe(6);
+        expect(checkTicks.mock.calls[0]).toStrictEqual([0, 0, [0, 20, 40, 60, 80, 100]]);
+        expect(checkTicks.mock.calls[1]).toStrictEqual([20, 1, [0, 20, 40, 60, 80, 100]]);
+    });
 });
