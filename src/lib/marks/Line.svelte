@@ -201,7 +201,7 @@
                                             : args.textStroke
                                               ? 2
                                               : 0,
-                                        fill: args.textFill || args.stroke,
+                                        fill: args.textFill || lineData[0].stroke,
                                         stroke: args.textStroke
                                     },
                                     'fill',

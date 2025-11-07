@@ -179,6 +179,26 @@ describe('Line mark', () => {
         expect(text?.textContent).toBe('Label');
     });
 
+    it('line with colored text from data', () => {
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0, label: 'Label' },
+                    { x: 1, y: 1, label: 'Label' }
+                ],
+                x: 'x',
+                y: 'y',
+                stroke: 'label',
+                text: (d) => d.label
+            }
+        });
+
+        const text = container.querySelector('g.lines > g > text') as SVGTextElement;
+        expect(text).not.toBeNull();
+        expect(text?.textContent).toBe('Label');
+        expect(text?.style.fill).toBe('#4269d0');
+    });
+
     it('line with text label and custom style', () => {
         const { container } = render(LineTest, {
             props: {
