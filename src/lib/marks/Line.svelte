@@ -201,7 +201,7 @@
                                             : args.textStroke
                                               ? 2
                                               : 0,
-                                        fill: args.textFill || args.stroke,
+                                        fill: args.textFill || lineData[0].stroke,
                                         stroke: args.textStroke
                                     },
                                     'fill',
@@ -222,7 +222,7 @@
                                     color={lineData[0].stroke || 'currentColor'}
                                     {style}
                                     class={styleClass}
-                                    text={text ? resolveProp(text, lineData[0]) : null}
+                                    text={text ? resolveProp(text, lineData[0].datum) : null}
                                     startOffset={resolveProp(
                                         args.textStartOffset,
                                         lineData[0].datum,
