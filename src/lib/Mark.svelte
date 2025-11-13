@@ -212,6 +212,7 @@
             resolvedData.flatMap((row) => {
                 const out: ScaledDataRecord<Datum> = {
                     datum: row.datum,
+                    resolved: row,
                     index: row[INDEX],
                     valid: true
                 };

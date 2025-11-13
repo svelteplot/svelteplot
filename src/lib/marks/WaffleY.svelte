@@ -10,10 +10,11 @@
         LinkableMarkProps,
         PlotContext
     } from '$lib/types';
-    import type { WaffleOptions } from './helpers/waffle';
+    import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults';
     import { getContext } from 'svelte';
     import { intervalY, recordizeY, sort, stackY } from '$lib/transforms';
+    import Mark from 'svelteplot/Mark.svelte';
 
     interface WaffleYMarkProps
         extends BaseMarkProps<Datum>,
@@ -67,4 +68,25 @@
             stack
         )
     );
+
+    $inspect({ args, options });
 </script>
+
+<Mark
+    type="waffleY"
+    requiredScales={{ x: ['band'] }}
+    channels={['y1', 'y2', 'x', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
+    {...args}>
+    {#snippet children({ mark, usedScales, scaledData })}
+        {@const wafflePoly = wafflePolygon('y', args, plot.scales)}
+        {#each scaledData as d, i (i)}
+            {@const { pattern, rect, path } = wafflePoly(d)}
+            <g>
+                <pattern {...pattern}>
+                    <rect {...rect} fill="currentColor" />
+                </pattern>
+                <path {...path} />
+            </g>
+        {/each}
+    {/snippet}
+</Mark>

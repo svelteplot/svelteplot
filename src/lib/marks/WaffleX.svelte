@@ -9,11 +9,12 @@
         ChannelAccessor,
         LinkableMarkProps
     } from 'svelteplot/types';
-    import type { WaffleOptions } from './helpers/waffle';
+    import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { intervalX, recordizeX, sort, stackX } from 'svelteplot/transforms';
     import type { StackOptions } from 'svelteplot/transforms/stack';
     import Mark from '$lib/Mark.svelte';
+    import { getContext } from 'svelte';
 
     interface WaffleXMarkProps
         extends BaseMarkProps<Datum>,
@@ -75,9 +76,16 @@
     requiredScales={{ y: ['band'] }}
     channels={['x1', 'x2', 'y', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}>
-    {#snippet children({ mark, usedScales, scaledData, scales })}
+    {#snippet children({ mark, usedScales, scaledData })}
+        {@const wafflePoly = wafflePolygon('x', args, plot.scales)}
         {#each scaledData as d, i (i)}
-            <path d={wafflePolygon('x', d, scales)} />
+            {@const { pattern, rect, path } = wafflePoly(d)}
+            <g>
+                <pattern {...pattern}>
+                    <rect {...rect} fill="currentColor" />
+                </pattern>
+                <path {...path} />
+            </g>
         {/each}
     {/snippet}
 </Mark>

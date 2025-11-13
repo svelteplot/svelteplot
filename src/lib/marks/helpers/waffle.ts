@@ -37,6 +37,7 @@
 // more points.
 //
 
+import { getPatternId } from 'svelteplot/helpers/getBaseStyles';
 import type { PlotScales, ScaledDataRecord } from 'svelteplot/types';
 
 // The last point describes the centroid (used for pointing)
@@ -61,19 +62,98 @@ export type WaffleOptions = {
     round?: boolean;
 };
 
+type WaffleProps = {
+    pattern: {
+        id: string;
+        patternUnits: 'userSpaceOnUse';
+        width: number;
+        height: number;
+    };
+    rect: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
+    path: {
+        fill: string;
+        transform: string;
+        d: string;
+    };
+};
+
 export function wafflePolygon(
     y: 'x' | 'y',
-    d: ScaledDataRecord,
     options: WaffleOptions,
     scales: PlotScales
-): string {
+): (d: ScaledDataRecord) => WaffleProps {
     const x = y === 'y' ? 'x' : 'y';
     const y1 = `${y}1`;
     const y2 = `${y}2`;
+    const xScale = scales[x as 'x' | 'y'];
+    const yScale = scales[y as 'x' | 'y'];
 
-    const points = wafflePoints(i1, i2, columns);
+    const barwidth = xScale.fn.bandwidth();
 
-    return dimension === 'x' ? points : points.map(([x, y]: Point): Point => [y, x]);
+    const { unit = 1, gap = 1 } = options;
+    const round = maybeRound(options.round);
+
+    // The length of a unit along y in pixels.
+    const scale = Math.abs(yScale.fn(unit) - yScale.fn(0));
+
+    // The number of cells on each row (or column) of the waffle.
+    const multiple = options.multiple ?? Math.max(1, Math.floor(Math.sqrt(barwidth / scale)));
+
+    // The outer size of each square cell, in pixels, including the gap.
+    const cx = Math.min(barwidth / multiple, scale * multiple);
+    const cy = scale * multiple;
+
+    // The reference position.
+    const tx = (barwidth - multiple * cx) / 2;
+
+    const transform = y === 'y' ? ([x, y]) => [x * cx, -y * cy] : ([x, y]) => [y * cy, x * cx];
+    // const mx = typeof x0 === 'function' ? (i) => x0(i) - barwidth / 2 : () => x0;
+    const [ix, iy] = y === 'y' ? [0, 1] : [1, 0];
+
+    const y0 = yScale.fn(0);
+    const mx = -barwidth / 2;
+
+    return (d: ScaledDataRecord) => {
+        const xv = d[x];
+        const y1val = d.resolved[y1];
+        const y2val = d.resolved[y2];
+        const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
+        const c = P.pop();
+        console.log({ c, P, xv, y1val, y2val });
+        const id = getPatternId();
+        const pos = [d[x] + tx + mx, y0];
+        return {
+            pattern: {
+                id,
+                patternUnits: 'userSpaceOnUse',
+                width: cx,
+                height: cy
+            },
+            rect: {
+                x: gap / 2,
+                y: gap / 2,
+                width: cx - gap,
+                height: cy - gap
+            },
+            path: {
+                fill: `url(#${id})`,
+                transform: `translate(${pos[ix]},${pos[iy]})`,
+                d: `M${P.join('L')}Z`
+            }
+        };
+        // return `M${P.join('L')}Z`;
+    };
+
+    //
+
+    // const points = wafflePoints(i1, i2, columns);
+
+    // return dimension === 'x' ? points : points.map(([x, y]: Point): Point => [y, x]);
 }
 
 export function wafflePoints(i1: number, i2: number, columns: number): Point[] {
@@ -166,4 +246,13 @@ function waffleRowCentroid(i1: number, i2: number, columns: number): Point {
                 Math.ceil(i1 % columns) + Math.ceil(Math.floor(i2) - Math.ceil(i1)) / 2,
                 Math.floor(i1 / columns) + (i2 >= 1 + i1 ? 0.5 : ((i1 + i2) / 2) % 1)
             ];
+}
+
+export function maybeRound(
+    round: boolean | ((x: number) => number) | undefined
+): (x: number) => number {
+    if (round === undefined || round === false) return Number;
+    if (round === true) return Math.round;
+    if (typeof round !== 'function') throw new Error(`invalid round: ${round}`);
+    return round;
 }

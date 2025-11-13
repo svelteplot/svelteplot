@@ -17,6 +17,7 @@ export type ScaledDataRecord<T = Record<string | symbol, RawValue>> = Partial<{
     dx: number;
     dy: number;
     datum: DataRecord<T>;
+    resolved: ResolvedDataRecord<T>;
     valid: Boolean;
     index: number;
 };

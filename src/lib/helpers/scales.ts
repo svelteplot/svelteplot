@@ -381,8 +381,8 @@ function domainFromInterval(domain: RawValue[], interval: string | number, name:
 }
 
 const markTypesWithBandDefault = {
-    x: new Set<MarkType>(['barY', 'cell', 'tickY']),
-    y: new Set<MarkType>(['barX', 'cell', 'tickX'])
+    x: new Set<MarkType>(['barY', 'cell', 'tickY', 'waffleY']),
+    y: new Set<MarkType>(['barX', 'cell', 'tickX', 'waffleX'])
 };
 
 /**

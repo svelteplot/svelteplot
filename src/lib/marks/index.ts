@@ -47,6 +47,8 @@ export { default as Spike } from './Spike.svelte';
 export { default as Text } from './Text.svelte';
 export { default as TickX } from './TickX.svelte';
 export { default as TickY } from './TickY.svelte';
+export { default as WaffleX } from './WaffleX.svelte';
+export { default as WaffleY } from './WaffleY.svelte';
 
 // HTML marks
 export { default as ColorLegend } from './ColorLegend.svelte';
