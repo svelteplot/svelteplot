@@ -178,6 +178,18 @@ type OlympiansRow = {
     info: string;
 };
 
+type Presidents2Row = {
+    Name: string;
+    'Very Favorable %': number;
+    'Somewhat Favorable %': number;
+    'Somewhat Unfavorable %': number;
+    'Very Unfavorable %': number;
+    'Don’t know %': number;
+    'Have not heard of them %': number;
+    'First Inauguration Date': Date;
+    'Portrait URL': string;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];
@@ -204,4 +216,5 @@ export type ExamplesData = {
     }[];
     stocks: StocksRow[];
     olympians: OlympiansRow[];
+    presidents2: Presidents2Row[];
 };

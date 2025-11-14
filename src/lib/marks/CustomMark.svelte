@@ -5,6 +5,7 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface CustomMarkProps extends BaseMarkProps<Datum> {
         data?: Datum[];
+        type?: string;
         x?: ChannelAccessor<Datum>;
         x1?: ChannelAccessor<Datum>;
         x2?: ChannelAccessor<Datum>;
@@ -18,7 +19,6 @@
         marks?: Snippet<[{ records: ScaledDataRecord<Datum>[]; usedScales: UsedScales }]>;
     }
 
-    import { getContext } from 'svelte';
     import type {
         PlotContext,
         DataRecord,
@@ -33,7 +33,13 @@
 
     import Mark from 'svelteplot/Mark.svelte';
 
-    let { data = [{} as Datum], mark, marks, ...options }: CustomMarkProps = $props();
+    let {
+        data = [{} as Datum],
+        mark,
+        type = 'custom',
+        marks,
+        ...options
+    }: CustomMarkProps = $props();
 
     const args = $derived(sort({ data, ...options })) as CustomMarkProps;
 
@@ -53,7 +59,7 @@
     ];
 </script>
 
-<Mark type="custom" required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
+<Mark {type} required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
     {#snippet children({ scaledData, usedScales })}
         {#if marks}
             {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}

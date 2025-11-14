@@ -36,6 +36,7 @@ import type {
     Graticule,
     GridX,
     GridY,
+    Image,
     Line,
     Link,
     Pointer,
@@ -273,6 +274,10 @@ export type PlotDefaults = {
      * default props for gridY marks
      */
     gridY: Partial<Omit<ComponentProps<typeof GridY>, IgnoreDefaults> & { implicit: boolean }>;
+    /**
+     * default props for image marks
+     */
+    image: Partial<Omit<ComponentProps<typeof Image>, IgnoreDefaults>>;
     /**
      * default props for line marks
      */
