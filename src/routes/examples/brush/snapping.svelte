@@ -34,11 +34,5 @@
             opacity={0.5} />
     {/if}
     <BarX data={[1, 2, 4]} opacity={0.5} />
-    <BrushX
-        bind:brush
-        onbrush={(e) => {
-            // brush = e.brush;
-        }}
-        constrainToDomain
-        stroke={false} />
+    <BrushX bind:brush constrainToDomain stroke={false} />
 </Plot>

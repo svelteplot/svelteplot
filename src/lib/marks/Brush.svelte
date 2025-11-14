@@ -211,7 +211,6 @@
             x2 = brush.x2 as Date | number;
             y1 = brush.y1 as Date | number;
             y2 = brush.y2 as Date | number;
-            onbrush?.({ brush } as BrushEvent);
         }
     });
 
