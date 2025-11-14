@@ -79,4 +79,35 @@ describe('Brush mark', () => {
         const draggedRect = container.querySelectorAll('rect.brush-rect');
         expect(draggedRect.length).toBe(1);
     });
+
+    it('update brush from outside', async () => {
+        const props: ComponentProps<typeof BrushTest> = $state({
+            plotArgs: { width: 400, margin: 0, x: { domain: [0, 10] }, y: { domain: [0, 10] } },
+            brushArgs: {},
+            brush: { enabled: false }
+        });
+
+        const { container } = render(BrushTest, props);
+
+        // Verify the brush was reset
+        const resetRect = container.querySelectorAll('rect.brush-rect');
+        expect(resetRect.length).toBe(0);
+
+        // Update brush from outside
+        props.brush = { enabled: true, x1: 2, x2: 5, y1: 3, y2: 7 };
+        await tick();
+
+        expect(props.brush.enabled).toBe(true);
+
+        // Verify the brush was created/updated
+        const updatedRect = container.querySelectorAll('rect.brush-rect');
+        expect(updatedRect.length).toBe(1);
+        expect(+updatedRect[0].getAttribute('width')).toBe(((5 - 2) * 400) / 10); // 40 pixels per unit
+
+        // Update brush from outside again
+        props.brush = { enabled: true, x1: 2, x2: 8, y1: 3, y2: 7 };
+        await tick();
+
+        expect(+updatedRect[0].getAttribute('width')).toBe(((8 - 2) * 400) / 10); // 40 pixels per unit
+    });
 });
