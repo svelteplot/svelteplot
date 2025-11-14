@@ -8,18 +8,21 @@
         ChannelAccessor,
         BaseMarkProps,
         LinkableMarkProps,
-        PlotContext
+        PlotContext,
+        BorderRadius
     } from '$lib/types';
     import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults';
     import { getContext } from 'svelte';
     import { intervalY, recordizeY, sort, stackY } from '$lib/transforms';
     import Mark from 'svelteplot/Mark.svelte';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect';
 
     interface WaffleYMarkProps
         extends BaseMarkProps<Datum>,
             LinkableMarkProps<Datum>,
-            WaffleOptions {
+            WaffleOptions<Datum> {
         data?: Datum[];
         /**
          * bound to a babd scale
@@ -37,11 +40,9 @@
          * bound to a quantitative scale
          */
         y2?: ChannelAccessor<Datum>;
-        stack?: StackOptions;
     }
 
     const DEFAULTS = {
-        fill: 'currentColor',
         ...getPlotDefaults().waffle,
         ...getPlotDefaults().waffleY
     };
@@ -52,6 +53,7 @@
         data = [{} as Datum],
         class: className = null,
         stack,
+        symbol = null,
         ...options
     }: WaffleYMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
@@ -68,8 +70,6 @@
             stack
         )
     );
-
-    $inspect({ args, options });
 </script>
 
 <Mark
@@ -80,10 +80,36 @@
     {#snippet children({ mark, usedScales, scaledData })}
         {@const wafflePoly = wafflePolygon('y', args, plot.scales)}
         {#each scaledData as d, i (i)}
+            {@const [style, styleClass] = resolveStyles(
+                plot,
+                d,
+                args,
+                args.stroke && !args.fill ? 'stroke' : 'fill',
+                usedScales
+            )}
+            {@const borderRadius = resolveProp(args.borderRadius, d?.datum, 0) as BorderRadius}
+            {@const hasBorderRadius =
+                (typeof borderRadius === 'number' && borderRadius > 0) ||
+                (typeof borderRadius === 'object' &&
+                    Math.max(
+                        borderRadius.topRight ?? 0,
+                        borderRadius.bottomRight ?? 0,
+                        borderRadius.topLeft ?? 0,
+                        borderRadius.bottomLeft ?? 0
+                    ) > 0)}
             {@const { pattern, rect, path } = wafflePoly(d)}
             <g>
                 <pattern {...pattern}>
-                    <rect {...rect} fill="currentColor" />
+                    {#if symbol}
+                        {@render symbol({ ...rect, style, styleClass })}
+                    {:else if hasBorderRadius}
+                        <path
+                            d={roundedRect(rect.x, rect.y, rect.width, rect.height, borderRadius)}
+                            {style}
+                            class={styleClass} />
+                    {:else}
+                        <rect {style} class={styleClass} {...rect} />
+                    {/if}
                 </pattern>
                 <path {...path} />
             </g>

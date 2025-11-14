@@ -37,13 +37,20 @@
 // more points.
 //
 
+import type { Snippet } from 'svelte';
 import { getPatternId } from 'svelteplot/helpers/getBaseStyles';
-import type { PlotScales, ScaledDataRecord } from 'svelteplot/types';
+import type { StackOptions } from 'svelteplot/transforms/stack';
+import type {
+    BorderRadius,
+    ConstantAccessor,
+    PlotScales,
+    ScaledDataRecord
+} from 'svelteplot/types';
 
 // The last point describes the centroid (used for pointing)
 type Point = [number, number];
 
-export type WaffleOptions = {
+export type WaffleOptions<T> = {
     /**
      * the quantity represented by each square in the waffle chart, defaults to 1
      */
@@ -60,6 +67,20 @@ export type WaffleOptions = {
      * whether to round values to avoid partial cells; defaults to false
      */
     round?: boolean;
+    stack?: StackOptions;
+    borderRadius?: ConstantAccessor<BorderRadius, T>;
+    symbol?: Snippet<
+        [
+            {
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+                style: string | null;
+                styleClass: string | null;
+            }
+        ]
+    >;
 };
 
 type WaffleProps = {
@@ -124,7 +145,6 @@ export function wafflePolygon(
         const y2val = d.resolved[y2];
         const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
         const c = P.pop();
-        console.log({ c, P, xv, y1val, y2val });
         const id = getPatternId();
         const pos = [d[x] + tx + mx, y0];
         return {

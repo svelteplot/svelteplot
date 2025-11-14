@@ -1,5 +1,5 @@
 <script module>
-    export let title = 'Simple Bars';
+    export let title = 'Simple waffle';
     export let sortKey = 1;
 </script>
 
