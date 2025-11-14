@@ -33,14 +33,17 @@
         onbrushend?: (evt: BrushEvent) => void;
         onbrush?: (evt: BrushEvent) => void;
     }
-    import { getContext } from 'svelte';
+    import { getContext, untrack } from 'svelte';
     import Rect from '$lib/marks/Rect.svelte';
     import type { BaseMarkProps, DataRecord, PlotContext } from 'svelteplot/types/index.js';
     import { clientToLayerCoordinates } from './helpers/events.js';
     import Frame from '$lib/marks/Frame.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let { brush = $bindable({ enabled: false }), ...markProps }: BrushMarkProps = $props();
+    let { brush: brushExternal = $bindable({ enabled: false }), ...markProps }: BrushMarkProps =
+        $props();
+
+    let brush = $state<Brush>(brushExternal);
 
     const DEFAULTS = {
         stroke: 'currentColor',
@@ -179,6 +182,7 @@
     );
 
     $effect(() => {
+        // update brush prop when internal state changes
         brush.x1 =
             !brush.enabled || limitDimension === 'y'
                 ? undefined
@@ -196,6 +200,39 @@
                 ? undefined
                 : constrain(y1 > y2 ? y1 : y2, yDomain);
     });
+
+    // update internal state when external brush prop changes
+    $effect(() => {
+        const brushInt = untrack(() => brush);
+        if (!brushIdentical(brushInt, brushExternal)) {
+            brush = brushExternal;
+            // also keep internal x1,x2,y1,y2 in sync
+            x1 = brush.x1 as Date | number;
+            x2 = brush.x2 as Date | number;
+            y1 = brush.y1 as Date | number;
+            y2 = brush.y2 as Date | number;
+            onbrush?.({ brush } as BrushEvent);
+        }
+    });
+
+    // update external brush when internal state changes
+    $effect(() => {
+        const brushExt = untrack(() => brushExternal);
+        if (!brushIdentical(brush, brushExt)) {
+            // avoid cycles
+            brushExternal = brush;
+        }
+    });
+
+    function brushIdentical(b1: Brush, b2: Brush) {
+        return (
+            b1.enabled === b2.enabled &&
+            b1.x1 === b2.x1 &&
+            b1.x2 === b2.x2 &&
+            b1.y1 === b2.y1 &&
+            b1.y2 === b2.y2
+        );
+    }
 
     function constrain<T extends number | Date>(x: T, extent: [typeof x, typeof x]) {
         const minE = extent[0] < extent[1] ? extent[0] : extent[1];
@@ -242,8 +279,12 @@
         } else {
             // draw new brush selection
             action = 'draw';
-            x1 = x2 = xScaleFn.invert(dragStart[0]);
-            y1 = y2 = yScaleFn.invert(dragStart[1]);
+            if (typeof xScaleFn.invert === 'function' && limitDimension !== 'y') {
+                x1 = x2 = xScaleFn.invert(dragStart[0]);
+            }
+            if (typeof yScaleFn.invert === 'function' && limitDimension !== 'x') {
+                y1 = y2 = yScaleFn.invert(dragStart[1]);
+            }
         }
         onbrushstart?.({ ...e, brush });
     }
