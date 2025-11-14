@@ -18,6 +18,7 @@
     import Mark from 'svelteplot/Mark.svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
 
     interface WaffleYMarkProps
         extends BaseMarkProps<Datum>,
@@ -98,7 +99,7 @@
                         borderRadius.bottomLeft ?? 0
                     ) > 0)}
             {@const { pattern, rect, path } = wafflePoly(d)}
-            <g>
+            <g class={['waffle-y', className]}>
                 <pattern {...pattern}>
                     {#if symbol}
                         {@render symbol({ ...rect, style, styleClass, datum: d.datum })}

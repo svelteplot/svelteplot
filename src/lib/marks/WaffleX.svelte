@@ -17,11 +17,12 @@
     import Mark from '$lib/Mark.svelte';
     import { getContext } from 'svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect';
 
     interface WaffleXMarkProps
         extends BaseMarkProps<Datum>,
             LinkableMarkProps<Datum>,
-            WaffleOptions {
+            WaffleOptions<Datum> {
         data?: Datum[];
         /**
          * bound to a quantitative scale
@@ -94,7 +95,7 @@
                     ) > 0)}
             {@const [style, styleClass] = resolveStyles(plot, d, options, 'fill', usedScales)}
             {@const { pattern, rect, path } = wafflePoly(d)}
-            <g>
+            <g class={['waffle-x', className]}>
                 <pattern {...pattern}>
                     {#if symbol}
                         {@render symbol(rect)}
