@@ -1,5 +1,7 @@
 <script module>
     export let title = 'Custom waffle symbol';
+    export let description =
+        'A waffle chart using a custom SVG symbol for each unit, passed via symbol snippet.';
     export let sortKey = 20;
     export let transforms = ['group'];
 </script>
@@ -16,7 +18,7 @@
     let { penguins } = $derived(page.data.data);
 </script>
 
-<Plot height={600} color={{ legend: true }}>
+<Plot color={{ legend: true }}>
     <RuleY data={[0]} />
     <WaffleY
         dy={-1}

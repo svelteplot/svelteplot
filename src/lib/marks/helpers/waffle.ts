@@ -78,6 +78,7 @@ export type WaffleOptions<T> = {
                 height: number;
                 style: string | null;
                 styleClass: string | null;
+                datum: T;
             }
         ]
     >;

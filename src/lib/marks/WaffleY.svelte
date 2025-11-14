@@ -101,7 +101,7 @@
             <g>
                 <pattern {...pattern}>
                     {#if symbol}
-                        {@render symbol({ ...rect, style, styleClass })}
+                        {@render symbol({ ...rect, style, styleClass, datum: d.datum })}
                     {:else if hasBorderRadius}
                         <path
                             d={roundedRect(rect.x, rect.y, rect.width, rect.height, borderRadius)}

@@ -1,6 +1,6 @@
 <script module>
     export let title = 'Stacked waffle';
-    export let sortKey = 2;
+    export let sortKey = 5;
     export let transforms = ['group'];
 </script>
 
