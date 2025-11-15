@@ -17,6 +17,7 @@
     import { randomId, testFilter } from '$lib/helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
+    import wordwrap from 'svelteplot/helpers/wordwrap';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
@@ -35,6 +36,7 @@
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
+            wordwrap: boolean;
             textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
         };
         text: boolean;
@@ -59,8 +61,21 @@
         text = true
     }: BaseAxisXProps = $props();
 
+    const isBandScale = $derived(scaleType === 'band');
+    const bandWidth = $derived(isBandScale ? scaleFn.bandwidth() : 0);
+
     function splitTick(tick: string | string[]) {
-        return Array.isArray(tick) ? tick : [tick];
+        return Array.isArray(tick)
+            ? tick
+            : typeof tick === 'string' && isBandScale && options.wordwrap !== false
+              ? wordwrap(
+                    tick,
+                    { maxLineWidth: bandWidth * 0.9 },
+                    { minCharactersPerLine: 4 },
+                    +resolveProp(tickFontSize, {}, 11),
+                    false
+                )
+              : [tick];
     }
 
     let tickRotate = $derived(plot.options.x.tickRotate || 0);
