@@ -55,7 +55,7 @@
         text-decoration: none;
         opacity: 0.8;
         vertical-align: super;
-        background-color: rgb(118 51 219 / 10%);
+        background-color: rgb(118 51 219 / 30%);
         color: #7633db;
         padding: 0.3rem;
         line-height: 1;
