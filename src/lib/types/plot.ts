@@ -482,8 +482,8 @@ export type PlotOptions = {
     opacity: Partial<ScaleOptions>;
     symbol: Partial<LegendScaleOptions>;
     length: Partial<ScaleOptions>;
-    fx: Partial<ScaleOptions>;
-    fy: Partial<ScaleOptions>;
+    fx: Partial<XScaleOptions>;
+    fy: Partial<YScaleOptions>;
     children: Snippet<
         [{ width: number; height: number; options: PlotOptions; scales: PlotScales }]
     >;
