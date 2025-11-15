@@ -38,6 +38,7 @@
             filter: ChannelAccessor;
             wordwrap: boolean;
             textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
+            removeDuplicateTicks: boolean;
         };
         text: boolean;
         plot: PlotState;
@@ -237,7 +238,9 @@
                             {:else}
                                 {#each textLines as line, i (i)}
                                     <tspan x="0" dy={i ? 12 : 0}
-                                        >{!prevTextLines || prevTextLines[i] !== line
+                                        >{!prevTextLines ||
+                                        prevTextLines[i] !== line ||
+                                        options.removeDuplicateTicks === false
                                             ? line
                                             : ''}</tspan>
                                 {/each}
