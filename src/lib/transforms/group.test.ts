@@ -168,6 +168,32 @@ describe('groupZ', () => {
         expect(channels).toStrictEqual({ fill: 'year', opacity: '__opacity' });
     });
 
+    it('groups by fx channel if no z is present', () => {
+        const { data, ...channels } = groupZ(
+            { data: inputData, fx: 'facet', opacity: 'value' },
+            { opacity: 'count' }
+        );
+        expect(data).toHaveLength(2);
+        expect(data[0].facet).toBe('A');
+        expect(data[1].facet).toBe('B');
+        expect(data[0].__opacity).toBe(3);
+        expect(data[1].__opacity).toBe(4);
+        expect(channels).toStrictEqual({ fx: 'facet', opacity: '__opacity' });
+    });
+
+    it('groups by fy channel if no z is present', () => {
+        const { data, ...channels } = groupZ(
+            { data: inputData, fy: 'facet', opacity: 'value' },
+            { opacity: 'count' }
+        );
+        expect(data).toHaveLength(2);
+        expect(data[0].facet).toBe('A');
+        expect(data[1].facet).toBe('B');
+        expect(data[0].__opacity).toBe(3);
+        expect(data[1].__opacity).toBe(4);
+        expect(channels).toStrictEqual({ fy: 'facet', opacity: '__opacity' });
+    });
+
     it('groups by z channel accessor', () => {
         const { data, ...channels } = groupZ({ data: inputData, z: (d) => d.year });
         expect(data).toHaveLength(3);
