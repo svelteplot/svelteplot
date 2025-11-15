@@ -110,7 +110,7 @@ async function generate() {
         const parts = urlPath.split('/');
         const group = parts[0] || '';
         const page = parts.slice(1).join('/') || '';
-        const key = `${group}/${page}`;
+        const key = `${group}/${page}/${r.mode}`;
 
         body += `
       <section class="case ${escapeHtml(r.status)}" data-status="${escapeHtml(r.status)}" data-key="${escapeHtml(key)}">
@@ -120,7 +120,7 @@ async function generate() {
           <span class="status ${statusCls}">[${statusText}]</span>
           <span class="pct">diff=${escapeHtml(pct)} ${mismatch}</span>
           <div class="actions" style="display: ${r.status === 'passed' ? 'none' : 'block'}">
-            <button class="approve" data-group="${escapeHtml(group)}" data-page="${escapeHtml(page)}">Approve</button>
+            <button class="approve" data-group="${escapeHtml(group)}" data-page="${escapeHtml(page)}" data-mode="${escapeHtml(r.mode)}">Approve</button>
           </div>
         </div>
         <div class="grid">
@@ -148,6 +148,7 @@ async function generate() {
         if (!btn) return;
         const group = btn.dataset.group;
         const page = btn.dataset.page;
+        const mode = btn.dataset.mode;
         const url = '/api/vr-tests/' + encodeURIComponent(group) + '/' + encodeURIComponent(page);
         const original = btn.textContent;
         btn.disabled = true;
@@ -157,14 +158,16 @@ async function generate() {
           const data = await res.json().catch(() => ({}));
           if (!res.ok || data.ok !== true) throw new Error(data.error || 'Request failed');
           // Update all matching buttons to Approved
-          const selector = 'button.approve[data-group="' + group.replace(/"/g, '\\"') + '"][data-page="' + page.replace(/"/g, '\\"') + '"]';
+          const selector = 'button.approve[data-group="' + group.replace(/"/g, '\\"') + '"][data-page="' + page.replace(/"/g, '\\"') + '"][data-mode="' + mode + '"]';
           document.querySelectorAll(selector).forEach((el) => {
             el.textContent = 'Approved';
             el.disabled = true;
           });
           // hide entire section
           const section = btn.closest('section.case');
-          if (section) section.style.display = 'none';
+          if (section) {
+            section.style.display = 'none';
+         }
         } catch (e) {
           btn.disabled = false;
           btn.textContent = original;

@@ -1,5 +1,5 @@
 import { groupFacetsAndZ } from '$lib/helpers/group.js';
-import { testFilter } from '$lib/helpers/index.js';
+import { isValid, testFilter } from '$lib/helpers/index.js';
 import { reduceOutputs, type ReducerName } from '$lib/helpers/reduce.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';
 import type { DataRecord, DataRow, RawValue, TransformArg } from '$lib/types/index.js';
@@ -117,12 +117,19 @@ export function groupZ(input: TransformArg<T, DataRecord>, options: GroupZOption
     return groupXYZ('z', input, options);
 }
 
+const groupDimRaw = Symbol('groupDimRaw');
+
 function groupXYZ(
     dim: 'x' | 'y' | 'z',
     { data, ...channels }: TransformArg<T, DataRecord>,
     options: GroupXOptions = {}
 ) {
-    if ((dim === 'z' ? channels.z || channels.fill || channels.stroke : channels[dim]) == null)
+    // console.log({ dim, data, channels, options });
+    if (
+        (dim === 'z'
+            ? channels.z || channels.fill || channels.stroke || channels.fx || channels.fy
+            : channels[dim]) == null
+    )
         throw new Error('you must provide a channel to group on ' + dim);
 
     const propName =
@@ -138,10 +145,12 @@ function groupXYZ(
         dim === 'z'
             ? [[null, data]]
             : d3Groups(
-                  data.filter((d) => testFilter(d, channels)),
+                  data
+                      .filter((d) => testFilter(d, channels))
+                      .map((d) => ({ ...d, [groupDimRaw]: resolveChannel(dim, d, channels) }))
+                      .filter((d) => isValid(d[groupDimRaw])),
                   (d) => {
-                      const v = resolveChannel(dim, d, channels);
-                      return interval ? interval.round(v) : v;
+                      return interval ? interval.floor(d[groupDimRaw]) : d[groupDimRaw];
                   }
               );
     const newData: DataRecord[] = [];

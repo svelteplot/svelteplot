@@ -1,10 +1,5 @@
 import isDataRecord from '$lib/helpers/isDataRecord.js';
-import type {
-    DataRecord,
-    TransformArgsRow,
-    TransformArgsRecord,
-    RawValue
-} from '$lib/types/index.js';
+import type { TransformArgsRow, TransformArgsRecord } from '$lib/types/index.js';
 import { INDEX } from '$lib/constants';
 
 export const X = Symbol('x');

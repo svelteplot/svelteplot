@@ -17,6 +17,7 @@
     import { randomId, testFilter } from '$lib/helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
+    import wordwrap from 'svelteplot/helpers/wordwrap';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
@@ -35,7 +36,9 @@
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
+            wordwrap: boolean;
             textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
+            removeDuplicateTicks: boolean;
         };
         text: boolean;
         plot: PlotState;
@@ -59,8 +62,21 @@
         text = true
     }: BaseAxisXProps = $props();
 
+    const isBandScale = $derived(scaleType === 'band');
+    const bandWidth = $derived(isBandScale ? scaleFn.bandwidth() : 0);
+
     function splitTick(tick: string | string[]) {
-        return Array.isArray(tick) ? tick : [tick];
+        return Array.isArray(tick)
+            ? tick
+            : typeof tick === 'string' && isBandScale && options.wordwrap !== false
+              ? wordwrap(
+                    tick,
+                    { maxLineWidth: bandWidth * 0.9 },
+                    { minCharactersPerLine: 4 },
+                    +resolveProp(tickFontSize, {}, 11),
+                    false
+                )
+              : [tick];
     }
 
     let tickRotate = $derived(plot.options.x.tickRotate || 0);
@@ -72,7 +88,7 @@
     // generate id used for registering margins
     const id = randomId();
 
-    const { autoMarginTop, autoMarginBottom } =
+    const { autoMarginTop, autoMarginBottom, autoMarginLeft, autoMarginRight } =
         getContext<AutoMarginStores>('svelteplot/autoMargins');
 
     let tickTextElements = $state([] as SVGTextElement[]);
@@ -107,6 +123,14 @@
             }
         }
         return tickObjects as ScaledDataRecord[];
+    });
+
+    $effect(() => {
+        // just add some minimal horizontal margins for axis ticks
+        untrack(() => $autoMarginLeft);
+        untrack(() => $autoMarginRight);
+        $autoMarginLeft.set(id, 5);
+        $autoMarginRight.set(id, 10);
     });
 
     $effect(() => {
@@ -147,6 +171,8 @@
         return () => {
             if ($autoMarginBottom.has(id)) $autoMarginBottom.delete(id);
             if ($autoMarginTop.has(id)) $autoMarginTop.delete(id);
+            if ($autoMarginLeft.has(id)) $autoMarginLeft.delete(id);
+            if ($autoMarginRight.has(id)) $autoMarginRight.delete(id);
         };
     });
 </script>
@@ -222,7 +248,9 @@
                             {:else}
                                 {#each textLines as line, i (i)}
                                     <tspan x="0" dy={i ? 12 : 0}
-                                        >{!prevTextLines || prevTextLines[i] !== line
+                                        >{!prevTextLines ||
+                                        prevTextLines[i] !== line ||
+                                        options.removeDuplicateTicks === false
                                             ? line
                                             : ''}</tspan>
                                 {/each}

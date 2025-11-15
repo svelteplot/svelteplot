@@ -8,6 +8,7 @@ import type {
     DataRecord,
     LegendScaleOptions,
     PlotScales,
+    RawValue,
     ScaleOptions,
     XScaleOptions,
     YScaleOptions
@@ -52,6 +53,8 @@ import type {
     TickY,
     Vector
 } from '../marks/index.js';
+import type WaffleX from 'svelteplot/marks/WaffleX.svelte';
+import type WaffleY from 'svelteplot/marks/WaffleY.svelte';
 
 export type PlotState = {
     width: number;
@@ -342,6 +345,18 @@ export type PlotDefaults = {
      * default props for vector marks
      */
     vector: Partial<Omit<ComponentProps<typeof Vector>, IgnoreDefaults>>;
+    /**
+     * default props for waffle marks, applied to both waffleX and waffleY marks
+     */
+    waffle: Partial<Omit<ComponentProps<typeof WaffleX>, IgnoreDefaults>>;
+    /**
+     * default props for waffleX marks
+     */
+    waffleX: Partial<Omit<ComponentProps<typeof WaffleX>, IgnoreDefaults>>;
+    /**
+     * default props for waffleY marks
+     */
+    waffleY: Partial<Omit<ComponentProps<typeof WaffleY>, IgnoreDefaults>>;
 };
 
 export type PlotOptions = {
@@ -455,11 +470,11 @@ export type PlotOptions = {
     /**
      * Options for the shared x scale.
      */
-    x: Partial<XScaleOptions>;
+    x: Partial<XScaleOptions> | false | RawValue[];
     /**
      * Options for the shared y scale
      */
-    y: Partial<YScaleOptions>;
+    y: Partial<YScaleOptions> | false | RawValue[];
     /**
      * Options for the shared radius scale
      */
@@ -468,8 +483,8 @@ export type PlotOptions = {
     opacity: Partial<ScaleOptions>;
     symbol: Partial<LegendScaleOptions>;
     length: Partial<ScaleOptions>;
-    fx: Partial<ScaleOptions>;
-    fy: Partial<ScaleOptions>;
+    fx: Partial<XScaleOptions> | false | RawValue[];
+    fy: Partial<YScaleOptions> | false | RawValue[];
     children: Snippet<
         [{ width: number; height: number; options: PlotOptions; scales: PlotScales }]
     >;

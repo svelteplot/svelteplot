@@ -65,3 +65,14 @@ export function maybeFromRem(value: string | number, rootFontSize: number = 16) 
         ? +value.slice(0, -3) * rootFontSize
         : value;
 }
+
+let nextClipId = 0;
+let nextPatternId = 0;
+
+export function getClipId() {
+    return `svp-clip-${++nextClipId}`;
+}
+
+export function getPatternId() {
+    return `svp-pattern-${++nextPatternId}`;
+}

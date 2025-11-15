@@ -28,7 +28,9 @@ export type MarkType =
     | 'swoopyArrow'
     | 'text'
     | 'tickX'
-    | 'tickY';
+    | 'tickY'
+    | 'waffleX'
+    | 'waffleY';
 
 // list of all prossible style props on marks
 export type MarkStyleProps =

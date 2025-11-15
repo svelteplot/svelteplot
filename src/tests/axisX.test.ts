@@ -273,4 +273,63 @@ describe('AxisX mark', () => {
         expect(checkTicks.mock.calls[0]).toStrictEqual([0, 0, [0, 20, 40, 60, 80, 100]]);
         expect(checkTicks.mock.calls[1]).toStrictEqual([20, 1, [0, 20, 40, 60, 80, 100]]);
     });
+
+    it('removes duplicate ticks', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: {
+                    width: 400,
+                    x: {
+                        domain: [0, 4],
+                        ticks: [1, 2, 3, 4],
+                        tickFormat(d, i) {
+                            return [i < 2 ? 'Foo' : 'Bar', d];
+                        }
+                    }
+                }
+            }
+        });
+
+        const ticks = container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>;
+        expect(ticks.length).toBe(4);
+        const tspans = Array.from(ticks).map((t) =>
+            Array.from(t.querySelectorAll('text tspan')).map((ts) => ts?.textContent)
+        );
+        expect(tspans).toStrictEqual([
+            ['Foo', '1'],
+            ['', '2'],
+            ['Bar', '3'],
+            ['', '4']
+        ]);
+    });
+
+    it('does not remove duplicate ticks if disabled', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: {
+                    width: 400,
+                    x: {
+                        domain: [0, 4],
+                        ticks: [1, 2, 3, 4],
+                        removeDuplicateTicks: false,
+                        tickFormat(d, i) {
+                            return [i < 2 ? 'Foo' : 'Bar', d];
+                        }
+                    }
+                }
+            }
+        });
+
+        const ticks = container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>;
+        expect(ticks.length).toBe(4);
+        const tspans = Array.from(ticks).map((t) =>
+            Array.from(t.querySelectorAll('text tspan')).map((ts) => ts?.textContent)
+        );
+        expect(tspans).toStrictEqual([
+            ['Foo', '1'],
+            ['Foo', '2'],
+            ['Bar', '3'],
+            ['Bar', '4']
+        ]);
+    });
 });

@@ -167,6 +167,15 @@ export type XScaleOptions = ScaleOptions & {
     labelAnchor: 'auto' | 'left' | 'center' | 'right';
 
     tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
+
+    /**
+     * Enable word wrapping for axis tick labels, default true
+     */
+    wordWrap: boolean;
+    /**
+     * Remove duplicate ticks from axis, default true
+     */
+    removeDuplicateTicks: boolean;
 };
 
 export type YScaleOptions = ScaleOptions & {

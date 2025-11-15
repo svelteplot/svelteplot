@@ -257,6 +257,20 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `symbol` also supports:
     - `legend` - whether to show a symbol legend
 
+You can also just pass the domain array as shorthand: _added in 0.6.1_
+
+```svelte live
+<script>
+    import { Plot } from 'svelteplot';
+</script>
+
+<Plot grid height={250} x={[0, 100]} y={[-50, 50]} />
+```
+
+```svelte
+<Plot grid height={250} x={[0, 100]} y={[-50, 50]} />
+```
+
 ### Other plot options
 
 - `locale` - locale used for automatic number and date formatting in axis ticks

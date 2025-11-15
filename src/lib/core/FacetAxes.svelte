@@ -35,7 +35,7 @@
             scaleFn={facetXScale}
             scaleType="band"
             ticks={fxValues}
-            tickFormat={(d) => d}
+            tickFormat={plot.options.fx.tickFormat || ((d) => d)}
             tickFontSize={11}
             tickSize={0}
             tickPadding={5}
@@ -53,7 +53,7 @@
             scaleFn={facetYScale}
             scaleType="band"
             ticks={fyValues}
-            tickFormat={(d) => d}
+            tickFormat={plot.options.fy.tickFormat || ((d) => d)}
             tickFontSize={11}
             tickSize={0}
             tickPadding={5}
