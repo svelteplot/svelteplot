@@ -13,4 +13,3 @@
 <Plot width={100} height={100} axes={false} {...plotArgs}>
     <WaffleX {...waffleArgs} />
 </Plot>
-
