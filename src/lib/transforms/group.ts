@@ -117,6 +117,8 @@ export function groupZ(input: TransformArg<T, DataRecord>, options: GroupZOption
     return groupXYZ('z', input, options);
 }
 
+const groupDimRaw = Symbol('groupDimRaw');
+
 function groupXYZ(
     dim: 'x' | 'y' | 'z',
     { data, ...channels }: TransformArg<T, DataRecord>,
@@ -148,8 +150,7 @@ function groupXYZ(
                       .map((d) => ({ ...d, [groupDimRaw]: resolveChannel(dim, d, channels) }))
                       .filter((d) => isValid(d[groupDimRaw])),
                   (d) => {
-                      const v = resolveChannel(dim, d, channels);
-                      return interval ? interval.round(v) : v;
+                      return interval ? interval.floor(d[groupDimRaw]) : d[groupDimRaw];
                   }
               );
     const newData: DataRecord[] = [];
