@@ -114,7 +114,7 @@
         class: className = '',
         css = DEFAULTS.css,
         width: fixedWidth,
-        ...initialOpts
+        ...initialOptions
     }: Partial<PlotOptions> = $props();
 
     let width = $state(DEFAULTS.initialWidth);
@@ -164,7 +164,7 @@
     );
 
     const explicitDomains = $derived(
-        new Set(SCALES.filter((scale) => !!initialOpts[scale]?.domain))
+        new Set(SCALES.filter((scale) => !!initialOptions[scale]?.domain))
     );
 
     // one-dimensional plots have different automatic margins and heights
@@ -173,12 +173,12 @@
     // construct the plot options from the user-defined options (top-level props) as well
     // as extending them from smart context-aware defaults
     const plotOptions = $derived(
-        extendPlotOptions(initialOpts, {
+        extendPlotOptions(initialOptions, {
             explicitScales,
             explicitDomains,
-            hasProjection: !!initialOpts.projection,
-            margin: initialOpts.margin,
-            inset: initialOpts.inset
+            hasProjection: !!initialOptions.projection,
+            margin: initialOptions.margin,
+            inset: initialOptions.inset
         })
     );
 
@@ -369,7 +369,7 @@
             {},
             { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains },
             smartDefaultPlotOptions(opts),
-            initialOpts
+            initialOptions
         );
     }
 

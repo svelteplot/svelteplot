@@ -26,7 +26,7 @@
     onclick={() => {
         brush = { enabled: true, x1: 1.5, x2: 3 };
     }}>reset to [1.5, 3]</button>
-<Plot grid>
+<Plot y={['A', 'B', 'C']} grid>
     {#if brush.enabled}
         <Rect
             {...snappedBrush}

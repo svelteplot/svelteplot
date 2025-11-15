@@ -65,7 +65,7 @@ pnpm add svelteplot
     import { Plot, BarX } from 'svelteplot';
 </script>
 
-<Plot grid>
+<Plot grid y={['A', 'B', 'C', 'D']}>
     <BarX data={[1, 2, 3, 4]} />
 </Plot>
 ```
@@ -75,7 +75,7 @@ pnpm add svelteplot
     import { Plot, BarX } from '$lib/index';
 </script>
 
-<Plot grid testid="four-bars">
+<Plot grid testid="four-bars" y={['A', 'B', 'C', 'D']}>
     <BarX data={[1, 2, 3, 4]} />
 </Plot>
 ```

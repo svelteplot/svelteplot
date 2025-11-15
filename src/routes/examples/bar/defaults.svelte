@@ -20,6 +20,6 @@
     });
 </script>
 
-<Plot>
+<Plot y={['A', 'B', 'C', 'D', 'E', 'F']}>
     <BarX data={[1, 2, 3, 4, 5, 6]} fill={(d) => d} />
 </Plot>

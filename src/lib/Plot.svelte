@@ -12,7 +12,7 @@
 <script lang="ts">
     import Plot from './core/Plot.svelte';
 
-    import type { PlotOptions } from './types/index.js';
+    import type { PlotOptions, RawValue, ScaleOptions } from './types/index.js';
 
     // implicit marks
     import AxisX from './marks/AxisX.svelte';
@@ -62,12 +62,22 @@
     const scales = $derived(
         Object.fromEntries(
             ['x', 'y', 'r', 'color', 'opacity', 'symbol', 'length', 'fx', 'fy'].map((scale) => {
-                const scaleOpts = restOptions[scale] || {};
+                const scaleOpts = maybeScaleOptions(restOptions[scale]);
                 const scaleFn = scaleOpts.scale || (scale === 'color' ? autoScaleColor : autoScale);
                 return [scale, { ...scaleOpts, scale: scaleFn }];
             })
         )
     );
+
+    function maybeScaleOptions(
+        scaleOptions: undefined | false | RawValue[] | object
+    ): Partial<ScaleOptions> | undefined {
+        if (scaleOptions === false) return { axis: false };
+        if (Array.isArray(scaleOptions)) return { domain: scaleOptions };
+        return scaleOptions || {};
+    }
+
+    $inspect({ scales });
 </script>
 
 {#snippet header()}

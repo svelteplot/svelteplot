@@ -88,7 +88,7 @@
     // generate id used for registering margins
     const id = randomId();
 
-    const { autoMarginTop, autoMarginBottom } =
+    const { autoMarginTop, autoMarginBottom, autoMarginLeft, autoMarginRight } =
         getContext<AutoMarginStores>('svelteplot/autoMargins');
 
     let tickTextElements = $state([] as SVGTextElement[]);
@@ -123,6 +123,14 @@
             }
         }
         return tickObjects as ScaledDataRecord[];
+    });
+
+    $effect(() => {
+        // just add some minimal horizontal margins for axis ticks
+        untrack(() => $autoMarginLeft);
+        untrack(() => $autoMarginRight);
+        $autoMarginLeft.set(id, 5);
+        $autoMarginRight.set(id, 5);
     });
 
     $effect(() => {
@@ -163,6 +171,8 @@
         return () => {
             if ($autoMarginBottom.has(id)) $autoMarginBottom.delete(id);
             if ($autoMarginTop.has(id)) $autoMarginTop.delete(id);
+            if ($autoMarginLeft.has(id)) $autoMarginLeft.delete(id);
+            if ($autoMarginRight.has(id)) $autoMarginRight.delete(id);
         };
     });
 </script>

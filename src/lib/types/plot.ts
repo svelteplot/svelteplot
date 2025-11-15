@@ -8,6 +8,7 @@ import type {
     DataRecord,
     LegendScaleOptions,
     PlotScales,
+    RawValue,
     ScaleOptions,
     XScaleOptions,
     YScaleOptions
@@ -469,11 +470,11 @@ export type PlotOptions = {
     /**
      * Options for the shared x scale.
      */
-    x: Partial<XScaleOptions>;
+    x: Partial<XScaleOptions> | false | RawValue[];
     /**
      * Options for the shared y scale
      */
-    y: Partial<YScaleOptions>;
+    y: Partial<YScaleOptions> | false | RawValue[];
     /**
      * Options for the shared radius scale
      */
@@ -482,8 +483,8 @@ export type PlotOptions = {
     opacity: Partial<ScaleOptions>;
     symbol: Partial<LegendScaleOptions>;
     length: Partial<ScaleOptions>;
-    fx: Partial<XScaleOptions>;
-    fy: Partial<YScaleOptions>;
+    fx: Partial<XScaleOptions> | false | RawValue[];
+    fy: Partial<YScaleOptions> | false | RawValue[];
     children: Snippet<
         [{ width: number; height: number; options: PlotOptions; scales: PlotScales }]
     >;
