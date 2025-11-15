@@ -257,7 +257,7 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `symbol` also supports:
     - `legend` - whether to show a symbol legend
 
-You can also just pass the domain array as shorthand: _added in 0.6.1_
+You can also just pass the domain array as shorthand: _added in 0.7.0_
 
 ```svelte live
 <script>

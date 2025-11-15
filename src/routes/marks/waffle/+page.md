@@ -3,7 +3,7 @@ title: Waffle mark
 ---
 
 :::info
-added in 0.6.1
+added in 0.7.0
 :::
 
 The Waffle mark renders pictograms or waffle charts, which are grids of squares used to visualize proportions over a band scale. They can be used like Bar marks. Waffles are useful for reading exact quantities. How quickly can you compare counts of the fruits below?
