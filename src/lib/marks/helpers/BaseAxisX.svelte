@@ -10,11 +10,13 @@
         PlotState,
         RawValue,
         ScaledDataRecord,
-        ScaleType
+        ScaleType,
+        TransitionArgs,
+        TransitionFunction
     } from 'svelteplot/types/index.js';
     import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import { max } from 'd3-array';
-    import { randomId, testFilter } from '$lib/helpers/index.js';
+    import { noTransition, randomId, testFilter } from '$lib/helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
     import wordwrap from 'svelteplot/helpers/wordwrap';
@@ -42,6 +44,8 @@
         };
         text: boolean;
         plot: PlotState;
+        tIn?: [TransitionFunction?, TransitionArgs?];
+        tOut?: [TransitionFunction?, TransitionArgs?];
     };
 
     let {
@@ -59,7 +63,9 @@
         options,
         plot,
         title,
-        text = true
+        text = true,
+        tIn = [],
+        tOut = []
     }: BaseAxisXProps = $props();
 
     const isBandScale = $derived(scaleType === 'band');
@@ -175,6 +181,9 @@
             if ($autoMarginRight.has(id)) $autoMarginRight.delete(id);
         };
     });
+
+    const tInF = $derived(tIn?.[0] ?? noTransition);
+    const tOutF = $derived(tOut?.[0] ?? noTransition);
 </script>
 
 <g class="axis-x">
@@ -183,6 +192,8 @@
             {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const tickFontSize_ = +resolveProp(tickFontSize, tick, 10)}
             <g
+                in:tInF|global={{ ...(tIn?.[1] ?? {}) }}
+                out:tOutF|global={{ ...(tOut?.[1] ?? {}) }}
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.x + tick.dx}, {tickY + tick.dy})"
                 text-anchor={tickRotate < 0 ? 'end' : tickRotate > 0 ? 'start' : 'middle'}>
