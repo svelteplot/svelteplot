@@ -81,7 +81,7 @@
         "@types/topojson-client": "^3.1.5",
         "@typescript-eslint/eslint-plugin": "^8.46.4",
         "@typescript-eslint/parser": "^8.46.4",
-        "csstype": "^3.2.0",
+        "csstype": "^3.2.1",
         "d3-dsv": "^3.0.1",
         "d3-fetch": "^3.0.1",
         "d3-force": "^3.0.0",
