@@ -18,7 +18,8 @@ export default function removeIdenticalLines(input: Tick[]): Tick[] {
         const isIdentical =
             input.length > 1 && input.every((tick) => input[0].text[l] === tick.text[l]);
         for (let c = 0; c < input.length; c++) {
-            if (!isIdentical && input[c].text[l]) uniqueTicks[c].text.push(input[c].text[l]);
+            if (!isIdentical && input[c].text[l] != null)
+                uniqueTicks[c].text.push(input[c].text[l]);
         }
     }
     return uniqueTicks;
