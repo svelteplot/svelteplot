@@ -11,7 +11,6 @@
         'geo/us-choropleth',
         'geo/earthquakes',
         'area/streamgraph',
-
         'regression/grouped',
         'vector/spike-map',
         'vector/wind',

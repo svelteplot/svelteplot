@@ -1,6 +1,9 @@
 <script lang="ts">
     import { afterNavigate } from '$app/navigation';
+    import { page } from '$app/state';
+    import { resolve } from '$app/paths';
     import '../app.scss';
+    import { shuffle } from 'd3-array';
 
     afterNavigate(() => {
         const content = document.querySelector('.content');
@@ -44,11 +47,72 @@
             });
         }
     });
+
+    let isDark = $state(false);
+
+    $effect(() => {
+        // watch dark class on html element
+        const observer = new MutationObserver(() => {
+            isDark = document.documentElement.classList.contains('dark');
+        });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        isDark = document.documentElement.classList.contains('dark');
+        return () => observer.disconnect();
+    });
+
+    const showcase = [
+        'area/smoothed-area',
+        'area/streamgraph',
+        'arrow/metro',
+        'axis/datawrapper-ticks',
+        'bar/faceted-bars',
+        'box/box-y',
+        'box/box-y-facet',
+        'box/box-x-faceted',
+        'brush/overview-detail',
+        'cell/temperatures-threshold',
+        'dot/1-colored-scatterplot',
+        'dot/beeswarm-bubbles',
+        'dot/dodge-faceted',
+        'geo/earthquakes',
+        'geo/us-choropleth',
+        'image/image-beeswarm',
+        'line/geo-line',
+        'line/gradient-line',
+        'line/running-mean',
+        'link/spherical-link',
+        'rect/binned',
+        'rule/data-rules',
+        'rect/marimekko',
+        'regression/grouped',
+        'regression/log',
+        'vector/spike-map',
+        'vector/wind',
+        'waffle/custom-symbol'
+    ].map((d) => ({
+        key: d,
+        light: resolve(`/examples/${d}.png`),
+        dark: resolve(`/examples/${d}.dark.png`)
+    }));
+
+    const showExampleGrid = $derived(page.url.pathname === '/');
 </script>
 
 <slot />
 
-<style>
+{#if showExampleGrid}
+    <div class="example-grid-background">
+        {#each shuffle(showcase) as example (example.key)}
+            <a href={resolve(`/examples/${example.key}`)}
+                ><img src={isDark ? example.dark : example.light} alt={example.key} /></a>
+        {/each}
+    </div>
+{/if}
+
+<style lang="scss">
     :global(.version-link) {
         font-size: 11px;
         margin-left: 0.75em;
@@ -63,5 +127,69 @@
         display: inline-block;
         text-decoration: none !important;
         font-weight: normal;
+    }
+    :root {
+        --example-grid-columns: 6;
+    }
+    @media (max-width: 900px) {
+        :root {
+            --example-grid-columns: 5;
+        }
+    }
+    @media (max-width: 800px) {
+        :root {
+            --example-grid-columns: 4;
+        }
+    }
+    @media (max-width: 600px) {
+        :root {
+            --example-grid-columns: 3;
+        }
+    }
+    @media (max-width: 500px) {
+        :root {
+            --example-grid-columns: 2;
+        }
+    }
+    .example-grid-background {
+        /* width: 100%; */
+        display: grid;
+        grid-template-columns: repeat(var(--example-grid-columns), 1fr);
+        grid-auto-rows: 1fr;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem 1.5rem;
+
+        &.max-one-row {
+            display: flex;
+            margin-top: -3rem;
+            overflow: hidden;
+            gap: 0.75rem;
+            z-index: -1;
+
+            a {
+                flex: 0 0 auto;
+                width: calc(100% / var(--example-grid-columns) - 0.75rem);
+            }
+        }
+    }
+
+    .example-grid-background img {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 3 / 2;
+        object-fit: cover;
+        position: relative;
+        padding: 8px;
+
+        // scale by 20% on hover
+        transition: transform 0.3s ease;
+        &:hover {
+            transform: scale(1.2);
+            z-index: 1;
+
+            background: fixed var(--svelteplot-bg);
+            // shadow
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     }
 </style>
