@@ -141,7 +141,6 @@ export function wafflePolygon(
     const mx = -barwidth / 2;
 
     return (d: ScaledDataRecord) => {
-        const xv = d[x];
         const y1val = d.resolved[y1];
         const y2val = d.resolved[y2];
         const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
@@ -170,10 +169,7 @@ export function wafflePolygon(
         // return `M${P.join('L')}Z`;
     };
 
-    //
-
     // const points = wafflePoints(i1, i2, columns);
-
     // return dimension === 'x' ? points : points.map(([x, y]: Point): Point => [y, x]);
 }
 
