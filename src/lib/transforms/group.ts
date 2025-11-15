@@ -122,7 +122,12 @@ function groupXYZ(
     { data, ...channels }: TransformArg<T, DataRecord>,
     options: GroupXOptions = {}
 ) {
-    if ((dim === 'z' ? channels.z || channels.fill || channels.stroke : channels[dim]) == null)
+    // console.log({ dim, data, channels, options });
+    if (
+        (dim === 'z'
+            ? channels.z || channels.fill || channels.stroke || channels.fx || channels.fy
+            : channels[dim]) == null
+    )
         throw new Error('you must provide a channel to group on ' + dim);
 
     const propName =
