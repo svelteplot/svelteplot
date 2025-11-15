@@ -135,7 +135,7 @@ describe('Line mark', () => {
             }
         });
 
-        const path = container.querySelector('g.lines > g > path');
+        const path = container.querySelectorAll('g.lines > g > path')[0];
         expect(path).not.toBeNull();
         expect(path?.getAttribute('marker-mid')).toMatch(/url\(#marker-/);
     });
@@ -153,7 +153,7 @@ describe('Line mark', () => {
             }
         });
 
-        const text = container.querySelector('g.lines > g > text') as SVGTextElement;
+        const text = container.querySelectorAll('g.lines > g > text')[0] as SVGTextElement;
         expect(text).not.toBeNull();
         expect(text?.textContent).toBe('Line Label');
         // The fill might be applied differently or through a different attribute
@@ -174,7 +174,7 @@ describe('Line mark', () => {
             }
         });
 
-        const text = container.querySelector('g.lines > g > text') as SVGTextElement;
+        const text = container.querySelectorAll('g.lines > g > text')[0] as SVGTextElement;
         expect(text).not.toBeNull();
         expect(text?.textContent).toBe('Label');
     });
@@ -193,7 +193,7 @@ describe('Line mark', () => {
             }
         });
 
-        const text = container.querySelector('g.lines > g > text') as SVGTextElement;
+        const text = container.querySelectorAll('g.lines > g > text')[0] as SVGTextElement;
         expect(text).not.toBeNull();
         expect(text?.textContent).toBe('Label');
         expect(text?.style.fill).toBe('#4269d0');
@@ -215,7 +215,7 @@ describe('Line mark', () => {
             }
         });
 
-        const text = container.querySelector('g.lines > g > text') as SVGTextElement;
+        const text = container.querySelectorAll('g.lines > g > text')[0] as SVGTextElement;
         expect(text).not.toBeNull();
         expect(text?.textContent).toBe('Line Label');
         // The fill might be applied differently or through a different attribute
@@ -238,7 +238,7 @@ describe('Line mark', () => {
             }
         });
 
-        const path = container.querySelector('g.lines > g > path');
+        const path = container.querySelectorAll('g.lines > g > path')[0];
         // Path includes 'Z' to close paths
         expect(path?.getAttribute('d')).toBe('M1,95ZM96,5Z');
     });
@@ -320,3 +320,25 @@ describe('Line mark', () => {
         ]);
     });
 });
+
+function formatHTML(html) {
+    var tab = '\t';
+    var result = '';
+    var indent = '';
+
+    html.replace(/<!---->/g, '')
+        .split(/>\s*</)
+        .forEach(function (element) {
+            if (element.match(/^\/\w/)) {
+                indent = indent.substring(tab.length);
+            }
+
+            result += indent + '<' + element + '>\r\n';
+
+            if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith('input')) {
+                indent += tab;
+            }
+        });
+
+    return result.substring(1, result.length - 3);
+}

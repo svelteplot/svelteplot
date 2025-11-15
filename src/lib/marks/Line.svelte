@@ -139,7 +139,7 @@
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
         {#if scaledData.length > 0}
-            {@const groupedLineData = groupIndex(scaledData, groupByKey)};
+            {@const groupedLineData = groupIndex(scaledData, groupByKey)}
             {#if canvas}
                 <LineCanvas {groupedLineData} {mark} {usedScales} {linePath} {groupByKey} />
             {:else}
