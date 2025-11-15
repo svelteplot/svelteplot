@@ -51,6 +51,7 @@
         tickSpacing?: number;
         /** text anchor for axis labels */
         textAnchor?: ConstantAccessor<CSS.Property.TextAnchor | 'auto', Datum>;
+        removeDuplicateTicks: boolean;
     }
 
     let markProps: AxisXMarkProps = $props();
@@ -223,7 +224,7 @@
             {anchor}
             {className}
             {labelAnchor}
-            {options}
+            options={{ ...options, ...plot.options.x }}
             {plot}
             {text}
             {tickClass}
