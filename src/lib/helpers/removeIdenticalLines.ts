@@ -13,7 +13,8 @@ export default function removeIdenticalLines(input: Tick[]): Tick[] {
             text: []
         });
     }
-    for (let l = 0; l < input[0].text.length; l++) {
+    const maxLines = Math.max(...input.map((t) => t.text.length));
+    for (let l = 0; l < maxLines; l++) {
         const isIdentical =
             input.length > 1 && input.every((tick) => input[0].text[l] === tick.text[l]);
         for (let c = 0; c < input.length; c++) {
