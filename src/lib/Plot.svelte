@@ -76,8 +76,6 @@
         if (Array.isArray(scaleOptions)) return { domain: scaleOptions };
         return scaleOptions || {};
     }
-
-    $inspect({ scales });
 </script>
 
 {#snippet header()}

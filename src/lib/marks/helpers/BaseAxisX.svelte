@@ -130,7 +130,7 @@
         untrack(() => $autoMarginLeft);
         untrack(() => $autoMarginRight);
         $autoMarginLeft.set(id, 5);
-        $autoMarginRight.set(id, 5);
+        $autoMarginRight.set(id, 10);
     });
 
     $effect(() => {

@@ -8,8 +8,8 @@ describe('GridX mark', () => {
         const { container } = render(GridXTest, {
             props: {
                 plotArgs: {
-                    x: { domain: [0, 10] },
-                    y: { domain: [0, 10] }
+                    x: [0, 10],
+                    y: [0, 10]
                 },
                 gridArgs: {
                     stroke: '#008000',
