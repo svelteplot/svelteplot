@@ -614,10 +614,6 @@
         border: 0 !important;
     }
 
-    .plot-header :global(h3) {
-        font-weight: 500;
-    }
-
     .plot-footer {
         margin-bottom: 2rem;
     }
