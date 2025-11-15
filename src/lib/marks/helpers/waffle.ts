@@ -145,7 +145,7 @@ export function wafflePolygon(
         const y1val = d.resolved[y1];
         const y2val = d.resolved[y2];
         const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
-        const c = P.pop();
+        P.pop();
         const id = getPatternId();
         const pos = [d[x] + tx + mx, y0];
         return {
