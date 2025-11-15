@@ -84,7 +84,6 @@ When using implicit axes (the default), you can customize them via the `x` and `
 - `labelAnchor` - position of axis labels
     - For x-axis: 'auto', 'left', 'center', 'right'
     - For y-axis: 'auto', 'bottom', 'middle', 'top'
-- `interval` - the interval to select axis ticks from, either numeric or a string like '2 weeks')
 - `insetLeft/Right` - insets for x-axis positioning
 - `insetTop/Bottom` - insets for y-axis positioning
 
@@ -105,7 +104,7 @@ A combination of options:
     y={{
         axis: 'right',
         label: '',
-        interval: 25,
+        ticks: 25,
         tickFormat: (d) => d.toFixed(2)
     }}>
     <Line data={aapl} x="Date" y="Close" />
@@ -122,6 +121,7 @@ A combination of options:
     }}
     y={{
         axis: 'both',
+        ticks: 25,
         tickFormat: (d) => d.toFixed(2)
     }}>
     <!-- plot content -->
