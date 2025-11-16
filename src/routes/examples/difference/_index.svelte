@@ -3,4 +3,3 @@
 </script>
 
 <h1>Difference mark examples</h1>
-

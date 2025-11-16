@@ -37,4 +37,3 @@
         stroke="var(--svp-blue)"
         curve="basis" />
 </Plot>
-

@@ -5,11 +5,7 @@
 </script>
 
 <script lang="ts">
-    import {
-        Plot,
-        DifferenceY,
-        RuleY
-    } from 'svelteplot';
+    import { Plot, DifferenceY, RuleY } from 'svelteplot';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
@@ -28,4 +24,3 @@
         negativeFill="var(--svp-blue)" />
     <RuleY data={[0]} />
 </Plot>
-
