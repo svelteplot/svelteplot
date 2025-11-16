@@ -11,11 +11,11 @@ export default {
                 {
                     title: 'Why SveltePlot?',
                     to: '/why-svelteplot'
+                },
+                {
+                    title: 'Examples',
+                    to: '/examples'
                 }
-                // {
-                //     title: 'Introduction',
-                //     to: '/introduction'
-                // }
             ]
         },
         {
@@ -63,6 +63,7 @@ export default {
                 { title: 'Frame', to: '/marks/frame' },
                 { title: 'Geo', to: '/marks/geo' },
                 { title: 'Grid', to: '/marks/grid' },
+                { title: 'Image', to: '/marks/image' },
                 { title: 'Line', to: '/marks/line' },
                 { title: 'Link', to: '/marks/link' },
                 { title: 'Pointer', to: '/marks/pointer' },
@@ -71,7 +72,8 @@ export default {
                 { title: 'Rule', to: '/marks/rule' },
                 { title: 'Text', to: '/marks/text' },
                 { title: 'Tick', to: '/marks/tick' },
-                { title: 'Vector', to: '/marks/vector' }
+                { title: 'Vector', to: '/marks/vector' },
+                { title: 'Waffle', to: '/marks/waffle' }
             ]
         },
         {
@@ -79,6 +81,7 @@ export default {
             collapsible: true,
             items: [
                 { title: 'Bin', to: '/transforms/bin' },
+                { title: 'Dodge', to: '/transforms/dodge' },
                 { title: 'Filter', to: '/transforms/filter' },
                 { title: 'Group', to: '/transforms/group' },
                 { title: 'Interval', to: '/transforms/interval' },

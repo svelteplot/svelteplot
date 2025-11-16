@@ -77,7 +77,7 @@ import {
 } from 'd3-scale-chromatic';
 
 import { quantize } from 'd3-interpolate';
-import type { ColorScheme } from '$lib/types.js';
+import type { ColorScheme } from '$lib/types/index.js';
 
 const schemeObservable10 = [
     '#4269d0',

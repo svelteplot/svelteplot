@@ -27,13 +27,12 @@ export { default as Geo } from './Geo.svelte';
 export { default as Graticule } from './Graticule.svelte';
 export { default as GridX } from './GridX.svelte';
 export { default as GridY } from './GridY.svelte';
+export { default as Image } from './Image.svelte';
 export { default as Line } from './Line.svelte';
 export { default as LineX } from './LineX.svelte';
 export { default as LineY } from './LineY.svelte';
 export { default as Link } from './Link.svelte';
-
 export { default as Pointer } from './Pointer.svelte';
-export { default as Vector } from './Vector.svelte';
 export { default as Rect } from './Rect.svelte';
 export { default as RectX } from './RectX.svelte';
 export { default as RectY } from './RectY.svelte';
@@ -46,6 +45,9 @@ export { default as Spike } from './Spike.svelte';
 export { default as Text } from './Text.svelte';
 export { default as TickX } from './TickX.svelte';
 export { default as TickY } from './TickY.svelte';
+export { default as Vector } from './Vector.svelte';
+export { default as WaffleX } from './WaffleX.svelte';
+export { default as WaffleY } from './WaffleY.svelte';
 
 // HTML marks
 export { default as ColorLegend } from './ColorLegend.svelte';

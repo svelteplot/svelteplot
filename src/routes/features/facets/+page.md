@@ -36,7 +36,7 @@ Facets are a way to split a plot into multiple panels.
 ```
 
 ```svelte
-<Plot frame grid height={600} inset={10} margins={30}>
+<Plot frame grid height={600} inset={10} margin={30}>
     <Dot
         data={penguins}
         x="culmen_length_mm"
@@ -101,7 +101,7 @@ Apply top-level facet options automatically:
         grid
         height={600}
         inset={10}
-        margins={30}
+        margin={30}
         facet={{ data: penguins, x: 'sex', y: 'island' }}>
         <Frame />
         <Dot

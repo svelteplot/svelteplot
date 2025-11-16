@@ -1,6 +1,24 @@
-<script lang="ts">
-    import { getContext, untrack, type Snippet } from 'svelte';
+<script lang="ts" generics="Datum extends DataRecord">
+    interface MarkProps extends Partial<BaseMarkProps<Datum>> {
+        data?: Datum[];
+        automatic?: boolean;
+        type: MarkType;
+        channels?: ScaledChannelName[];
+        required?: ScaledChannelName[];
+        requiredScales?: Partial<Record<ScaleName, ScaleType[]>>;
+        children?: Snippet<
+            [
+                {
+                    mark: Mark<GenericMarkOptions>;
+                    usedScales: ReturnType<typeof getUsedScales>;
+                    scaledData: ScaledDataRecord<Datum>[];
+                }
+            ]
+        >;
+        defaults?: Partial<Record<ScaledChannelName, RawValue>>;
+    }
 
+    import { getContext, untrack, type Snippet } from 'svelte';
     import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
     import type {
         ScaledChannelName,
@@ -17,31 +35,13 @@
         ResolvedDataRecord,
         ScaledDataRecord,
         ScaleType
-    } from './types.js';
+    } from './types/index.js';
     import { isEqual } from 'es-toolkit';
     import { getUsedScales, projectXY, projectX, projectY } from './helpers/scales.js';
     import { testFilter, isValid } from '$lib/helpers/index.js';
     import { resolveChannel, resolveProp } from './helpers/resolve.js';
-
-    type MarkProps = {
-        data?: DataRecord[];
-        automatic?: boolean;
-        type: MarkType;
-        channels?: ScaledChannelName[];
-        required?: ScaledChannelName[];
-        requiredScales?: Partial<Record<ScaleName, ScaleType[]>>;
-        children?: Snippet<
-            [
-                {
-                    mark: Mark<GenericMarkOptions>;
-                    usedScales: ReturnType<typeof getUsedScales>;
-                    scaledData: ScaledDataRecord[];
-                }
-            ]
-        >;
-        defaults?: Partial<Record<ScaledChannelName, RawValue>>;
-    } & Partial<Record<ChannelName, ChannelAccessor>> &
-        Partial<BaseMarkProps>;
+    import { RENAME } from './transforms/rename.js';
+    import { dodgeX, dodgeY } from './transforms/dodge.js';
 
     let {
         data = [],
@@ -56,7 +56,7 @@
 
     const channelsWithFacets: ScaledChannelName[] = $derived([...channels, 'fx', 'fy']);
 
-    const { addMark, updateMark, updatePlotState, removeMark, getTopLevelFacet, getPlotState } =
+    const { addMark, removeMark, getTopLevelFacet, getPlotState } =
         getContext<PlotContext>('svelteplot');
 
     const plot = $derived(getPlotState());
@@ -134,14 +134,15 @@
     const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
     const testFacet = $derived(getTestFacet());
 
-    const resolvedData: ResolvedDataRecord[] = $derived(
+    const resolvedData: ResolvedDataRecord<Datum>[] = $derived(
         data
             .map((d, i) => ({ ...d, [INDEX]: i }))
-            .flatMap((row) => {
-                const channels = options as Record<ChannelName, ChannelAccessor>;
+            .flatMap((row, index) => {
+                const channels = options as Record<ChannelName, ChannelAccessor<Datum>>;
                 if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
-                const out: ResolvedDataRecord = {
-                    datum: row
+                const out: ResolvedDataRecord<Datum> = {
+                    datum: row,
+                    index
                 };
                 for (const [channel] of Object.entries(CHANNEL_SCALE) as [
                     ScaledChannelName,
@@ -151,6 +152,12 @@
                     if (options?.[channel] !== undefined && out[channel] === undefined) {
                         // resolve value
                         out[channel] = resolveChannel(channel, row, options);
+                        if (options[channel] === INDEX) {
+                            const scale = plot.scales[CHANNEL_SCALE[channel]];
+                            if (scale.type === 'band' || scale.type === 'point') {
+                                out[channel] = scale.domain[out[channel] % scale.domain.length];
+                            }
+                        }
                     }
                 }
                 return [out];
@@ -160,7 +167,7 @@
     let prevResolvedData: ResolvedDataRecord[] = [];
 
     $effect(() => {
-        if (isDifferent(resolvedData, prevResolvedData)) {
+        if (isDifferent(data, mark.data) || isDifferent(resolvedData, prevResolvedData)) {
             prevResolvedData = resolvedData;
             // data has changed
             mark.data = data;
@@ -207,81 +214,99 @@
      * elements to the scales
      */
     const scaledData = $derived(
-        resolvedData.flatMap((row) => {
-            const out: ScaledDataRecord = {
-                datum: row.datum,
-                valid: true
-            };
-            // compute dx/dy
-            const dx = Number(resolveProp<number>(options.dx, out.datum, 0));
-            const dy = Number(resolveProp<number>(options.dy, out.datum, 0));
+        dodge(
+            resolvedData.flatMap((row) => {
+                const out: ScaledDataRecord<Datum> = {
+                    datum: row.datum,
+                    resolved: row,
+                    index: row[INDEX],
+                    valid: true
+                };
+                // compute dx/dy
+                out.dx = Number(resolveProp<number>(options.dx, out.datum, 0));
+                out.dy = Number(resolveProp<number>(options.dy, out.datum, 0));
 
-            // special handling if there's a projection, e.g. a line mark
-            if (plot.scales.projection && mark.type !== 'geo') {
-                for (const suffix of ['', '1', '2']) {
-                    if (
-                        options?.[`x${suffix}`] !== undefined &&
-                        options?.[`y${suffix}`] !== undefined
-                    ) {
-                        // we have two-dimensional accessors
-                        // for the x and y channels
-                        const [x, y] =
-                            mark.type === 'line'
-                                ? [row.x, row.y] // line paths are projected later
-                                : projectXY(
-                                      plot.scales,
-                                      row.x,
-                                      row.y,
-                                      usedScales.x,
-                                      usedScales.y,
-                                      suffix
-                                  );
+                // special handling if there's a projection, e.g. a line mark
+                if (plot.scales.projection && mark.type !== 'geo') {
+                    for (const suffix of ['', '1', '2']) {
+                        if (
+                            options?.[`x${suffix}`] !== undefined &&
+                            options?.[`y${suffix}`] !== undefined
+                        ) {
+                            // we have two-dimensional accessors
+                            // for the x and y channels
+                            const [x, y] =
+                                mark.type === 'line'
+                                    ? [row.x, row.y] // line paths are projected later
+                                    : projectXY(
+                                          plot.scales,
+                                          row.x,
+                                          row.y,
+                                          usedScales.x,
+                                          usedScales.y,
+                                          suffix
+                                      );
 
-                        out[`x${suffix}`] = x;
-                        out[`y${suffix}`] = y;
-                        out.valid =
-                            out.valid &&
-                            isValid(row.x) &&
-                            isValid(row.y) &&
-                            isValid(x) &&
-                            isValid(y);
+                            out[`x${suffix}`] = x;
+                            out[`y${suffix}`] = y;
+                            out.valid =
+                                out.valid &&
+                                isValid(row.x) &&
+                                isValid(row.y) &&
+                                isValid(x) &&
+                                isValid(y);
+                        }
                     }
                 }
-            }
 
-            // iterate over all scaled channels
-            for (const [channel, scale] of Object.entries(CHANNEL_SCALE) as [
-                ScaledChannelName,
-                ScaleName
-            ][]) {
-                // check if the mark has defined an accessor for this channel
-                if (options?.[channel] != null && out[channel] === undefined) {
-                    // resolve value
-                    const value = row[channel];
+                // iterate over all scaled channels
+                for (const [channel, scale] of Object.entries(CHANNEL_SCALE) as [
+                    ScaledChannelName,
+                    ScaleName
+                ][]) {
+                    // check if the mark has defined an accessor for this channel
+                    if (options?.[channel] != null && out[channel] === undefined) {
+                        // resolve value
+                        const value = row[channel];
+                        // if this channel was renamed, use the original channel for scaling
+                        const origChannel = options?.[RENAME]?.[channel] || channel;
+                        const scaled = usedScales[channel]
+                            ? scale === 'x'
+                                ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
+                                : scale === 'y'
+                                  ? projectY(origChannel as 'y' | 'y1' | 'y2', plot.scales, value)
+                                  : scale === 'color' && !isValid(value)
+                                    ? plot.options.color.unknown
+                                    : plot.scales[scale].fn(value)
+                            : value;
 
-                    const scaled = usedScales[channel]
-                        ? scale === 'x'
-                            ? projectX(channel as 'x' | 'x1' | 'x2', plot.scales, value)
-                            : scale === 'y'
-                              ? projectY(channel as 'y' | 'y1' | 'y1', plot.scales, value)
-                              : plot.scales[scale].fn(value)
-                        : value;
+                        out.valid = out.valid && (scale === 'color' || isValid(value));
 
-                    out.valid = out.valid && isValid(value);
-
-                    // apply dx/dy transform
-                    out[channel] =
-                        scale === 'x' && Number.isFinite(scaled) ? (scaled as number) + dx : scaled;
-                    out[channel] =
-                        scale === 'y' && Number.isFinite(scaled) ? (scaled as number) + dy : scaled;
-                } else if (defaults[channel]) {
-                    out[channel] = defaults[channel];
+                        // apply dx/dy transform
+                        out[channel] =
+                            Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
+                                ? scaled + (scale === 'x' ? out.dx : out.dy)
+                                : scaled;
+                    } else if (defaults[channel]) {
+                        out[channel] = defaults[channel];
+                    }
                 }
-            }
 
-            return [out];
-        })
+                return [out];
+            }),
+            options
+        )
     );
+
+    function dodge<T>(data: ScaledDataRecord<Datum>[], options: BaseMarkProps<T>) {
+        if (options.dodgeX) {
+            return dodgeX({ data, ...options }, plot);
+        }
+        if (options.dodgeY) {
+            return dodgeY({ data, ...options }, plot);
+        }
+        return data;
+    }
 </script>
 
 {#if errors.length}

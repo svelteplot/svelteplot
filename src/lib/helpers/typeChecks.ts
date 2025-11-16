@@ -1,4 +1,4 @@
-import type { RawValue } from '$lib/types.js';
+import type { RawValue } from '$lib/types/index.js';
 import { isSymbol } from './symbols.js';
 import { color } from 'd3-color';
 import {

@@ -1,24 +1,22 @@
 <!-- @component
     Creates an area chart with filled regions between two x-y value pairs
 -->
-<script module lang="ts">
-    export type AreaMarkProps = {
-        data: DataRecord[];
-        x1?: ChannelAccessor;
-        x2?: ChannelAccessor;
-        y1?: ChannelAccessor;
-        y2?: ChannelAccessor;
-        z?: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface AreaMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        data: Datum[];
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
+        z?: ChannelAccessor<Datum>;
         curve?: CurveName | CurveFactory;
         tension?: number;
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
         stack?: Partial<StackOptions>;
         canvas?: boolean;
-    } & BaseMarkProps &
-        LinkableMarkProps;
-</script>
+        areaClass?: ConstantAccessor<string, Datum>;
+    }
 
-<script lang="ts">
     import Mark from '../Mark.svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { getContext } from 'svelte';
@@ -29,6 +27,7 @@
     import { maybeCurve } from '$lib/helpers/curves.js';
     import { isValid } from '$lib/helpers/index.js';
     import AreaCanvas from './helpers/AreaCanvas.svelte';
+    import Anchor from './helpers/Anchor.svelte';
 
     import type {
         CurveName,
@@ -37,22 +36,33 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        FacetContext,
         ScaledDataRecord,
-        LinkableMarkProps
-    } from '../types.js';
-    import type { RawValue } from '$lib/types.js';
+        LinkableMarkProps,
+        RawValue
+    } from '../types/index.js';
     import type { StackOptions } from '$lib/transforms/stack.js';
+    import { addEventHandlers } from './helpers/events';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let {
-        data,
+    let markProps: AreaMarkProps = $props();
+
+    const DEFAULTS = {
+        fill: 'currentColor',
+        curve: 'linear' as CurveName,
+        tension: 0,
+        ...getPlotDefaults().area
+    };
+
+    const {
+        data = [{} as Datum],
         /** the curve */
-        curve = 'linear',
+        curve = 'linear' as CurveName,
         tension = 0,
         class: className = '',
+        areaClass,
         canvas = false,
         ...options
-    }: AreaMarkProps = $props();
+    }: AreaMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -105,40 +115,42 @@
     {data}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     required={['x1', 'y1']}
+    {...markProps}
     {...options}>
     {#snippet children({ mark, usedScales, scaledData })}
         {@const grouped = groupAndSort(scaledData)}
         {#if canvas}
             <AreaCanvas groupedAreaData={grouped} {mark} {usedScales} {areaPath} />
         {:else}
-            <GroupMultiple length={grouped.length}>
+            <GroupMultiple class={className} length={grouped.length}>
                 {#each grouped as areaData, i (i)}
-                    {#snippet el(datum: ScaledDataRecord)}
-                        {@const title = resolveProp(options.title, datum.datum, '')}
-                        {@const [style, styleClass] = resolveStyles(
-                            plot,
-                            datum,
-                            options,
-                            'fill',
-                            usedScales
-                        )}
-                        <path
-                            class={['svelteplot-area', className, styleClass]}
-                            clip-path={options.clipPath}
-                            d={areaPath(areaData)}
-                            {style}
-                            >{#if title}<title>{title}</title>{/if}</path>
-                    {/snippet}
+                    {@const datum = areaData[0]}
                     {#if areaData.length > 0}
-                        {#if options.href}
-                            <a
-                                href={resolveProp(options.href, areaData[0].datum, '')}
-                                target={resolveProp(options.target, areaData[0].datum, '_self')}>
-                                {@render el(areaData[0])}
-                            </a>
-                        {:else}
-                            {@render el(areaData[0])}
-                        {/if}
+                        <Anchor {options} {datum}>
+                            {@const title = resolveProp(options.title, datum.datum, '')}
+                            {@const [style, styleClass] = resolveStyles(
+                                plot,
+                                datum,
+                                options,
+                                'fill',
+                                usedScales
+                            )}
+                            <path
+                                class={[
+                                    'area',
+                                    resolveProp(areaClass, areaData[0].datum),
+                                    styleClass
+                                ]}
+                                clip-path={options.clipPath}
+                                d={areaPath(areaData)}
+                                {@attach addEventHandlers({
+                                    getPlotState,
+                                    options,
+                                    datum: datum?.datum
+                                })}
+                                {style}
+                                >{#if title}<title>{title}</title>{/if}</path>
+                        </Anchor>
                     {/if}
                 {/each}
             </GroupMultiple>

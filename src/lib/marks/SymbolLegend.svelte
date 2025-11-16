@@ -2,7 +2,7 @@
     import { getContext } from 'svelte';
     import { symbol as d3Symbol } from 'd3-shape';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
-    import type { PlotContext } from '../types.js';
+    import type { PlotContext } from '../types/index.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());

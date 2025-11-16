@@ -1,32 +1,7 @@
 <!-- @component
     Renders a vertical axis with labels and tick marks
 -->
-<script module lang="ts">
-    export type AxisYMarkProps = Omit<
-        BaseMarkProps,
-        'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
-    > & {
-        data?: RawValue[];
-        automatic?: boolean;
-        title?: string;
-        anchor?: 'left' | 'right';
-        facetAnchor?: 'auto' | 'left' | 'right' | 'left-empty' | 'right-empty';
-        lineAnchor?: 'top' | 'center' | 'bottom';
-        interval?: string | number;
-        labelAnchor?: 'auto' | 'left' | 'center' | 'right';
-        tickSize?: number;
-        tickFontSize?: ConstantAccessor<number>;
-        tickPadding?: number;
-        tickFormat?:
-            | 'auto'
-            | Intl.DateTimeFormatOptions
-            | Intl.NumberFormatOptions
-            | ((d: RawValue) => string);
-        tickClass?: ConstantAccessor<string>;
-    };
-</script>
-
-<script lang="ts">
+<script lang="ts" generics="Datum extends RawValue">
     import { getContext } from 'svelte';
     import BaseAxisY from './helpers/BaseAxisY.svelte';
     import Mark from '../Mark.svelte';
@@ -35,41 +10,92 @@
         BaseMarkProps,
         RawValue,
         FacetContext,
-        DefaultOptions
-    } from '../types.js';
+        ChannelName,
+        ConstantAccessor
+    } from '../types/index.js';
     import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
-    import type { ConstantAccessor } from '$lib/types.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    const DEFAULTS = {
+    interface AxisYMarkProps
+        extends Omit<
+            BaseMarkProps<Datum>,
+            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+        > {
+        data?: Datum[];
+        automatic?: boolean;
+        title?: string | false | null;
+        anchor?: 'left' | 'right';
+        facetAnchor?: 'auto' | 'left' | 'right' | 'left-empty' | 'right-empty';
+        lineAnchor?: 'top' | 'center' | 'bottom';
+        interval?: string | number;
+        labelAnchor?: 'auto' | 'left' | 'center' | 'right';
+        textAnchor?: 'auto' | 'start' | 'middle' | 'end';
+        tickSize?: number;
+        tickFontSize?: ConstantAccessor<number, Datum>;
+        titleFontSize?: number;
+        tickPadding?: number;
+        tickFormat?:
+            | 'auto'
+            | Intl.DateTimeFormatOptions
+            | Intl.NumberFormatOptions
+            | ((d: RawValue) => string);
+        tickClass?: ConstantAccessor<string, Datum>;
+        /** ticks is a shorthand for defining data, tickCount or interval */
+        ticks?: number | string | Datum[];
+        /** set to false or null to disable tick labels */
+        text?: boolean | null;
+        /** approximate number of ticks to be generated */
+        tickCount?: number;
+        /** approximate number of pixels between generated ticks */
+        tickSpacing?: number;
+    }
+
+    let markProps: AxisYMarkProps = $props();
+
+    const DEFAULTS: Omit<AxisYMarkProps, 'data' | ChannelName> = {
         tickSize: 6,
         tickPadding: 3,
         tickFontSize: 11,
-        axisYAnchor: 'left',
-        ...getContext<Partial<DefaultOptions>>('svelteplot/_defaults')
+        opacity: 0.8,
+        anchor: 'left',
+        textAnchor: 'auto',
+        ...getPlotDefaults().axis,
+        ...getPlotDefaults().axisY
     };
 
-    let {
-        data = [],
+    const {
+        ticks: magicTicks,
+        data = Array.isArray(magicTicks) ? magicTicks : [],
         automatic = false,
         title,
-        anchor = DEFAULTS.axisYAnchor as 'left' | 'right',
+        anchor = 'left',
+        class: className,
         facetAnchor = 'auto',
+        interval = typeof magicTicks === 'string' ? magicTicks : undefined,
         lineAnchor = 'center',
-        tickSize = DEFAULTS.tickSize,
-        tickFontSize = DEFAULTS.tickFontSize,
-        tickPadding = DEFAULTS.tickPadding,
+        textAnchor,
+        tickSize,
+        tickFontSize,
+        tickPadding,
         tickFormat,
         tickClass,
+        tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
+        tickSpacing,
+        text = true,
         ...options
-    }: AxisYMarkProps = $props();
+    }: AxisYMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
     const autoTickCount = $derived(
-        Math.max(2, Math.round(plot.facetHeight / plot.options.y.tickSpacing))
+        tickCount != null
+            ? tickCount
+            : tickSpacing != null
+              ? Math.max(3, Math.round(plot.facetHeight / tickSpacing))
+              : Math.max(2, Math.round(plot.facetHeight / plot.options.y.tickSpacing))
     );
 
     const ticks: RawValue[] = $derived(
@@ -80,7 +106,7 @@
               autoTicks(
                   plot.scales.y.type,
                   plot.options.y.ticks,
-                  plot.options.y.interval,
+                  interval || plot.options.y.interval,
                   plot.scales.y.domain,
                   plot.scales.y.fn,
                   autoTickCount
@@ -117,14 +143,15 @@
     const optionsLabel = $derived(plot.options.y.label);
 
     const useTitle = $derived(
-        title ||
-            (optionsLabel === null
-                ? null
-                : optionsLabel !== undefined
-                  ? optionsLabel
-                  : plot.scales.y.autoTitle
-                    ? `↑ ${plot.scales.y.autoTitle}${plot.options.y.percent ? ' (%)' : ''}`
-                    : '')
+        title !== undefined
+            ? title || ''
+            : optionsLabel === null
+              ? null
+              : optionsLabel !== undefined
+                ? optionsLabel
+                : plot.scales.y.autoTitle
+                  ? `↑ ${plot.scales.y.autoTitle}${plot.options.y.percent ? ' (%)' : ''}`
+                  : ''
     );
 
     const { getFacetState } = getContext<FacetContext>('svelteplot/facet');
@@ -155,40 +182,55 @@
         <text
             style={resolveScaledStyles(
                 null,
-                { ...options, stroke: null, textAnchor: anchor === 'left' ? 'start' : 'end' },
+                {
+                    opacity: 0.8,
+                    ...options,
+                    fontSize: options.titleFontSize ?? 11,
+                    fill: 'currentColor',
+                    stroke: null,
+                    textAnchor: anchor === 'left' ? 'start' : 'end'
+                },
                 {},
                 plot,
                 'fill'
             )}
             x={anchor === 'left' ? 0 : plot.width}
             y={5}
-            class="axis-x-title"
+            class="axis-y-title"
             dominant-baseline="hanging">{useTitle}</text>
     {/if}
     {#if showAxis}
         <BaseAxisY
+            {anchor}
+            {className}
+            {lineAnchor}
+            options={{
+                ...options,
+                textAnchor:
+                    textAnchor == null || textAnchor === 'auto'
+                        ? anchor === 'left'
+                            ? 'end'
+                            : 'start'
+                        : textAnchor
+            }}
+            {plot}
+            {text}
+            {tickClass}
+            {tickFontSize}
+            {tickPadding}
+            {ticks}
+            {tickSize}
+            marginLeft={plot.options.marginLeft}
             scaleFn={plot.scales.y.fn}
             scaleType={plot.scales.y.type}
             tickFormat={useTickFormat}
-            {ticks}
-            marginLeft={plot.options.marginLeft}
-            width={plot.facetWidth}
-            {anchor}
-            {lineAnchor}
-            {tickSize}
-            {tickPadding}
-            {tickFontSize}
-            {tickClass}
-            {options}
             title={useTitle}
-            {plot} />
+            width={plot.facetWidth} />
     {/if}
 </Mark>
 
 <style>
     text {
-        font-size: 11px;
-        opacity: 0.8;
         fill: currentColor;
     }
 </style>

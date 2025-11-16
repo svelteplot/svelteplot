@@ -32,7 +32,7 @@ import type {
     ScaleName,
     ScaleOptions,
     ScaleType
-} from '../types.js';
+} from '../types/index.js';
 import {
     categoricalSchemes,
     isCategoricalScheme,
@@ -160,7 +160,32 @@ export function autoScale({
         ...(type === 'band' || type === 'point'
             ? {
                   align: scaleOptions.align,
-                  padding: maybeNumber(coalesce(scaleOptions.padding, plotOptions.padding, 0.15))
+                  ...(type === 'point'
+                      ? {
+                            // point scales don't have paddingInner/Outer, only padding
+                            padding: maybeNumber(
+                                coalesce(scaleOptions.padding, plotOptions.padding, 0.15)
+                            )
+                        }
+                      : {
+                            //   padding: maybeNumber(coalesce(scaleOptions.padding, plotOptions.padding, 0.15)),
+                            paddingInner: maybeNumber(
+                                coalesce(
+                                    scaleOptions.paddingInner,
+                                    scaleOptions.padding,
+                                    plotOptions.padding,
+                                    0.15
+                                )
+                            ),
+                            paddingOuter: maybeNumber(
+                                coalesce(
+                                    scaleOptions.paddingOuter,
+                                    scaleOptions.padding,
+                                    plotOptions.padding,
+                                    0.15
+                                )
+                            )
+                        })
               }
             : {})
     };
@@ -302,7 +327,7 @@ export function autoScaleColor({
         }
     }
     if (!fn) {
-        console.warn('color problem', type);
+        console.error('color problem', type);
         // problem
         fn = () => 'red';
         fn.range = () => ['red'];

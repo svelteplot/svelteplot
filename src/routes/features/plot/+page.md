@@ -180,24 +180,25 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `caption` - a caption to be displayed as `<figcaption>` below the plot
 - `locale` - locale to be used for number and date formatting, e.g. in axis ticks
 
-**Size and margins**
+### Size and margins
 
+- `width` - you can set a fixed width for the plot element, otherwise it will fill 100% of the container width
 - `maxWidth` - you can set the max-width of the plot element to prevent the plot from scaling to the container div width
-- `height`
+- `height` - you can set a fixed height for the plot element, otherwise it will default to 350px or be computed from the plot marks or aspect ratio. Height also accepts a function `(width) => number`
 - `marginTop` - plot margins
 - `marginBottom` - margins
 - `marginLeft` - margins
 - `marginRight` - margins
-- `margin` - shortcut to set all 4 margins to the same value
+- `margin` - shortcut to set all 4 margins to the same value, also accepts objects like `{ top: 10, bottom: 20 }`
 - `inset` - shortcut for setting all insets. To set individual insets, see `x` and `y` scale options.
 
-**Implicit marks**
+### Implicit marks
 
 - `grid` - set this flag to activate implicit grids
 - `axes` - set this flag to activate implicit axes
 - `frame` - set this flag to activate implicit frame
 
-**Scale options**
+### Scale options
 
 - `x` - options for the x scale:
     - `axis`
@@ -213,7 +214,6 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `length` - options for the length scale
 
 - You can set the following shared scale options for all the scales listed above:
-
     - `domain` - custom domain for the scale
     - `range` - custom range for the scale
     - `reverse` - reverse the scale direction
@@ -233,7 +233,6 @@ List of all plot options you can pass via props on the `<Plot />` component:
 **Scale-specific options**
 
 - `x` also supports:
-
     - `grid` - whether to show a grid
     - `axis` - axis position ('top', 'bottom', 'both', or false)
     - `tickRotate` - rotation angle for tick labels
@@ -242,7 +241,6 @@ List of all plot options you can pass via props on the `<Plot />` component:
     - `insetRight` - right inset value
 
 - `y` also supports:
-
     - `grid` - whether to show a grid
     - `axis` - axis position ('left', 'right', 'both', or false)
     - `tickRotate` - rotation angle for tick labels
@@ -259,7 +257,21 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `symbol` also supports:
     - `legend` - whether to show a symbol legend
 
-**Other plot options**
+You can also just pass the domain array as shorthand: _added in 0.7.0_
+
+```svelte live
+<script>
+    import { Plot } from 'svelteplot';
+</script>
+
+<Plot grid height={250} x={[0, 100]} y={[-50, 50]} />
+```
+
+```svelte
+<Plot grid height={250} x={[0, 100]} y={[-50, 50]} />
+```
+
+### Other plot options
 
 - `locale` - locale used for automatic number and date formatting in axis ticks
 - `aspectRatio` - if set, computes height such that a variation in x of one unit corresponds to the given number of pixels as a variation in y of one unit
@@ -273,7 +285,7 @@ List of all plot options you can pass via props on the `<Plot />` component:
     - `x` - accessor for horizontal facets
     - `y` - accessor for vertical facets
 
-**Snippet options**
+### Snippet options
 
 These can be used to add custom markup to different parts of the plot:
 
@@ -314,7 +326,7 @@ to add events and scoped styles.
     {#snippet footer()}
         <h4>
             Centered headline below plot with
-            <a href="#/" on:click={() => alert('works')}
+            <a href="#/" onclick={() => alert('works')}
                 >custom link</a>
         </h4>
     {/snippet}
@@ -422,3 +434,5 @@ SveltePlot provides a lot of convenience features with the unfortunate side-effe
         y="Adj Close" />
 </Plot>
 ```
+
+You can set default plot options, see [Defaults](/features/defaults) for more information.

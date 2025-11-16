@@ -1,8 +1,8 @@
-import type { Channels, DataRecord, TransformArg } from '$lib/types.js';
-import { resolveChannel } from 'svelteplot/helpers/resolve';
+import type { Channels, DataRecord, TransformArg } from '$lib/types/index.js';
+import { resolveChannel } from '$lib/helpers/resolve.js';
 import { randomUniform, randomNormal } from 'd3-random';
-import { isDate } from 'svelteplot/helpers/typeChecks';
-import { durations, maybeTimeInterval, parseTimeInterval } from 'svelteplot/helpers/time';
+import { isDate } from '$lib/helpers/typeChecks.js';
+import { durations, parseTimeInterval } from '$lib/helpers/time.js';
 
 const JITTER_X = Symbol('jitterX');
 const JITTER_Y = Symbol('jitterY');

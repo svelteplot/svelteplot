@@ -39,7 +39,7 @@ Like most other marks, rules also accept data for displaying multiple lines at o
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from '$lib/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);

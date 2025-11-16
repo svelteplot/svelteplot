@@ -118,18 +118,22 @@ Useful for showing text labels. The text mark is using SVG `<text>` elements, so
 
 ## Text options
 
-The following channels are required:
-
 - **text** - the text contents (a string, possibly with multiple lines)
+
+You can position text either using [frameAnchor](#frame-anchor) or using _x_ and _y_ channels.
+
 - **x** - the horizontal position; bound to the _x_ scale
 - **y** - the vertical position; bound to the _y_ scale
+- **frameAnchor** - if no x or y is given, the text can be positioned relative to the plot frame - `bottom`, `top`, `left`, `right`, `top-left`, `bottom-left`, `top-right`, `bottom-right`
+
 - **dx** - horizontal offset in px
 - **dy** - vertical offset in px
 - **textAnchor** - `start`, `end`, or `middle`
 - **lineAnchor** - `top`, `bottom` or `middle`
-- **frameAnchor** - if no x or y is given, the text can be positioned relative to the plot frame - `bottom`, `top`, `left`, `right`, `top-left`, `bottom-left`, `top-right`, `bottom-right`
+- **lineHeight** - expressed as factor of font size, default 1.1
 - **class** - CSS class name to applied to the `<g>` around all texts
 - **textClass** - CSS class to be applied to each `<text>` element, can be a function of data
+- **rotate** - rotation angle in degrees _added in 0.4.0_
 
 ### Frame anchor
 

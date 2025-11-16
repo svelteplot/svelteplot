@@ -84,7 +84,6 @@ When using implicit axes (the default), you can customize them via the `x` and `
 - `labelAnchor` - position of axis labels
     - For x-axis: 'auto', 'left', 'center', 'right'
     - For y-axis: 'auto', 'bottom', 'middle', 'top'
-- `interval` - the interval to select axis ticks from, either numeric or a string like '2 weeks')
 - `insetLeft/Right` - insets for x-axis positioning
 - `insetTop/Bottom` - insets for y-axis positioning
 
@@ -105,7 +104,7 @@ A combination of options:
     y={{
         axis: 'right',
         label: '',
-        interval: 25,
+        ticks: 25,
         tickFormat: (d) => d.toFixed(2)
     }}>
     <Line data={aapl} x="Date" y="Close" />
@@ -122,6 +121,7 @@ A combination of options:
     }}
     y={{
         axis: 'both',
+        ticks: 25,
         tickFormat: (d) => d.toFixed(2)
     }}>
     <!-- plot content -->
@@ -211,11 +211,19 @@ Ordinal axis:
     }} />
 ```
 
-You can change the defaults for SveltePlot grids by defining the `svelteplot/defaults` context:
+You can change the defaults for SveltePlot grids using the `setPlotDefaults` hook:
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+    import {
+        Plot,
+        Line,
+        setPlotDefaults
+    } from 'svelteplot';
+
+    setPlotDefaults({
+        axis: { tickSize: 0 }
+    });
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -228,11 +236,14 @@ You can change the defaults for SveltePlot grids by defining the `svelteplot/def
 
 ```svelte
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { setContext } from 'svelte';
+    import {
+        Plot,
+        Line,
+        setPlotDefaults
+    } from 'svelteplot';
 
-    setContext('svelteplot/defaults', {
-        tickSize: 0
+    setPlotDefaults({
+        axis: { tickSize: 0 }
     });
 
     let aapl = [
@@ -260,9 +271,13 @@ You can explicitly add an x axis using the `AxisX` mark component. The `AxisX` c
 - `tickSize` - size of the tick marks in pixels (default: 6)
 - `tickFontSize` - font size for tick labels (default: 11)
 - `tickPadding` - padding between tick lines and labels (default: 3)
+- `tickSpacing` - approximate pixel space between generated ticks
+- `tickCount` - approximate number of ticks to generate
 - `tickFormat` - custom formatter for tick labels (can be 'auto', Intl.DateTimeFormatOptions, Intl.NumberFormatOptions, or custom function)
 - `tickClass` - function to assign custom classes to ticks based on their values
 - `automatic` - internal flag, set to true for implicit axes
+
+For compatibility reasons AxisX also supports the "magic" **ticks** option which can be an alias for **data** (array), **interval** (string) or **tickCount** (number) depending on the type of value you're passing.
 
 The `AxisX` component also inherits all styling properties from the base mark component (fill, stroke, strokeWidth, opacity, etc.).
 
@@ -280,9 +295,13 @@ The `AxisY` component provides extensive customization options for y-axis presen
 - `tickSize` - size of the tick marks in pixels (default: 6)
 - `tickFontSize` - font size for tick labels (default: 11)
 - `tickPadding` - padding between tick lines and labels (default: 3)
+- `tickSpacing` - approximate pixel space between generated ticks
+- `tickCount` - approximate number of ticks to generate
 - `tickFormat` - custom formatter for tick labels (can be 'auto', Intl.DateTimeFormatOptions, Intl.NumberFormatOptions, or custom function)
 - `tickClass` - function to assign custom classes to ticks based on their values
 - `automatic` - internal flag, set to true for implicit axes
+
+For compatibility reasons AxisY also supports the "magic" **ticks** option which can be an alias for **data** (array), **interval** (string) or **tickCount** (number) depending on the type of value you're passing.
 
 The `AxisY` component also inherits all styling properties from the base mark component (fill, stroke, strokeWidth, opacity, etc.).
 
@@ -498,7 +517,7 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 </script>
 
 <Plot
-    margins={10}
+    margin={10}
     marginBottom={40}
     x={{
         domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
@@ -518,7 +537,7 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 
 ```svelte
 <Plot
-    margins={30}
+    margin={30}
     marginBottom={50}
     x={{
         domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]

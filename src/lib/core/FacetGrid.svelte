@@ -5,7 +5,7 @@
 -->
 <script lang="ts">
     import { getContext, type Snippet } from 'svelte';
-    import type { PlotContext, GenericMarkOptions, Mark } from '../types.js';
+    import type { PlotContext, GenericMarkOptions, Mark } from '../types/index.js';
     import { scaleBand } from 'd3-scale';
     import Facet from './Facet.svelte';
     import { getEmptyFacets } from '../helpers/facets.js';
@@ -59,11 +59,22 @@
     {#each fyValues as facetY, j (j)}
         <g
             class="facet"
+            data-facet-x={i}
+            data-facet-y={j}
+            data-facet={i * fyValues.length + j}
             fill="currentColor"
             style:display={emptyFacets.get(facetX)?.get(facetY) ? 'none' : 'block'}
             transform="translate({useFacetX ? facetXScale(facetX) : 0}, {useFacetY
                 ? facetYScale(facetY)
                 : 0})">
+            <!-- facets need invisible rect -->
+            <rect
+                x={plot.options.marginLeft}
+                y={plot.options.marginTop}
+                width={facetWidth}
+                height={facetHeight}
+                fill="transparent"
+                pointer-events="all" />
             <Facet
                 fx={facetX}
                 fy={facetY}

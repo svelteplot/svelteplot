@@ -1,7 +1,7 @@
 <script lang="ts">
     import { setContext, type Snippet } from 'svelte';
     import { resolveChannel } from '../helpers/resolve.js';
-    import type { BaseMarkProps, DataRecord, RawValue } from '../types.js';
+    import type { BaseMarkProps, DataRecord, RawValue } from '../types/index.js';
 
     let {
         fx,

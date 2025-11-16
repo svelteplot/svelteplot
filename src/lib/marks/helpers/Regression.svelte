@@ -1,5 +1,10 @@
 <script module lang="ts">
-    import type { BaseMarkProps, ChannelAccessor, FacetContext, PlotContext } from '../../types.js';
+    import type {
+        BaseMarkProps,
+        ChannelAccessor,
+        FacetContext,
+        PlotContext
+    } from '../../types/index.js';
 
     type RegressionType = 'linear' | 'quad' | 'poly' | 'exp' | 'log' | 'pow' | 'loess';
 
@@ -38,11 +43,11 @@
         regressionLog,
         regressionPow,
         regressionLoess
-    } from 'd3-regression/dist/d3-regression.esm.js';
+    } from '$lib/regression/index.js';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { confidenceInterval } from '$lib/helpers/math.js';
     import callWithProps from '$lib/helpers/callWithProps.js';
-    import { isDate } from '$lib/helpers/typeChecks';
+    import { isDate } from '$lib/helpers/typeChecks.js';
 
     const regressions = new Map<RegressionType, typeof regressionLinear>([
         ['linear', regressionLinear],
@@ -123,7 +128,7 @@
     );
 
     let confBandGen = $derived(
-        confidence !== false
+        confidence !== false && regression.predict
             ? confidenceInterval(
                   data
                       .map((d) => ({

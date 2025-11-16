@@ -5,14 +5,14 @@
         PlotContext,
         ScaledDataRecord,
         UsedScales
-    } from '$lib/types.js';
+    } from 'svelteplot/types/index.js';
     import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
     import { getContext } from 'svelte';
     import { type Line } from 'd3-shape';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
-    import { resolveColor } from './canvas';
+    import { resolveColor } from './canvas.js';
 
     let {
         mark,

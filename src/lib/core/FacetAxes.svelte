@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
     import { getContext } from 'svelte';
-    import type { PlotContext } from '../types.js';
+    import type { PlotContext } from '../types/index.js';
     import { scaleBand } from 'd3-scale';
     import BaseAxisX from '../marks/helpers/BaseAxisX.svelte';
     import BaseAxisY from '../marks/helpers/BaseAxisY.svelte';
@@ -35,7 +35,8 @@
             scaleFn={facetXScale}
             scaleType="band"
             ticks={fxValues}
-            tickFormat={(d) => d}
+            tickFormat={plot.options.fx.tickFormat || ((d) => d)}
+            tickFontSize={11}
             tickSize={0}
             tickPadding={5}
             anchor={plot.options.fx.axis}
@@ -52,7 +53,8 @@
             scaleFn={facetYScale}
             scaleType="band"
             ticks={fyValues}
-            tickFormat={(d) => d}
+            tickFormat={plot.options.fy.tickFormat || ((d) => d)}
+            tickFontSize={11}
             tickSize={0}
             tickPadding={5}
             anchor={plot.options.fy.axis}

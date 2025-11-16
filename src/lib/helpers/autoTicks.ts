@@ -1,4 +1,4 @@
-import type { RawValue, ScaleType } from '$lib/types.js';
+import type { RawValue, ScaleType } from '$lib/types/index.js';
 import { maybeTimeInterval } from './time.js';
 import { extent, range as rangei } from 'd3-array';
 
@@ -42,7 +42,7 @@ export function autoTicks(
     if (interval) {
         const [lo, hi] = extent(domain);
         const I = maybeInterval(interval, type);
-        return I.range(lo, I.offset(hi));
+        return I.range(lo, I.offset(hi)).filter((d) => d >= lo && d <= hi);
     }
     return typeof scaleFn.ticks === 'function' ? scaleFn.ticks(count) : [];
 }

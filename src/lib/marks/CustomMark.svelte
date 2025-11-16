@@ -2,42 +2,74 @@
     @component
     For showing custom SVG marks positioned at x/y coordinates
 -->
-<script module lang="ts">
-    import type { ChannelAccessor, DataRow } from '$lib/types.js';
+<script lang="ts" generics="Datum extends DataRecord">
+    interface CustomMarkProps extends BaseMarkProps<Datum> {
+        data?: Datum[];
+        type?: string;
+        x?: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
+        r?: ChannelAccessor<Datum>;
+        mark?: Snippet<
+            [{ record: ScaledDataRecord<Datum>; index: number; usedScales: UsedScales }]
+        >;
+        marks?: Snippet<[{ records: ScaledDataRecord<Datum>[]; usedScales: UsedScales }]>;
+    }
+
+    import type {
+        PlotContext,
+        DataRecord,
+        ChannelAccessor,
+        BaseMarkProps,
+        ScaledDataRecord,
+        UsedScales,
+        ScaledChannelName
+    } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
+    import { sort } from '$lib/index.js';
 
-    export type HTMLMarkProps = {
-        data: DataRow[];
-        x?: ChannelAccessor;
-        y?: ChannelAccessor;
-        children: Snippet<{ datum: DataRow; x: number; y: number }>;
-    };
+    import Mark from 'svelteplot/Mark.svelte';
+
+    let {
+        data = [{} as Datum],
+        mark,
+        type = 'custom',
+        marks,
+        ...options
+    }: CustomMarkProps = $props();
+
+    const args = $derived(sort({ data, ...options })) as CustomMarkProps;
+
+    const channels: ScaledChannelName[] = [
+        'x',
+        'x1',
+        'x2',
+        'y',
+        'y1',
+        'y2',
+        'r',
+        'fill',
+        'stroke',
+        'opacity',
+        'fillOpacity',
+        'strokeOpacity'
+    ];
 </script>
 
-<script lang="ts">
-    import { getContext } from 'svelte';
-    import type { PlotContext } from '../types.js';
-
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
-
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { projectXY } from '$lib/helpers/scales.js';
-    import { isValid } from '$lib/helpers/index.js';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
-
-    let { data = [{}], x, y, children, class: className = null }: HTMLMarkProps = $props();
-</script>
-
-<GroupMultiple class="g-custom-mark {className || ''}" length={className ? 2 : data.length}>
-    {#each data as datum, i (i)}
-        {@const x_ = resolveChannel('x', datum, { x, y })}
-        {@const y_ = resolveChannel('y', datum, { x, y })}
-        {#if isValid(x_) && isValid(y_)}
-            {@const [px, py] = projectXY(plot.scales, x_, y_)}
-            <g transform="translate({px}, {py})">
-                {@render children({ datum, x: px, y: py })}
-            </g>
+<Mark {type} required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
+    {#snippet children({ scaledData, usedScales })}
+        {#if marks}
+            {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}
         {/if}
-    {/each}
-</GroupMultiple>
+        {#if mark}
+            {#each scaledData as datum, i (i)}
+                {#if datum.valid}
+                    {@render mark({ record: datum, index: i, usedScales })}
+                {/if}
+            {/each}
+        {/if}
+    {/snippet}
+</Mark>

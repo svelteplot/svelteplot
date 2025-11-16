@@ -2,33 +2,46 @@
     @component
     For arbitrary rectangles, requires band x and y scales 
 -->
-<script module lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
+    interface CellMarkProps
+        extends BaseMarkProps<Datum>,
+            LinkableMarkProps<Datum>,
+            BaseRectMarkProps<Datum> {
+        data: Datum[];
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+    }
     import type {
         PlotContext,
         DataRecord,
         BaseMarkProps,
         BaseRectMarkProps,
-        ChannelAccessor
-    } from '../types.js';
-
-    export type CellMarkProps = BaseMarkProps &
-        BaseRectMarkProps & {
-            data: DataRecord[];
-            x?: ChannelAccessor;
-            y?: ChannelAccessor;
-        };
-</script>
-
-<script lang="ts">
+        ChannelAccessor,
+        LinkableMarkProps
+    } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
     import { recordizeY, sort } from '$lib/index.js';
     import { resolveChannel } from '../helpers/resolve.js';
 
-    import { isValid } from '../helpers/isValid.js';
+    import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let { data = [{}], class: className = null, ...options }: CellMarkProps = $props();
+    let markProps: CellMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().cell
+    };
+
+    const {
+        data = [{} as Datum],
+        class: className = '',
+        ...options
+    }: CellMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -44,8 +57,8 @@
                       sort: { channel: 'x' }
                   }),
                   sort: { channel: 'y' }
-              }) as Props)
-    );
+              }) as CellMarkProps)
+    ) as CellMarkProps;
 </script>
 
 <Mark

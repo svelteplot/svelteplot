@@ -1,40 +1,15 @@
 <!-- @component
 Helper component for rendering rectangular marks in SVG
 -->
-<script lang="ts">
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { roundedRect } from 'svelteplot/helpers/roundedRect';
-    import type {
-        BaseMarkProps,
-        BaseRectMarkProps,
-        BorderRadius,
-        ScaledDataRecord,
-        UsedScales,
-        PlotContext
-    } from 'svelteplot/types';
-    import { addEventHandlers } from './events';
-    import { getContext } from 'svelte';
-
-    let {
-        datum,
-        options,
-        class: className = null,
-        x,
-        y,
-        width,
-        height,
-        useInsetAsFallbackVertically = true,
-        useInsetAsFallbackHorizontally = true,
-        usedScales,
-        fallbackStyle = 'fill'
-    }: {
-        datum: ScaledDataRecord;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface RectPathProps {
+        datum: ScaledDataRecord<Datum>;
         class: string | null;
         x: number;
         y: number;
         width: number;
         height: number;
-        options: BaseRectMarkProps & BaseMarkProps;
+        options: BaseRectMarkProps<Datum> & BaseMarkProps<Datum>;
         /**
          * By default, the `inset` property is applied to all four insets. Mark components
          * can tweak this behavior for insetTop and insetBottom by setting the
@@ -49,13 +24,34 @@ Helper component for rendering rectangular marks in SVG
         useInsetAsFallbackHorizontally?: boolean;
         usedScales: UsedScales;
         fallbackStyle?: 'fill' | 'stroke';
-    } = $props();
+    }
+
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect';
+    import { addEventHandlers } from './events.js';
+    import { getContext } from 'svelte';
+    import Anchor from './Anchor.svelte';
+    import type { BaseMarkProps, BaseRectMarkProps, BorderRadius } from 'svelteplot/types/mark.js';
+    import type { DataRecord, ScaledDataRecord } from 'svelteplot/types/data.js';
+    import type { PlotContext, UsedScales } from 'svelteplot/types/index.js';
+
+    let {
+        datum,
+        options,
+        class: className = null,
+        x,
+        y,
+        width,
+        height,
+        useInsetAsFallbackVertically = true,
+        useInsetAsFallbackHorizontally = true,
+        usedScales,
+        fallbackStyle
+    }: RectPathProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const dx = $derived(+(resolveProp(options.dx, datum?.datum, 0) as number));
-    const dy = $derived(+(resolveProp(options.dy, datum?.datum, 0) as number));
     const inset = $derived(+(resolveProp(options.inset, datum?.datum, 0) as number));
     const insetLeft = $derived(
         +(resolveProp(
@@ -85,7 +81,9 @@ Helper component for rendering rectangular marks in SVG
             useInsetAsFallbackVertically ? inset : 0
         ) as number)
     );
-    const borderRadius = $derived((options.borderRadius ?? 0) as BorderRadius);
+    const borderRadius = $derived(
+        resolveProp(options.borderRadius, datum?.datum, 0) as BorderRadius
+    );
     const hasBorderRadius = $derived(
         (typeof borderRadius === 'number' && borderRadius > 0) ||
             (typeof borderRadius === 'object' &&
@@ -97,37 +95,45 @@ Helper component for rendering rectangular marks in SVG
                 ) > 0)
     );
     const [style, styleClass] = $derived(
-        resolveStyles(plot, datum, options, fallbackStyle, usedScales)
+        resolveStyles(
+            plot,
+            datum,
+            options,
+            !fallbackStyle ? (options.stroke && !options.fill ? 'stroke' : 'fill') : fallbackStyle,
+            usedScales
+        )
     );
 </script>
 
-{#if hasBorderRadius}
-    <path
-        transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
-        d={roundedRect(
-            0,
-            0,
-            width - insetLeft - insetRight,
-            height - insetTop - insetBottom,
-            borderRadius
-        )}
-        class={[styleClass, className]}
-        {style}
-        use:addEventHandlers={{
-            getPlotState,
-            options,
-            datum: datum?.datum
-        }} />
-{:else}
-    <rect
-        transform="translate({x + dx + insetLeft},{y + insetBottom + dy})"
-        width={width - insetLeft - insetRight}
-        height={height - insetTop - insetBottom}
-        class={[styleClass, className]}
-        {style}
-        use:addEventHandlers={{
-            getPlotState,
-            options,
-            datum: datum?.datum
-        }} />
-{/if}
+<Anchor {options} datum={datum?.datum}>
+    {#if hasBorderRadius}
+        <path
+            transform="translate({x + insetLeft},{y + insetBottom})"
+            d={roundedRect(
+                0,
+                0,
+                width - insetLeft - insetRight,
+                height - insetTop - insetBottom,
+                borderRadius
+            )}
+            class={[styleClass, className]}
+            {style}
+            {@attach addEventHandlers({
+                getPlotState,
+                options,
+                datum: datum?.datum
+            })} />
+    {:else}
+        <rect
+            transform="translate({x + insetLeft},{y + insetBottom})"
+            width={width - insetLeft - insetRight}
+            height={height - insetTop - insetBottom}
+            class={[styleClass, className]}
+            {style}
+            {@attach addEventHandlers({
+                getPlotState,
+                options,
+                datum: datum?.datum
+            })} />
+    {/if}
+</Anchor>

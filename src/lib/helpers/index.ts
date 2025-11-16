@@ -1,4 +1,11 @@
-import type { ChannelAccessor, ChannelName, DataRecord, RawValue } from '$lib/types.js';
+import type {
+    ChannelAccessor,
+    ChannelName,
+    Channels,
+    ConstantAccessor,
+    DataRecord,
+    RawValue
+} from '$lib/types/index.js';
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks.js';
@@ -16,11 +23,8 @@ export function coalesce(...args: (RawValue | undefined | null)[]) {
     return null; // Return null if all arguments are null or undefined
 }
 
-export function testFilter(datum: DataRecord, options: Record<ChannelName, ChannelAccessor>) {
-    return (
-        options.filter == null ||
-        resolveProp(options.filter, datum?.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum)
-    );
+export function testFilter<T>(datum: T, options: Channels<T>) {
+    return options.filter == null || resolveProp(options.filter as ConstantAccessor<T>, datum);
 }
 
 export function randomId() {
@@ -32,23 +36,32 @@ export function isSnippet(value: unknown): value is Snippet {
 }
 
 export function isValid(value: RawValue | undefined): value is number | Date | string {
-    return value !== null && value !== undefined && !Number.isNaN(value);
+    return (
+        value !== null &&
+        value !== undefined &&
+        !Number.isNaN(value) &&
+        (typeof value !== 'number' || Number.isFinite(value))
+    );
 }
 
-export function maybeData(data: DataRecord[]): DataRecord[] {
-    // if (data.type === 'FeatureCollection') return data.features;
-    return data;
-}
-
-export function isObject(option: object | RawValue): option is object {
+export function isObject<T>(option: object | T): option is object {
     // doesn't work with Proxies
     return (
         typeof option === 'object' && !isDate(option) && !Array.isArray(option) && option !== null
     );
 }
 
-export function maybeNumber(value: RawValue | null): number | null {
-    return value != null ? +value : null;
+const NUMERIC = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;
+
+export function maybeNumber(value: any): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string') {
+        // only accept numeric strings
+        if (NUMERIC.test(value.trim())) {
+            return parseFloat(value);
+        }
+    }
+    return null;
 }
 
 export const constant =

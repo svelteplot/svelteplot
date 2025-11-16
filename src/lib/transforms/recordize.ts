@@ -1,64 +1,69 @@
 import isDataRecord from '$lib/helpers/isDataRecord.js';
-import type { DataRecord, TransformArgsRow, TransformArgsRecord, RawValue } from '$lib/types.js';
+import type { TransformArgsRow, TransformArgsRecord } from '$lib/types/index.js';
+import { INDEX } from '$lib/constants';
 
-export const INDEX = Symbol('index');
+export const X = Symbol('x');
+export const Y = Symbol('y');
+
 export const RAW_VALUE = Symbol('originalValue');
+
+export function indexData<T extends object>(data: T[]): (T & { [INDEX]: number })[] {
+    return data.map((d, i) => ({ ...d, [INDEX]: i }) as T & { [INDEX]: number });
+}
 
 /*
  * This transform takes an array of raw values as input and returns data records
  * in which the values are interpreted as x channel and their index as y
  */
-export function recordizeX(
-    { data, ...channels }: TransformArgsRow,
+export function recordizeX<T>(
+    { data, ...channels }: TransformArgsRow<T>,
     { withIndex } = { withIndex: true }
-): TransformArgsRecord {
+): TransformArgsRecord<T> {
     const dataIsRawValueArray =
         !isDataRecord(data[0]) && !Array.isArray(data[0]) && channels.x == null;
     if (dataIsRawValueArray) {
+        // we remove x, x1 and x2 from the channels since they make no sense when
+        // the data is a raw value array
+        const { x, x1, x2, ...nonXChannels } = channels;
         return {
             data: data.map((value, index) => ({
-                __value: value,
-                ...(withIndex ? { [INDEX]: index } : {}),
-                [RAW_VALUE]: value
-            })) as DataRecord[],
-            ...channels,
+                [RAW_VALUE]: value,
+                [INDEX]: index
+            })) as T[],
+            ...nonXChannels,
             x: RAW_VALUE,
             ...(withIndex ? { y: INDEX } : {})
         };
     }
-    return { data: data as DataRecord[], ...channels };
+    return { data: indexData(data as object[]) as T[], ...channels };
 }
 
 /*
  * This transform takes an array of raw values as input and returns data records
  * in which the values are interpreted as y channel and their index as yx
  */
-export function recordizeY(
-    { data, ...channels }: TransformArgsRow,
+export function recordizeY<T>(
+    { data, ...channels }: TransformArgsRow<T>,
     { withIndex } = { withIndex: true }
-): TransformArgsRecord {
+): TransformArgsRecord<T> {
     if (!data) return { data, ...channels };
     const dataIsRawValueArray =
         !isDataRecord(data[0]) && !Array.isArray(data[0]) && channels.y == null;
     if (dataIsRawValueArray) {
+        // we remove y, y1 and y2 from the channels since they make no sense when
+        // the data is a raw value array
+        const { y, y1, y2, ...nonYChannels } = channels;
         return {
             data: Array.from(data).map((value, index) => ({
-                ...(withIndex ? { __index: index } : {}),
+                [INDEX]: index,
                 [RAW_VALUE]: value
-            })) as DataRecord[],
-            ...channels,
-            ...(withIndex ? { x: '__index' } : {}),
+            })) as T[],
+            ...nonYChannels,
+            ...(withIndex ? { x: INDEX } : {}),
             y: RAW_VALUE
         };
     }
-    return {
-        data: Array.from(data).map((d, index) => ({
-            ...d,
-            ...(withIndex ? { __index: index } : {})
-        })) as DataRecord[],
-        x: '__index',
-        ...channels
-    };
+    return { data: indexData(data as object[]) as T[], ...channels };
 }
 
 /**
@@ -66,7 +71,7 @@ export function recordizeY(
  * as dataset to marks that support it. It transforms the arrays into records, so
  * the rest of our code doesn't have to deal with this case anymore.
  */
-export function recordizeXY({ data, ...channels }: TransformArgsRow): TransformArgsRecord {
+export function recordizeXY<T>({ data, ...channels }: TransformArgsRow<T>): TransformArgsRecord<T> {
     if (!data) return { data, ...channels };
     if (
         !isDataRecord(data[0]) &&
@@ -75,28 +80,30 @@ export function recordizeXY({ data, ...channels }: TransformArgsRow): TransformA
         channels.y === undefined
     ) {
         return {
-            data: (data as [number, number][]).map(([x, y, ...rest]) => ({
+            data: (data as [number, number][]).map(([x, y, ...rest], i) => ({
                 [RAW_VALUE]: [x, y, ...rest],
-                __x: x,
-                __y: y
-            })) as DataRecord[],
+                [INDEX]: i,
+                [X]: x,
+                [Y]: y
+            })) as T[],
             ...channels,
-            x: '__x',
-            y: '__y'
+            x: X,
+            y: Y
         };
     }
-    return { data, ...channels };
+    return { data: data, ...channels };
 }
 
-export function recordize({ data, ...channels }: TransformArgsRow): TransformArgsRecord {
+export function recordize<T>({ data, ...channels }: TransformArgsRow<T>): TransformArgsRecord<T> {
     if (!data) return { data, ...channels };
     if (!isDataRecord(data[0])) {
         return {
-            data: (data as RawValue[]).map((d) => ({
-                [RAW_VALUE]: d
-            })) as DataRecord[],
+            data: (data as T[]).map((d, i) => ({
+                [RAW_VALUE]: d,
+                [INDEX]: i
+            })) as T[],
             ...channels
         };
     }
-    return { data, ...channels };
+    return { data: indexData(data as object[]), ...channels };
 }

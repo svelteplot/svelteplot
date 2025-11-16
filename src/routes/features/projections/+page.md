@@ -67,7 +67,7 @@ title: Projections
     {options}
     label="Projection" />
 <button
-    on:click={() => {
+    onclick={() => {
         vx = 10;
         step();
     }}>spin</button>

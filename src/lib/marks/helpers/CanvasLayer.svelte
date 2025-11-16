@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import type { PlotContext } from 'svelteplot/types';
+    import type { PlotContext } from '$lib/types/plot';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { MediaQuery } from 'svelte/reactivity';
     import type { Attachment } from 'svelte/attachments';

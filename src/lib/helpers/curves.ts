@@ -1,4 +1,4 @@
-import type { Curve } from '../types.js';
+import type { Curve } from '../types/index.js';
 import {
     curveBasis,
     curveBasisClosed,

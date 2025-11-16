@@ -6,29 +6,36 @@
     import type {
         AutoMarginStores,
         ConstantAccessor,
+        DataRecord,
         PlotState,
         RawValue,
+        ScaledDataRecord,
         ScaleType
-    } from '$lib/types.js';
+    } from '$lib/types/index.js';
+    import { RAW_VALUE } from '$lib/transforms/recordize';
+    import { INDEX } from '$lib/constants';
 
     type BaseAxisYProps = {
         scaleFn: (d: RawValue) => number;
         scaleType: ScaleType;
         ticks: RawValue[];
-        tickFormat: (d: RawValue) => string | string[];
+        tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
         anchor: 'left' | 'right';
         lineAnchor: 'top' | 'center' | 'bottom';
         tickSize: number;
         tickPadding: number;
         tickFontSize: ConstantAccessor<number>;
+        tickClass: ConstantAccessor<number>;
         marginLeft: number;
         width: number;
         title: string | null;
         options: {
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
+            textAnchor: 'start' | 'middle' | 'end';
         };
         plot: PlotState;
+        text: boolean | null;
     };
 
     let {
@@ -46,7 +53,8 @@
         width,
         title,
         plot,
-        options
+        options,
+        text = true
     }: BaseAxisYProps = $props();
 
     const LINE_ANCHOR = {
@@ -57,26 +65,29 @@
 
     const positionedTicks = $derived.by(() => {
         let tickObjects = ticks.map((tick, i) => {
+            const datum = { [RAW_VALUE]: tick, [INDEX]: i };
             return {
-                value: tick,
+                ...datum,
                 hidden: false,
-                dx: +resolveProp(options.dx, tick, 0),
-                dy: +resolveProp(options.dy, tick, 0),
+                dx: +resolveProp(options.dx, datum, 0),
+                dy: +resolveProp(options.dy, datum, 0),
                 y: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
-                text: tickFormat(tick),
+                text: tickFormat(tick, i, ticks),
                 element: null as SVGTextElement | null
             };
         });
-        const T = tickObjects.length;
-        for (let i = 0; i < T; i++) {
-            let j = i;
-            // find the preceding tick that was not hidden
-            do {
-                j--;
-            } while (j >= 0 && tickObjects[j].hidden);
-            if (j >= 0) {
-                const tickLabelSpace = Math.abs(tickObjects[i].y - tickObjects[j].y);
-                tickObjects[i].hidden = tickLabelSpace < 15;
+        if (text) {
+            const T = tickObjects.length;
+            for (let i = 0; i < T; i++) {
+                let j = i;
+                // find the preceding tick that was not hidden
+                do {
+                    j--;
+                } while (j >= 0 && tickObjects[j].hidden);
+                if (j >= 0) {
+                    const tickLabelSpace = Math.abs(tickObjects[i].y - tickObjects[j].y);
+                    tickObjects[i].hidden = tickLabelSpace < 15;
+                }
             }
         }
         return tickObjects;
@@ -101,11 +112,11 @@
                 max(
                     positionedTicks.map((tick, i) => {
                         if (
-                            resolveProp(options.textAnchor, tick.value, outsideTextAnchor) !==
+                            resolveProp(options.textAnchor, tick, outsideTextAnchor) !==
                             outsideTextAnchor
                         )
                             return 0;
-                        if (tick.hidden || !testFilter(tick.value, options)) return 0;
+                        if (tick.hidden || !testFilter(tick, options)) return 0;
                         if (tickTexts[i]) return tickTexts[i].getBoundingClientRect().width;
                         return 0;
                     }) as number[]
@@ -125,7 +136,7 @@
         untrack(() => [$autoMarginTop]);
         if (title) {
             // add margin top to make some space for title
-            $autoMarginTop.set(id, 20);
+            $autoMarginTop.set(id, 27);
         } else {
             // no need for extra margin top
             $autoMarginTop.delete(id);
@@ -143,12 +154,12 @@
 </script>
 
 <g class="axis-y">
-    {#each positionedTicks as tick, t (t)}
-        {#if testFilter(tick.value, options) && !tick.hidden}
-            {@const tickClass_ = resolveProp(tickClass, tick.value)}
+    {#each positionedTicks as tick, t (tick[RAW_VALUE])}
+        {#if testFilter(tick, options) && !tick.hidden}
+            {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const [textStyle, textClass] = resolveStyles(
                 plot,
-                tick,
+                { datum: tick },
                 {
                     fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                     ...options,
@@ -156,7 +167,8 @@
                     stroke: null
                 },
                 'fill',
-                { y: true }
+                { y: true },
+                true
             )}
             <g
                 class="tick {tickClass_ || ''}"
@@ -166,23 +178,26 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        tick,
+                        { datum: tick },
                         options,
                         'stroke',
-                        { y: true }
+                        { y: true },
+                        true
                     )}
                     <line
                         style={tickLineStyle}
                         class={tickLineClass}
                         x2={anchor === 'left' ? -tickSize : tickSize} />
                 {/if}
-                <text
-                    bind:this={tickTexts[t]}
-                    class={[textClass, { 'is-left': anchor === 'left' }]}
-                    style={textStyle}
-                    x={(tickSize + tickPadding) * (anchor === 'left' ? -1 : 1)}
-                    dominant-baseline={LINE_ANCHOR[lineAnchor]}
-                    >{Array.isArray(tick.text) ? tick.text.join(' ') : tick.text}</text>
+                {#if text}
+                    <text
+                        bind:this={tickTexts[t]}
+                        class={[textClass, { 'is-left': anchor === 'left' }]}
+                        style={textStyle}
+                        x={(tickSize + tickPadding) * (anchor === 'left' ? -1 : 1)}
+                        dominant-baseline={LINE_ANCHOR[lineAnchor]}
+                        >{Array.isArray(tick.text) ? tick.text.join(' ') : tick.text}</text>
+                {/if}
             </g>
         {/if}
     {/each}
@@ -193,11 +208,6 @@
         stroke: currentColor;
     }
     text {
-        font-size: 11px;
-        opacity: 0.8;
         fill: currentColor;
-    }
-    text.is-left {
-        text-anchor: end;
     }
 </style>

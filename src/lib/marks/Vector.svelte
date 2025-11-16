@@ -3,69 +3,74 @@
     The vector mark lets you place shapes (like arrows) on your plot.
 -->
 <script lang="ts" module>
-    import type {
-        PlotContext,
-        DataRecord,
-        BaseMarkProps,
-        ConstantAccessor,
-        ChannelAccessor,
-        FacetContext
-    } from '../types.js';
-
     type D3Path = ReturnType<typeof import('d3-path').path>;
-
     export type ShapeRenderer = {
         draw(context: D3Path, l: number, r: number): void;
     };
+</script>
 
-    export type VectorMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x: ChannelAccessor;
-        y: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface VectorMarkProps extends BaseMarkProps<Datum> {
+        data: Datum[];
+        x: ChannelAccessor<Datum>;
+        y: ChannelAccessor<Datum>;
         r?: number;
-        length?: ChannelAccessor;
-        rotate?: ChannelAccessor;
+        length?: ChannelAccessor<Datum>;
+        rotate?: ChannelAccessor<Datum>;
         /**
          * Controls where the vector is anchored in relation to the x, y position.
          * If set to 'start', the arrow will start at the x, y position. If set to
          * 'middle', the arrow will be centered at the x, y position. If set to
          * 'end', the arrow will end at the x, y position.
          */
-        anchor: 'start' | 'middle' | 'end';
+        anchor?: 'start' | 'middle' | 'end';
         shape?: 'arrow' | 'spike' | 'arrow-filled' | ShapeRenderer;
         children?: Snippet;
         canvas?: boolean;
-    };
-</script>
+    }
+    import type {
+        PlotContext,
+        DataRecord,
+        BaseMarkProps,
+        ChannelAccessor,
+        FacetContext
+    } from '../types/index.js';
 
-<script lang="ts">
     import { getContext, type Snippet } from 'svelte';
     import { pathRound as path } from 'd3-path';
 
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { projectXY } from '../helpers/scales.js';
     import { sort } from '$lib/index.js';
     import Mark from '../Mark.svelte';
     //import DotCanvas from './helpers/DotCanvas.svelte';
-    import { maybeData, testFilter, isValid } from '$lib/helpers/index.js';
+    import { isValid } from '$lib/helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const defaultRadius = 3.5;
 
     // The size of the arrowhead is proportional to its length, but we still allow
-    // the relative size of the head to be controlled via the mark’s width option;
+    // the relative size of the head to be controlled via the mark's width option;
     // doubling the default radius will produce an arrowhead that is twice as big.
-    // That said, we’ll probably want a arrow with a fixed head size, too.
+    // That said, we'll probably want a arrow with a fixed head size, too.
     const wingRatio = defaultRadius * 5;
 
-    let {
+    let markProps: VectorMarkProps = $props();
+    const DEFAULTS = {
+        ...getPlotDefaults().vector
+    };
+    const {
         data = [{}],
         canvas,
         shape = 'arrow',
         anchor = 'middle',
         r = defaultRadius,
         ...options
-    }: VectorMarkProps = $props();
+    }: VectorMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -141,7 +146,7 @@
 
     const args = $derived(
         sort({
-            data: maybeData(data),
+            data: indexData(data),
             // sort by descending radius by default
             ...options
         })
@@ -173,8 +178,6 @@
                 {#each scaledData as d, i (i)}
                     {@const r = resolveChannel('r', d.datum, { r: 3, ...args })}
                     {#if d.valid && isValid(r)}
-                        {@const dx = +resolveProp(args.dx, d.datum, 0)}
-                        {@const dy = +resolveProp(args.dx, d.datum, 0)}
                         {@const [style, styleClass] = resolveStyles(
                             plot,
                             d,
@@ -189,7 +192,7 @@
                         )}
                         <path
                             d={shapePath(shape, d.length, r)}
-                            transform="translate({d.x + dx}, {d.y + dy}) rotate({resolveProp(
+                            transform="translate({d.x}, {d.y}) rotate({resolveProp(
                                 args.rotate,
                                 d.datum,
                                 0
@@ -199,11 +202,11 @@
                                   ? `translate(0, ${d.length})`
                                   : `translate(0, ${d.length / 2})`}"
                             {style}
-                            use:addEventHandlers={{
+                            {@attach addEventHandlers({
                                 getPlotState,
                                 options: args,
-                                datum: d.datum
-                            }}
+                                datum: d?.datum
+                            })}
                             class={[styleClass]} />
                     {/if}
                 {/each}

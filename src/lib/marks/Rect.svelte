@@ -2,21 +2,21 @@
     @component
     For arbitrary rectangles, requires quantitative x and y scales 
 -->
-<script module lang="ts">
-    export type RectMarkProps = {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        x1?: ChannelAccessor;
-        x2?: ChannelAccessor;
-        y?: ChannelAccessor;
-        y1?: ChannelAccessor;
-        y2?: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface RectMarkProps
+        extends BaseMarkProps<Datum>,
+            LinkableMarkProps<Datum>,
+            BaseRectMarkProps<Datum> {
+        data: Datum[];
+        x?: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
         interval?: number | string;
-    } & BaseMarkProps &
-        BaseRectMarkProps;
-</script>
-
-<script lang="ts">
+        className?: string;
+    }
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
     import { intervalX, intervalY } from '$lib/index.js';
@@ -25,12 +25,28 @@
         DataRecord,
         BaseMarkProps,
         BaseRectMarkProps,
-        ChannelAccessor
-    } from '../types.js';
+        ChannelAccessor,
+        LinkableMarkProps
+    } from '../types/index.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
 
-    let { data = [{}], class: className = 'rect', ...options }: RectMarkProps = $props();
+    let markProps: RectMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().rect
+    };
+
+    const {
+        data = [{} as Datum],
+        class: className = '',
+        ...options
+    }: RectMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
@@ -44,15 +60,18 @@
     type="rect"
     required={[]}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
+    {...markProps}
     {...args}>
     {#snippet children({ usedScales, scaledData })}
         <GroupMultiple class={scaledData.length > 1 ? className : null} length={scaledData.length}>
             {#each scaledData as d, i (i)}
                 {#if d.valid}
-                    {@const x1 = d.x1 == null ? plot.options.marginLeft : d.x1}
-                    {@const x2 = d.x2 == null ? plot.options.marginLeft + plot.facetWidth : d.x2}
-                    {@const y1 = d.y1 == null ? plot.options.marginTop : d.y1}
-                    {@const y2 = d.y2 == null ? plot.options.marginTop + plot.facetHeight : d.y2}
+                    {@const x1 = d.x1 == null ? plot.options.marginLeft + d.dx : d.x1}
+                    {@const x2 =
+                        d.x2 == null ? plot.options.marginLeft + plot.facetWidth + d.dx : d.x2}
+                    {@const y1 = d.y1 == null ? plot.options.marginTop + d.dy : d.y1}
+                    {@const y2 =
+                        d.y2 == null ? plot.options.marginTop + plot.facetHeight + d.dy : d.y2}
 
                     {@const miny = Math.min(y1, y2)}
                     {@const maxy = Math.max(y1, y2)}
@@ -73,10 +92,3 @@
         </GroupMultiple>
     {/snippet}
 </Mark>
-
-<style>
-    rect {
-        stroke: none;
-        /* fill: none; */
-    }
-</style>

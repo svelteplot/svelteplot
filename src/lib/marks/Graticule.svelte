@@ -1,35 +1,42 @@
 <!-- @component
     Renders a geographic graticule grid with customizable step sizes
 -->
-<script module lang="ts">
-    import type { DefaultOptions, BaseMarkProps } from '../types.js';
-    export type GraticuleMarkProps = Omit<
-        BaseMarkProps,
-        'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'cursor'
-    > & {
+
+<script lang="ts">
+    interface GraticuleMarkProps
+        extends Omit<
+            BaseMarkProps<GeoJSON.GeoJsonObject>,
+            'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'cursor'
+        > {
         step?: number;
         stepX?: number;
         stepY?: number;
-    };
-</script>
-
-<script lang="ts">
+    }
     import Geo from './Geo.svelte';
     import { geoGraticule } from 'd3-geo';
-    import { getContext } from 'svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import type { BaseMarkProps } from '../types/index.js';
+
+    let markProps: GraticuleMarkProps = $props();
 
     const DEFAULTS = {
-        graticuleStep: 10,
-        ...getContext<Partial<DefaultOptions>>('svelteplot/defaults')
+        step: 10,
+        ...getPlotDefaults().graticule
     };
 
-    let { step = DEFAULTS.graticuleStep, stepX, stepY, ...options }: GraticuleMarkProps = $props();
+    const { class: className = '', ...options }: GraticuleMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
-    let graticule = $derived.by(() => {
+    const graticule = $derived.by(() => {
         const graticule = geoGraticule();
-        graticule.stepMinor([stepX || step, stepY || step]);
+        graticule.stepMinor([
+            options.stepX ?? options.step ?? DEFAULTS.step,
+            options.stepY ?? options.step ?? DEFAULTS.step
+        ]);
         return graticule;
     });
 </script>
 
-<Geo data={[graticule()]} {...options} geoType="graticule" preferStroke />
+<Geo data={[graticule()]} {...options} geoType="graticule" />

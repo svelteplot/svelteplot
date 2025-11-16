@@ -293,6 +293,7 @@ Another use case for the Brush mark would be to create a zoomable plot by changi
         {:else}
             <Frame
                 fill="transparent"
+                stroke="transparent"
                 cursor="zoom-out"
                 onpointerup={resetZoom} />
         {/if}

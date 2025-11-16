@@ -1,24 +1,24 @@
-<script module lang="ts">
-    export type ColorLegendMarkProps = {
-        class: string | null;
-    };
-</script>
-
 <script lang="ts">
+    interface ColorLegendMarkProps {
+        class: string | null;
+    }
     import { getContext } from 'svelte';
-    import { Plot, AxisX, Frame } from '$lib/index.js';
+    import Plot from '$lib/Plot.svelte';
+    import AxisX from '$lib/marks/AxisX.svelte';
+    import Frame from '$lib/marks/Frame.svelte';
     import { symbol as d3Symbol } from 'd3-shape';
     import { range as d3Range, extent } from 'd3-array';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
 
-    import type { DefaultOptions, PlotContext } from '../types.js';
+    import type { PlotContext } from '$lib/types/plot.js';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
 
     let { class: className = null }: ColorLegendMarkProps = $props();
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const DEFAULTS = getContext<Partial<DefaultOptions>>('svelteplot/_defaults');
+    const DEFAULTS = getPlotDefaults();
 
     const legendTitle = $derived(plot.options.color.label);
     const scaleType = $derived(plot.scales.color.type);
@@ -27,7 +27,7 @@
             ? plot.options.color.tickFormat
             : Intl.NumberFormat(
                   plot.options.locale,
-                  plot.options.color.tickFormat || DEFAULTS.numberFormat
+                  plot.options.color.tickFormat || { ...DEFAULTS.numberFormat, notation: 'compact' }
               ).format
     );
     const randId = Math.round(Math.random() * 1e6).toFixed(32);
@@ -89,7 +89,7 @@
             ).slice(1)}
             <Plot
                 maxWidth="240px"
-                margins={1}
+                margin={1}
                 marginLeft={1}
                 marginRight={1}
                 marginTop={6}
@@ -122,7 +122,7 @@
 
             <Plot
                 maxWidth="240px"
-                margins={1}
+                margin={1}
                 marginLeft={10}
                 marginRight={10}
                 marginTop={6}
@@ -167,6 +167,7 @@
     .swatch {
         display: inline-flex;
         align-items: center;
+        column-gap: 0.3rem;
     }
     .item-label {
         vertical-align: super;

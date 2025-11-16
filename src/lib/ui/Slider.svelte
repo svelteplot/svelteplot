@@ -8,7 +8,7 @@
         type = 'range'
     }: {
         label: string;
-        type: 'range' | 'number';
+        type?: 'range' | 'number';
         value: number;
         min?: number;
         max?: number;

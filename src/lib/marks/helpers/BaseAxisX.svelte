@@ -9,17 +9,21 @@
         ConstantAccessor,
         PlotState,
         RawValue,
+        ScaledDataRecord,
         ScaleType
-    } from '$lib/types.js';
+    } from 'svelteplot/types/index.js';
     import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import { max } from 'd3-array';
     import { randomId, testFilter } from '$lib/helpers/index.js';
+    import { INDEX } from 'svelteplot/constants';
+    import { RAW_VALUE } from 'svelteplot/transforms/recordize';
+    import wordwrap from 'svelteplot/helpers/wordwrap';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
         scaleType: ScaleType;
         ticks: RawValue[];
-        tickFormat: (d: RawValue, i: number) => string | string[];
+        tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
         anchor: 'top' | 'bottom';
         tickSize: number;
         tickPadding: number;
@@ -32,7 +36,11 @@
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
+            wordwrap: boolean;
+            textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
+            removeDuplicateTicks: boolean;
         };
+        text: boolean;
         plot: PlotState;
     };
 
@@ -50,11 +58,25 @@
         height,
         options,
         plot,
-        title
+        title,
+        text = true
     }: BaseAxisXProps = $props();
 
+    const isBandScale = $derived(scaleType === 'band');
+    const bandWidth = $derived(isBandScale ? scaleFn.bandwidth() : 0);
+
     function splitTick(tick: string | string[]) {
-        return Array.isArray(tick) ? tick : [tick];
+        return Array.isArray(tick)
+            ? tick
+            : typeof tick === 'string' && isBandScale && options.wordwrap !== false
+              ? wordwrap(
+                    tick,
+                    { maxLineWidth: bandWidth * 0.9 },
+                    { minCharactersPerLine: 4 },
+                    +resolveProp(tickFontSize, {}, 11),
+                    false
+                )
+              : [tick];
     }
 
     let tickRotate = $derived(plot.options.x.tickRotate || 0);
@@ -66,7 +88,7 @@
     // generate id used for registering margins
     const id = randomId();
 
-    const { autoMarginTop, autoMarginBottom } =
+    const { autoMarginTop, autoMarginBottom, autoMarginLeft, autoMarginRight } =
         getContext<AutoMarginStores>('svelteplot/autoMargins');
 
     let tickTextElements = $state([] as SVGTextElement[]);
@@ -74,34 +96,46 @@
     const positionedTicks = $derived.by(() => {
         let tickObjects = removeIdenticalLines(
             ticks.map((tick, i) => {
+                const datum = { [RAW_VALUE]: tick, [INDEX]: i };
                 return {
-                    value: tick,
+                    ...datum,
                     hidden: false,
-                    dx: +resolveProp(options.dx, tick, 0),
-                    dy: +resolveProp(options.dy, tick, 0),
+                    dx: +resolveProp(options.dx, datum, 0),
+                    dy: +resolveProp(options.dy, datum, 0),
                     x: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
-                    text: splitTick(tickFormat(tick, i)),
+                    text: splitTick(tickFormat(tick, i, ticks)),
                     element: null as SVGTextElement | null
                 };
             })
         );
         const T = tickObjects.length;
-        for (let i = 0; i < T; i++) {
-            let j = i;
-            // find the preceding tick that was not hidden
-            do {
-                j--;
-            } while (j >= 0 && tickObjects[j].hidden);
-            if (j >= 0) {
-                const tickLabelSpace = Math.abs(tickObjects[i].x - tickObjects[j].x);
-                tickObjects[i].hidden = tickLabelSpace < 15;
+        if (text) {
+            for (let i = 0; i < T; i++) {
+                let j = i;
+                // find the preceding tick that was not hidden
+                do {
+                    j--;
+                } while (j >= 0 && tickObjects[j].hidden);
+                if (j >= 0) {
+                    const tickLabelSpace = Math.abs(tickObjects[i].x - tickObjects[j].x);
+                    tickObjects[i].hidden = tickLabelSpace < 15;
+                }
             }
         }
-        return tickObjects;
+        return tickObjects as ScaledDataRecord[];
+    });
+
+    $effect(() => {
+        // just add some minimal horizontal margins for axis ticks
+        untrack(() => $autoMarginLeft);
+        untrack(() => $autoMarginRight);
+        $autoMarginLeft.set(id, 5);
+        $autoMarginRight.set(id, 10);
     });
 
     $effect(() => {
         untrack(() => [$autoMarginTop, $autoMarginBottom]);
+        if (!text) return;
         const outsideTextAnchor = anchor === 'top' ? 'end' : 'start';
         // measure tick label heights
         const maxLabelHeight =
@@ -109,11 +143,11 @@
                 max(
                     positionedTicks.map((tick, i) => {
                         if (
-                            resolveProp(options.anchor, tick.value, outsideTextAnchor) !==
+                            resolveProp(options.anchor, tick, outsideTextAnchor) !==
                             outsideTextAnchor
                         )
                             return 0;
-                        if (tick.hidden || !testFilter(tick.value, options)) return 0;
+                        if (tick.hidden || !testFilter(tick, options)) return 0;
                         if (tickTextElements[i])
                             return tickTextElements[i].getBoundingClientRect().height;
                         return 0;
@@ -137,33 +171,17 @@
         return () => {
             if ($autoMarginBottom.has(id)) $autoMarginBottom.delete(id);
             if ($autoMarginTop.has(id)) $autoMarginTop.delete(id);
+            if ($autoMarginLeft.has(id)) $autoMarginLeft.delete(id);
+            if ($autoMarginRight.has(id)) $autoMarginRight.delete(id);
         };
     });
 </script>
 
 <g class="axis-x">
-    {#each positionedTicks as tick, t (t)}
-        {#if testFilter(tick.value, options) && !tick.hidden}
-            {@const textLines = tick.text}
-            {@const prevTextLines = t && positionedTicks[t - 1].text}
-            {@const fontSize = resolveProp(tickFontSize, tick)}
-            {@const tickClass_ = resolveProp(tickClass, tick.value)}
-            {@const estLabelWidth = max(textLines.map((t) => t.length)) * fontSize * 0.2}
-            {@const moveDown =
-                (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize * 0.35 : 0)) *
-                (anchor === 'bottom' ? 1 : -1)}
-            {@const [textStyle, textClass] = resolveStyles(
-                plot,
-                tick,
-                {
-                    fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
-                    ...options,
-                    fontSize: tickFontSize,
-                    stroke: null
-                },
-                'fill',
-                { x: true }
-            )}
+    {#each positionedTicks as tick, t (tick[RAW_VALUE])}
+        {#if testFilter(tick, options) && !tick.hidden}
+            {@const tickClass_ = resolveProp(tickClass, tick)}
+            {@const tickFontSize_ = +resolveProp(tickFontSize, tick, 10)}
             <g
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.x + tick.dx}, {tickY + tick.dy})"
@@ -171,10 +189,11 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        tick,
+                        { datum: tick },
                         options,
                         'stroke',
-                        { x: true }
+                        { x: true },
+                        true
                     )}
                     <line
                         style={tickLineStyle}
@@ -182,31 +201,63 @@
                         y2={anchor === 'bottom' ? tickSize : -tickSize} />
                 {/if}
 
-                <text
-                    bind:this={tickTextElements[t]}
-                    transform="translate(0, {moveDown})  rotate({tickRotate})"
-                    style={textStyle}
-                    class={textClass}
-                    x={0}
-                    y={0}
-                    dominant-baseline={tickRotate !== 0
-                        ? 'central'
-                        : anchor === 'bottom'
-                          ? 'hanging'
-                          : 'auto'}>
-                    {#if ticks.length > 0 || t === 0 || t === ticks.length - 1}
-                        {#if textLines.length === 1}
-                            {textLines[0]}
-                        {:else}
-                            {#each textLines as line, i (i)}
-                                <tspan x="0" dy={i ? 12 : 0}
-                                    >{!prevTextLines || prevTextLines[i] !== line
-                                        ? line
-                                        : ''}</tspan>
-                            {/each}
+                {#if text}
+                    {@const textLines = tick.text}
+                    {@const prevTextLines = t && positionedTicks[t - 1].text}
+
+                    {@const moveDown =
+                        (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize_ * 0.35 : 0)) *
+                        (anchor === 'bottom' ? 1 : -1)}
+                    {@const [textStyle, textClass] = resolveStyles(
+                        plot,
+                        { datum: tick },
+                        {
+                            fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
+                            ...options,
+                            textAnchor:
+                                options.textAnchor === 'auto'
+                                    ? // automatically adjust text anchor based on rotation
+                                      tickRotate < 0
+                                        ? 'end'
+                                        : tickRotate > 0
+                                          ? 'start'
+                                          : 'middle'
+                                    : options.textAnchor,
+                            fontSize: tickFontSize_,
+                            stroke: null
+                        },
+                        'fill',
+                        { x: true },
+                        true
+                    )}
+                    <text
+                        bind:this={tickTextElements[t]}
+                        transform="translate(0, {moveDown})  rotate({tickRotate})"
+                        style={textStyle}
+                        class={textClass}
+                        x={0}
+                        y={0}
+                        dominant-baseline={tickRotate !== 0
+                            ? 'central'
+                            : anchor === 'bottom'
+                              ? 'hanging'
+                              : 'auto'}>
+                        {#if ticks.length > 0 || t === 0 || t === ticks.length - 1}
+                            {#if textLines.length === 1}
+                                {textLines[0]}
+                            {:else}
+                                {#each textLines as line, i (i)}
+                                    <tspan x="0" dy={i ? 12 : 0}
+                                        >{!prevTextLines ||
+                                        prevTextLines[i] !== line ||
+                                        options.removeDuplicateTicks === false
+                                            ? line
+                                            : ''}</tspan>
+                                {/each}
+                            {/if}
                         {/if}
-                    {/if}
-                </text>
+                    </text>
+                {/if}
             </g>
         {/if}
     {/each}
@@ -217,7 +268,6 @@
         stroke: currentColor;
     }
     text {
-        font-size: 11px;
         opacity: 0.8;
         fill: currentColor;
     }

@@ -1,6 +1,6 @@
 import { maybeInterval } from '$lib/helpers/autoTicks.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { PlotState, TransformArg } from '$lib/types.js';
+import type { PlotState, TransformArg } from '$lib/types/index.js';
 
 export function intervalX<T>(args: TransformArg<T>, { plot }: { plot: PlotState }) {
     return interval('x', plot, args);

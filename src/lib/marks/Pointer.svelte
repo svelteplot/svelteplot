@@ -1,71 +1,83 @@
-<script module lang="ts">
-    import type { ChannelAccessor, DataRow } from '$lib/types.js';
-
-    export type PointerMarkProps = {
-        data: DataRow[];
-        children: Snippet<[{ data: DataRow[] }]>;
-        x?: ChannelAccessor;
-        y?: ChannelAccessor;
-        z?: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRow">
+    interface PointerMarkProps {
+        data: Datum[];
+        children?: Snippet<[{ data: Datum[] }]>;
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        z?: ChannelAccessor<Datum>;
+        fx?: ChannelAccessor<Datum>;
+        fy?: ChannelAccessor<Datum>;
         /**
          * maximum cursor distance to select data points
          */
         maxDistance?: number;
         /**
+         * tolerance for considering points as "the same" when sharing x or y values
+         * defaults to 0 pixel
+         */
+        tolerance?: number;
+        /**
          * called whenever the selection changes
          * @param data
          */
-        onupdate?: (data: DataRow[]) => void;
-    };
-</script>
+        onupdate?: (data: Datum[]) => void;
+    }
 
-<script lang="ts">
     import { getContext, type Snippet } from 'svelte';
-    import type { PlotContext } from '../types.js';
-    import { groups as d3Groups } from 'd3-array';
-
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
-
+    import type { ChannelAccessor, DataRow, PlotContext } from '../types/index.js';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
     import { projectXY } from '$lib/helpers/scales.js';
     import isDataRecord from '$lib/helpers/isDataRecord.js';
-    import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+    import { indexData, RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+    import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let {
+    const { getPlotState } = getContext<PlotContext>('svelteplot');
+    const plot = $derived(getPlotState());
+
+    const POINTER_X = Symbol('pointerX');
+    const POINTER_Y = Symbol('pointerY');
+
+    let markProps: PointerMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().pointer
+    };
+
+    const {
         data = [{}],
         children,
         x,
         y,
         z,
+        fx,
+        fy,
         maxDistance = 15,
+        tolerance = Number.NEGATIVE_INFINITY,
         onupdate = null
-    }: PointerMarkProps = $props();
+    }: PointerMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     let selectedData = $state([]);
 
-    function onMouseMove(evt: MouseEvent) {
-        updateSelection(evt.layerX, evt.layerY);
-    }
-
-    function onTouchMove(evt: TouchEvent) {
-        if (evt.touches) {
-            const rect = (evt.target as HTMLElement).getBoundingClientRect();
-            const pageTop = window.scrollY || document.documentElement.scrollTop;
-            const ox = rect.left;
-            const oy = rect.top + pageTop;
-
-            const touch = evt.touches[0] || evt.changedTouches[0];
-            if (touch) {
-                const ex = touch.pageX - ox;
-                const ey = touch.pageY - oy;
-                updateSelection(ex, ey);
-            }
+    function onPointerMove(evt: MouseEvent) {
+        let facetEl = evt.target as SVGElement;
+        while (facetEl && !facetEl.classList.contains('facet')) {
+            facetEl = facetEl.parentElement;
         }
+        const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
+
+        const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
+        const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
+
+        // console.log({ relativeX, relativeY }, evt);
+        updateSelection(relativeX, relativeY);
     }
 
-    function onMouseLeave() {
+    function onPointerLeave() {
         selectedData = [];
         if (onupdate) onupdate(selectedData);
     }
@@ -75,31 +87,44 @@
         const points = trees.map((tree) =>
             tree.find(x != null ? ex : 0, y != null ? ey : 0, maxDistance)
         );
-        selectedData = points.filter((d) => d != null);
+        // also include other points that share the same x or y value
+        const otherPoints = trees.flatMap((tree, i) => {
+            return tree
+                .data()
+                .filter((d) => d !== points[i])
+                .filter(
+                    (d) =>
+                        (!isFinite(d[POINTER_X]) ||
+                            Math.abs(d[POINTER_X] - points[i]?.[POINTER_X]) < tolerance) &&
+                        (!isFinite(d[POINTER_Y]) ||
+                            Math.abs(d[POINTER_Y] - points[i]?.[POINTER_Y]) < tolerance)
+                );
+        });
+        selectedData = [...points, ...otherPoints].filter((d) => d != null);
         if (onupdate) onupdate(selectedData);
     }
 
     $effect(() => {
-        plot.body?.addEventListener('mousemove', onMouseMove);
-        plot.body?.addEventListener('mouseleave', onMouseLeave);
-        plot.body?.addEventListener('touchmove', onTouchMove);
+        plot.body?.addEventListener('pointermove', onPointerMove);
+        plot.body?.addEventListener('pointerleave', onPointerLeave);
 
         return () => {
-            plot.body?.removeEventListener('mousemove', onMouseMove);
-            plot.body?.removeEventListener('mouseleave', onMouseLeave);
-            plot.body?.removeEventListener('touchmove', onTouchMove);
+            plot.body?.removeEventListener('pointermove', onPointerMove);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
         };
     });
 
-    const groups = $derived(
-        z != null ? d3Groups(data, (d) => resolveChannel('z', d, { x, z })) : [[null, data]]
-    );
+    const groups = $derived.by(() => {
+        const groups = [];
+        groupFacetsAndZ(indexData(data), { x, y, z, fx, fy }, (d) => groups.push(d));
+        return groups;
+    });
 
     const trees = $derived(
-        groups.map(([, items]) =>
+        groups.map((items) =>
             quadtree()
-                .x(x != null ? (d) => d.__pointerX : () => 0)
-                .y(y != null ? (d) => d.__pointerY : () => 0)
+                .x(x != null ? (d) => d[POINTER_X] : () => 0)
+                .y(y != null ? (d) => d[POINTER_Y] : () => 0)
                 .addAll(
                     items?.map((d) => {
                         const [px, py] = projectXY(
@@ -111,8 +136,8 @@
                         );
                         return {
                             ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
-                            __pointerX: px,
-                            __pointerY: py
+                            [POINTER_X]: px,
+                            [POINTER_Y]: py
                         };
                     }) ?? []
                 )

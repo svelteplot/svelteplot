@@ -1,54 +1,90 @@
-<script module lang="ts">
-    export type DifferenceYMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
-        data: DataRecord[];
+<script lang="ts" generics="Datum extends DataRecord">
+    interface DifferenceYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        data: Datum[];
         /*
          * the horizontal position of the comparison; bound to the x scale
          */
-        x1: ChannelAccessor;
+        x1: ChannelAccessor<Datum>;
         /**
          * the horizontal position of the metric; bound to the x scale
          */
-        x2: ChannelAccessor;
-        x: ChannelAccessor;
+        x2: ChannelAccessor<Datum>;
+        x: ChannelAccessor<Datum>;
         /**
          * the vertical position of the comparison; bound to the y scale
          */
-        y1: ChannelAccessor;
+        y1: ChannelAccessor<Datum>;
         /**
          * the vertical position of the metric; bound to the y scale
          */
-        y2: ChannelAccessor;
-        y: ChannelAccessor;
+        y2: ChannelAccessor<Datum>;
+        y: ChannelAccessor<Datum>;
         fillOpacity?: number;
+        /**
+         * the stroke color of the "positive" area; defaults to 'blue'
+         */
         positiveFill?: string;
+        /**
+         * the fill opacity of the "positive" area; defaults to 1
+         */
         positiveFillOpacity?: number;
+        /**
+         * the stroke color of the "negative" area; defaults to 'red'
+         */
         negativeFill?: string;
+        /**
+         * the fill opacity of the "negative" area; defaults to 1
+         */
         negativeFillOpacity?: number;
+        /**
+         * curve type for the area; defaults to 'linear'
+         */
         curve?: CurveName | CurveFactory;
+        /**
+         * the tension of the area curve; defaults to 0
+         */
         tension?: number;
-    };
-</script>
-
-<script lang="ts">
+    }
     import type {
         BaseMarkProps,
         ChannelAccessor,
         CurveName,
         DataRecord,
         PlotContext
-    } from '$lib/types.js';
-    import { Line, Area } from '$lib/index.js';
+    } from 'svelteplot/types/index.js';
+    import { Line, Area } from '$lib/marks/index.js';
     import { randomId, coalesce } from '$lib/helpers/index.js';
     import { getContext } from 'svelte';
     import { extent, max, min } from 'd3-array';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { CurveFactory } from 'd3-shape';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
 
-    let { data, stroke, class: className = null, ...options }: DifferenceYMarkProps = $props();
-    let { x, x1, x2, y, y1, y2 } = $derived(options);
+    let markProps: DifferenceYMarkProps = $props();
+
+    const DEFAULTS = {
+        positiveFill: 'red',
+        positiveFillOpacity: 1,
+        negativeFill: 'blue',
+        negativeFillOpacity: 1,
+        curve: 'linear' as CurveName,
+        tension: 0,
+        ...getPlotDefaults().differenceY
+    };
+
+    const {
+        data,
+        stroke,
+        class: className = null,
+        ...options
+    }: DifferenceYMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
+    const { x, x1, x2, y, y1, y2 } = $derived(options);
 
     const x1x2Differ = $derived((x1 == null || x2 == null) && x1 !== x2);
 

@@ -2,44 +2,63 @@
     @component 
     Renders a simple frame around the entire plot domain 
 -->
-<script module lang="ts">
-    export type FrameMarkProps = Omit<
-        BaseMarkProps,
-        'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'
-    > &
-        Omit<
-            BaseRectMarkProps,
-            'inset' | 'insetLeft' | 'insetRight' | 'insetTop' | 'insetBottom'
-        > & {
-            fill: string;
-            stroke: string;
-            fillOpacity: number;
-            strokeOpacity: number;
-            automatic?: boolean;
-            inset?: number;
-            insetLeft?: number;
-            insetRight?: number;
-            insetTop?: number;
-            insetBottom?: number;
-        };
-</script>
-
-<script lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
+    interface FrameMarkProps
+        extends Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
+            BaseRectMarkProps<Datum>,
+            LinkableMarkProps<Datum> {
+        fill?: string;
+        stroke?: string;
+        fillOpacity?: number;
+        strokeOpacity?: number;
+        opacity?: number;
+        automatic?: boolean;
+        inset?: number;
+        insetLeft?: number;
+        insetRight?: number;
+        insetTop?: number;
+        insetBottom?: number;
+    }
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
-    import type { PlotContext, BaseRectMarkProps } from '../types.js';
-    import type { BaseMarkProps } from '../types.js';
+    import type {
+        PlotContext,
+        BaseRectMarkProps,
+        LinkableMarkProps,
+        DataRecord
+    } from '../types/index.js';
+    import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
+    import { resolveProp } from 'svelteplot/helpers/resolve';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let {
+    let markProps: FrameMarkProps = $props();
+
+    const DEFAULTS: FrameMarkProps = {
+        fill: undefined,
+        class: 'frame',
+        stroke: undefined,
+        fillOpacity: 1,
+        strokeOpacity: 1,
+        ...getPlotDefaults().frame
+    };
+
+    const {
         automatic,
-        class: className = 'frame',
+        class: className,
         fill,
         stroke,
+        opacity,
         fillOpacity,
         strokeOpacity,
         ...options
-    }: FrameMarkProps = $props();
+    }: FrameMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
+
+    const dx = $derived(resolveProp(options.dx, null, 0) || 0);
+    const dy = $derived(resolveProp(options.dy, null, 0) || 0);
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -49,13 +68,13 @@
     {#snippet children({ usedScales })}
         <RectPath
             class={className}
-            datum={{ fill, stroke, fillOpacity, strokeOpacity, datum: {}, valid: true }}
-            x={plot.options.marginLeft}
-            y={plot.options.marginTop}
+            datum={{ fill, stroke, fillOpacity, strokeOpacity, opacity, datum: {}, valid: true }}
+            x={plot.options.marginLeft + dx}
+            y={plot.options.marginTop + dy}
             width={plot.facetWidth}
             height={plot.facetHeight}
             {usedScales}
-            fallbackStyle="stroke"
-            options={{ ...options, fill, stroke, fillOpacity, strokeOpacity }} />
+            fallbackStyle={fill == null || fill === 'none' ? 'stroke' : 'fill'}
+            options={{ ...options, fill, stroke, fillOpacity, opacity, strokeOpacity }} />
     {/snippet}
 </Mark>

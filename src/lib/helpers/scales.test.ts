@@ -6,8 +6,8 @@ const DATES = [new Date(), new Date()];
 const NUMBERS = [1, 2, 3, 4];
 
 describe('inferScaleType', () => {
-    it('infers band for strings', () => {
-        expect(inferScaleType('x', STRINGS, new Set())).toBe('band');
+    it('infers point for strings', () => {
+        expect(inferScaleType('x', STRINGS, new Set())).toBe('point');
     });
     it('infers linear for numbers', () => {
         expect(inferScaleType('x', NUMBERS, new Set())).toBe('linear');
@@ -25,14 +25,25 @@ describe('inferScaleType', () => {
     });
     it('enforces band scales for bars and ticks', () => {
         expect(inferScaleType('x', NUMBERS, new Set(['barY']))).toBe('band');
+        expect(inferScaleType('x', STRINGS, new Set(['barY']))).toBe('band');
         expect(inferScaleType('x', NUMBERS, new Set(['tickY']))).toBe('band');
+        expect(inferScaleType('x', STRINGS, new Set(['cell']))).toBe('band');
         expect(inferScaleType('y', NUMBERS, new Set(['barX']))).toBe('band');
         expect(inferScaleType('y', NUMBERS, new Set(['tickX']))).toBe('band');
+        expect(inferScaleType('y', STRINGS, new Set(['tickX']))).toBe('band');
     });
     it('infers point scale if just one value', () => {
         expect(inferScaleType('x', [1], new Set())).toBe('point');
         expect(inferScaleType('x', ['x'], new Set())).toBe('point');
         expect(inferScaleType('x', [new Date()], new Set())).toBe('point');
+    });
+    it('infers linear scale from scale options is set', () => {
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']))).toBe('band');
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { domain: [0, 100] })).toBe(
+            'linear'
+        );
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { nice: true })).toBe('linear');
+        expect(inferScaleType('x', [0, 10], new Set(['tickY']), { zero: true })).toBe('linear');
     });
 });
 

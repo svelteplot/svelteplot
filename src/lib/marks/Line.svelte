@@ -1,7 +1,26 @@
 <!-- @component
     Creates line charts with connecting points in a dataset with customizable curves and markers
 -->
-<script module lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
+    interface LineMarkProps extends MarkerOptions, BaseMarkProps<Datum> {
+        data?: Datum[];
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        z?: ChannelAccessor<Datum>;
+        outlineStroke?: string;
+        outlineStrokeWidth?: number;
+        outlineStrokeOpacity?: number;
+        curve?: CurveName | CurveFactory | 'auto';
+        tension?: number;
+        sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
+        text?: ConstantAccessor<string, Datum>;
+        textFill?: ConstantAccessor<string, Datum>;
+        textStroke?: ConstantAccessor<string, Datum>;
+        textStartOffset?: ConstantAccessor<string, Datum>;
+        textStrokeWidth?: ConstantAccessor<number, Datum>;
+        lineClass?: ConstantAccessor<string, Datum>;
+        canvas?: boolean;
+    }
     import type {
         CurveName,
         PlotContext,
@@ -11,31 +30,7 @@
         ChannelAccessor,
         MarkerOptions,
         ScaledDataRecord
-    } from '../types.js';
-
-    export type LineMarkProps = {
-        data: DataRecord[];
-        x?: ChannelAccessor;
-        y?: ChannelAccessor;
-        z?: ChannelAccessor;
-        outlineStroke?: string;
-        outlineStrokeWidth?: number;
-        outlineStrokeOpacity?: number;
-        curve?: CurveName | CurveFactory | 'auto';
-        tension?: number;
-        sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
-        text?: ConstantAccessor<string>;
-        textFill?: ConstantAccessor<string>;
-        textStroke?: ConstantAccessor<string>;
-        textStartOffset?: ConstantAccessor<string>;
-        textStrokeWidth?: ConstantAccessor<number>;
-        lineClass?: ConstantAccessor<string>;
-        canvas?: boolean;
-    } & MarkerOptions &
-        BaseMarkProps;
-</script>
-
-<script lang="ts">
+    } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
     import { getContext } from 'svelte';
@@ -47,22 +42,37 @@
     import { pick } from 'es-toolkit';
     import LineCanvas from './helpers/LineCanvas.svelte';
 
-    import type { RawValue } from '$lib/types.js';
+    import type { RawValue } from 'svelteplot/types/index.js';
     import { isValid } from '$lib/helpers/index.js';
     import { sort } from '$lib/transforms/sort.js';
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let {
-        data = [{}],
-        curve = 'auto',
-        tension = 0,
+    let markProps: LineMarkProps = $props();
+
+    const DEFAULTS: LineMarkProps = {
+        curve: 'auto',
+        tension: 0,
+        canvas: false,
+        class: null,
+        lineClass: null,
+        ...getPlotDefaults().line
+    };
+
+    const {
+        data = [{} as Datum],
+        curve,
+        tension,
         text,
-        canvas = false,
-        class: className = null,
-        lineClass = null,
+        canvas,
+        class: className,
+        lineClass,
         ...options
-    }: LineMarkProps = $props();
+    }: LineMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const args = $derived(sort(recordizeXY({ data, ...options })));
 
@@ -129,7 +139,7 @@
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
         {#if scaledData.length > 0}
-            {@const groupedLineData = groupIndex(scaledData, groupByKey)};
+            {@const groupedLineData = groupIndex(scaledData, groupByKey)}
             {#if canvas}
                 <LineCanvas {groupedLineData} {mark} {usedScales} {linePath} {groupByKey} />
             {:else}
@@ -191,7 +201,7 @@
                                             : args.textStroke
                                               ? 2
                                               : 0,
-                                        fill: args.textFill || args.stroke,
+                                        fill: args.textFill || lineData[0].stroke,
                                         stroke: args.textStroke
                                     },
                                     'fill',
@@ -206,16 +216,16 @@
                                     markerEnd={args.markerEnd}
                                     marker={args.marker}
                                     strokeWidth={args.strokeWidth}
-                                    datum={lineData[0]}
+                                    datum={lineData[0].datum}
                                     d={pathString}
                                     dInv={text ? linePath(lineData.toReversed()) : null}
                                     color={lineData[0].stroke || 'currentColor'}
                                     {style}
                                     class={styleClass}
-                                    text={text ? resolveProp(text, lineData[0]) : null}
+                                    text={text ? resolveProp(text, lineData[0].datum) : null}
                                     startOffset={resolveProp(
                                         args.textStartOffset,
-                                        lineData[0],
+                                        lineData[0].datum,
                                         '50%'
                                     )}
                                     {textStyle}

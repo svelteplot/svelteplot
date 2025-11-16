@@ -1,5 +1,5 @@
 <script>
-    import { Plot, Dot } from 'svelteplot';
+    import { Plot, Dot } from '$lib/index.js';
 
     let { colorOptions: color, dotOptions } = $props();
 </script>

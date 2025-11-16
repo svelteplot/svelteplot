@@ -1,75 +1,91 @@
 <!-- @component
     Creates arrows with customizable heads, angles, and bending
 -->
-<script module lang="ts">
-    export type ArrowMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
-        data: DataRecord[];
-        sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
-        x1: ChannelAccessor;
-        y1: ChannelAccessor;
-        x2: ChannelAccessor;
-        y2: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface ArrowMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        data: Datum[];
+        sort?:
+            | ConstantAccessor<RawValue>
+            | { channel: 'stroke' | 'fill' | 'x1' | 'y1' | 'x2' | 'y2' };
+        x1: ChannelAccessor<Datum>;
+        y1: ChannelAccessor<Datum>;
+        x2: ChannelAccessor<Datum>;
+        y2: ChannelAccessor<Datum>;
         /**
          * the bend angle, in degrees; defaults to 0°; true for 22.5°
          */
-        bend?: ConstantAccessor<number> | true;
+        bend?: ConstantAccessor<number, Datum> | true;
         /**
          * the arrowhead angle, in degrees; defaults to 60°
          */
-        headAngle?: ConstantAccessor<number>;
+        headAngle?: ConstantAccessor<number, Datum>;
         /**
          * the arrowhead scale; defaults to 8
          */
-        headLength?: ConstantAccessor<number>;
+        headLength?: ConstantAccessor<number, Datum>;
         /**
          * inset at the end of the arrow (useful if the arrow points to a dot)
          */
-        insetEnd?: ConstantAccessor<number>;
+        insetEnd?: ConstantAccessor<number, Datum>;
         /**
          * inset at the start of the arrow
          */
-        insetStart?: ConstantAccessor<number>;
+        insetStart?: ConstantAccessor<number, Datum>;
         /**
          * shorthand for the two insets
          */
-        inset?: ConstantAccessor<number>;
+        inset?: ConstantAccessor<number, Datum>;
         sweep?: SweepOption;
-    };
-</script>
-
-<script lang="ts">
-    import { getContext, type Snippet } from 'svelte';
+    }
+    import { getContext } from 'svelte';
     import type {
         PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        RawValue
-    } from '../types.js';
-    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { coalesce, maybeData, maybeNumber } from '../helpers/index.js';
+        RawValue,
+        PlotDefaults
+    } from '../types/index.js';
+    import { resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
     import { replaceChannels } from '$lib/transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { sort } from '$lib/transforms/sort.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let { data = [{}], class: className = null, ...options }: ArrowMarkProps = $props();
+    let markProps: ArrowMarkProps = $props();
+
+    const DEFAULTS = {
+        headAngle: 60,
+        headLength: 8,
+        inset: 0,
+        ...getPlotDefaults().arrow
+    };
+
+    const {
+        data = [{} as Datum],
+        class: className = '',
+        ...options
+    }: ArrowMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    const sorted = $derived(
-        options.sort
-            ? maybeData(data).toSorted((a, b) =>
-                  resolveChannel('sort', a, options) > resolveChannel('sort', b, options) ? 1 : -1
-              )
-            : maybeData(data)
-    );
-
-    const args: ArrowProps = $derived(
-        replaceChannels({ data: sorted, ...options }, { y: ['y1', 'y2'], x: ['x1', 'x2'] })
+    const args: ArrowMarkProps = $derived(
+        sort(
+            replaceChannels(
+                { data: indexData(data), ...options },
+                { y: ['y1', 'y2'], x: ['x1', 'x2'] }
+            )
+        )
     );
 </script>
 
@@ -78,7 +94,7 @@
     required={['x1', 'x2', 'y1', 'y2']}
     channels={['x1', 'y1', 'x2', 'y2', 'opacity', 'stroke', 'strokeOpacity']}
     {...args}>
-    {#snippet children({ mark, usedScales, scaledData })}
+    {#snippet children({ usedScales, scaledData })}
         {@const sweep = maybeSweep(args.sweep)}
         <GroupMultiple class="arrow" length={scaledData.length}>
             {#each scaledData as d, i (i)}
@@ -86,8 +102,8 @@
                     {@const inset = resolveProp(args.inset, d.datum, 0)}
                     {@const insetStart = resolveProp(args.insetStart, d.datum)}
                     {@const insetEnd = resolveProp(args.insetEnd, d.datum)}
-                    {@const headAngle = resolveProp(args.headAngle, d.datum, 60)}
-                    {@const headLength = resolveProp(args.headLength, d.datum, 8)}
+                    {@const headAngle = resolveProp(args.headAngle, d.datum)}
+                    {@const headLength = resolveProp(args.headLength, d.datum)}
                     {@const bend = resolveProp(args.bend, d.datum, 0)}
                     {@const strokeWidth = resolveProp(args.strokeWidth, d.datum, 1)}
                     {@const arrPath = arrowPath(
@@ -117,11 +133,11 @@
                     )}
                     <g
                         class={[className]}
-                        use:addEventHandlers={{
+                        {@attach addEventHandlers({
                             getPlotState,
-                            options: args,
-                            datum: d.datum
-                        }}>
+                            options,
+                            datum: d?.datum
+                        })}>
                         {#if options.onmouseenter || options.onclick}
                             <!-- add invisible path in bg for easier mouse access -->
                             <path

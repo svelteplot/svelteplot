@@ -1,4 +1,4 @@
-import type { DataRecord } from '../types.js';
+import type { DataRecord } from '../types/index.js';
 
 export default function (value: any): value is DataRecord {
     if (typeof value !== 'object' || value === null) return false;

@@ -1,4 +1,4 @@
-import type { ScaleName, ScaleType, ScaledChannelName } from './types.js';
+import type { ChannelName, ScaleName, ScaleType, ScaledChannelName } from './types/index.js';
 
 export const SCALE_TYPES: Record<ScaleName, symbol> = {
     opacity: Symbol('opacity'),
@@ -11,6 +11,29 @@ export const SCALE_TYPES: Record<ScaleName, symbol> = {
     fx: Symbol('fx'),
     fy: Symbol('fy'),
     projection: Symbol('projection')
+};
+
+export const ORIGINAL_NAME_KEYS: Record<ChannelName, symbol> = {
+    x: Symbol('origName_x'),
+    x1: Symbol('origName_x1'),
+    x2: Symbol('origName_x2'),
+    y: Symbol('origName_y'),
+    y1: Symbol('origName_y1'),
+    y2: Symbol('origName_y2'),
+    fill: Symbol('origName_color'),
+    stroke: Symbol('origName_color'),
+    opacity: Symbol('origName_opacity'),
+    symbol: Symbol('origName_symbol'),
+    r: Symbol('origName_r'),
+    z: Symbol('origName_z'),
+    sort: Symbol('origName_sort'),
+    filter: Symbol('origName_filter'),
+    interval: Symbol('origName_interval'),
+    length: Symbol('origName_length'),
+    fx: Symbol('origName_fx'),
+    fy: Symbol('origName_fy'),
+    fillOpacity: Symbol('origName_opacity'),
+    strokeOpacity: Symbol('origName_opacity')
 };
 
 export const SCALES: ScaleName[] = [

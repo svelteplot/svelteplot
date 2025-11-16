@@ -5,7 +5,7 @@
         BaseMarkProps,
         ScaledDataRecord,
         PlotContext
-    } from '$lib/types.js';
+    } from 'svelteplot/types/index.js';
     import { resolveProp } from '$lib/helpers/resolve.js';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
     import { symbol as d3Symbol } from 'd3-shape';
@@ -13,7 +13,7 @@
     import CanvasLayer from './CanvasLayer.svelte';
     import { getContext } from 'svelte';
     import { devicePixelRatio } from 'svelte/reactivity/window';
-    import { resolveColor } from './canvas';
+    import { resolveColor } from './canvas.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

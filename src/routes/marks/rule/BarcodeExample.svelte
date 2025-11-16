@@ -13,7 +13,7 @@
 
 <Code
     code={`<scr${'ipt>'}
-    import { Plot, RuleX } from 'svelteplot';
+    import { Plot, RuleX } from '$lib/index.js';
     import { randomNormal } from 'd3-random';
     import { range } from 'd3-array';
 </scr${'ipt>'}

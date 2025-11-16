@@ -39,7 +39,7 @@ If the **x** and **y** options are not defined, the line mark assumes that the d
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from '$lib/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -243,7 +243,7 @@ BLS Demo:
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from '$lib/types/index.js';
 
     import { page } from '$app/state';
     let { bls } = $derived(page.data.data);
@@ -335,7 +335,7 @@ The [LineY constructor](/marks/line#LineY) provides default channel definitions 
 ```svelte live
 <script lang="ts">
     import { Plot, LineY } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from '$lib/types/index.js';
     import { randomNormal } from 'd3-random';
     import { range, cumsum } from 'd3-array';
 </script>
@@ -491,7 +491,7 @@ With a [spherical projection](/features/projections), line segments become [geod
         inset={3}
         width={40}
         height={25}
-        margins={0}
+        margin={0}
         testid="axis-off">
         <Line data={aapl.slice(-60)} x="Date" y="Close" />
     </Plot> inside a text paragraph or table -- often referred
@@ -515,7 +515,7 @@ With a [spherical projection](/features/projections), line segments become [geod
         inset={3}
         width={40}
         height={25}
-        margins={0}>
+        margin={0}>
         <Line data={aapl.slice(-60)} x="Date" y="Close" />
     </Plot> inside a text paragraph or table -- often referred
     to as sparklines.

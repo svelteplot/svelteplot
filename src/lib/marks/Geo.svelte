@@ -1,48 +1,68 @@
 <!-- @component
     Renders geographical data using projections and GeoJSON geometries
 -->
-<script module lang="ts">
-    export type GeoMarkProps = {
-        data: DataRecord[];
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
+    interface GeoMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        data?: Datum[] | { type: 'Sphere' }[];
         geoType?: 'sphere' | 'graticule';
-        dragRotate: boolean;
-        canvas: boolean;
-        href: ConstantAccessor<string>;
-        target: ConstantAccessor<string>;
-    } & BaseMarkProps &
-        LinkableMarkProps;
-</script>
-
-<script lang="ts">
+        /**
+         * todo: implement?
+         */
+        dragRotate?: boolean;
+        /**
+         * toggle canvas rendering mode
+         */
+        canvas?: boolean;
+        /**
+         * simple browser tooltip to be displayed on mouseover
+         */
+        title?: ConstantAccessor<string, Datum>;
+        /**
+         * radius for point features
+         */
+        r?: ChannelAccessor<Datum>;
+    }
     import { getContext } from 'svelte';
     import type {
         DataRecord,
         PlotContext,
         BaseMarkProps,
         ConstantAccessor,
-        LinkableMarkProps
-    } from '../types.js';
+        LinkableMarkProps,
+        ChannelAccessor
+    } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import { geoPath } from 'd3-geo';
     import { resolveChannel, resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import callWithProps from '$lib/helpers/callWithProps.js';
-    import { sort } from '$lib/index.js';
+    import { sort } from '$lib/transforms/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import GeoCanvas from './helpers/GeoCanvas.svelte';
     import { recordize } from '$lib/transforms/recordize.js';
     import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
+    import Anchor from './helpers/Anchor.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
 
-    let {
-        data = [{}],
+    let markProps: GeoMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().geo
+    };
+
+    const {
+        data = [{} as Datum],
         canvas = false,
         geoType,
         dragRotate,
-        class: className = null,
+        class: className = '',
         ...options
-    }: GeoMarkProps = $props();
+    }: GeoMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const path = $derived(
         callWithProps(geoPath, [plot.scales.projection], {
@@ -68,28 +88,6 @@
     channels={['fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity', 'r']}
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
-        {#snippet el(d)}
-            {@const title = resolveProp(args.title, d.datum, '')}
-            {@const geometry = resolveProp(args.geometry, d.datum, d.datum)}
-            {@const [style, styleClass] = resolveStyles(
-                plot,
-                d,
-                args,
-                GEOJSON_PREFER_STROKE.has(geometry.type) ? 'stroke' : 'fill',
-                usedScales
-            )}
-            <path
-                d={path(geometry)}
-                {style}
-                class={[styleClass]}
-                use:addEventHandlers={{
-                    getPlotState,
-                    options: args,
-                    datum: d.datum
-                }}>
-                {#if title}<title>{title}</title>{/if}
-            </path>
-        {/snippet}
         <g
             aria-label="geo"
             class={['geo', geoType && `geo-${geoType}`, className]}
@@ -99,15 +97,28 @@
             {:else}
                 {#each scaledData as d, i (i)}
                     {#if d.valid}
-                        {#if options.href}
-                            <a
-                                href={resolveProp(args.href, d.datum, '')}
-                                target={resolveProp(args.target, d.datum, '_self')}>
-                                {@render el(d)}
-                            </a>
-                        {:else}
-                            {@render el(d)}
-                        {/if}
+                        <Anchor {options} datum={d.datum}>
+                            {@const title = resolveProp(args.title, d.datum, '')}
+                            {@const geometry = resolveProp(args.geometry, d.datum, d.datum)}
+                            {@const [style, styleClass] = resolveStyles(
+                                plot,
+                                d,
+                                args,
+                                GEOJSON_PREFER_STROKE.has(geometry.type) ? 'stroke' : 'fill',
+                                usedScales
+                            )}
+                            <path
+                                d={path(geometry)}
+                                {style}
+                                class={[styleClass]}
+                                {@attach addEventHandlers({
+                                    getPlotState,
+                                    options: args,
+                                    datum: d?.datum
+                                })}>
+                                {#if title}<title>{title}</title>{/if}
+                            </path>
+                        </Anchor>
                     {/if}
                 {/each}
             {/if}

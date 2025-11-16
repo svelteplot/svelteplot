@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import type { PlotContext, RawValue } from 'svelteplot/types';
+    import type { PlotContext, RawValue } from '$lib/index.js';
 
     let {
         id,

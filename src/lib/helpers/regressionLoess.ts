@@ -1,4 +1,4 @@
-import type { DataRow } from '$lib/types.js';
+import type { DataRow } from '$lib/types/index.js';
 import Loess from 'loess';
 
 type AccessorFn = (d: any) => number;

@@ -71,7 +71,6 @@ You can style box plots by passing separate options for the marks
         y="class"
         dot={{ fill: true }}
         bar={{
-            fill: 'var(--svelteplot-bg)',
             stroke: 'currentColor'
         }} />
 </Plot>
@@ -85,10 +84,7 @@ You can style box plots by passing separate options for the marks
         tickMinMax
         y="class"
         dot={{ fill: true }}
-        bar={{
-            fill: 'var(--svelteplot-bg)',
-            stroke: 'currentColor'
-        }} />
+        bar={{ stroke: 'currentColor' }} />
 </Plot>
 ```
 

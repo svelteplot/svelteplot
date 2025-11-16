@@ -1,24 +1,40 @@
 <!-- @component
     Creates connections between pairs of points with optional curve styling and markers
 -->
-<script lang="ts" module>
-    export type LinkMarkProps = BaseMarkProps &
-        MarkerOptions & {
-            data: DataRecord[];
-            sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
-            x1: ChannelAccessor;
-            y1: ChannelAccessor;
-            x2: ChannelAccessor;
-            y2: ChannelAccessor;
-            curve?: 'auto' | CurveName | CurveFactory;
-            tension?: number;
-            text: ConstantAccessor<string>;
-            children?: Snippet;
-        };
-</script>
 
-<script lang="ts">
-    import { getContext, type Snippet } from 'svelte';
+<script lang="ts" generics="Datum extends DataRecord">
+    interface LinkMarkProps extends BaseMarkProps<Datum>, MarkerOptions {
+        data: Datum[];
+        sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
+        /**
+         * the x1 channel accessor for the start of the link
+         */
+        x1: ChannelAccessor<Datum>;
+        /**
+         * the y1 channel accessor for the start of the link
+         */
+        y1: ChannelAccessor<Datum>;
+        /**
+         * the x2 channel accessor for the end of the link
+         */
+        x2: ChannelAccessor<Datum>;
+
+        y2: ChannelAccessor<Datum>;
+        /**
+         * the curve type, defaults to 'auto' which uses a linear curve for planar projections
+         * and a spherical line for geographic projections
+         */
+        curve?: 'auto' | CurveName | CurveFactory;
+        /**
+         * the tension of the curve, defaults to 0
+         */
+        tension?: number;
+        /**
+         * the text label for the link, can be a constant or a function
+         */
+        text?: ConstantAccessor<string, Datum>;
+    }
+    import { getContext } from 'svelte';
     import type {
         PlotContext,
         DataRecord,
@@ -29,9 +45,8 @@
         MarkerOptions,
         RawValue,
         ScaledDataRecord
-    } from '../types.js';
+    } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { maybeData } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
     import { replaceChannels } from '$lib/transforms/rename.js';
@@ -40,30 +55,36 @@
     import { maybeCurve } from '$lib/helpers/curves.js';
     import { geoPath } from 'd3-geo';
     import { pick } from 'es-toolkit';
+    import { sort } from 'svelteplot/transforms/sort.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let {
-        data = [{}],
+    let markProps: LinkMarkProps = $props();
+    const DEFAULTS = {
+        ...getPlotDefaults().link
+    };
+    const {
+        data = [{} as Datum],
         curve = 'auto',
         tension = 0,
         text,
-        class: className = null,
+        class: className = '',
         ...options
-    }: LinkMarkProps = $props();
+    }: LinkMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     let plot = $derived(getPlotState());
 
-    const sorted = $derived(
-        options.sort
-            ? maybeData(data).toSorted((a, b) =>
-                  resolveChannel('sort', a, options) > resolveChannel('sort', b, options) ? 1 : -1
-              )
-            : maybeData(data)
-    );
-
     const args = $derived(
         replaceChannels(
-            { data: sorted, stroke: 'currentColor', ...options },
+            sort({
+                data: indexData(data),
+                stroke: 'currentColor',
+                ...options
+            }),
             { y: ['y1', 'y2'], x: ['x1', 'x2'] }
         )
     );
@@ -133,8 +154,6 @@
         <g class={['link', className]} data-use-x={usedScales.x ? 1 : 0}>
             {#each scaledData as d, i (i)}
                 {#if d.valid || true}
-                    {@const dx = resolveProp(args.dx, d.datum, 0)}
-                    {@const dy = resolveProp(args.dx, d.datum, 0)}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         d,
@@ -172,8 +191,7 @@
                         text={text ? resolveProp(text, d.datum) : null}
                         startOffset={resolveProp(args.textStartOffset, d.datum, '50%')}
                         {textStyle}
-                        {textStyleClass}
-                        transform={dx || dy ? `translate(${dx}, ${dy})` : null} />
+                        {textStyleClass} />
                 {/if}
             {/each}
         </g>

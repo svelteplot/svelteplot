@@ -1,15 +1,25 @@
 <!-- @component
     Geo mark with Sphere geometry object  -->
 
-<script module lang="ts">
-    import { type BaseMarkProps } from '$lib/types.js';
-    export type SphereMarkProps = BaseMarkProps;
-</script>
-
 <script lang="ts">
-    import Geo from './Geo.svelte';
+    interface SphereMarkProps
+        extends BaseMarkProps<GeoJSON.GeoJsonObject>,
+            LinkableMarkProps<GeoJSON.GeoJsonObject> {}
 
-    let { ...args }: SphereMarkProps = $props();
+    import Geo from './Geo.svelte';
+    import type { BaseMarkProps, LinkableMarkProps, PlotDefaults } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+
+    let markProps: SphereMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().sphere
+    };
+
+    const { ...options }: SphereMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 </script>
 
-<Geo data={[{ type: 'Sphere' }]} {...args} geoType="sphere" />
+<Geo data={[{ type: 'Sphere' }]} {...options} geoType="sphere" />

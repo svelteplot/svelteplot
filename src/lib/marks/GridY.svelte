@@ -1,23 +1,37 @@
 <!-- @component
     Renders horizontal gridlines at y-axis tick positions
 -->
-<script module lang="ts">
-    export type GridYMarkProps = Omit<BaseMarkProps, 'fill' | 'fillOpacity'> & {
-        data?: RawValue[];
+<script lang="ts" generics="Datum = RawValue">
+    interface GridYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        data?: Datum[];
         automatic?: boolean;
-    };
-</script>
-
-<script lang="ts">
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
+    }
     import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
-    import type { PlotContext, BaseMarkProps, RawValue } from '../types.js';
-    import { resolveChannel, resolveStyles } from '../helpers/resolve.js';
+    import type { PlotContext, BaseMarkProps, RawValue, ChannelAccessor } from '../types/index.js';
+    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let { data = [], automatic = false, ...options }: GridYMarkProps = $props();
+    let markProps: GridYMarkProps = $props();
+
+    const DEFAULTS = {
+        ...getPlotDefaults().grid,
+        ...getPlotDefaults().gridY
+    };
+
+    const {
+        data = [],
+        automatic = false,
+        ...options
+    }: GridYMarkProps = $derived({
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -57,8 +71,14 @@
                         (plot.scales.y.type === 'band' ? plot.scales.y.fn.bandwidth() * 0.5 : 0)}
                     {@const x1_ = resolveChannel('x1', tick, options)}
                     {@const x2_ = resolveChannel('x2', tick, options)}
-                    {@const x1 = options.x1 != null ? plot.scales.x.fn(x1_) : 0}
-                    {@const x2 = options.x2 != null ? plot.scales.x.fn(x2_) : plot.facetWidth}
+                    {@const x1 =
+                        options.x1 != null ? plot.scales.x.fn(x1_) : plot.options.marginLeft}
+                    {@const x2 =
+                        options.x2 != null
+                            ? plot.scales.x.fn(x2_)
+                            : plot.options.marginLeft + plot.facetWidth}
+                    {@const dx = +resolveProp(options?.dx, tick, 0)}
+                    {@const dy = +resolveProp(options?.dy, tick, 0)}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         { datum: { [RAW_VALUE]: tick } },
@@ -70,7 +90,7 @@
                     <line
                         {style}
                         class={styleClass}
-                        transform="translate({plot.options.marginLeft},{y})"
+                        transform="translate({dx},{y + dy})"
                         {x1}
                         {x2} />
                 {/if}

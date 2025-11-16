@@ -2,7 +2,7 @@
     @component
     Helper component for paths with markers and optional text along the path.
 -->
-<script lang="ts">
+<script lang="ts" generics="Datum extends DataRecord">
     import Marker, { type MarkerShape } from './Marker.svelte';
     import { isSnippet, randomId } from '$lib/helpers/index.js';
     import { resolveProp } from '$lib/helpers/resolve.js';
@@ -13,16 +13,16 @@
         Mark,
         PlotContext,
         PlotScales
-    } from '$lib/types.js';
+    } from 'svelteplot/types/index.js';
     import { addEventHandlers } from './events.js';
     import { getContext } from 'svelte';
 
-    type MarkerPathProps = BaseMarkProps & {
+    type MarkerPathProps = BaseMarkProps<Datum> & {
         /**
          * the datum associated with this path, usually the first
          * element of the data array group
          */
-        datum: DataRecord;
+        datum: Datum;
         /**
          * the marker shape to use at the start of the path, defaults to
          * circle
@@ -52,7 +52,7 @@
         transform: string;
         color: string;
         strokeWidth: ConstantAccessor<number>;
-        mark: Mark<BaseMarkProps>;
+        mark: Mark<BaseMarkProps<Datum>>;
         scales: PlotScales;
     };
 
@@ -95,7 +95,11 @@
     {transform}
     class={className}
     stroke-width={strokeWidth_}
-    use:addEventHandlers={{ getPlotState, options: mark.options, datum }}>
+    {@attach addEventHandlers({
+        getPlotState,
+        options: mark.options,
+        datum: datum
+    })}>
     {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, marker] (key)}
         {@const markerId = `marker-${key === 'all' ? '' : `${key}-`}${id}`}
         {#if isSnippet(marker)}
@@ -122,7 +126,11 @@
         marker-end={markerEnd || marker ? `url(#marker-${markerEnd ? 'end-' : ''}${id})` : null}
         {d}
         {style}
-        use:addEventHandlers={{ getPlotState, options: mark.options, datum }} />
+        {@attach addEventHandlers({
+            getPlotState,
+            options: mark.options,
+            datum: datum
+        })} />
     {#if text}
         <!-- since textPath.side is not yet supported, we have to use an invisible
             path in order to keep the text from turning upside down -->

@@ -397,17 +397,182 @@ We can also see that the scale is no longer sorted by cylinders, as the domain o
 
 ### Band scale
 
-## Categorical colors
-
-Categorical color scales are useful for mapping categories to colors. The following categorical schemes are included in SveltePlot:
+Band scales are similar to point scales but allocate space for each category. This is useful for extent-based marks like [Bar](/marks/bar) marks. In the following example, the car manufacturers are categorical data so the plot uses a band scale for the x scale.
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
+    import { Plot, BarY, groupX, Frame } from 'svelteplot';
+    import { Slider } from '$lib/ui';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
+    let paddingInner = $state(0.1);
+    let paddingOuter = $state(0.25);
+    let align = $state(0.5);
+
+    const domain = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 </script>
 
+<Slider
+    label="paddingInner"
+    bind:value={paddingInner}
+    min={0}
+    max={0.9}
+    step={0.01} />
+<Slider
+    label="paddingOuter"
+    bind:value={paddingOuter}
+    min={0}
+    max={0.9}
+    step={0.01} />
+<Slider
+    label="align"
+    bind:value={align}
+    min={0}
+    max={1}
+    step={0.01} />
+
+<Plot
+    x={{
+        type: 'band',
+        grid: true,
+        align,
+        paddingInner,
+        paddingOuter
+    }}
+    marginTop={30}
+    y={{ axis: false }}
+    height={120}>
+    <Frame opacity={0.2} />
+    <BarY
+        data={domain.map((d) => ({
+            category: d,
+            value: 1
+        }))}
+        stroke="currentColor"
+        x="category"
+        y="value" />
+</Plot>
+```
+
+[fork](https://svelte.dev/playground/cccdc5392048468585b6cfd9302e661b?version=5)
+
+### Domain sorting
+
+Note that SveltePlot sortes the domain values in point and band scales alphabetically by default.
+
+```svelte live
+<script>
+    import { Plot, BarX } from 'svelteplot';
+    const data = [
+        { category: 'C', value: 2 },
+        { category: 'A', value: 1 },
+        { category: 'B', value: 3 }
+    ];
+</script>
+
+<Plot>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+```svelte
+<script>
+    import { Plot, BarX } from 'svelteplot';
+    const data = [
+        { category: 'C', value: 2 },
+        { category: 'A', value: 1 },
+        { category: 'B', value: 3 }
+    ];
+</script>
+
+<Plot>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+If one of the marks used in the plot is using the [sort transform](/transforms/sort), SveltePlot will automatically disable this behavior and use the order of appearance in the sorted data to define the domain order:
+
+```svelte live
+<script>
+    import { Plot, BarX } from 'svelteplot';
+    const data = [
+        { category: 'C', value: 2 },
+        { category: 'A', value: 1 },
+        { category: 'B', value: 3 }
+    ];
+</script>
+
+<Plot>
+    <BarX {data} sort="value" x="value" y="category" />
+</Plot>
+```
+
+```svelte
+<Plot>
+    <BarX {data} sort="value" x="value" y="category" />
+</Plot>
+```
+
+Another way to disable the sorting is to pass `sort: false` to the scale options:
+
+```svelte live
+<script>
+    import { Plot, BarX } from 'svelteplot';
+    const data = [
+        { category: 'C', value: 2 },
+        { category: 'A', value: 1 },
+        { category: 'B', value: 3 }
+    ];
+</script>
+
+<Plot y={{ sort: false }}>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+```svelte
+<Plot y={{ sort: false }}>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+Alternatively, you can disable this behavior for the entire plot by setting `sortOrdinalDomains` to `false` in the plot options:
+
+```svelte live
+<script>
+    import { Plot, BarX } from 'svelteplot';
+    const data = [
+        { category: 'C', value: 2 },
+        { category: 'A', value: 1 },
+        { category: 'B', value: 3 }
+    ];
+</script>
+
+<Plot sortOrdinalDomains={false}>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+```svelte
+<Plot sortOrdinalDomains={false}>
+    <BarX {data} x="value" y="category" />
+</Plot>
+```
+
+If you want to disable this behavior for all plots by default, you can set the `sortOrdinalDomains` option in your [Defaults](/features/defaults) configuration.
+
+```js
+import { setPlotDefaults } from 'svelteplot';
+
+setPlotDefaults({ sortOrdinalDomains: false });
+```
+
+## Categorical colors
+
+Categorical color scales are useful for mapping categories to colors. The following categorical
+schemes are included in SveltePlot:
+
+```svelte --live
 <Plot color={{ legend: true }}>
     <Dot
         data={penguins}

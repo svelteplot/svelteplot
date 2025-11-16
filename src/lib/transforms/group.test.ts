@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { group, groupX, groupY, groupZ } from './group.js';
-import type { DataRecord } from '$lib/types.js';
+import type { DataRecord } from '$lib/types/index.js';
 import { csvParse } from 'd3-dsv';
 import { readFileSync } from 'fs';
+import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 
 const inputData: DataRecord[] = [
     { year: 2000, facet: 'A', value: 10 },
@@ -86,8 +87,8 @@ describe('groupX', () => {
             x: 'year',
             y: '__y',
             y1: '__y1',
-            __y_origField: 'Frequency',
-            __y1_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.y]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.y1]: 'Sum ( value )'
         });
     });
 
@@ -136,8 +137,8 @@ describe('groupY', () => {
             y: 'year',
             x: '__x',
             x1: '__x1',
-            __x_origField: 'Frequency',
-            __x1_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.x]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.x1]: 'Sum ( value )'
         });
     });
 });
@@ -165,6 +166,32 @@ describe('groupZ', () => {
         expect(data[1].__opacity).toBe(2);
         expect(data[2].__opacity).toBe(3);
         expect(channels).toStrictEqual({ fill: 'year', opacity: '__opacity' });
+    });
+
+    it('groups by fx channel if no z is present', () => {
+        const { data, ...channels } = groupZ(
+            { data: inputData, fx: 'facet', opacity: 'value' },
+            { opacity: 'count' }
+        );
+        expect(data).toHaveLength(2);
+        expect(data[0].facet).toBe('A');
+        expect(data[1].facet).toBe('B');
+        expect(data[0].__opacity).toBe(3);
+        expect(data[1].__opacity).toBe(4);
+        expect(channels).toStrictEqual({ fx: 'facet', opacity: '__opacity' });
+    });
+
+    it('groups by fy channel if no z is present', () => {
+        const { data, ...channels } = groupZ(
+            { data: inputData, fy: 'facet', opacity: 'value' },
+            { opacity: 'count' }
+        );
+        expect(data).toHaveLength(2);
+        expect(data[0].facet).toBe('A');
+        expect(data[1].facet).toBe('B');
+        expect(data[0].__opacity).toBe(3);
+        expect(data[1].__opacity).toBe(4);
+        expect(channels).toStrictEqual({ fy: 'facet', opacity: '__opacity' });
     });
 
     it('groups by z channel accessor', () => {
@@ -195,8 +222,8 @@ describe('groupZ', () => {
             z: 'year',
             x: '__x',
             y: '__y',
-            __x_origField: 'Frequency',
-            __y_origField: 'Sum ( value )'
+            [ORIGINAL_NAME_KEYS.x]: 'Frequency',
+            [ORIGINAL_NAME_KEYS.y]: 'Sum ( value )'
         });
     });
 });

@@ -1,16 +1,12 @@
 import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { ChannelName, Channels, DataRecord } from '$lib/types.js';
+import type { ChannelName, Channels, DataRecord } from '$lib/types/index.js';
 import { groups as d3Groups } from 'd3-array';
 
 /**
  * Groups the data by the fx, fy and z channels and calls the reduce function
  * for each group. Returns the new channels to be added in the transform.
  */
-export function groupFacetsAndZ(
-    items: DataRecord[],
-    channels: Channels,
-    reduce: (items: DataRecord[]) => any
-) {
+export function groupFacetsAndZ<T>(items: T[], channels: Channels<T>, reduce: (items: T[]) => any) {
     const groupBy = (['fx', 'fy', 'z'] as ChannelName[]).map((groupChannel) => {
         const groupByChannel =
             groupChannel === 'z'

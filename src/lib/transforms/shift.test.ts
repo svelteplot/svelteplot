@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { shiftX, shiftY } from './shift.js';
-import type { DataRecord } from '$lib/types.js';
+import type { DataRecord } from '$lib/types/index.js';
 
 describe('shiftX', () => {
     it('should shift the x values by a number', () => {

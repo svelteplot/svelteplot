@@ -7,7 +7,7 @@ import type {
     MapMethod,
     DataRecord,
     Channels
-} from '$lib/types.js';
+} from '$lib/types/index.js';
 import { count, rank } from 'd3-array';
 import { groupFacetsAndZ } from '$lib/helpers/group.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';

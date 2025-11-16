@@ -2,14 +2,12 @@
     @component
     For showing custom HTML tooltips positioned at x/y coordinates
 -->
-<script module lang="ts">
-    import type { ChannelAccessor, ConstantAccessor, DataRow } from '$lib/types.js';
-    import type { Snippet } from 'svelte';
 
-    export type HTMLMarkProps = {
-        data: DataRow[];
-        x?: ChannelAccessor;
-        y?: ChannelAccessor;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface CustomMarkHTMLProps {
+        data: Datum[];
+        x?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
         frameAnchor?: ConstantAccessor<
             | 'bottom'
             | 'top'
@@ -19,15 +17,19 @@
             | 'bottom-left'
             | 'top-right'
             | 'bottom-right'
-            | 'center'
+            | 'center',
+            Datum
         >;
-        children: Snippet<{ datum: DataRow; x: number; y: number }>;
-    };
-</script>
-
-<script lang="ts">
-    import { getContext } from 'svelte';
-    import type { PlotContext } from '../types.js';
+        class: string | null;
+        children: Snippet<{ datum: Datum; x: number; y: number }>;
+    }
+    import { getContext, type Snippet } from 'svelte';
+    import type {
+        ChannelAccessor,
+        ConstantAccessor,
+        DataRecord,
+        PlotContext
+    } from '../types/index.js';
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -37,15 +39,15 @@
     import { isValid } from '$lib/helpers/index.js';
 
     let {
-        data = [{}],
+        data = [{} as Datum],
         x,
         y,
         frameAnchor,
         children,
         class: className = null
-    }: HTMLMarkProps = $props();
+    }: CustomMarkHTMLProps = $props();
 
-    function getXY(datum) {
+    function getXY(datum: Datum) {
         const fa = frameAnchor || 'center';
         const isLeft = fa.endsWith('left');
         const isRight = fa.endsWith('right');

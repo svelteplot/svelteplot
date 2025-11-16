@@ -88,7 +88,7 @@ Note that for the interpolation methods `basis`, `bundle`, and `step`, the marke
     import { Plot, LineY, Dot } from 'svelteplot';
     import Slider from '$lib/ui/Slider.svelte';
     import Select from '$lib/ui/Select.svelte';
-    import type { CurveName } from '$lib/types.js';
+    import type { CurveName } from '$lib/types/index.js';
 
     // curve demo
     const numbers = [
@@ -134,7 +134,7 @@ You can also specify a custom marker icon using the `marker` snippet:
 ```svelte live
 <script lang="ts">
     import { Plot, Line } from 'svelteplot';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from '$lib/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);

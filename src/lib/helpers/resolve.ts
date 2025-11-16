@@ -1,8 +1,8 @@
-import { CHANNEL_SCALE } from '$lib/constants.js';
+import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
 import isDataRecord from '$lib/helpers/isDataRecord.js';
 import isRawValue from '$lib/helpers/isRawValue.js';
-import type { MarkStyleProps, PlotState, ScaledDataRecord } from '$lib/types.js';
-import { isValid } from './isValid.js';
+import type { MarkStyleProps, PlotState, ScaledDataRecord } from '$lib/types/index.js';
+import { isValid } from './index.js';
 
 import type {
     ScaleName,
@@ -13,31 +13,32 @@ import type {
     RawValue,
     DataRecord,
     ConstantAccessor
-} from '../types.js';
+} from '../types/index.js';
 import { getBaseStylesObject } from './getBaseStyles.js';
-import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+import { RAW_VALUE } from '$lib/transforms/recordize.js';
 
 type ChannelAlias = { channel: ScaledChannelName };
 
-export function resolveProp<T>(
-    accessor: ConstantAccessor<T>,
+export function resolveProp<K, T>(
+    accessor: ConstantAccessor<K, T>,
     datum: DataRecord | null,
-    _defaultValue: T | null = null
-): T | typeof _defaultValue {
+    _defaultValue: K | null = null
+): K | typeof _defaultValue {
     if (typeof accessor === 'function') {
         // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
         // "recordized" by the recordize transform. We want to hide this wrapping to the user
         // so we're passing the original value to accessor functions instead of our wrapped record
         return datum == null
             ? accessor()
-            : accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
+            : accessor(datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum, datum[INDEX]);
     } else if (
         (typeof accessor === 'string' || typeof accessor === 'symbol') &&
         datum &&
         datum[accessor] !== undefined
     ) {
-        return datum[accessor] as T;
+        return datum[accessor] as K;
     }
+
     return isRawValue(accessor) ? accessor : _defaultValue;
 }
 
@@ -67,17 +68,16 @@ export function toChannelOption(
           };
 }
 
-export function resolveChannel(
+export function resolveChannel<T>(
     channel: ChannelName,
-    datum: DataRow,
-    channels: Partial<Record<ChannelName, ChannelAccessor | ChannelAlias>>
+    datum: DataRow<T>,
+    channels: Partial<Record<ChannelName, ChannelAccessor<T> | ChannelAlias>>
 ): RawValue {
     const scale = CHANNEL_SCALE[channel];
     // the z channel has an automatic alias mechanism
     const accessor: ChannelAccessor | ChannelAlias =
         channel === 'z' ? channels.z || channels.fill || channels.stroke : channels[channel];
     const channelOptions = toChannelOption(channel, accessor);
-
     if (channelOptions.channel) {
         return resolveChannel(channelOptions.channel, datum, channels);
     }
@@ -97,7 +97,7 @@ function resolve(
             // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
             // "recordized" by the recordize transform. We want to hide this wrapping to the user
             // so we're passing the original value to accessor functions instead of our wrapped record
-            return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum);
+            return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum, datum?.[INDEX]);
         // use accessor string
         if (
             (typeof accessor === 'string' || typeof accessor === 'symbol') &&
@@ -116,7 +116,7 @@ function resolve(
     } else {
         // return single value or accessor
         return typeof accessor === 'function'
-            ? accessor(datum)
+            ? accessor(datum, datum?.[INDEX])
             : accessor !== null && isRawValue(accessor)
               ? accessor
               : !Array.isArray(datum) && (scale === 'x' || scale === 'y')
@@ -207,7 +207,9 @@ export function resolveStyles(
         ...getBaseStylesObject(datum?.datum, channels),
         fill: 'none',
         stroke: 'none',
-        ...(defaultColorProp && channels[oppositeColor[defaultColorProp]] == null
+        ...(defaultColorProp &&
+        (channels[oppositeColor[defaultColorProp]] == null ||
+            channels[oppositeColor[defaultColorProp]] === 'none')
             ? { [defaultColorProp]: 'currentColor' }
             : {}),
         ...Object.fromEntries(
@@ -231,6 +233,8 @@ export function resolveStyles(
                         ) {
                             return [cssAttr, plot.options.color.unknown];
                         }
+                    } else if ((key === 'fill' || key === 'stroke') && value === true) {
+                        return [cssAttr, 'currentColor'];
                     }
                     return [cssAttr, value];
                 })

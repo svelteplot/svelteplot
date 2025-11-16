@@ -1,4 +1,4 @@
-import type { RawValue } from '$lib/types.js';
+import type { RawValue } from '$lib/types/index.js';
 
 type Setter = (v: any) => void;
 

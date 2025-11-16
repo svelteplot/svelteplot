@@ -2,12 +2,13 @@ import { extent, ascending } from 'd3-array';
 
 import {
     isColorOrNull,
+    isDate,
     isDateOrNull,
     isNumberOrNull,
     isNumberOrNullOrNaN,
     isStringOrNull
 } from './typeChecks.js';
-import { CHANNEL_SCALE, VALID_SCALE_TYPES } from '$lib/constants.js';
+import { CHANNEL_SCALE, ORIGINAL_NAME_KEYS, VALID_SCALE_TYPES } from '$lib/constants.js';
 import { isSymbolOrNull } from './typeChecks.js';
 import { resolveProp, toChannelOption } from './resolve.js';
 import type {
@@ -25,11 +26,12 @@ import type {
     ScaleType,
     ScaledChannelName,
     UsedScales
-} from '../types.js';
+} from '../types/index.js';
 import isDataRecord from './isDataRecord.js';
 
 import { createProjection } from './projection.js';
 import { maybeInterval } from './autoTicks.js';
+import { IS_SORTED } from 'svelteplot/transforms/sort.js';
 
 /**
  * compute the plot scales
@@ -175,15 +177,17 @@ export function createScale<T extends ScaleOptions>(
     let manualActiveMarks = 0;
     const propNames = new Set<string>();
     const uniqueScaleProps = new Set<string | ChannelAccessor>();
-    let sortOrdinalDomain = true;
-
+    let sortOrdinalDomain = plotOptions.sortOrdinalDomains ?? true;
     for (const mark of marks) {
         // we only sort the scale domain alphabetically, if none of the
         // marks that map to it are using the `sort` transform. Note that
         // we're deliberately checking for !== undefined and not for != null
         // since the explicit sort transforms like shuffle will set the
         // sort channel to null to we know that there's an explicit order
-        if (mark.channels.sort !== undefined) sortOrdinalDomain = false;
+        if ((name === 'x' || name === 'y') && mark.options[IS_SORTED] != undefined) {
+            sortOrdinalDomain = false;
+        }
+
         for (const channel of mark.channels) {
             // channelOptions can be passed as prop, but most often users will just
             // pass the channel accessor or constant value, so we may need to wrap
@@ -266,16 +270,23 @@ export function createScale<T extends ScaleOptions>(
                 // special handling of marks using the stackX/stackY transform
                 if (
                     (name === 'x' || name === 'y') &&
-                    mark.options[`__${name}_origField`] &&
-                    !mark.options[`__${name}_origField`].startsWith('__')
+                    mark.options[ORIGINAL_NAME_KEYS[name]] &&
+                    !mark.options[ORIGINAL_NAME_KEYS[name]].startsWith('__')
                 ) {
-                    propNames.add(mark.options[`__${name}_origField`]);
+                    propNames.add(mark.options[ORIGINAL_NAME_KEYS[name]]);
                 }
             } else {
                 // also skip marks without data to prevent exceptions
                 // (skip.get(channel) as Set<symbol>).add(mark.id);
             }
         }
+    }
+
+    if ((name === 'x' || name === 'y') && scaleOptions.sort) {
+        sortOrdinalDomain = true;
+    }
+    if ((name === 'x' || name === 'y') && scaleOptions.sort === false) {
+        sortOrdinalDomain = false;
     }
 
     // construct domain from data values
@@ -285,7 +296,7 @@ export function createScale<T extends ScaleOptions>(
 
     const type: ScaleType =
         scaleOptions.type === 'auto'
-            ? inferScaleType(name, valueArr, markTypes)
+            ? inferScaleType(name, valueArr, markTypes, scaleOptions)
             : scaleOptions.type;
 
     if (VALID_SCALE_TYPES[name] && !VALID_SCALE_TYPES[name].has(type)) {
@@ -293,8 +304,7 @@ export function createScale<T extends ScaleOptions>(
             ${name}. Valid types are ${[...VALID_SCALE_TYPES[name]].join(', ')}`);
     }
 
-    const isOrdinal =
-        type === 'band' || type === 'point' || type === 'ordinal' || type === 'categorical';
+    const isOrdinal = isOrdinalScale(type);
 
     if (isOrdinal && sortOrdinalDomain) {
         valueArr.sort(ascending);
@@ -323,7 +333,7 @@ export function createScale<T extends ScaleOptions>(
             domain = domainFromInterval(domain, scaleOptions.interval, name);
         } else {
             if (markTypes.size > 0) {
-                console.warn(
+                console.error(
                     'Setting interval via axis options is only supported for ordinal scales'
                 );
             }
@@ -370,6 +380,11 @@ function domainFromInterval(domain: RawValue[], interval: string | number, name:
     return name === 'y' ? out.toReversed() : out;
 }
 
+const markTypesWithBandDefault = {
+    x: new Set<MarkType>(['barY', 'cell', 'tickY', 'waffleY']),
+    y: new Set<MarkType>(['barX', 'cell', 'tickX', 'waffleX'])
+};
+
 /**
  * Infer a scale type based on the scale name, the data values mapped to it and
  * the mark types that are bound to the scale
@@ -377,7 +392,8 @@ function domainFromInterval(domain: RawValue[], interval: string | number, name:
 export function inferScaleType(
     name: ScaleName,
     dataValues: RawValue[],
-    markTypes: Set<MarkType>
+    markTypes: Set<MarkType>,
+    scaleOptions: Partial<ScaleOptions> = {}
 ): ScaleType {
     if (name === 'color') {
         if (!dataValues.length) return 'ordinal';
@@ -387,24 +403,24 @@ export function inferScaleType(
         return 'categorical';
     }
     if (name === 'symbol') return 'ordinal';
-    // for positional scales, try to pick a scale that's required by the mark types
-    if ((name === 'x' || name === 'y') && markTypes.size === 1) {
-        if (
-            name === 'y' &&
-            (markTypes.has('barX') || markTypes.has('tickX') || markTypes.has('cell'))
-        )
-            return 'band';
-        if (
-            name === 'x' &&
-            (markTypes.has('barY') || markTypes.has('tickY') || markTypes.has('cell'))
-        )
-            return 'band';
+    if (name === 'x' || name === 'y') {
+        // if for a positional scale we may infer the scale type from the scale options
+        if (scaleOptions.nice || scaleOptions.zero) return 'linear';
+        if (scaleOptions.domain && scaleOptions.domain.length === 2) {
+            if (scaleOptions.domain.every(Number.isFinite)) return 'linear';
+            if (scaleOptions.domain.every(isDate)) return 'time';
+        }
     }
+    // for positional scales, try to pick a scale that's required by the mark types
+    if (name === 'y' && Array.from(markTypes).some((d) => markTypesWithBandDefault.y.has(d)))
+        return 'band';
+    if (name === 'x' && Array.from(markTypes).some((d) => markTypesWithBandDefault.x.has(d)))
+        return 'band';
     if (!dataValues.length) return 'linear';
     if (dataValues.length === 1) return 'point';
     if (dataValues.every(isNumberOrNull)) return name === 'r' ? 'sqrt' : 'linear';
     if (dataValues.every(isDateOrNull)) return 'time';
-    if (dataValues.every(isStringOrNull)) return markTypes.has('arrow') ? 'point' : 'band';
+    if (dataValues.every(isStringOrNull)) return 'point';
     return 'linear';
 }
 
@@ -511,5 +527,15 @@ export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: 
             : channel === 'y2' && scales.y.type === 'band'
               ? scales.y.fn.bandwidth()
               : 0)
+    );
+}
+
+export function isOrdinalScale(scaleType: ScaleType) {
+    return (
+        scaleType === 'band' ||
+        scaleType === 'point' ||
+        scaleType === 'ordinal' ||
+        scaleType === 'categorical' ||
+        scaleType === 'threshold'
     );
 }

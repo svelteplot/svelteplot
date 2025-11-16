@@ -5,7 +5,8 @@ import { constant, isObject } from './index.js';
 const identity = constant({ stream: (stream) => stream });
 
 const defaultAspectRatio = 0.618;
-type Clip = boolean | null | number | 'frame';
+
+export type Clip = boolean | null | number | 'frame';
 
 type ProjectionOptions = {
     type: string;

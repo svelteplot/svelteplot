@@ -2,41 +2,55 @@
     @component
     For horizontal bar charts using a band scale as y axis
 -->
-<script module lang="ts">
-    import type {
-        PlotContext,
-        BaseMarkProps,
-        BaseRectMarkProps,
-        ChannelAccessor
-    } from '../types.js';
+<script lang="ts" generics="Datum extends DataRow">
+    interface BarXMarkProps
+        extends BaseMarkProps<Datum>,
+            LinkableMarkProps<Datum>,
+            BaseRectMarkProps<Datum> {
+        data: Datum[];
+        x?: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
+        stack?: StackOptions;
+        /**
+         * Converts x into x1/x2 ranges based on the provided interval. Disables the
+         * implicit stacking
+         */
+        interval?: number | string;
+    }
 
-    export type BarXMarkProps = BaseMarkProps &
-        BaseRectMarkProps & {
-            data: DataRow[];
-            x?: ChannelAccessor;
-            x1?: ChannelAccessor;
-            x2?: ChannelAccessor;
-            y?: ChannelAccessor;
-            stack?: StackOptions;
-            /**
-             * Converts x into x1/x2 ranges based on the provided interval. Disables the
-             * implicit stacking
-             */
-            interval?: number | string;
-        };
-</script>
-
-<script lang="ts">
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
     import { stackX, recordizeX, intervalX, sort } from '$lib/index.js';
 
     import type { StackOptions } from '$lib/transforms/stack.js';
-    import type { DataRow } from '$lib/types.js';
+    import type { DataRow } from 'svelteplot/types/index.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
+    import type {
+        PlotContext,
+        BaseMarkProps,
+        BaseRectMarkProps,
+        ChannelAccessor,
+        LinkableMarkProps
+    } from '../types/index.js';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    let { data = [{}], class: className = null, stack, ...options }: BarXMarkProps = $props();
+    const DEFAULTS = {
+        fill: 'currentColor',
+        ...getPlotDefaults().bar,
+        ...getPlotDefaults().barX
+    };
+
+    let markProps: BarXMarkProps = $props();
+
+    const {
+        data = [{} as Datum],
+        class: className = null,
+        stack,
+        ...options
+    }: BarXMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -45,7 +59,7 @@
         stackX(
             intervalX(
                 // by default, sort by y channel (the ordinal labels)
-                sort(recordizeX({ data, sort: { channel: 'y' }, ...options })),
+                sort(recordizeX({ data, ...options })),
                 { plot }
             ),
             stack

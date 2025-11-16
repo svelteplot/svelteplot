@@ -80,15 +80,15 @@ export function arrowPath(
                     sign * Math.sign(insetEnd)
                 );
                 lineAngle += Math.atan2(y - cy, x - cx) - Math.atan2(y2 - cy, x2 - cx);
-                (x2 = x), (y2 = y);
+                ((x2 = x), (y2 = y));
             }
         } else {
             // For inset straight arrows, offset along the straight line.
             const dx = x2 - x1,
                 dy = y2 - y1,
                 d = Math.hypot(dx, dy);
-            if (insetStart) (x1 += (dx / d) * insetStart), (y1 += (dy / d) * insetStart);
-            if (insetEnd) (x2 -= (dx / d) * insetEnd), (y2 -= (dy / d) * insetEnd);
+            if (insetStart) ((x1 += (dx / d) * insetStart), (y1 += (dy / d) * insetStart));
+            if (insetEnd) ((x2 -= (dx / d) * insetEnd), (y2 -= (dy / d) * insetEnd));
         }
     }
 

@@ -1,19 +1,17 @@
 <!-- @component
     Creates dots or symbols at specified positions with customizable size and appearance
 -->
-<script module lang="ts">
-    export type DotMarkProps = BaseMarkProps & {
-        data: DataRecord[];
-        x: ChannelAccessor;
-        y: ChannelAccessor;
-        r?: ChannelAccessor;
-        symbol?: ChannelAccessor | Snippet<[number, string]>;
+<script lang="ts" generics="Datum extends DataRecord">
+    interface DotMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        data: Datum[];
+        x: ChannelAccessor<Datum>;
+        y: ChannelAccessor<Datum>;
+        r?: ChannelAccessor<Datum>;
+        symbol?: ChannelAccessor<Datum> | Snippet<[number, string]>;
         canvas?: boolean;
-        dotClass?: ConstantAccessor<string>;
-    };
-</script>
+        dotClass?: ConstantAccessor<string, Datum>;
+    }
 
-<script lang="ts">
     import { getContext, type Snippet } from 'svelte';
     import type {
         PlotContext,
@@ -21,26 +19,34 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        FacetContext,
-        PlotDefaults
-    } from '../types.js';
+        LinkableMarkProps
+    } from '../types/index.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
     import { symbol as d3Symbol } from 'd3-shape';
     import { sort } from '$lib/index.js';
     import Mark from '../Mark.svelte';
     import DotCanvas from './helpers/DotCanvas.svelte';
-    import { maybeData, isValid } from '$lib/helpers/index.js';
+    import { isValid } from '$lib/helpers/index.js';
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
+    import Anchor from './helpers/Anchor.svelte';
+    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { isOrdinalScale } from 'svelteplot/helpers/scales.js';
 
-    let {
-        data = [{}],
+    const DEFAULTS = {
+        ...getPlotDefaults().dot
+    };
+
+    let markProps: DotMarkProps = $props();
+
+    const {
+        data = [{} as Datum],
         canvas = false,
         class: className = '',
         dotClass = null,
         ...options
-    }: DotMarkProps = $props();
+    }: DotMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -49,17 +55,17 @@
         return d3Symbol(maybeSymbol(symbolType), size)();
     }
 
-    const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
-    const { dotRadius } = getContext<PlotDefaults>('svelteplot/_defaults');
-    let testFacet = $derived(getTestFacet());
-
     const args = $derived(
         // todo: move sorting to Mark
         sort(
             recordizeXY({
-                data: maybeData(data),
+                data,
                 // sort by descending radius by default
-                ...(options.r ? { sort: { channel: '-r' } } : {}),
+                ...(options.r &&
+                !isOrdinalScale(plot.scales.x.type) &&
+                !isOrdinalScale(plot.scales.y.type)
+                    ? { sort: { channel: '-r' } }
+                    : {}),
                 ...options,
                 ...(options.fill === true ? { fill: 'currentColor' } : {})
             })
@@ -81,10 +87,10 @@
         'fillOpacity',
         'strokeOpacity'
     ]}
-    defaults={{ r: dotRadius, symbol: 'circle' }}
+    defaults={{ x: 0, y: 0, r: 3, symbol: 'circle' }}
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
-        <g class="dots {className || ''}">
+        <g class="dot {className || ''}">
             {#if canvas}
                 <DotCanvas data={scaledData} {mark} />
             {:else}
@@ -97,19 +103,21 @@
                             'stroke',
                             usedScales
                         )}
-                        <path
-                            transform="translate({d.x}, {d.y})"
-                            d={getSymbolPath(d.symbol, d.r ** 2 * Math.PI)}
-                            class={[
-                                dotClass ? resolveProp(dotClass, d.datum, null) : null,
-                                styleClass
-                            ]}
-                            {style}
-                            use:addEventHandlers={{
-                                getPlotState,
-                                options: args,
-                                datum: d.datum
-                            }} />
+                        <Anchor {options} datum={d.datum}>
+                            <path
+                                transform="translate({d.x}, {d.y})"
+                                d={getSymbolPath(d.symbol, d.r ** 2 * Math.PI)}
+                                class={[
+                                    dotClass ? resolveProp(dotClass, d.datum, null) : null,
+                                    styleClass
+                                ]}
+                                {style}
+                                {@attach addEventHandlers({
+                                    getPlotState,
+                                    options: args,
+                                    datum: d?.datum
+                                })} />
+                        </Anchor>
                     {/if}
                 {/each}
             {/if}

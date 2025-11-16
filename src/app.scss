@@ -56,6 +56,7 @@ p:has(a.link.highlight[href^="https://svelte.dev/playground/"]:only-child)
 
 :root {
     --svelteplot-bg: #fff;
+    --svelteplot-bg-rgb: 255, 255, 255;
     --svp-accent: #d81a5b;
     --svp-brand: #d81a5b;
     --svp-red: #f43f5e;
@@ -104,6 +105,33 @@ ul li p {
     }
 }
 
+@media (max-width: 950px) {
+    header {
+        background: rgba(255, 255, 255, 0.9);
+
+        .header-inner {
+            padding-top: 0.6rem;
+            .left {
+                display: none;
+            }
+        }
+        .sub-nav {
+            height: 0;
+            .text-6 {
+                position: relative;
+                top: -1rem;
+            }
+            div + div {
+                display: none;
+            }
+        }
+    }
+}
+
+html.dark header {
+    background: rgba(27, 27, 31, 0.9);
+}
+
 :root {
     --vp-layout-max-width: 1440px;
     --svelteplot-tooltip-bg: white;
@@ -118,7 +146,7 @@ figure.svelteplot {
         font-size: 20px;
     }
     h3 {
-        font-weight: 400;
+        font-weight: 300;
         font-size: 16px;
     }
     h2 + h3 {
@@ -198,8 +226,10 @@ html {
 
     .nav-links {
         font-size: 15px !important;
-        background-color: var(--svelteplot-bg);
-        box-shadow: 0px 0px 7px 4px var(--svelteplot-bg);
+    }
+    header {
+        background-color: rgba(var(--svelteplot-bg-rgb), 0.9) !important;
+        box-shadow: 0px 0px 7px 4px rgba(var(--svelteplot-bg-rgb), 0.9) !important;
     }
 
     .content {
@@ -276,6 +306,7 @@ html {
         --svelteplot-tooltip-border: #333;
 
         --svelteplot-bg: #1b1b1f;
+        --svelteplot-bg-rgb: 27, 27, 31;
         body {
             background-color: var(--svelteplot-bg) !important;
 

@@ -1,5 +1,5 @@
-import type { Channels } from '$lib/types.js';
-import type { MarkStyleProps, DataRow } from '$lib/types.js';
+import type { Channels } from '$lib/types/index.js';
+import type { MarkStyleProps, DataRow } from '$lib/types/index.js';
 import { resolveProp } from './resolve.js';
 
 /**
@@ -14,11 +14,16 @@ const styleProps: Partial<Record<MarkStyleProps, string | null>> = {
     blend: 'mix-blend-mode',
     clipPath: 'clip-path',
     mask: 'mask',
+    fontFamily: 'font-family',
     fontSize: 'font-size',
-    fontWeight: 'font-weight',
     fontStyle: 'font-style',
+    fontWeight: 'font-weight',
     textAnchor: 'text-anchor',
     fontVariant: 'font-variant',
+    letterSpacing: 'letter-spacing',
+    textDecoration: 'text-decoration',
+    textTransform: 'text-transform',
+    wordSpacing: 'word-spacing',
     cursor: 'cursor',
     pointerEvents: 'pointer-events'
 };
@@ -49,4 +54,25 @@ export function maybeToPixel(cssKey: string, value: string | number) {
         return typeof value === 'number' ? `${value}px` : value;
     }
     return value;
+}
+
+export function maybeFromPixel(value: string | number) {
+    return typeof value === 'string' && value.endsWith('px') ? +value.slice(0, -2) : value;
+}
+
+export function maybeFromRem(value: string | number, rootFontSize: number = 16) {
+    return typeof value === 'string' && value.endsWith('rem')
+        ? +value.slice(0, -3) * rootFontSize
+        : value;
+}
+
+let nextClipId = 0;
+let nextPatternId = 0;
+
+export function getClipId() {
+    return `svp-clip-${++nextClipId}`;
+}
+
+export function getPatternId() {
+    return `svp-pattern-${++nextPatternId}`;
 }

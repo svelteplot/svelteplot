@@ -8,7 +8,7 @@
     this component. 
 -->
 <script lang="ts">
-    import { getContext, setContext } from 'svelte';
+    import { setContext } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
     import { writable } from 'svelte/store';
 
@@ -21,13 +21,16 @@
         PlotScale,
         PlotDefaults,
         PlotState,
-        RawValue
-    } from '../types.js';
+        RawValue,
+        PlotMargin
+    } from '../types/index.js';
     import FacetGrid from './FacetGrid.svelte';
 
     import mergeDeep from '../helpers/mergeDeep.js';
     import { computeScales, projectXY } from '../helpers/scales.js';
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
+    import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
+    import { maybeNumber } from 'svelteplot/helpers/index.js';
 
     // automatic margins can be applied by the marks, registered
     // with their respective unique identifier as keys
@@ -51,22 +54,18 @@
     const maxMarginBottom = $derived(Math.max(...$autoMarginBottom.values()));
     const maxMarginTop = $derived(Math.max(...$autoMarginTop.values()));
 
+    const USER_DEFAULTS = getPlotDefaults();
+
     // default settings in the plot and marks can be overwritten by
     // defining the svelteplot/defaults context outside of Plot
     const DEFAULTS: PlotDefaults = {
-        axisXAnchor: 'bottom',
-        axisYAnchor: 'left',
-        xTickSpacing: 80,
-        yTickSpacing: 50,
         height: 350,
         initialWidth: 500,
         inset: 0,
+        margin: 'auto',
         colorScheme: 'turbo',
-        unknown: '#cccccc',
-        dotRadius: 3,
-        frame: false,
-        axes: true,
-        grid: false,
+        unknown: '#cccccc99',
+        sortOrdinalDomains: true,
         categoricalColorScheme: 'observable10',
         pointScaleHeight: 18,
         bandScaleHeight: 30,
@@ -74,10 +73,33 @@
         numberFormat: {
             style: 'decimal',
             // notation: 'compact',
+            useGrouping: 'min2',
             compactDisplay: 'short'
         },
         markerDotRadius: 3,
-        ...getContext<Partial<PlotDefaults>>('svelteplot/defaults')
+        ...USER_DEFAULTS,
+        axisX: {
+            anchor: 'bottom',
+            implicit: true,
+            ...USER_DEFAULTS.axis,
+            ...USER_DEFAULTS.axisX
+        },
+        axisY: {
+            anchor: 'left',
+            implicit: true,
+            ...USER_DEFAULTS.axis,
+            ...USER_DEFAULTS.axisY
+        },
+        gridX: {
+            implicit: false,
+            ...USER_DEFAULTS.grid,
+            ...USER_DEFAULTS.gridX
+        },
+        gridY: {
+            implicit: false,
+            ...USER_DEFAULTS.grid,
+            ...USER_DEFAULTS.gridY
+        }
     };
 
     let {
@@ -92,19 +114,19 @@
         class: className = '',
         css = DEFAULTS.css,
         width: fixedWidth,
-        ...initialOpts
+        ...initialOptions
     }: Partial<PlotOptions> = $props();
 
     let width = $state(DEFAULTS.initialWidth);
 
-    setContext('svelteplot/_defaults', DEFAULTS);
+    setPlotDefaults(DEFAULTS);
 
     // information that influences the default plot options
     type PlotOptionsParameters = {
         explicitScales: Set<ScaleName>;
         explicitDomains: Set<ScaleName>;
         hasProjection: boolean;
-        margins?: number;
+        margin?: number | 'auto';
         inset?: number;
     };
 
@@ -142,7 +164,7 @@
     );
 
     const explicitDomains = $derived(
-        new Set(SCALES.filter((scale) => !!initialOpts[scale]?.domain))
+        new Set(SCALES.filter((scale) => !!initialOptions[scale]?.domain))
     );
 
     // one-dimensional plots have different automatic margins and heights
@@ -151,12 +173,12 @@
     // construct the plot options from the user-defined options (top-level props) as well
     // as extending them from smart context-aware defaults
     const plotOptions = $derived(
-        extendPlotOptions(initialOpts, {
+        extendPlotOptions(initialOptions, {
             explicitScales,
             explicitDomains,
-            hasProjection: !!initialOpts.projection,
-            margins: initialOpts.margins,
-            inset: initialOpts.inset
+            hasProjection: !!initialOptions.projection,
+            margin: initialOptions.margin,
+            inset: initialOptions.inset
         })
     );
 
@@ -185,6 +207,7 @@
     const yDomainCount = $derived(
         isOneDimensional && explicitScales.has('x') ? 1 : preScales.y.domain.length
     );
+
     // compute the (automatic) height based on various factors:
     // - if the plot used a projection and the projection requires an aspect ratio,
     //   we use it, but adjust for the facet counts
@@ -193,35 +216,35 @@
     // - for one-dimensional scales using the x scale we set a fixed height
     // - for y band-scales we use the number of items in the y domain
     const height = $derived(
-        plotOptions.height === 'auto'
-            ? Math.round(
-                  preScales.projection && preScales.projection.aspectRatio
-                      ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
-                            yFacetCount +
+        typeof plotOptions.height === 'function'
+            ? plotOptions.height(plotWidth)
+            : maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
+              ? Math.round(
+                    preScales.projection && preScales.projection.aspectRatio
+                        ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
+                              yFacetCount +
+                              plotOptions.marginTop +
+                              plotOptions.marginBottom
+                        : plotOptions.aspectRatio
+                          ? heightFromAspect(
+                                preScales.x,
+                                preScales.y,
+                                plotOptions.aspectRatio,
+                                plotWidth,
+                                plotOptions.marginTop,
+                                plotOptions.marginBottom
+                            )
+                          : ((isOneDimensional && explicitScales.has('x')) || !explicitMarks.length
+                                ? yFacetCount * DEFAULTS.bandScaleHeight
+                                : preScales.y.type === 'band'
+                                  ? yFacetCount * yDomainCount * DEFAULTS.bandScaleHeight
+                                  : preScales.y.type === 'point'
+                                    ? yFacetCount * yDomainCount * DEFAULTS.pointScaleHeight
+                                    : DEFAULTS.height) +
                             plotOptions.marginTop +
                             plotOptions.marginBottom
-                      : plotOptions.aspectRatio
-                        ? heightFromAspect(
-                              preScales.x,
-                              preScales.y,
-                              plotOptions.aspectRatio,
-                              plotWidth,
-                              plotOptions.marginTop,
-                              plotOptions.marginBottom
-                          )
-                        : ((isOneDimensional && explicitScales.has('x')) || !explicitMarks.length
-                              ? yFacetCount * DEFAULTS.bandScaleHeight
-                              : preScales.y.type === 'band'
-                                ? yFacetCount * yDomainCount * DEFAULTS.bandScaleHeight
-                                : preScales.y.type === 'point'
-                                  ? yFacetCount * yDomainCount * DEFAULTS.pointScaleHeight
-                                  : DEFAULTS.height) +
-                          plotOptions.marginTop +
-                          plotOptions.marginBottom
-              )
-            : typeof plotOptions.height === 'function'
-              ? plotOptions.height(plotWidth)
-              : plotOptions.height
+                )
+              : maybeNumber(plotOptions.height)
     );
 
     const plotHeight = $derived(height - plotOptions.marginTop - plotOptions.marginBottom);
@@ -342,7 +365,44 @@
         initialOpts: Partial<PlotOptions>,
         opts: PlotOptionsParameters
     ): PlotOptions {
-        return mergeDeep<PlotOptions>({}, smartDefaultPlotOptions(opts), initialOpts);
+        return mergeDeep<PlotOptions>(
+            {},
+            { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains },
+            smartDefaultPlotOptions(opts),
+            initialOptions
+        );
+    }
+
+    function maybeMargin(
+        // the margin option provided to the <Plot> component
+        margin: number | 'auto' | PlotMargin | undefined,
+        // direction to extract from the margin object
+        direction: 'left' | 'right' | 'top' | 'bottom',
+        // the margin option defined in the plot defaults
+        defaultValue: PlotMargin | number | 'auto',
+        // automatic margins computed from the marks
+        autoMargins: {
+            left: number;
+            right: number;
+            top: number;
+            bottom: number;
+        }
+    ): number {
+        // direction-specific margin value takes precedence
+        const marginValue =
+            typeof margin === 'object' && margin[direction] != null
+                ? margin[direction]
+                : // use the margin value if it's a number
+                  typeof margin === 'number' || margin === 'auto'
+                  ? margin
+                  : // use direction-specific default value if defined
+                    typeof defaultValue === 'object' && defaultValue[direction] != null
+                    ? defaultValue[direction]
+                    : typeof defaultValue === 'number' || defaultValue === 'auto'
+                      ? defaultValue
+                      : 'auto';
+
+        return marginValue === 'auto' ? autoMargins[direction] : marginValue;
     }
 
     /**
@@ -352,54 +412,42 @@
         explicitScales,
         explicitDomains,
         hasProjection,
-        margins
+        margin
     }: PlotOptionsParameters): PlotOptions {
         const autoXAxis = explicitScales.has('x') || explicitDomains.has('x');
         const autoYAxis = explicitScales.has('y') || explicitDomains.has('y');
         const isOneDimensional = autoXAxis !== autoYAxis;
         const oneDimX = autoXAxis && !autoYAxis;
         const oneDimY = autoYAxis && !autoXAxis;
+
+        const autoMargins = {
+            left: hasProjection ? 0 : Math.max(maxMarginLeft + 1, 1),
+            right: hasProjection ? 0 : oneDimY ? 0 : Math.max(maxMarginRight + 1, 4),
+            top: hasProjection ? 0 : oneDimX ? 0 : Math.max(5, maxMarginTop),
+            bottom: hasProjection ? 0 : Math.max(5, maxMarginBottom)
+        };
+
         return {
             title: '',
             subtitle: '',
             caption: '',
             height: 'auto',
             // maxWidth: oneDimY ? `${60 * e}px` : undefined,
-            marginLeft: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : Math.max(maxMarginLeft + 1, 1),
-            marginRight: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : oneDimY
-                    ? 0
-                    : Math.max(maxMarginRight + 1, 4),
-            marginTop: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : oneDimX
-                    ? 0
-                    : Math.max(5, maxMarginTop),
-            marginBottom: hasProjection
-                ? 0
-                : margins != null
-                  ? margins
-                  : Math.max(5, maxMarginBottom),
+            marginLeft: maybeMargin(margin, 'left', DEFAULTS.margin, autoMargins),
+            marginRight: maybeMargin(margin, 'right', DEFAULTS.margin, autoMargins),
+            marginTop: maybeMargin(margin, 'top', DEFAULTS.margin, autoMargins),
+            marginBottom: maybeMargin(margin, 'bottom', DEFAULTS.margin, autoMargins),
             inset: isOneDimensional ? 10 : DEFAULTS.inset,
-            grid: DEFAULTS.grid,
-            axes: DEFAULTS.axes,
-            frame: DEFAULTS.frame,
+            grid: (DEFAULTS.gridX?.implicit ?? false) && (DEFAULTS.gridY?.implicit ?? false),
+            axes: (DEFAULTS.axisX?.implicit ?? false) && (DEFAULTS.axisY?.implicit ?? false),
+            frame: DEFAULTS.frame?.implicit ?? false,
             projection: null,
             aspectRatio: null,
             facet: {},
             padding: 0.1,
             x: {
                 type: 'auto',
-                axis: autoXAxis ? DEFAULTS.axisXAnchor : false,
+                axis: DEFAULTS.axisX.implicit && autoXAxis ? DEFAULTS.axisX.anchor : false,
                 labelAnchor: 'auto',
                 reverse: false,
                 clamp: false,
@@ -408,13 +456,13 @@
                 round: false,
                 percent: false,
                 align: 0.5,
-                tickSpacing: DEFAULTS.xTickSpacing,
+                tickSpacing: DEFAULTS.axisX.tickSpacing ?? 80,
                 tickFormat: 'auto',
-                grid: false
+                grid: DEFAULTS.gridX.implicit ?? false
             },
             y: {
                 type: 'auto',
-                axis: autoYAxis ? DEFAULTS.axisYAnchor : false,
+                axis: DEFAULTS.axisY.implicit && autoYAxis ? DEFAULTS.axisY.anchor : false,
                 labelAnchor: 'auto',
                 reverse: false,
                 clamp: false,
@@ -423,9 +471,9 @@
                 round: false,
                 percent: false,
                 align: 0.5,
-                tickSpacing: DEFAULTS.yTickSpacing,
+                tickSpacing: DEFAULTS.axisY.tickSpacing ?? 50,
                 tickFormat: 'auto',
-                grid: false
+                grid: DEFAULTS.gridY.implicit ?? false
             },
             opacity: {
                 type: 'linear',
@@ -450,7 +498,7 @@
                 padding: 0,
                 align: 0
             },
-            color: { type: 'auto' },
+            color: { type: 'auto', unknown: DEFAULTS.unknown },
             length: { type: 'linear' },
             symbol: { type: 'ordinal' },
             fx: { type: 'band', axis: 'top' },
@@ -482,8 +530,7 @@
             width={fixedWidth || width}
             {height}
             fill="currentColor"
-            viewBox="0 0 {width} {height}"
-            font-family="system-ui, sans-serif">
+            viewBox="0 0 {width} {height}">
             {@render facetAxes?.()}
             <FacetGrid marks={explicitMarks}>
                 {#if children}
@@ -502,7 +549,20 @@
                 {/if}
             </FacetGrid>
         </svg>
-        {#if overlay}<div class="plot-overlay">{@render overlay?.()}</div>{/if}
+        {#if overlay}<div class="plot-overlay">
+                {@render overlay?.({
+                    width,
+                    height,
+                    options: plotOptions,
+                    scales: plotState.scales,
+                    mapXY,
+                    hasProjection,
+                    hasExplicitAxisX,
+                    hasExplicitAxisY,
+                    hasExplicitGridX,
+                    hasExplicitGridY
+                })}
+            </div>{/if}
     </div>
     {#if footer}
         <figcaption class="plot-footer">
@@ -554,17 +614,7 @@
         border: 0 !important;
     }
 
-    .plot-header :global(h3) {
-        font-weight: 500;
-    }
-
     .plot-footer {
         margin-bottom: 2rem;
-    }
-
-    .plot-footer :global(> div) {
-        font-size: 12px;
-        font-style: italic;
-        opacity: 0.7;
     }
 </style>

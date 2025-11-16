@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Plot, Line, RuleX, RuleY } from '$lib/index.js';
-    import type { Datasets } from '$lib/types.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
     import { getContext } from 'svelte';
     import SineRules from './SineRules.svelte';
     import BarcodeExample from './BarcodeExample.svelte';

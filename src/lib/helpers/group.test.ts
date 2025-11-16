@@ -1,4 +1,4 @@
-import { groupFacetsAndZ } from './group';
+import { groupFacetsAndZ } from './group.js';
 import { describe, it, expect } from 'vitest';
 
 describe('groupFacetsAndZ', () => {

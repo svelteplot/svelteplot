@@ -1,5 +1,5 @@
-import type { Scale } from '$lib/classes/Scale.svelte.js';
-import { isDate } from '$lib/helpers/typeChecks';
+import type { PlotScale } from '$lib/types/index.js';
+import { isDate } from '$lib/helpers/typeChecks.js';
 
 const DATE_TIME: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
@@ -32,9 +32,9 @@ const autoFormatMonthYear = (locale: string) => {
     return (date: Date) => format(date).replace(' ', '\n');
 };
 
-export default function autoTimeFormat(x: Scale, plotWidth: number, plotLocale: string) {
+export default function autoTimeFormat(x: PlotScale, plotWidth: number, plotLocale: string) {
     const daysPer100Px =
-        ((toNumber(x.domain[1]) - toNumber(x.domain[0])) / plotWidth / 864e5) * 100;
+        ((toNumber(x.domain[1] as Date) - toNumber(x.domain[0] as Date)) / plotWidth / 864e5) * 100;
     const format =
         daysPer100Px < 1
             ? autoFormatDateTime(plotLocale)

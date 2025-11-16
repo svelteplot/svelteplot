@@ -24,8 +24,7 @@ For connecting two points with a line.
         scheme: 'BuRd',
         pivot: 1.5,
         label: 'Change in inequality from 1980 to 2015',
-        legend: true,
-        tickFormat: '+f'
+        legend: true
     }}>
     <Link
         data={metros}
@@ -38,7 +37,8 @@ For connecting two points with a line.
         style="transition: opacity 0.2s ease-in"
         opacity={{
             scale: null,
-            value: (d) => (!hl || hl === d ? 1 : 0.1)
+            value: (d) =>
+                !hl || hl.Metro === d.Metro ? 1 : 0.1
         }}
         onmouseenter={(event, d) => (hl = d)}
         onmouseleave={() => (hl = null)}
@@ -47,7 +47,8 @@ For connecting two points with a line.
         data={metros}
         x="POP_2015"
         y="R90_10_2015"
-        filter={(d) => (hl ? d === hl : d.highlight)}
+        filter={(d) =>
+            hl ? d.Metro === hl.Metro : d.highlight}
         text="nyt_display"
         fill="currentColor"
         stroke="var(--svelteplot-bg)"

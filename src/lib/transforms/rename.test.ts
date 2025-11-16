@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { renameChannels } from './rename.js';
-import type { DataRecord } from '$lib/types.js';
+import { RENAME, renameChannels } from './rename.js';
+import type { DataRecord } from '$lib/types/index.js';
 
 const inputData: DataRecord[] = [
     { year: 2000, facet: 'A', value: 10 },
@@ -19,7 +19,7 @@ describe('renameChannels', () => {
             { x: 'year2' }
         );
         expect(data).toStrictEqual(inputData);
-        expect(channels).toStrictEqual({ year2: 'year' });
+        expect(channels).toStrictEqual({ year2: 'year', [RENAME]: { year2: 'x' } });
     });
 
     it('does not rename channels that do not exist', () => {

@@ -1,18 +1,22 @@
-<script module lang="ts">
-    export type CellXMarkProps = Omit<CellMarkProps, 'y'>;
-</script>
-
+<!--
+    @component
+    For arbitrary rectangles with fixed y position, requires band x scale
+-->
 <script lang="ts">
-    import Cell, { type CellMarkProps } from './Cell.svelte';
+    import Cell from './Cell.svelte';
     import { recordizeY } from '$lib/index.js';
+    import type { ComponentProps } from 'svelte';
+    import type { TransformArgsRow } from 'svelteplot/types/index.js';
+
+    interface CellXMarkProps extends Omit<ComponentProps<typeof Cell>, 'y'> {}
 
     let { data = [{}], ...options }: CellXMarkProps = $props();
 
     const args = $derived(
-        recordizeY<CellXMarkProps>({
+        recordizeY({
             data,
             ...options
-        })
+        } as TransformArgsRow)
     );
 </script>
 
