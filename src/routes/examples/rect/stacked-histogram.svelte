@@ -4,6 +4,8 @@
         'A stacked histogram showing the distribution of Olympic athletes’ weights, colored by sex.';
     export const transforms = ['bin'];
     export const sortKey = 41;
+    export const repl =
+        'https://svelte.dev/playground/db322b8d3f1f47718bf822eb385d9a1e?version=5';
 </script>
 
 <script lang="ts">

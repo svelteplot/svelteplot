@@ -2,6 +2,8 @@
     export const title = 'Faceted beeswarm';
     export const sortKey = 32;
     export const transforms = ['dodge'];
+    export const repl =
+        'https://svelte.dev/playground/9763a9fac9e94b4ba31ffdf5c193a690?version=5';
 </script>
 
 <script lang="ts">
