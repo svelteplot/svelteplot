@@ -21,6 +21,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
                     'crimea',
                     'driving',
                     'election',
+                    'gistemp',
                     'languages',
                     'metros',
                     'mpg',
@@ -36,6 +37,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
                     'simpsons',
                     'stateage',
                     'stocks',
+                    'trade',
                     'tdf',
                     'unemployment',
                     'wind'

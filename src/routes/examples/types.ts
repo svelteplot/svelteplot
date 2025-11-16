@@ -163,6 +163,17 @@ type StocksRow = {
     Volume: number;
 };
 
+type GistempRow = {
+    Date: Date;
+    Anomaly: number;
+};
+
+type TradeRow = {
+    Year: Date;
+    Imports: number;
+    Exports: number;
+};
+
 type OlympiansRow = {
     id: number;
     name: string;
@@ -214,6 +225,8 @@ export type ExamplesData = {
         population: number;
         continent: string;
     }[];
+    gistemp: GistempRow[];
+    trade: TradeRow[];
     stocks: StocksRow[];
     olympians: OlympiansRow[];
     presidents2: Presidents2Row[];

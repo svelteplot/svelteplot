@@ -97,9 +97,7 @@
     examples.
 </p>
 
-<ExamplesGrid {examples} />
-
-<h2>Organized by marks</h2>
+<!-- <ExamplesGrid {examples} /> -->
 
 <ExamplesPageList {paths} {pages} />
 
