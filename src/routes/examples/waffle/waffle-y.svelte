@@ -1,6 +1,8 @@
 <script module>
     export let title = 'Vertical waffle';
     export let sortKey = 1;
+    export let repl =
+        'https://svelte.dev/playground/7312ce68199747b8b49814bb4adcefee?version=5';
 </script>
 
 <script>

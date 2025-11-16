@@ -98,7 +98,8 @@
         'tick/tick-x',
         'vector/spike-map',
         'vector/wind',
-        'waffle/custom-symbol'
+        'waffle/custom-symbol',
+        'waffle/stacked-x'
     ].map((d) => ({
         key: d,
         light: resolve(`/examples/${d}.png`),

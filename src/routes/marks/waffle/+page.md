@@ -24,6 +24,8 @@ The Waffle mark renders pictograms or waffle charts, which are grids of squares 
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/7312ce68199747b8b49814bb4adcefee?version=5)
+
 The waffle mark is often used with the group transform to compute counts. The chart below compares the number of female and male athletes in the 2012 Olympics.
 
 ```svelte live
@@ -259,6 +261,8 @@ You can pass the **symbol** snippet to customize the shape of the waffle cells (
     </WaffleY>
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/be263ac346794e71a80e6ce86b592eef?version=5)
 
 ## Waffle options
 

@@ -1,6 +1,8 @@
 <script module>
     export let title = 'Horizontal waffle';
     export let sortKey = 2;
+    export let repl =
+        'https://svelte.dev/playground/56ab7b1534714fd3b8b8416048365701?version=5';
 </script>
 
 <script>
