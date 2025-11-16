@@ -1,9 +1,56 @@
 <script lang="ts">
-    import { afterNavigate } from '$app/navigation';
+    import { afterNavigate, beforeNavigate } from '$app/navigation';
     import { page } from '$app/state';
     import { resolve } from '$app/paths';
     import '../app.scss';
     import { shuffle } from 'd3-array';
+    import { untrack } from 'svelte';
+    import { slide } from 'svelte/transition';
+
+    let showcase = $state(
+        [
+            'difference/trade-balance',
+            'difference/apple-yoy',
+            'axis/datawrapper-ticks',
+            'line/geo-line',
+            'rect/stacked-histogram',
+            'box/box-x-faceted',
+            'box/box-y',
+            'waffle/stacked-x',
+            'line/running-mean',
+            'vector/spike-map',
+            'brush/overview-detail',
+            'waffle/custom-symbol',
+            'area/streamgraph',
+            'difference/anomaly-baseline',
+            'dot/dodge-faceted',
+            'area/smoothed-area',
+            'tick/tick-x',
+            'cell/temperatures-threshold',
+            'image/image-beeswarm',
+            'rect/marimekko',
+            'dot/1-colored-scatterplot',
+            'link/spherical-link',
+            'line/gradient-line',
+            'vector/wind',
+            'bar/faceted-bars',
+            'custom/histogram-topline',
+            'box/box-y-facet',
+            'rect/marimekko-faceted',
+            'geo/earthquakes',
+            'rect/binned',
+            'rule/data-rules',
+            'dot/beeswarm-bubbles',
+            'arrow/metro',
+            'regression/grouped',
+            'geo/us-choropleth',
+            'regression/log'
+        ].map((d) => ({
+            key: d,
+            light: resolve(`/examples/${d}.png`),
+            dark: resolve(`/examples/${d}.dark.png`)
+        }))
+    );
 
     afterNavigate(() => {
         const content = document.querySelector('.content');
@@ -48,6 +95,20 @@
         }
     });
 
+    let shuffled = $state(false);
+
+    $effect(() => {
+        if (shuffled) return;
+        showcase = shuffle(untrack(() => showcase).slice());
+        shuffled = true;
+    });
+
+    beforeNavigate(() => {
+        if (page.url.pathname === '/') {
+            showcase = shuffle(showcase.slice());
+        }
+    });
+
     let isDark = $state(false);
 
     $effect(() => {
@@ -63,58 +124,15 @@
         return () => observer.disconnect();
     });
 
-    const showcase = [
-        'area/smoothed-area',
-        'area/streamgraph',
-        'arrow/metro',
-        'axis/datawrapper-ticks',
-        'bar/faceted-bars',
-        'box/box-y',
-        'box/box-y-facet',
-        'box/box-x-faceted',
-        'brush/overview-detail',
-        'custom/histogram-topline',
-        'cell/temperatures-threshold',
-        'difference/trade-balance',
-        'difference/anomaly-baseline',
-        'difference/apple-yoy',
-        'dot/1-colored-scatterplot',
-        'dot/beeswarm-bubbles',
-        'dot/dodge-faceted',
-        'geo/earthquakes',
-        'geo/us-choropleth',
-        'image/image-beeswarm',
-        'line/geo-line',
-        'line/gradient-line',
-        'line/running-mean',
-        'link/spherical-link',
-        'rect/binned',
-        'rule/data-rules',
-        'rect/marimekko',
-        'rect/stacked-histogram',
-        'rect/marimekko-faceted',
-        'regression/grouped',
-        'regression/log',
-        'tick/tick-x',
-        'vector/spike-map',
-        'vector/wind',
-        'waffle/custom-symbol',
-        'waffle/stacked-x'
-    ].map((d) => ({
-        key: d,
-        light: resolve(`/examples/${d}.png`),
-        dark: resolve(`/examples/${d}.dark.png`)
-    }));
-
-    const showExampleGrid = $derived(page.url.pathname === '/');
+    const showExampleGrid = $derived(shuffled && page.url.pathname === '/');
 </script>
 
 <slot />
 
 {#if showExampleGrid}
     <div class="example-grid-background">
-        {#each shuffle(showcase) as example (example.key)}
-            <a href={resolve(`/examples/${example.key}`)}
+        {#each showcase as example (example.key)}
+            <a animate:slide href={resolve(`/examples/${example.key}`)}
                 ><img src={isDark ? example.dark : example.light} alt={example.key} /></a>
         {/each}
     </div>
