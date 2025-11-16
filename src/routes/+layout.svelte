@@ -161,6 +161,7 @@
     .example-grid-background {
         /* width: 100%; */
         display: grid;
+        overflow-x: clip;
         grid-template-columns: repeat(var(--example-grid-columns), 1fr);
         grid-auto-rows: 1fr;
         gap: 0.75rem;
