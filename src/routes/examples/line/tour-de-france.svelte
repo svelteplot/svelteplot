@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Elevation profile';
     export const description =
-        'While the x scale of a line chart often represents time, this is not required. For example, we can plot the elevation profile of a Tour de France stage.';
+        'While the x scale of a line chart often represents time, this is not required. For example, we can plot the elevation profile of a Tour de France stage. Based on an example from <a href="https://observablehq.com/@observablehq/plot-tour-de-france-elevation-profile">Observable Plot</a>.';
 </script>
 
 <script lang="ts">

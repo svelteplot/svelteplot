@@ -1,7 +1,7 @@
 <script module>
     export const frontmatter = {
         title: 'Examples',
-        description: 'Some description'
+        description: ''
     };
 
     // list of maybe 9 nice examples showcases
@@ -94,7 +94,11 @@
 
 <p>
     It's easiest to learn a new framework by digging into
-    examples.
+    examples. A lot of the examples here are based on
+    examples from the wonderful <a
+        href="https://observablehq.com/plot"
+        >Observable Plot examples gallery</a
+    >.
 </p>
 
 <!-- <ExamplesGrid {examples} /> -->

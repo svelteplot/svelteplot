@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Flow plot';
+
+    export const description = `Based on an example from <a href="https://observablehq.com/@observablehq/plot-wind-map">Observable Plot</a> that is based on a <a href="https://github.com/gicentre/litvis/blob/main/examples/windVectors.md">LitVis example</a>.`;
 </script>
 
 <script lang="ts">

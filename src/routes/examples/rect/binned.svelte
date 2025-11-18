@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Binned Rectangles';
     export const description =
-        'A simple example of a binned rectangle plot showing the distribution of Olympian weights.';
+        'A simple example of a binned rectangle plot showing the distribution of Olympian weights. Based on an example from <a href="https://observablehq.com/@observablehq/plot-olympians-heatmap">Observable Plot</a>.';
     export const sortKey = 20;
     export const transforms = ['bin'];
 </script>

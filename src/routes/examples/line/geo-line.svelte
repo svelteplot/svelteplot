@@ -1,7 +1,7 @@
 <script module lang="ts">
     export const title = 'Geo line';
     export const description =
-        'Demonstrates how to use Line mark together with projections.';
+        'Demonstrates how to use Line mark together with projections. Based on an example from <a href="https://observablehq.com/@observablehq/plot-spherical-line">Observable Plot</a> (data via <a href="https://observablehq.com/@bmschmidt/data-driven-projections-darwins-world">Benjamin Schmidt</a>).';
     export const repl =
         'https://svelte.dev/playground/8f433172583d4b7eb4ae1d72572d2e31?version=5.33.14';
 </script>

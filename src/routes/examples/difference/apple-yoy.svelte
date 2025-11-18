@@ -1,7 +1,7 @@
 <script module lang="ts">
     export const title = 'Year-over-year differences';
     export const description =
-        'Apple stock price compared to a shifted copy of itself to show year-over-year differences.';
+        'Apple stock price compared to a shifted copy of itself to show year-over-year differences. Based on an example from <a href="https://observablehq.com/plot/transforms/shift">Observable Plot</a>.';
     export const transforms = ['shift'];
 </script>
 

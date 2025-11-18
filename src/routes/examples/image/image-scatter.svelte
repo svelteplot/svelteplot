@@ -2,6 +2,7 @@
     export let title = 'Image scatterplot';
     export let repl =
         'https://svelte.dev/playground/3a0886eed9404d9cb1334dcb3ace0fb2?version=5.43.2';
+    export const description = `Based on a plot by <a href="https://observablehq.com/@rlesser/when-presidents-fade-away">Robert Lesser</a> that shows the favorability of U.S. presidents over time.`;
 </script>
 
 <script lang="ts">

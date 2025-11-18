@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Streamgraph';
     export const transforms = ['stack'];
+    export const description =
+        'A streamgraph showing RIAA music industry revenue by format over time. Based on an example from <a href="https://observablehq.com/@observablehq/plot-stack-offset">Observable Plot</a>.';
 </script>
 
 <script lang="ts">

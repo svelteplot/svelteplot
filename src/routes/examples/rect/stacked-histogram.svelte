@@ -1,7 +1,7 @@
 <script module lang="ts">
     export const title = 'Stacked histogram';
     export const description =
-        'A stacked histogram showing the distribution of Olympic athletes’ weights, colored by sex.';
+        'A stacked histogram showing the distribution of Olympic athletes’ weights, colored by sex. Based on an example from <a href="https://observablehq.com/@observablehq/plot-vertical-histogram">Observable Plot</a>.';
     export const transforms = ['bin'];
     export const sortKey = 41;
     export const repl =

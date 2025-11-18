@@ -4,6 +4,7 @@
     export const transforms = ['dodge'];
     export const repl =
         'https://svelte.dev/playground/9763a9fac9e94b4ba31ffdf5c193a690?version=5';
+    export const description = `Based on an example from <a href="https://observablehq.com/@observablehq/plot-dodge-penguins">Observable Plot</a>, this plot shows body mass of penguins across different species. Sex is encoded using color, and points are dodged to avoid overlap.`;
 </script>
 
 <script lang="ts">

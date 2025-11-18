@@ -1,5 +1,6 @@
 <script module lang="ts">
     export let title = 'Cell Plot';
+    export const description = `Ratings of Simpsons episodes, arranged by season. Based on an example from <a href="https://observablehq.com/@observablehq/plot-simpsons-ratings">Observable Plot</a>.`;
 </script>
 
 <script lang="ts">

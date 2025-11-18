@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Area with rolling mean';
     export const description =
-        'An area chart showing daily high and low temperatures with smoothed rolling window lines.';
+        'An area chart showing daily high and low temperatures with smoothed rolling window lines. Based on an example from <a href="https://observablehq.com/@observablehq/plot-window-line-area">Observable Plot</a>.';
     export const transforms = ['window'];
 </script>
 
