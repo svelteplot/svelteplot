@@ -1,6 +1,6 @@
 <script module>
     export const title = 'Spike map';
-    export const transforms = ['geoCentroid'];
+    // export const transforms = ['geoCentroid'];
     export const repl =
         'https://svelte.dev/playground/186c3954751e4d04b42f9901f4b00305?version=latest';
 </script>

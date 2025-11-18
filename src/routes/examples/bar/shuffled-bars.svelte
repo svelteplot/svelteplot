@@ -1,6 +1,6 @@
 <script module>
     export let title = 'Shuffled Bars';
-    export const transforms = ['shuffle'];
+    export const transforms = ['sort'];
 </script>
 
 <script>

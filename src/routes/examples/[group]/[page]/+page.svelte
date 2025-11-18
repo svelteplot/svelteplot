@@ -79,7 +79,7 @@
         <a href={resolve('/examples')}>Examples</a>
         <span>/</span>
         <a href={resolve(`/examples/${page.params.group}`)}
-            >{pages[parentPage].title}</a>
+            >{pages[parentPage]?.title}</a>
     </div>
     <h1 class="page-title">{mod.title}</h1>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
