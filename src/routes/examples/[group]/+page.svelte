@@ -94,14 +94,31 @@
                 )
             }))
     );
+
+    const type: 'mark' | 'transform' = $derived(
+        pagesByTransform[page.params.group]
+            ? 'transform'
+            : 'mark'
+    );
 </script>
 
 {#if subPages.length}
     <a href={resolve('/examples')}>Examples</a>
+
+    <h1>{page.params.group}</h1>
+    <p>
+        Examples showing the use of the <a
+            href={resolve(`/${type}s/${page.params.group}`)}
+            >{page.params.group} {type}</a
+        >. Some of the examples here are based on examples
+        from the wonderful
+        <a
+            href="https://observablehq.com/@observablehq/plot-gallery"
+            >Observable Plot examples gallery</a
+        >.
+    </p>
     {#if indexKey}
         <indexMod.default />
-    {:else}
-        <h1>{page.params.group} examples</h1>
     {/if}
     <ExamplesGrid {examples} />
 {:else}
