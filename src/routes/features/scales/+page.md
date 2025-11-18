@@ -572,7 +572,13 @@ setPlotDefaults({ sortOrdinalDomains: false });
 Categorical color scales are useful for mapping categories to colors. The following categorical
 schemes are included in SveltePlot:
 
-```svelte --live
+```svelte live
+<script>
+    import { Plot, Dot } from 'svelteplot';
+    import { page } from '$app/state';
+    let { penguins } = $derived(page.data.data);
+</script>
+
 <Plot color={{ legend: true }}>
     <Dot
         data={penguins}
@@ -816,7 +822,18 @@ Another very common way to color plots is to map numbers to colors. If you simpl
 ```
 
 ```svelte
-<Plot grid color={{ legend: true }}>
+<Plot
+    grid
+    height={200}
+    color={{
+        legend: true,
+        label: 'Body mass',
+        tickFormat: (d) =>
+            Intl.NumberFormat('en-US', {
+                style: 'unit',
+                unit: 'kilogram'
+            }).format(d / 1000)
+    }}>
     <Dot
         data={penguins}
         x="culmen_length_mm"
@@ -932,7 +949,13 @@ You can also interpolate between custom colors of your liking by passing them as
 ```
 
 ```svelte
-<Plot grid color={{ legend: true }}>
+<Plot
+    grid
+    height={200}
+    color={{
+        legend: true,
+        scheme: ['#fa6244', '#ececec', '#00abe1']
+    }}>
     <Dot
         data={penguins}
         x="culmen_length_mm"
