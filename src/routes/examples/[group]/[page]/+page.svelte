@@ -79,7 +79,7 @@
         <a href={resolve('/examples')}>Examples</a>
         <span>/</span>
         <a href={resolve(`/examples/${page.params.group}`)}
-            >{pages[parentPage]?.title}</a>
+            >{page.params.group}</a>
     </div>
     <h1 class="page-title">{mod.title}</h1>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -178,7 +178,12 @@
             text-decoration: none;
         }
     }
-    .breadcrumb span {
-        opacity: 0.5;
+    .breadcrumb {
+        a {
+            text-transform: capitalize;
+        }
+        span {
+            opacity: 0.5;
+        }
     }
 </style>

@@ -28,6 +28,8 @@
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
     import { resolve } from '$app/paths';
     import ExamplesPageList from 'svelteplot/ui/ExamplesPageList.svelte';
+    import { slide } from 'svelte/transition';
+    import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';
 
     const { isDark } = getContext<SveltepressContext>(
         SVELTEPRESS_CONTEXT_KEY
@@ -51,6 +53,24 @@
         ),
         (d) => d.split('/')[1]
     );
+
+    const allPages = $derived(
+        Object.keys(pages)
+            .filter((page) => !page.includes('[group]'))
+            .map((page) => ({
+                page,
+                title: pages[page].title,
+                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
+                screenshot: `/examples/${page
+                    .replace(/^..\//, '')
+                    .replace(
+                        '.svelte',
+                        $isDark ? '.dark.png' : '.png'
+                    )}`
+            }))
+    );
+
+    $inspect({ allPages });
 
     const examples = $derived(
         showcase
@@ -102,9 +122,52 @@
 </p>
 
 <!-- <ExamplesGrid {examples} /> -->
+<h3>Jump to mark</h3>
+<ul class="quick-links">
+    {#each Object.keys(paths).sort( (a, b) => a.localeCompare(b) ) as group (group)}
+        <li>
+            <a href={resolve(`/examples/${group}`)}
+                >{group}</a>
+        </li>
+    {/each}
+</ul>
 
-<ExamplesPageList {paths} {pages} />
+<h3>Jump to transform</h3>
+<ul class="quick-links">
+    {#each Object.keys(pagesByTransform).sort( (a, b) => a.localeCompare(b) ) as group (group)}
+        <li>
+            <a href={resolve(`/examples/${group}`)}
+                >{group}</a>
+        </li>
+    {/each}
+</ul>
 
-<h2>Organized by transforms</h2>
+<ExamplesPagePreview {paths} {pages} isDark={$isDark} />
 
-<ExamplesPageList paths={pagesByTransform} {pages} />
+<!-- <ExamplesPageList {paths} {pages} /> -->
+
+<ExamplesPagePreview
+    paths={pagesByTransform}
+    {pages}
+    isDark={$isDark} />
+
+<style>
+    h3 {
+        margin: 0;
+    }
+    .quick-links {
+        display: block;
+        margin: 0 0 1rem 0;
+        padding: 0;
+        li {
+            display: inline-block;
+            font-size: 0.875rem;
+            margin: 0;
+            padding: 0 1.25rem 0.25rem 0;
+
+            a {
+                text-transform: capitalize;
+            }
+        }
+    }
+</style>

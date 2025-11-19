@@ -2,7 +2,7 @@
     export const title = 'Grouped regression';
 
     export const description =
-        'Regression lines grouped by a categorical variable, with different colors for each group.';
+        'Regression lines grouped by a categorical variable, with different colors for each group. Based on an example from <a href="https://observablehq.com/@observablehq/plot-linear-regression-simpson" target="_blank" rel="noopener noreferrer">Observable Plot</a>.';
 </script>
 
 <script>
