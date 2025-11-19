@@ -3,19 +3,6 @@
         title: 'Examples',
         description: ''
     };
-
-    // list of maybe 9 nice examples showcases
-    const showcase = [
-        'line/gradient-line',
-        'dot/1-colored-scatterplot',
-        'geo/us-choropleth',
-        'geo/earthquakes',
-        'area/streamgraph',
-        'regression/grouped',
-        'vector/spike-map',
-        'vector/wind',
-        'axis/datawrapper-ticks'
-    ];
 </script>
 
 <script lang="ts">
@@ -67,30 +54,6 @@
                         '.svelte',
                         $isDark ? '.dark.png' : '.png'
                     )}`
-            }))
-    );
-
-    $inspect({ allPages });
-
-    const examples = $derived(
-        showcase
-            .map((url) =>
-                Object.keys(pages).find(
-                    (p) => p === `./${url}.svelte`
-                )
-            )
-            .map((page) => ({
-                page,
-                title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: resolve(
-                    `/examples/${page
-                        .replace(/^..\//, '')
-                        .replace(
-                            '.svelte',
-                            $isDark ? '.dark.png' : '.png'
-                        )}`
-                )
             }))
     );
 
