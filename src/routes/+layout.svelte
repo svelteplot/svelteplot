@@ -131,8 +131,6 @@
     });
 
     const showExampleGrid = $derived(shuffled && page.url.pathname === '/');
-
-    $inspect(showcase, 'showcase');
 </script>
 
 <slot />
