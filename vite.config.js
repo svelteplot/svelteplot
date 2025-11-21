@@ -1,6 +1,7 @@
 import { sveltepress } from '@sveltepress/vite';
 import { defaultTheme } from '@sveltepress/theme-default';
 import { defineConfig } from 'vitest/config';
+import { enhancedImages } from '@sveltejs/enhanced-img';
 import sidebar from './config/sidebar.js';
 import * as url from 'url';
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
@@ -20,6 +21,7 @@ export default defineConfig({
         }
     },
     plugins: [
+        enhancedImages(),
         sveltepress({
             theme: defaultTheme({
                 logo: '/favicon.png',

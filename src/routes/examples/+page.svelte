@@ -12,10 +12,7 @@
         type SveltepressContext
     } from '@sveltepress/theme-default/context';
     import { getContext } from 'svelte';
-    import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
     import { resolve } from '$app/paths';
-    import ExamplesPageList from 'svelteplot/ui/ExamplesPageList.svelte';
-    import { slide } from 'svelte/transition';
     import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';
 
     const { isDark } = getContext<SveltepressContext>(

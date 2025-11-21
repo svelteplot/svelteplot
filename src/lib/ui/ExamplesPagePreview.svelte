@@ -1,5 +1,14 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
+
+    const exampleImages = import.meta.glob('../../../static/examples/*/*.png', {
+        eager: true,
+        query: {
+            enhanced: true,
+            w: 440
+        }
+    });
+
     let {
         paths,
         pages,
@@ -41,13 +50,13 @@
                         animate:slide
                         href={resolve(page.replace('./', './examples/').replace('.svelte', ''))}
                         ><div>
-                            <img
+                            <enhanced:img
                                 title={pages[page].title}
-                                src={resolve(
-                                    page
-                                        .replace('./', './examples/')
-                                        .replace('.svelte', isDark ? '.dark.png' : '.png')
-                                )}
+                                src={exampleImages[
+                                    `../../../static/examples/${page
+                                        .replace('./', '')
+                                        .replace('.svelte', isDark ? '.dark.png' : '.png')}`
+                                ].default}
                                 alt={pages[page].title} />
                             <div class="title">{pages[page].title}</div>
                         </div></a>
@@ -117,13 +126,14 @@
         }
     }
 
-    .example-grid img {
-        width: 100%;
-        height: 100%;
+    .example-grid :global(img) {
+        height: auto !important;
         aspect-ratio: 4 / 3;
         object-fit: cover;
-        position: relative;
+        width: 100%;
+        height: auto;
 
+        position: relative;
         transition: transform 0.05s ease-out;
         &:hover {
             transform: scale(1.5);

@@ -7,6 +7,14 @@
     import { untrack } from 'svelte';
     import { slide } from 'svelte/transition';
 
+    const exampleImages = import.meta.glob('../../static/examples/*/*.png', {
+        eager: true,
+        query: {
+            enhanced: true,
+            w: 440
+        }
+    });
+
     let showcase = $state(
         [
             'difference/trade-balance',
@@ -47,8 +55,8 @@
             'regression/log'
         ].map((d) => ({
             key: d,
-            light: resolve(`/examples/${d}.png`),
-            dark: resolve(`/examples/${d}.dark.png`)
+            light: exampleImages[`../../static/examples/${d}.png`].default,
+            dark: exampleImages[`../../static/examples/${d}.dark.png`].default
         }))
     );
 
@@ -133,7 +141,7 @@
     <div class="example-grid-background">
         {#each showcase as example (example.key)}
             <a animate:slide href={resolve(`/examples/${example.key}`)}
-                ><img src={isDark ? example.dark : example.light} alt={example.key} /></a>
+                ><enhanced:img src={isDark ? example.dark : example.light} alt={example.key} /></a>
         {/each}
     </div>
 {/if}
@@ -185,24 +193,11 @@
         grid-auto-rows: 1fr;
         gap: 0.75rem;
         padding: 0.75rem 1.5rem 1.5rem;
-
-        &.max-one-row {
-            display: flex;
-            margin-top: -3rem;
-            overflow: hidden;
-            gap: 0.75rem;
-            z-index: -1;
-
-            a {
-                flex: 0 0 auto;
-                width: calc(100% / var(--example-grid-columns) - 0.75rem);
-            }
-        }
     }
 
-    .example-grid-background img {
+    .example-grid-background :global(img) {
         width: 100%;
-        height: 100%;
+        height: auto;
         aspect-ratio: 3 / 2;
         object-fit: cover;
         position: relative;
