@@ -1,7 +1,7 @@
 ---
 title: SveltePlot
 description: The best visualizations are built with <span>Svelte.</span>
-heroImage: /logo.png
+heroImage: /logo.svg
 tagline: A Svelte-native visualization framework based on the layered grammar of graphics principles.
 actions:
     - label: Getting started
