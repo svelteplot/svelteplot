@@ -54,9 +54,7 @@
             'geo/us-choropleth',
             'regression/log'
         ].map((d) => ({
-            key: d,
-            light: exampleImages[`../../static/examples/${d}.png`].default,
-            dark: exampleImages[`../../static/examples/${d}.dark.png`].default
+            key: d
         }))
     );
 
@@ -133,6 +131,8 @@
     });
 
     const showExampleGrid = $derived(shuffled && page.url.pathname === '/');
+
+    $inspect(showcase, 'showcase');
 </script>
 
 <slot />
@@ -141,7 +141,11 @@
     <div class="example-grid-background">
         {#each showcase as example (example.key)}
             <a animate:slide href={resolve(`/examples/${example.key}`)}
-                ><enhanced:img src={isDark ? example.dark : example.light} alt={example.key} /></a>
+                ><enhanced:img
+                    src={exampleImages[
+                        `../../static/examples/${example.key}${isDark ? '.dark' : ''}.png`
+                    ].default}
+                    alt={example.key} /></a>
         {/each}
     </div>
 {/if}
