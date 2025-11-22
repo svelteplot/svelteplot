@@ -2,13 +2,13 @@
     export let title = 'Stacked Bars';
     export let sortKey = 2;
     export let transforms = ['group'];
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script>
     import { Plot, BarY, RuleY, groupX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { penguins } = $props();
 </script>
 
 <Plot x={{ axis: 'top' }} color={{ legend: true }}>

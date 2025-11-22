@@ -2,16 +2,12 @@
     export const title = 'Trade balance';
     export const description =
         'Difference between US exports to and imports from the UK, with areas colored by sign.';
+    export const data = { trade: '/data/trade.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Line, DifferenceY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    let { trade } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { trade } = $props();
 </script>
 
 <Plot grid>

@@ -1,13 +1,13 @@
 <script module>
     export const title = 'Loess regression';
+    export const data = { cars: '/data/cars.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, RegressionY } from 'svelteplot';
-    import { page } from '$app/state';
     import { Slider } from '$lib/ui';
 
-    let { cars } = $derived(page.data.data);
+    let { cars } = $props();
 
     let span = $state(0.7);
 </script>

@@ -2,19 +2,22 @@
     export const title = 'Inset and Aspect Ratio';
     export const description =
         'Demonstrates how to use inset and aspect ratio in geographic projections.';
+    export const data = {
+        world: '/data/countries-110m.json'
+    };
 </script>
 
 <script lang="ts">
     import { Slider } from '$lib/ui';
     import { Plot, Geo } from 'svelteplot';
-    import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import { geoCentroid } from 'd3-geo';
+    import type { WorldAtlas } from '../types';
 
     let aspect = $state(0.75);
     let inset = $state(10);
 
-    let { world } = $derived(page.data.data);
+    let { world }: { world: WorldAtlas } = $props();
 
     let countries = $derived(
         topojson.feature(world, world.objects.countries)

@@ -4,6 +4,7 @@
     export const transforms = ['stack'];
     // export const repl =
     // 'https://svelte.dev/playground/7a6b0ae12c624ffeb52448adac644b5b?version=5.33.18';
+    export const data = { sales2: '/data/sales2.csv' };
 </script>
 
 <script lang="ts">
@@ -14,12 +15,8 @@
         stackMosaicX
     } from 'svelteplot';
     import { Checkbox } from '$lib/ui';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
 
-    const { sales2 } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    const { sales2 } = $props();
 
     const stacked = $derived(
         stackMosaicX(

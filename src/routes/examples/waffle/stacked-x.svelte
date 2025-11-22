@@ -4,13 +4,13 @@
     export let transforms = ['group'];
     export let repl =
         'https://svelte.dev/playground/bfcc3c72808e4406a795884af8207d12?version=5';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script>
     import { Plot, WaffleX, groupY } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { penguins } = $props();
 </script>
 
 <Plot

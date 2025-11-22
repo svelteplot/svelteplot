@@ -2,16 +2,19 @@
     export const title = 'Custom projection';
     export const description =
         'Demonstrates how to use a custom projection in SveltePlot.';
+    export const data = {
+        world: '/data/countries-110m.json'
+    };
 </script>
 
 <script lang="ts">
     import { Slider } from '$lib/ui';
     import { Plot, Geo, Graticule } from 'svelteplot';
-    import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import { geoOrthographic } from 'd3-geo';
+    import type { WorldAtlas } from '../types';
 
-    const { world } = $derived(page.data.data);
+    const { world }: { world: WorldAtlas } = $props();
 
     let lat = $state(0);
     let lon = $state(0);

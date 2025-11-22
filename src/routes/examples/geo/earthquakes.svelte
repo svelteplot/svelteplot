@@ -2,6 +2,10 @@
     export const title = 'Earthquakes';
     export const description =
         'A map of earthquakes around the world, with markers sized by magnitude.';
+    export const data = {
+        world: '/data/countries-110m.json',
+        earthquakes: '/data/earthquakes.json'
+    };
 </script>
 
 <script lang="ts">
@@ -11,14 +15,12 @@
         Sphere,
         Graticule
     } from 'svelteplot';
-    import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import type { ExamplesData } from '../types';
 
-    let { world, earthquakes } = $derived(
-        page.data.data
-    ) as ExamplesData;
-    let land = $derived(
+    let { world, earthquakes } = $props() as ExamplesData;
+
+    const land = $derived(
         topojson.feature(world, world.objects.land)
     );
 </script>

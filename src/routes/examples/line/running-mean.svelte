@@ -5,6 +5,7 @@
     export const sortKey = 40;
     export const transforms = ['window', 'bin', 'select'];
     export const fullCode = true;
+    export const data = { stocks: '/data/stocks.csv' };
 </script>
 
 <script lang="ts">
@@ -17,12 +18,9 @@
         Text,
         windowY
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { StocksRow } from '../types';
 
-    let { stocks } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { stocks }: { stocks: StocksRow[] } = $props();
 
     let smoothed = $derived(
         windowY(

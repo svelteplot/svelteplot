@@ -3,12 +3,12 @@
     export const description =
         'A line plot with one line shifted by 2 months along the x-axis.';
     export const transforms = ['shift'];
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Line, shiftX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot y={{ grid: true }}>

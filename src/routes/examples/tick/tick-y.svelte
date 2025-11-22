@@ -1,11 +1,11 @@
 <script module>
     export const title = 'TickY';
+    export const data = { stateage: '/data/stateage.csv' };
 </script>
 
 <script>
     import { Plot, RuleY, TickY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { stateage } = $derived(page.data.data);
+    let { stateage } = $props();
 </script>
 
 <Plot y={{ grid: true, percent: true }}>

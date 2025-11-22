@@ -4,16 +4,17 @@
         'A  histogram showing the distribution of Olympic athletes’ weights.';
     export const transforms = ['bin'];
     export const sortKey = 40;
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { OlympiansRow } from '../types';
 
-    let { olympians } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { olympians }: { olympians: OlympiansRow[] } =
+        $props();
 </script>
 
 <Plot height={300} grid marginLeft={40}>

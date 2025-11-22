@@ -3,13 +3,14 @@
     export const description =
         'An area chart showing daily high and low temperatures with smoothed rolling window lines. Based on an example from <a href="https://observablehq.com/@observablehq/plot-window-line-area">Observable Plot</a>.';
     export const transforms = ['window'];
+    export const data = { sftemp: '/data/sftemp.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, AreaY, Line, windowY } from 'svelteplot';
-    import { page } from '$app/state';
 
-    let { sftemp } = $derived(page.data.data);
+    let { sftemp } = $props();
+
     let k = $state(20);
     let reduce = $state('mean');
     let anchor = $state('middle');

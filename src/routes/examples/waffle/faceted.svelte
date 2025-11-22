@@ -1,12 +1,14 @@
 <script module>
     export let title = 'Faceted waffle';
     export let sortKey = 15;
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, WaffleY, groupX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+    let { olympians } = $props();
 </script>
 
 <Plot

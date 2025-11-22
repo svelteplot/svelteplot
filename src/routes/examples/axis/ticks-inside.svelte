@@ -1,12 +1,11 @@
 <script module>
     export const title = 'Ticks inside';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script>
     import { Plot, AxisY, Line } from 'svelteplot';
-    import { page } from '$app/state';
-
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot

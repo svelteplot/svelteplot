@@ -1,13 +1,13 @@
 <script module>
     export const title = 'Slope chart axis';
     export const sortKey = 96;
+    export const data = { metros: '/data/metros.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, Link, AxisX } from 'svelteplot';
-    import { page } from '$app/state';
-    import { d } from 'svelte-highlight/languages';
-    let { metros } = $derived(page.data.data);
+    import type { MetrosRow } from '../types';
+    let { metros }: { metros: MetrosRow[] } = $props();
     const eastCoastStates =
         'ct,de,fl,ga,me,md,ma,nh,nj,ny,nc,ri,sc,va,vt,wv'.split(
             ','

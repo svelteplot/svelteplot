@@ -6,9 +6,6 @@
 <script>
     import { Plot, BarY, RuleY } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { alphabet } = $derived(page.data.data);
-
     const data = [
         { fruit: 'Apples', quantity: 212 },
         { fruit: 'Bananas', quantity: 207 },

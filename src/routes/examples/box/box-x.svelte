@@ -2,16 +2,17 @@
     export const title = 'BoxX';
     export const description =
         "Box plot of Olympic athletes' weights across different sports.";
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, BoxX } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { OlympiansRow } from '../types';
 
-    let { olympians } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { olympians }: { olympians: OlympiansRow[] } =
+        $props();
 </script>
 
 <Plot

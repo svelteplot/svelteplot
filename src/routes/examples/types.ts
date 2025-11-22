@@ -1,4 +1,4 @@
-type AaplRow = {
+export type AaplRow = {
     Date: Date;
     Open: number;
     High: number;
@@ -8,7 +8,7 @@ type AaplRow = {
     [`Adj Close`]: number;
 };
 
-type SimpsonsRow = {
+export type SimpsonsRow = {
     episode: string;
     season: string;
     /**
@@ -18,7 +18,7 @@ type SimpsonsRow = {
     title: string;
 };
 
-type PenguinsRow = {
+export type PenguinsRow = {
     species: string;
     island: string;
     culmen_length_mm: number;
@@ -27,7 +27,7 @@ type PenguinsRow = {
     body_mass_g: number;
 };
 
-type LanguagesRow = {
+export type LanguagesRow = {
     Language: string;
     Remarks: string;
     Family: string;
@@ -37,7 +37,7 @@ type LanguagesRow = {
     [`Total speakers`]: number;
 };
 
-type EarthquakeFeature = {
+export type EarthquakeFeature = {
     type: 'Feature';
     properties: {
         mag: number;
@@ -69,19 +69,19 @@ type EarthquakeFeature = {
     id: string;
 };
 
-type BeagleRow = {
+export type BeagleRow = {
     lon: number;
     lat: number;
 };
 
-type RiaaRow = {
+export type RiaaRow = {
     year: Date;
     format: string;
     group: string;
     revenue: number;
 };
 
-type MetrosRow = {
+export type MetrosRow = {
     Metro: string;
     POP_1980: number;
     LPOP_1980: number;
@@ -94,14 +94,14 @@ type MetrosRow = {
     highlight: number;
 };
 
-type WindRow = {
+export type WindRow = {
     longitude: number;
     latitude: number;
     u: number;
     v: number;
 };
 
-type ElectionRow = {
+export type ElectionRow = {
     // state,fips,margin2020,margin2016,votes,votes2016
     state: string;
     fips: number;
@@ -111,7 +111,7 @@ type ElectionRow = {
     votes2016: number;
 };
 
-interface WorldAtlas extends TopoJSON.Topology {
+export interface WorldAtlas extends TopoJSON.Topology {
     objects: {
         countries: {
             type: 'GeometryCollection';
@@ -123,7 +123,7 @@ interface WorldAtlas extends TopoJSON.Topology {
     transform: TopoJSON.Transform;
 }
 
-interface USAtlas extends TopoJSON.Topology {
+export interface USAtlas extends TopoJSON.Topology {
     objects: {
         counties: {
             type: 'GeometryCollection';
@@ -139,20 +139,20 @@ interface USAtlas extends TopoJSON.Topology {
     transform: TopoJSON.Transform;
 }
 
-type SalesRow = {
+export type SalesRow = {
     market: string;
     segment: string;
     value: number;
 };
 
-type QuarterlySalesRow = {
+export type QuarterlySalesRow = {
     market: string;
     segment: string;
     quarter: string;
     value: number;
 };
 
-type StocksRow = {
+export type StocksRow = {
     Symbol: string;
     Date: Date;
     Open: number;
@@ -163,18 +163,18 @@ type StocksRow = {
     Volume: number;
 };
 
-type GistempRow = {
+export type GistempRow = {
     Date: Date;
     Anomaly: number;
 };
 
-type TradeRow = {
+export type TradeRow = {
     Year: Date;
     Imports: number;
     Exports: number;
 };
 
-type OlympiansRow = {
+export type OlympiansRow = {
     id: number;
     name: string;
     nationality: string;
@@ -189,7 +189,7 @@ type OlympiansRow = {
     info: string;
 };
 
-type Presidents2Row = {
+export type Presidents2Row = {
     Name: string;
     'Very Favorable %': number;
     'Somewhat Favorable %': number;

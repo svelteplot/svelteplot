@@ -1,5 +1,6 @@
 <script module>
     export const title = 'Gradient line';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
@@ -8,9 +9,8 @@
         Line,
         LinearGradientX
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot x={{ grid: true }}>

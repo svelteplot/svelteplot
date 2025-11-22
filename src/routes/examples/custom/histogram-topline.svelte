@@ -3,11 +3,13 @@
     export const repl =
         'https://svelte.dev/playground/42919d4eb5d84d1ca3a0d6c7028eea0d?version=latest';
     export const transforms = ['bin'];
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+    let { olympians } = $props();
     import {
         Plot,
         RectY,

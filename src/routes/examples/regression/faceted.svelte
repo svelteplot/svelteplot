@@ -3,12 +3,12 @@
 
     export const description =
         'Regression lines grouped by a categorical variable, with different colors for each group.';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script>
     import { Plot, Dot, RegressionY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { penguins } = $props();
 </script>
 
 <Plot grid frame aspectRatio={1} inset={5}>

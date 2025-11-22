@@ -1,16 +1,14 @@
 <script module>
     export const title = 'Link';
+    export const data = { metros: '/data/metros.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Link, Dot, Text } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { metros } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { MetrosRow } from '../types';
+    let { metros }: { metros: MetrosRow[] } = $props();
 
-    let hl: false | (typeof metros)[0] = $state(false);
+    let hl: false | MetrosRow = $state(false);
 </script>
 
 <Plot

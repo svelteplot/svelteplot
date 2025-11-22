@@ -4,19 +4,20 @@
         'A simple example of a binned rectangle plot showing the distribution of Olympian weights. Based on an example from <a href="https://observablehq.com/@observablehq/plot-olympians-heatmap">Observable Plot</a>.';
     export const sortKey = 20;
     export const transforms = ['bin'];
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Rect, bin } from 'svelteplot';
-    import { page } from '$app/state';
     import { getContext } from 'svelte';
     import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
     import type { SveltepressContext } from '$theme/context';
-    import type { ExamplesData } from '../types';
+    import type { OlympiansRow } from '../types';
 
-    let { olympians } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { olympians }: { olympians: OlympiansRow[] } =
+        $props();
 
     const { isDark } = getContext<SveltepressContext>(
         SVELTEPRESS_CONTEXT_KEY

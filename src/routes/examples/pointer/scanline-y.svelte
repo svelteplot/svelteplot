@@ -1,5 +1,6 @@
 <script module>
     export const title = 'Scanline Y';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
@@ -11,9 +12,7 @@
         Text,
         Pointer
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    let { aapl } = $props();
 </script>
 
 <Plot marginRight={20}>

@@ -6,6 +6,7 @@
     export let transforms = ['group'];
     export let repl =
         'https://svelte.dev/playground/be263ac346794e71a80e6ce86b592eef?version=5';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script>
@@ -16,8 +17,7 @@
         groupX
     } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { penguins } = $props();
 </script>
 
 <Plot color={{ legend: true }}>

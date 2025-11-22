@@ -2,16 +2,16 @@
     export const title = 'Image beeswarm';
     export const sortKey = 30;
     export const transforms = ['dodge'];
+    export const data = {
+        presidents2: '/data/presidents2.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Image } from 'svelteplot';
-    import { page } from '$app/state';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
     import type { ExamplesData } from '../types';
-    const { presidents2 } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    const { presidents2 } = $props() as ExamplesData;
 </script>
 
 <Plot

@@ -4,6 +4,7 @@
     export const repl =
         'https://svelte.dev/playground/8426ef943f63404d8efd40831667ff9e?version=latest';
     export const transforms = ['stack'];
+    export const data = { sales: '/data/sales.csv' };
 </script>
 
 <script lang="ts">
@@ -13,13 +14,9 @@
         Text,
         stackMosaicX
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
     import { groups } from 'd3-array';
 
-    const { sales } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    const { sales } = $props();
 
     const stacked = $derived(
         stackMosaicX(
