@@ -1,4 +1,5 @@
 <script>
+    import { resolve } from '$app/paths';
     import External from './icons/External.svelte';
     import { getPathFromBase } from './utils';
 
@@ -15,7 +16,7 @@
 </script>
 
 <a
-    href={external ? to : getPathFromBase(to)}
+    href={resolve(external ? to : getPathFromBase(to))}
     class={`svp-action ${type ? `svp-action--${type}` : ''}`}
     target={external ? '_blank' : ''}>
     <span class="label">

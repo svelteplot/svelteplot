@@ -1,8 +1,16 @@
 <script>
     import ActionButton from './ActionButton.svelte';
+    import ExampleGrid from './ExampleGrid.svelte';
     import Feature from './home/Feature.svelte';
 
-    const { features = [], actions = [], tagline = '', siteConfig, heroImage } = $props();
+    const {
+        features = [],
+        actions = [],
+        examples = [],
+        tagline = '',
+        siteConfig,
+        heroImage
+    } = $props();
 </script>
 
 <div class="home-page">
@@ -26,17 +34,27 @@
     </div>
 
     <div class="actions">
-        {#each actions as action}
+        {#each actions as action (action.to)}
             <ActionButton {...action} />
         {/each}
     </div>
-
-    <div class="features">
-        {#each features as fe, i}
-            <Feature {...fe} {i} />
-        {/each}
-    </div>
 </div>
+
+{#if examples.length}
+    <div class="examples">
+        <ExampleGrid {examples} />
+    </div>
+{/if}
+
+{#if features.length}
+    <div class="home-page">
+        <div class="features">
+            {#each features as fe, i (i)}
+                <Feature {...fe} {i} />
+            {/each}
+        </div>
+    </div>
+{/if}
 
 <style>
     .home-page {
@@ -62,5 +80,8 @@
     }
     .features {
         --at-apply: 'grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 grid-cols-1 mb-4';
+    }
+    .examples {
+        --at-apply: 'mt-10 mb-4';
     }
 </style>

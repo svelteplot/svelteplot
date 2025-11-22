@@ -13,7 +13,44 @@ actions:
     - label: Examples
       to: /examples
       type: flat
-_features:
+examples:
+    - area/smoothed-area
+    - area/streamgraph
+    - arrow/metro
+    - axis/datawrapper-ticks
+    - bar/faceted-bars
+    - box/box-x-faceted
+    - box/box-y
+    - box/box-y-facet
+    - brush/overview-detail
+    - cell/temperatures-threshold
+    - custom/histogram-topline
+    - difference/anomaly-baseline
+    - difference/apple-yoy
+    - difference/trade-balance
+    - dot/1-colored-scatterplot
+    - dot/beeswarm-bubbles
+    - dot/dodge-faceted
+    - geo/earthquakes
+    - geo/us-choropleth
+    - image/image-beeswarm
+    - line/geo-line
+    - line/gradient-line
+    - line/running-mean
+    - link/spherical-link
+    - rect/binned
+    - rect/marimekko
+    - rect/marimekko-faceted
+    - rect/stacked-histogram
+    - regression/grouped
+    - regression/log
+    - rule/data-rules
+    - tick/tick-x
+    - vector/spike-map
+    - vector/wind
+    - waffle/custom-symbol
+    - waffle/stacked-x
+features:
     - title: Marks
       description: SveltePlot comes with a powerful set of built-in marks for building for your visualizations
       icon:
