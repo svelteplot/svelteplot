@@ -4,7 +4,7 @@
     import { untrack } from 'svelte';
     import { slide } from 'svelte/transition';
 
-    const exampleImages = import.meta.glob('../../../static/examples/*/*.png', {
+    const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,
         query: {
             enhanced: true,
@@ -33,30 +33,14 @@
         );
         shuffled = true;
     });
-
-    let isDark = $state(false);
-
-    $effect(() => {
-        // watch dark class on html element
-        const observer = new MutationObserver(() => {
-            isDark = document.documentElement.classList.contains('dark');
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        isDark = document.documentElement.classList.contains('dark');
-        return () => observer.disconnect();
-    });
 </script>
 
 <div class="example-grid-background">
     {#each showcase as example (example.key)}
         <a animate:slide href={resolve(`/examples/${example.key}`)} title={example.title}
             ><enhanced:img
-                src={exampleImages[
-                    `../../../static/examples/${example.key}${isDark ? '.dark' : ''}.png`
-                ].default}
+                src={exampleImages[`../../snapshots/${example.key}${isDark ? '.dark' : ''}.png`]
+                    .default}
                 alt={example.title} /></a>
     {/each}
 </div>

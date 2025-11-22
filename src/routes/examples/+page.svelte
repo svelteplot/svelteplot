@@ -38,22 +38,6 @@
         (d) => d.split('/')[1]
     );
 
-    const allPages = $derived(
-        Object.keys(pages)
-            .filter((page) => !page.includes('[group]'))
-            .map((page) => ({
-                page,
-                title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: `/examples/${page
-                    .replace(/^..\//, '')
-                    .replace(
-                        '.svelte',
-                        $isDark ? '.dark.png' : '.png'
-                    )}`
-            }))
-    );
-
     const pagesByTransform = $derived(
         Object.entries(pages).reduce(
             (acc, [path, mod]) => {

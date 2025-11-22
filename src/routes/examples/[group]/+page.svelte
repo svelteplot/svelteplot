@@ -6,6 +6,7 @@
         SVELTEPRESS_CONTEXT_KEY,
         type SveltepressContext
     } from '$theme/context';
+
     const { isDark } = getContext<SveltepressContext>(
         SVELTEPRESS_CONTEXT_KEY
     );
@@ -83,15 +84,10 @@
             .map((page) => ({
                 page,
                 title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: resolve(
-                    `/examples/${page
-                        .replace(/^..\//, '')
-                        .replace(
-                            '.svelte',
-                            $isDark ? '.dark.png' : '.png'
-                        )}`
-                )
+                key: page
+                    .replace(/^..\//, '')
+                    .replace('.svelte', ''),
+                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`
             }))
     );
 
@@ -120,7 +116,7 @@
     {#if indexKey}
         <indexMod.default />
     {/if}
-    <ExamplesGrid {examples} />
+    <ExamplesGrid isDark={$isDark} {examples} />
 {:else}
     <h2>Not found</h2>
 {/if}

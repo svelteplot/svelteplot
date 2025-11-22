@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
-const EXAMPLES_BASELINE_DIR = path.join(__dirname, '..', 'static', 'examples');
+const EXAMPLES_BASELINE_DIR = path.join(__dirname, '..', 'src', 'snapshots');
 const VR_ROOT_DIR = path.join(__dirname, '..', 'static', '__vr');
 const VR_LATEST_DIR = path.join(VR_ROOT_DIR, 'latest');
 const VR_DIFF_DIR = path.join(VR_ROOT_DIR, 'diff');
@@ -91,6 +91,12 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     if (isDarkMode) {
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
+            window.dispatchEvent(new Event('theme-change'));
+        });
+        await new Promise((r) => setTimeout(r, 300));
+    } else {
+        await page.evaluate(() => {
+            document.documentElement.classList.remove('dark');
             window.dispatchEvent(new Event('theme-change'));
         });
         await new Promise((r) => setTimeout(r, 300));
@@ -197,6 +203,10 @@ const compareImages = async (page, baselineUrl, latestUrl, diffOutPath, serverUr
 };
 
 const main = async () => {
+    // empty out previous latest and diff images
+    await fs.rm(VR_LATEST_DIR, { recursive: true, force: true });
+    await fs.rm(VR_DIFF_DIR, { recursive: true, force: true });
+
     await ensureDirectoryExists(VR_LATEST_DIR);
     await ensureDirectoryExists(VR_DIFF_DIR);
 
@@ -276,9 +286,10 @@ const main = async () => {
                 }
 
                 const comparePage = await browser.newPage();
-                const baselineUrl = `${serverUrl}${path.posix.join('examples', urlPath + `${suffix}.png`)}`;
+                const baselineUrl = `${serverUrl}${path.posix.join('src', 'snapshots', urlPath + `${suffix}.png`)}`;
                 const latestUrl = `${serverUrl}${path.posix.join('__vr', 'latest', urlPath + `${suffix}.png`)}`;
                 let res;
+
                 try {
                     res = await compareImages(
                         comparePage,
@@ -288,6 +299,7 @@ const main = async () => {
                         serverUrl
                     );
                 } catch (e) {
+                    console.log(e);
                     res = {
                         width: 0,
                         height: 0,
@@ -315,7 +327,9 @@ const main = async () => {
                     diff: diffPng,
                     status: passed ? 'passed' : 'failed'
                 };
+
                 records.push(rec);
+
                 if (!passed) {
                     failures.push(rec);
                     routeFailed = true;
