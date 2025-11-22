@@ -1,5 +1,6 @@
 <script>
     import { goto } from '$app/navigation';
+    import { resolve } from '$app/paths';
     import IconifyIcon from '../IconifyIcon.svelte';
     import Apple from '../icons/Apple.svelte';
     import Banana from '../icons/Banana.svelte';
@@ -38,7 +39,7 @@
     function handleFeatureCardClick() {
         if (!link) return;
         if (external) window.open(link, '_blank');
-        else goto(link);
+        else goto(resolve(link));
     }
 </script>
 

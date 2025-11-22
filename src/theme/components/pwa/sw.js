@@ -1,5 +1,4 @@
 // @ts-nocheck
-/* eslint-disable no-restricted-globals */
 import {
     cleanupOutdatedCaches,
     createHandlerBoundToURL,

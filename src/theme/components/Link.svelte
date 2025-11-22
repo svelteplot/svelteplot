@@ -1,4 +1,5 @@
 <script>
+    import { resolve } from '$app/paths';
     import { getPathFromBase } from './utils';
 
     /**
@@ -32,7 +33,7 @@
 </script>
 
 <a
-    href={withBase ? toWithBase : to}
+    href={resolve(withBase ? toWithBase : to)}
     class="link"
     class:no-inline={!inline}
     class:active

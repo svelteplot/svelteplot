@@ -12,7 +12,6 @@
         activeIcon,
         inactiveIcon
     });
-    // eslint-disable-next-line no-self-assign
     $items = $items;
 </script>
 

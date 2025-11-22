@@ -47,7 +47,7 @@
     </div>
     {#if !collapsed}
         <div class="links" transition:slide>
-            {#each items as item}
+            {#each items as item, i (i)}
                 {@const active = routeId.endsWith('/')
                     ? item.to === routeId
                     : item.to === `${routeId}/`}

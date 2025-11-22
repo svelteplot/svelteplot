@@ -59,13 +59,14 @@
 </script>
 
 <svelte:window bind:scrollY />
+
 {#if anchors.length}
     <div class="toc" class:collapsed={$tocCollapsed}>
         <div class="title">
             {themeOptions?.i18n?.onThisPage || DEFAULT_ON_THIS_PAGE}
         </div>
         <div class="anchors" style={`--bar-top: calc(${activeIdx * 2}em);`}>
-            {#each anchors as an, i}
+            {#each anchors as an, i (an.slugId)}
                 {@const active = activeIdx === i}
                 <a
                     href="#{an.slugId}"

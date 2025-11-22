@@ -1,4 +1,5 @@
 <script>
+    import { resolve } from '$app/paths';
     import { page } from '$app/state';
     import External from './icons/External.svelte';
     import NavArrowDown from './icons/NavArrowDown.svelte';
@@ -29,7 +30,6 @@
     } = $props();
 
     let active = $derived(page.url.pathname.startsWith(`${to.endsWith('/') ? to : `${to}/`}`));
-    // eslint-disable-next-line no-unused-expressions
     rest;
 </script>
 
@@ -51,14 +51,14 @@
             </div>
         {/if}
         <div class="dropdown">
-            {#each items as subItem}
+            {#each items as subItem (subItem.to)}
                 <Self {...subItem} />
             {/each}
         </div>
     </div>
 {:else}
     <a
-        href={external ? to : getPathFromBase(to)}
+        href={resolve(external ? to : getPathFromBase(to))}
         class:nav-item--icon={icon}
         class="nav-item"
         class:active

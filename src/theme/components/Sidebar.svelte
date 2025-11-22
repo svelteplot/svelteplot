@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    {#each $resolvedSidebar as sidebarItem}
+    {#each $resolvedSidebar as sidebarItem, i (i)}
         {@const hasItems = Array.isArray(sidebarItem.items)}
         <SidebarGroup {...hasItems ? sidebarItem : { title: '', items: [sidebarItem] }} />
     {/each}

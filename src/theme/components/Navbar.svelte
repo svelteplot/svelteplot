@@ -29,7 +29,7 @@
         <nav class="nav-links" aria-label="Menu">
             <div class="navbar-pc">
                 <div class="sm:flex none">
-                    {#each themeOptions.navbar as navItem}
+                    {#each themeOptions.navbar as navItem (navItem.to)}
                         <NavItem {...navItem} />
                     {/each}
                 </div>

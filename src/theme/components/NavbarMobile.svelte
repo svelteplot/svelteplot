@@ -24,7 +24,7 @@
 {#if !$navCollapsed}
     <nav class="navbar-mobile" transition:slide aria-label="Menu">
         <Logo />
-        {#each themeOptions.navbar as navItem}
+        {#each themeOptions.navbar as navItem (navItem.to)}
             {#if navItem.items}
                 <Expansion title={navItem.title} showIcon={false}>
                     {#snippet customTitle()}
@@ -39,7 +39,7 @@
                             {/if}
                         </div>
                     {/snippet}
-                    {#each navItem.items as subItem}
+                    {#each navItem.items as subItem (subItem.to)}
                         <NavItem {...subItem} />
                     {/each}
                 </Expansion>
