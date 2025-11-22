@@ -1,8 +1,10 @@
-import svelte, { rules } from 'eslint-plugin-svelte';
+import svelte from 'eslint-plugin-svelte';
 import svelteParser from 'svelte-eslint-parser';
 import tsParser from '@typescript-eslint/parser';
+import * as regexpPlugin from 'eslint-plugin-regexp';
 
 export default [
+    regexpPlugin.configs['flat/recommended'],
     {
         rules: {
             'no-console': ['error', { allow: ['error'] }]
