@@ -1,16 +1,16 @@
 <script lang="ts">
     import { getContext, untrack } from 'svelte';
-    import { randomId, testFilter } from '$lib/helpers/index.js';
+    import { identity, noTransition, randomId, testFilter } from '$lib/helpers/index.js';
     import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
     import { max } from 'd3-array';
     import type {
         AutoMarginStores,
         ConstantAccessor,
-        DataRecord,
         PlotState,
         RawValue,
-        ScaledDataRecord,
-        ScaleType
+        ScaleType,
+        TransitionArgs,
+        TransitionFunction
     } from '$lib/types/index.js';
     import { RAW_VALUE } from '$lib/transforms/recordize';
     import { INDEX } from '$lib/constants';
@@ -36,6 +36,8 @@
         };
         plot: PlotState;
         text: boolean | null;
+        tIn?: [TransitionFunction?, TransitionArgs?];
+        tOut?: [TransitionFunction?, TransitionArgs?];
     };
 
     let {
@@ -54,7 +56,9 @@
         title,
         plot,
         options,
-        text = true
+        text = true,
+        tIn = [],
+        tOut = []
     }: BaseAxisYProps = $props();
 
     const LINE_ANCHOR = {
@@ -151,6 +155,9 @@
             if ($autoMarginTop.has(id)) $autoMarginTop.delete(id);
         };
     });
+
+    const tInF = $derived(tIn?.[0] ?? noTransition);
+    const tOutF = $derived(tOut?.[0] ?? noTransition);
 </script>
 
 <g class="axis-y">
@@ -171,6 +178,8 @@
                 true
             )}
             <g
+                in:tInF|global={{ ...(tIn?.[1] ?? {}) }}
+                out:tOutF|global={{ ...(tOut?.[1] ?? {}) }}
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.dx +
                     marginLeft +

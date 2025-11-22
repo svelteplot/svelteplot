@@ -10,6 +10,7 @@ import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks.js';
 import { RAW_VALUE } from '$lib/transforms/recordize.js';
+import type { TransitionConfig } from 'svelte/transition';
 
 /**
  * Returns first argument that is not null or undefined
@@ -92,3 +93,15 @@ export function identity<T>(x: T): T {
 }
 
 export const GEOJSON_PREFER_STROKE = new Set(['MultiLineString', 'LineString']);
+
+export function noTransition(node: Element): TransitionConfig {
+    node.dispatchEvent(new CustomEvent('introstart'));
+    node.dispatchEvent(new CustomEvent('introend'));
+    node.dispatchEvent(new CustomEvent('outrostart'));
+    node.dispatchEvent(new CustomEvent('outroend'));
+    return {
+        duration: 0,
+        delay: 0,
+        css: () => ''
+    };
+}

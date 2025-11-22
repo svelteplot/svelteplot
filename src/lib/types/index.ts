@@ -4,6 +4,7 @@ import type { MarkerShape } from '../marks/helpers/Marker.svelte';
 import type { Channels, ScaledChannelName } from './channel.js';
 import type { DataRecord, DataRow, RawValue } from './data.js';
 import type { BaseMarkProps } from './mark.js';
+import type { TransitionConfig } from 'svelte/transition';
 
 export type GenericMarkOptions = Record<string | symbol, any>;
 
@@ -81,6 +82,9 @@ export type MapMethod =
 export type MapOptions = Partial<Record<ScaledChannelName, MapMethod>>;
 
 export type UsedScales = Record<ScaledChannelName, boolean>;
+
+export type TransitionFunction = (node: Element, params: any) => TransitionConfig;
+export type TransitionArgs = { delay?: number; duration?: number; easing?: (t: number) => number };
 
 export * from './channel';
 export * from './colorScheme';
