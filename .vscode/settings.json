@@ -28,5 +28,12 @@
     "svelte.plugin.svelte.format.enable": false,
     "eslint.probe": ["javascript", "typescript", "svelte"],
     "eslint.useFlatConfig": true,
-    "eslint.workingDirectories": [{ "mode": "auto" }]
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "[svg]": {
+        "editor.defaultFormatter": "jock.svg"
+    }
 }
