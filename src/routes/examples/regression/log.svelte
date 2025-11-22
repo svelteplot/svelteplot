@@ -1,12 +1,11 @@
 <script module>
     export const title = 'Log regression';
+    export const data = { cars: '/data/cars.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, RegressionY } from 'svelteplot';
-    import { page } from '$app/state';
-
-    let { cars } = $derived(page.data.data);
+    let { cars } = $props();
 </script>
 
 <Plot grid x={{ type: 'log' }} y={{ type: 'log' }}>

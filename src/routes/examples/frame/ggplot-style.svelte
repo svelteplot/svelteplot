@@ -12,8 +12,8 @@
         GridX,
         GridY
     } from '$lib/index.js';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+    export const data = { aapl: '/data/aapl.csv' };
+    const { aapl } = $props();
 </script>
 
 <Plot inset={10}>

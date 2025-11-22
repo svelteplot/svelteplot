@@ -2,14 +2,12 @@
     export const title = 'Beeswarm plot';
     export const sortKey = 30;
     export const transforms = ['dodge'];
+    export const data = { cars: '/data/cars.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    let { cars } = $derived(page.data.data) as ExamplesData;
+    let { cars } = $props();
 </script>
 
 <Plot height={200}>

@@ -3,14 +3,12 @@
     export const description =
         'Apple stock price compared to a shifted copy of itself to show year-over-year differences. Based on an example from <a href="https://observablehq.com/plot/transforms/shift">Observable Plot</a>.';
     export const transforms = ['shift'];
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, DifferenceY, shiftX } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    let { aapl } = $derived(page.data.data as ExamplesData);
+    let { aapl } = $props();
 </script>
 
 <Plot height={350} grid>

@@ -2,6 +2,7 @@
     export const title = 'Grouped pointer tooltips';
     export const repl =
         'https://svelte.dev/playground/dbef67909e854ed38f53d30671353f2c?version=latest';
+    export const data = { stocks: '/data/stocks.csv' };
 </script>
 
 <script lang="ts">
@@ -13,11 +14,7 @@
         Text,
         Pointer
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { stocks } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { stocks } = $props();
     let stocks2 = $derived(
         stocks.filter((d) => d.Date < new Date(2018, 0, 1))
     );

@@ -9,12 +9,10 @@
 
 <script lang="ts">
     import { Plot, Dot } from '$lib';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    const { countries_2020: countries } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    export const data = {
+        countries: '/data/countries_2020.csv'
+    };
+    const { countries } = $props();
 </script>
 
 <Plot

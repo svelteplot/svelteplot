@@ -2,6 +2,7 @@
     export const title = 'Faceted Pointer (2)';
     export const repl =
         'https://svelte.dev/playground/5b5a1383b5124896bd5fa1c6b7a2ada6?version=latest';
+    export const data = { stocks: '/data/stocks.csv' };
 </script>
 
 <script lang="ts">
@@ -14,13 +15,9 @@
         Pointer,
         normalizeY
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
     import Frame from 'svelteplot/marks/Frame.svelte';
     import type { DataRecord } from 'svelteplot/types';
-    let { stocks } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { stocks } = $props();
     let stocks2 = $derived(
         stocks.filter((d) => d.Date < new Date(2018, 0, 1))
     );
