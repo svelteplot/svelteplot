@@ -2,8 +2,6 @@
 title: Interactivity
 ---
 
-# Interactivity
-
 SveltePlot makes creating interactive charts intuitive and straightforward using Svelte's reactive programming model. This page provides a brief overview of the various ways you can add interactivity to your plots.
 
 ## Events

@@ -5,7 +5,7 @@
     import {
         SVELTEPRESS_CONTEXT_KEY,
         type SveltepressContext
-    } from '@sveltepress/theme-default/context';
+    } from '$theme/context';
     const { isDark } = getContext<SveltepressContext>(
         SVELTEPRESS_CONTEXT_KEY
     );

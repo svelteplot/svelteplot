@@ -9,7 +9,7 @@
     import { BarX, Plot } from 'svelteplot';
     import { page } from '$app/state';
     import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
+    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
     const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
     let { penguins } = $derived(page.data.data);
 </script>
