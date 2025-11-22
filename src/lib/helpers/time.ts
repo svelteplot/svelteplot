@@ -197,7 +197,7 @@ export function parseTimeInterval(input: string): [string, number] {
     let name = `${input}`.toLowerCase();
     if (name.endsWith('s')) name = name.slice(0, -1); // drop plural
     let period = 1;
-    const match = /^(?:(\d+)\s+)/.exec(name);
+    const match = /^(\d+)\s+/.exec(name);
     if (match) {
         name = name.slice(match[0].length);
         period = +match[1];

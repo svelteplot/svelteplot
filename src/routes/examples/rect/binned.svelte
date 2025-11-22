@@ -10,8 +10,8 @@
     import { Plot, Rect, bin } from 'svelteplot';
     import { page } from '$app/state';
     import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    import type { SveltepressContext } from '@sveltepress/theme-default/context';
+    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
+    import type { SveltepressContext } from '$theme/context';
     import type { ExamplesData } from '../types';
 
     let { olympians } = $derived(

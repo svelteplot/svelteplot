@@ -11,7 +11,7 @@ export function resolveColor(color: string, canvas: HTMLCanvasElement) {
     }
     if (CSS_URL.test(color)) {
         // might be a gradient we can parse!
-        const m = color.match(/^url\((#[^\)]+)\)/);
+        const m = color.match(/^url\((#[^)]+)\)/);
         const gradientId = m[1];
         const gradient = canvas.ownerDocument.querySelector(gradientId) as
             | SVGLinearGradientElement

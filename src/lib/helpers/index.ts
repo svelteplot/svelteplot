@@ -9,7 +9,6 @@ import type {
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
 import { isDate } from '$lib/helpers/typeChecks.js';
-import { RAW_VALUE } from '$lib/transforms/recordize.js';
 
 /**
  * Returns first argument that is not null or undefined
@@ -51,7 +50,7 @@ export function isObject<T>(option: object | T): option is object {
     );
 }
 
-const NUMERIC = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;
+const NUMERIC = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
 
 export function maybeNumber(value: any): number | null {
     if (typeof value === 'number' && Number.isFinite(value)) return value;

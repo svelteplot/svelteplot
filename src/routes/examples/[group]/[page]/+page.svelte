@@ -4,7 +4,7 @@
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
+    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
     const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
 
     import { getContext } from 'svelte';

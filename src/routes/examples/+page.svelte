@@ -10,7 +10,7 @@
     import {
         SVELTEPRESS_CONTEXT_KEY,
         type SveltepressContext
-    } from '@sveltepress/theme-default/context';
+    } from '$theme/context';
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
     import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';

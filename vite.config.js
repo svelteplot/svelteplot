@@ -1,5 +1,5 @@
 import { sveltepress } from '@sveltepress/vite';
-import { defaultTheme } from '@sveltepress/theme-default';
+import { defaultTheme } from './src/theme/index.js';
 import { defineConfig } from 'vitest/config';
 import { enhancedImages } from '@sveltejs/enhanced-img';
 import sidebar from './config/sidebar.js';
@@ -17,7 +17,9 @@ export default defineConfig({
         alias: {
             svelteplot: path.resolve(__dirname, './src/lib/index.js'),
             $lib: path.resolve(__dirname, './src/lib'),
-            '$lib/*': path.resolve(__dirname, './src/lib') + '/*'
+            '$lib/*': path.resolve(__dirname, './src/lib') + '/*',
+            $theme: path.resolve(__dirname, './src/theme'),
+            '$theme/*': path.resolve(__dirname, './src/theme') + '/*'
         }
     },
     plugins: [
@@ -51,6 +53,7 @@ export default defineConfig({
                     //         to: '/introduction'
                     //     }
                 ],
+                editLink: 'https://github.com/svelteplot/svelteplot/edit/main/src/routes:route',
                 sidebar,
                 preBuildIconifyIcons: {
                     carbon: ['ruler-alt', 'roadmap'],
