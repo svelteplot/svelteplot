@@ -53,7 +53,7 @@ export default defineConfig({
                     //         to: '/introduction'
                     //     }
                 ],
-                editLink: 'https://github.com/svelteplot/svelteplot/edit/main/src/routes/:route',
+                editLink: 'https://github.com/svelteplot/svelteplot/edit/main/src/routes:route',
                 sidebar,
                 preBuildIconifyIcons: {
                     carbon: ['ruler-alt', 'roadmap'],

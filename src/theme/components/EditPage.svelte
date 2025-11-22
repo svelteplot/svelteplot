@@ -13,15 +13,19 @@
     const { pageType = 'md' } = $props();
 
     const DEFAULT_TEXT = 'Improve this page';
+
+    const editLink = $derived(
+        routeId === '/examples/[group]/[page]'
+            ? themeOptions.editLink?.replace(':route', `${page.url.pathname}.svelte`)
+            : routeId === '/examples/[group]'
+              ? themeOptions.editLink?.replace(':route', `/examples/%5Bgroup%5D/%2Bpage.svelte`)
+              : themeOptions.editLink.replace(':route', `${routeId}/+page.${pageType}`)
+    );
 </script>
 
 {#if themeOptions.editLink}
     <!-- eslint-disable svelte/no-navigation-without-resolve -->
-    <a
-        class="edit-link"
-        href={themeOptions.editLink.replace(':route', `${routeId}/+page.${pageType}`)}
-        target="_blank"
-        tabindex="0">
+    <a class="edit-link" href={editLink} target="_blank" tabindex="0">
         <div class="edit-text">
             {themeOptions.i18n?.suggestChangesToThisPage || DEFAULT_TEXT}
         </div>
