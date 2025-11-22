@@ -15,8 +15,9 @@
     let { label, type = '', to, external = false } = $props();
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
-    href={resolve(external ? to : getPathFromBase(to))}
+    href={external ? to : resolve(getPathFromBase(to))}
     class={`svp-action ${type ? `svp-action--${type}` : ''}`}
     target={external ? '_blank' : ''}>
     <span class="label">

@@ -28,12 +28,13 @@
         children
     } = $props();
 
-    let isExternal = $derived(/^https?|mailto:/.test(to));
-    let toWithBase = $derived(isExternal ? to : getPathFromBase(to));
+    const isExternal = $derived(/^https?|mailto:/.test(to));
+    const toWithBase = $derived(isExternal ? to : getPathFromBase(to));
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
-    href={resolve(withBase ? toWithBase : to)}
+    href={isExternal ? to : resolve(toWithBase)}
     class="link"
     class:no-inline={!inline}
     class:active

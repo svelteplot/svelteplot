@@ -57,8 +57,9 @@
         </div>
     </div>
 {:else}
+    <!-- eslint-disable svelte/no-navigation-without-resolve -->
     <a
-        href={resolve(external ? to : getPathFromBase(to))}
+        href={external ? to : resolve(getPathFromBase(to))}
         class:nav-item--icon={icon}
         class="nav-item"
         class:active
