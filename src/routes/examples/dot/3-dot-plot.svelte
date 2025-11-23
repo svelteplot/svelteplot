@@ -1,14 +1,15 @@
 <script module>
     export const title = 'Dot plot';
+    export const data = {
+        languages: '/data/languages.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, GridY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { languages } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { LanguagesRow } from '../types';
+    let { languages }: { languages: LanguagesRow[] } =
+        $props();
 </script>
 
 <Plot

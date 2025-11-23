@@ -1,12 +1,14 @@
 <script module>
     export const title = 'Simple area';
+    export const data = { aapl: '/data/aapl.csv' };
+    export const sortKey = 1;
 </script>
 
 <script lang="ts">
     import { Plot, Area } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    import type { AaplRow } from '../types';
+
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot y={{ grid: true }}>

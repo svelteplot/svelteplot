@@ -2,14 +2,6 @@
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
-    import {
-        SVELTEPRESS_CONTEXT_KEY,
-        type SveltepressContext
-    } from '$theme/context';
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
-
     import { getContext } from 'svelte';
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
 
@@ -83,15 +75,10 @@
             .map((page) => ({
                 page,
                 title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: resolve(
-                    `/examples/${page
-                        .replace(/^..\//, '')
-                        .replace(
-                            '.svelte',
-                            $isDark ? '.dark.png' : '.png'
-                        )}`
-                )
+                key: page
+                    .replace(/^..\//, '')
+                    .replace('.svelte', ''),
+                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`
             }))
     );
 

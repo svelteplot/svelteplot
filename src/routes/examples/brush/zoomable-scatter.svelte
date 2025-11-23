@@ -1,16 +1,16 @@
 <script module lang="ts">
     export const title = 'Zoomable scatter plot';
     export const fullCode = true;
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, Brush, Frame } from 'svelteplot';
     import { Tween } from 'svelte/motion';
     import { cubicInOut } from 'svelte/easing';
-    import { page } from '$app/state';
     import { extent } from 'd3-array';
 
-    const { penguins } = $derived(page.data.data);
+    const { penguins } = $props();
 
     let brush = $state({ enabled: false });
     let isZoomedIn = $state(false);

@@ -7,17 +7,9 @@
 
 <script lang="ts">
     import { groupBy } from 'es-toolkit';
-    import {
-        SVELTEPRESS_CONTEXT_KEY,
-        type SveltepressContext
-    } from '$theme/context';
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
     import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';
-
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
 
     const pages = import.meta.glob('./**/*.svelte', {
         eager: true
@@ -36,22 +28,6 @@
             (d) => !d.startsWith('./[group]')
         ),
         (d) => d.split('/')[1]
-    );
-
-    const allPages = $derived(
-        Object.keys(pages)
-            .filter((page) => !page.includes('[group]'))
-            .map((page) => ({
-                page,
-                title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: `/examples/${page
-                    .replace(/^..\//, '')
-                    .replace(
-                        '.svelte',
-                        $isDark ? '.dark.png' : '.png'
-                    )}`
-            }))
     );
 
     const pagesByTransform = $derived(
@@ -102,14 +78,11 @@
     {/each}
 </ul>
 
-<ExamplesPagePreview {paths} {pages} isDark={$isDark} />
+<ExamplesPagePreview {paths} {pages} />
 
 <!-- <ExamplesPageList {paths} {pages} /> -->
 
-<ExamplesPagePreview
-    paths={pagesByTransform}
-    {pages}
-    isDark={$isDark} />
+<ExamplesPagePreview paths={pagesByTransform} {pages} />
 
 <style>
     h3 {

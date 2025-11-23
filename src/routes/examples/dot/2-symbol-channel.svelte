@@ -1,14 +1,14 @@
 <script module>
     export let title = 'Symbol channel';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { penguins } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { PenguinsRow } from '../types';
+
+    let { penguins }: { penguins: PenguinsRow[] } =
+        $props();
 </script>
 
 <Plot

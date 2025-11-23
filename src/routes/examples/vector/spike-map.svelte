@@ -3,6 +3,10 @@
     // export const transforms = ['geoCentroid'];
     export const repl =
         'https://svelte.dev/playground/186c3954751e4d04b42f9901f4b00305?version=latest';
+    export const data = {
+        us: '/data/us-counties-10m.json',
+        election: '/data/election.csv'
+    };
 </script>
 
 <script lang="ts">
@@ -13,12 +17,8 @@
         geoCentroid
     } from 'svelteplot';
     import * as topojson from 'topojson-client';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
 
-    const { us, election } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    const { us, election } = $props();
 
     const nation = $derived(
         topojson.feature(us, us.objects.nation)

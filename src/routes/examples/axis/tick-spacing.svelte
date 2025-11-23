@@ -1,11 +1,11 @@
 <script module>
     export const title = 'Tick spacing';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script>
     import { Plot, AxisX, AxisY, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot marginTop={30}>

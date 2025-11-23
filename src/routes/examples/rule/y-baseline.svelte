@@ -2,13 +2,12 @@
     export const title = 'Y Baseline';
     export const description =
         'A simple horizontal rule at y=0.';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    let { aapl } = $props();
 </script>
 
 <Plot>

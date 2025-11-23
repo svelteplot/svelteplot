@@ -1,13 +1,11 @@
 <script module>
     export const title = 'BoxY';
+    export const data = { mpg: '/data/mpg.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, BoxY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    let { mpg } = $derived(page.data.data) as ExamplesData;
+    let { mpg } = $props();
 </script>
 
 <Plot grid x={{ type: 'band' }} inset={10}>

@@ -1,15 +1,13 @@
 <script>
     import { afterNavigate, beforeNavigate } from '$app/navigation';
     import { page } from '$app/state';
-    import { onMount, setContext } from 'svelte';
+    import { onMount } from 'svelte';
     import themeOptions from 'virtual:sveltepress/theme-default';
-    import { SVELTEPRESS_CONTEXT_KEY } from '../context';
     import AjaxBar from './AjaxBar.svelte';
     import Backdrop from './Backdrop.svelte';
     import Error from './Error.svelte';
     import {
         anchors,
-        isDark,
         navCollapsed,
         oldScrollY,
         resolveSidebar,
@@ -30,10 +28,6 @@
 
     /** @type {Props & { [key: string]: any }} */
     const { children, ...rest } = $props();
-
-    setContext(SVELTEPRESS_CONTEXT_KEY, {
-        isDark
-    });
 
     resolveSidebar(page.route.id);
 

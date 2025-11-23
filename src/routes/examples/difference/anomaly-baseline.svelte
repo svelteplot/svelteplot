@@ -2,16 +2,12 @@
     export const title = 'Anomaly vs baseline';
     export const description =
         'Temperature anomalies relative to a zero baseline, with positive and negative areas colored separately.';
+    export const data = { gistemp: '/data/gistemp.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, DifferenceY, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-
-    let { gistemp } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { gistemp } = $props();
 </script>
 
 <Plot height={350} y={{ grid: true }}>

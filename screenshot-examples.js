@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
 const EXAMPLES_DIR = path.join(__dirname, 'src', 'routes', 'examples');
-const OUTPUT_DIR = path.join(__dirname, 'static', 'examples');
+const OUTPUT_DIR = path.join(__dirname, 'src', 'snapshots');
 const SCREENSHOT_WIDTH = 600;
 const DEVICE_PIXEL_RATIO = 2;
 
@@ -128,6 +128,15 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
             // Force any theme-aware components to re-render
+            window.dispatchEvent(new Event('theme-change'));
+        });
+
+        // Wait a bit for theme to apply
+        await new Promise((resolve) => setTimeout(resolve, 300));
+    } else {
+        // Ensure light mode
+        await page.evaluate(() => {
+            document.documentElement.classList.remove('dark');
             window.dispatchEvent(new Event('theme-change'));
         });
 

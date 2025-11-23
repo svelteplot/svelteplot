@@ -1,5 +1,6 @@
 <script module>
     export const title = 'Crosshair';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script>
@@ -12,8 +13,7 @@
         AxisY,
         Pointer
     } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <div style="touch-action: none">

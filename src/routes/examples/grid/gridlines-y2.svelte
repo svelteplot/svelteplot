@@ -2,6 +2,7 @@
     export const title = 'Crop grid lines to range';
     export const description =
         'You can use an area mark as clipping path for grid lines';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script>
@@ -12,9 +13,7 @@
         GridX,
         RuleY
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import { d } from 'svelte-highlight/languages';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot>

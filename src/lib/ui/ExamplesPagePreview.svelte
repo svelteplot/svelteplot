@@ -1,7 +1,8 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
+    import { useDark } from './isDark.svelte';
 
-    const exampleImages = import.meta.glob('../../../static/examples/*/*.png', {
+    const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,
         query: {
             enhanced: true,
@@ -11,8 +12,7 @@
 
     let {
         paths,
-        pages,
-        isDark
+        pages
     }: {
         paths: Record<string, string[]>;
         pages: Record<
@@ -24,8 +24,9 @@
                 transforms?: string[];
             }
         >;
-        isDark: boolean;
     } = $props();
+
+    const ds = useDark();
 
     function sortPages(a: string, b: string) {
         const sortA = pages[a].sortKey ?? 10;
@@ -53,9 +54,9 @@
                             <enhanced:img
                                 title={pages[page].title}
                                 src={exampleImages[
-                                    `../../../static/examples/${page
+                                    `../../snapshots/${page
                                         .replace('./', '')
-                                        .replace('.svelte', isDark ? '.dark.png' : '.png')}`
+                                        .replace('.svelte', ds.isDark ? '.dark.png' : '.png')}`
                                 ].default}
                                 alt={pages[page].title} />
                             <div class="title">{pages[page].title}</div>

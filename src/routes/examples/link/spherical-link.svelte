@@ -1,16 +1,16 @@
 <script module>
     export const title = 'Spherical Link';
+    export const data = {
+        world: '/data/countries-110m.json'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Geo, Sphere, Link } from 'svelteplot';
-    import { page } from '$app/state';
     import * as topojson from 'topojson-client';
-    import type { ExamplesData } from '../types';
+    import type { WorldAtlas } from '../types';
 
-    let { world } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { world }: { world: WorldAtlas } = $props();
 
     let land = $derived(
         topojson.feature(world, world.objects.land)

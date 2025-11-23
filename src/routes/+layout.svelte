@@ -1,7 +1,10 @@
 <script lang="ts">
-    import { afterNavigate, beforeNavigate } from '$app/navigation';
+    import { afterNavigate } from '$app/navigation';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
 
     import '../app.scss';
+
+    let { children } = $props();
 
     afterNavigate(() => {
         const content = document.querySelector('.content');
@@ -45,9 +48,24 @@
             });
         }
     });
+
+    const ds = useDark();
+
+    $effect(() => {
+        // watch dark class on html element
+        const observer = new MutationObserver(() => {
+            ds.isDark = document.documentElement.classList.contains('dark');
+        });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        ds.isDark = document.documentElement.classList.contains('dark');
+        return () => observer.disconnect();
+    });
 </script>
 
-<slot />
+{@render children()}
 
 <style lang="scss">
     :global(.version-link) {

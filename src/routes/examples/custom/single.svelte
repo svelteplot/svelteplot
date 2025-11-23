@@ -2,16 +2,15 @@
     export const title = 'Single SVG marks';
     export const description =
         'You can use the CustomMark to place a single SVG element at a specific x/y coordinate.';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, CustomMark } from 'svelteplot';
     import Spiral from '$lib/ui/Spiral.svelte';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { penguins } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { PenguinsRow } from '../types';
+    let { penguins }: { penguins: PenguinsRow[] } =
+        $props();
 </script>
 
 <Plot grid>
