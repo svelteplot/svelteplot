@@ -3,6 +3,7 @@
     import { shuffle } from 'd3-array';
     import { untrack } from 'svelte';
     import { slide } from 'svelte/transition';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
 
     const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,
@@ -20,6 +21,8 @@
     let showcase = $state([]);
 
     let shuffled = $state(false);
+
+    const ds = useDark();
 
     $effect(() => {
         if (shuffled) return;
@@ -39,7 +42,7 @@
     {#each showcase as example (example.key)}
         <a animate:slide href={resolve(`/examples/${example.key}`)} title={example.title}
             ><enhanced:img
-                src={exampleImages[`../../snapshots/${example.key}${isDark ? '.dark' : ''}.png`]
+                src={exampleImages[`../../snapshots/${example.key}${ds.isDark ? '.dark' : ''}.png`]
                     .default}
                 alt={example.title} /></a>
     {/each}

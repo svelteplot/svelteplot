@@ -2,6 +2,7 @@
     export const title = 'Frame with ggplot style';
     export const description =
         'A frame with a light gray fill and white grid lines, similar to ggplot2 style.';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
@@ -12,7 +13,7 @@
         GridX,
         GridY
     } from '$lib/index.js';
-    export const data = { aapl: '/data/aapl.csv' };
+
     const { aapl } = $props();
 </script>
 
