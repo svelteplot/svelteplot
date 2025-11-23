@@ -28,8 +28,6 @@
 
     const ds = useDark();
 
-    $inspect(ds.isDark);
-
     function sortPages(a: string, b: string) {
         const sortA = pages[a].sortKey ?? 10;
         const sortB = pages[b].sortKey ?? 10;

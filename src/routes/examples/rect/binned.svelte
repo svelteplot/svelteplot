@@ -11,25 +11,21 @@
 
 <script lang="ts">
     import { Plot, Rect, bin } from 'svelteplot';
-    import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
-    import type { SveltepressContext } from '$theme/context';
     import type { OlympiansRow } from '../types';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
 
     let { olympians }: { olympians: OlympiansRow[] } =
         $props();
 
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
+    const ds = useDark();
 </script>
 
 <Plot
     opacity={{
-        range: [$isDark ? 0 : 0.4, 1],
+        range: [ds.isDark ? 0 : 0.4, 1],
         type: 'sqrt'
     }}
-    color={{ scheme: $isDark ? 'magma' : 'rdpu' }}>
+    color={{ scheme: ds.isDark ? 'magma' : 'rdpu' }}>
     <Rect
         {...bin(
             { data: olympians, x: 'weight', y: 'height' },

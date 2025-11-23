@@ -2,15 +2,6 @@
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
-    import {
-        SVELTEPRESS_CONTEXT_KEY,
-        type SveltepressContext
-    } from '$theme/context';
-
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
-
     import { getContext } from 'svelte';
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
 
@@ -116,7 +107,7 @@
     {#if indexKey}
         <indexMod.default />
     {/if}
-    <ExamplesGrid isDark={$isDark} {examples} />
+    <ExamplesGrid {examples} />
 {:else}
     <h2>Not found</h2>
 {/if}

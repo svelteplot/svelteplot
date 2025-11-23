@@ -4,13 +4,11 @@
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
-    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
-
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -110,11 +108,13 @@
         }
         return code.trim();
     }
+
+    const ds = useDark();
 </script>
 
 <svelte:head>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-    {@html $isDark ? codeStyleDark : codeStyleLight}
+    {@html ds.isDark ? codeStyleDark : codeStyleLight}
 </svelte:head>
 
 {#if plotKey}

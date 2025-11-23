@@ -8,9 +8,9 @@
 
 <script>
     import { BarX, Plot } from 'svelteplot';
-    import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '$theme/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
+
+    const ds = useDark();
     let { penguins } = $props();
 </script>
 
@@ -20,7 +20,7 @@
     y={{ label: undefined }}
     color={{
         legend: true,
-        scheme: $isDark ? 'magma' : 'reds'
+        scheme: ds.isDark ? 'magma' : 'reds'
     }}>
     <BarX
         data={penguins}
