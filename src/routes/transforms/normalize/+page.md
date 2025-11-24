@@ -130,7 +130,7 @@ Normalizes the x-values of a data series based on a specified basis.
 added in 0.7.1
 :::
 
-A specialized normalizeY that normalizes multiple y-value series indepenently for each x-value. Under the hood this is just the `normalizeY` and `sort` transforms combined.
+A specialized normalizeY that normalizes multiple y-value series indepenently for each x-value. Under the hood this is just the `normalizeY` and `sort` transforms [combined](https://github.com/svelteplot/svelteplot/blob/main/src/lib/transforms/normalize.ts#L116-L132).
 
 ```svelte live
 <script lang="ts">
