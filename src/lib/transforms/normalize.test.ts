@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-    normalizeX,
-    normalizeY,
-    normalizeParallelX,
-    normalizeParallelY
-} from './normalize.js';
+import { normalizeX, normalizeY, normalizeParallelX, normalizeParallelY } from './normalize.js';
 
 const data = [
     { id: 'a1', group: 'A', x: 1, y: 2 },
