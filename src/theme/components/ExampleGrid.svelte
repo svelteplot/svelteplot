@@ -89,13 +89,19 @@
         aspect-ratio: 3 / 2;
         object-fit: cover;
         position: relative;
-        padding: 8px;
+        padding: 6px;
+        border-radius: 3px;
+        cursor: pointer;
 
         // scale by 20% on hover
-        transition: transform 0.3s ease;
+        transition:
+            transform 0.15s ease-in-out,
+            object-fit 0.15s ease-in-out;
         &:hover {
-            transform: scale(1.2);
+            transform: scale(1.4);
             z-index: 1;
+            object-fit: contain;
+            // aspect-ratio: 1 / 1;
 
             background: fixed var(--svelteplot-bg);
             // shadow
