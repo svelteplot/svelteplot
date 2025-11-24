@@ -38,8 +38,6 @@ export const customTypes: Record<string, Admonition> = {
     caution
 };
 
-console.log({ customTypes });
-
 const admonitions: Plugin<any[], any> = () => {
     return (tree) => {
         visit(tree, (node, idx, parent) => {
