@@ -30,13 +30,18 @@ examples:
     - difference/trade-balance
     - dot/1-colored-scatterplot
     - dot/beeswarm-bubbles
+    - dot/dot-faceted
     - dot/dodge-faceted
     - geo/earthquakes
     - geo/us-choropleth
+    - image/image-scatter
     - image/image-beeswarm
     - line/geo-line
     - line/gradient-line
+    - line/indexed-stocks
     - line/running-mean
+    - line/parallel-x
+    - line/parallel-y-hl
     - link/spherical-link
     - rect/binned
     - rect/marimekko

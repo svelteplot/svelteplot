@@ -3,7 +3,7 @@ export { bollingerX, bollingerY } from './bollinger.js';
 export { geoCentroid } from './centroid.js';
 export { filter } from './filter.js';
 export { map, mapX, mapY } from './map.js';
-export { normalizeX, normalizeY } from './normalize.js';
+export { normalizeX, normalizeY, normalizeParallelX, normalizeParallelY } from './normalize.js';
 export { group, groupX, groupY, groupZ } from './group.js';
 export { intervalX, intervalY } from './interval.js';
 export { jitterX, jitterY } from './jitter.js';

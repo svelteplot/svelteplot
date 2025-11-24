@@ -23,7 +23,6 @@ const info = {
 const important = {
     svg: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 12"><path fill="currentColor" d="M4.283 2.98a1.735 1.735 0 1 1 3.434 0l-.576 4.03a1.153 1.153 0 0 1-2.282 0l-.576-4.03Zm2.444-.142a.735.735 0 1 0-1.454 0l.576 4.03a.153.153 0 0 0 .303 0l.575-4.03ZM6 11a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z"></path></svg>'
 };
-
 const caution = {
     svg: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28"><path fill="currentColor" d="M15 20a1 1 0 1 1-2 0a1 1 0 0 1 2 0Zm-1.75-3.25a.75.75 0 0 0 1.5 0v-6.5a.75.75 0 0 0-1.5 0v6.5ZM11.592 4.17c1.046-1.894 3.77-1.895 4.816 0l9.25 16.75c1.012 1.833-.314 4.08-2.407 4.08H4.757c-2.093 0-3.42-2.246-2.408-4.079l9.243-16.75Zm3.502.725a1.25 1.25 0 0 0-2.188 0L3.662 21.646A1.25 1.25 0 0 0 4.757 23.5H23.25a1.25 1.25 0 0 0 1.094-1.854l-9.25-16.751Z"></path></svg>'
 };
@@ -53,10 +52,10 @@ const admonitions: Plugin<any[], any> = () => {
 
                     let title = type.toUpperCase();
                     let hasLabel = false;
-                    if (mayBeLabel && mayBeLabel.data?.directiveLabel) {
-                        title = mayBeLabel.children[0].value;
-                        hasLabel = true;
-                    }
+                    // if (mayBeLabel && mayBeLabel.data?.directiveLabel) {
+                    //     title = mayBeLabel.children[0].value;
+                    //     hasLabel = true;
+                    // }
 
                     parent.children.splice(idx, 1, {
                         type: 'SvpAdmonition',
@@ -67,38 +66,38 @@ const admonitions: Plugin<any[], any> = () => {
                             }
                         },
                         children: [
-                            {
-                                type: 'SvpAdmonition',
-                                data: {
-                                    hName: 'div',
-                                    hProperties: {
-                                        className: 'admonition-heading'
-                                    }
-                                },
-                                children: [
-                                    {
-                                        type: 'SvpAdmonition',
-                                        data: {
-                                            hName: 'span',
-                                            hProperties: {
-                                                className: 'admonition-icon'
-                                            }
-                                        },
-                                        children: [
-                                            {
-                                                type: 'html',
-                                                value: icon
-                                                    ? `<IconifyIcon collection="${collection}" name="${name}" />`
-                                                    : ad.svg
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: 'text',
-                                        value: title
-                                    }
-                                ]
-                            },
+                            // {
+                            //     type: 'SvpAdmonition',
+                            //     data: {
+                            //         hName: 'div',
+                            //         hProperties: {
+                            //             className: 'admonition-heading'
+                            //         }
+                            //     },
+                            //     children: [
+                            //         {
+                            //             type: 'SvpAdmonition',
+                            //             data: {
+                            //                 hName: 'span',
+                            //                 hProperties: {
+                            //                     className: 'admonition-icon'
+                            //                 }
+                            //             },
+                            //             children: [
+                            //                 {
+                            //                     type: 'html',
+                            //                     value: icon
+                            //                         ? `<IconifyIcon collection="${collection}" name="${name}" />`
+                            //                         : ad.svg
+                            //                 }
+                            //             ]
+                            //         },
+                            //         {
+                            //             type: 'text',
+                            //             value: title
+                            //         }
+                            //     ]
+                            // },
                             {
                                 type: 'SvpAdmonition',
                                 data: {
@@ -107,7 +106,26 @@ const admonitions: Plugin<any[], any> = () => {
                                         className: 'admonition-content'
                                     }
                                 },
-                                children: hasLabel ? restChildren : node.children
+                                children: [
+                                    // {
+                                    //     type: 'SvpAdmonition',
+                                    //     data: {
+                                    //         hName: 'span',
+                                    //         hProperties: {
+                                    //             className: 'admonition-icon'
+                                    //         }
+                                    //     },
+                                    //     children: [
+                                    //         {
+                                    //             type: 'html',
+                                    //             value: icon
+                                    //                 ? `<IconifyIcon collection="${collection}" name="${name}" />`
+                                    //                 : ad.svg
+                                    //         }
+                                    //     ]
+                                    // },
+                                    ...(hasLabel ? restChildren : node.children)
+                                ]
                             }
                         ]
                     });
