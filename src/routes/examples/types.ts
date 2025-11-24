@@ -201,6 +201,13 @@ export type Presidents2Row = {
     'Portrait URL': string;
 };
 
+export type IrisRow = {
+    id: number;
+    Species: string;
+    Measurement: 'Sepal.Length' | 'Sepal.Width' | 'Petal.Length' | 'Petal.Width';
+    Value: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];

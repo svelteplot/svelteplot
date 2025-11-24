@@ -18,11 +18,13 @@
     {#each examples as page, i (i)}
         <a href={resolve(page.url)}>
             <div>
-                <enhanced:img
-                    src={ds.isDark
-                        ? exampleImages[`../../snapshots/${page.key}.dark.png`].default.img.src
-                        : exampleImages[`../../snapshots/${page.key}.png`].default.img.src}
-                    alt={page.title} />
+                {#if exampleImages[`../../snapshots/${page.key}.png`]}
+                    <enhanced:img
+                        src={ds.isDark
+                            ? exampleImages[`../../snapshots/${page.key}.dark.png`].default.img.src
+                            : exampleImages[`../../snapshots/${page.key}.png`].default.img.src}
+                        alt={page.title} />
+                {/if}
             </div>
             <h4>
                 {page.title}
