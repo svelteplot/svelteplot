@@ -2,7 +2,7 @@
 title: Normalize transform
 ---
 
-Useful for normalizing data series of varying magnitude such as stock prices of different companies.
+Useful for normalizing data series of different measurement units or varying magnitude such as stock prices of different companies.
 
 ```svelte live
 <script>
@@ -58,6 +58,24 @@ Useful for normalizing data series of varying magnitude such as stock prices of 
 </Plot>
 ```
 
+:::tip
+👀 You find more examples using the normalize transform in the [examples section](/examples/normalize).
+:::
+
+## Options
+
+The normalize transform supports the following named basis options:
+
+- `first` - Normalizes based on the first value in the series.
+- `last` - Normalizes based on the last value in the series.
+- `min` - Normalizes based on the minimum value in the series.
+- `max` - Normalizes based on the maximum value in the series.
+- `mean` - Normalizes based on the mean (average) value in the series.
+- `median` - Normalizes based on the median value in the series.
+- `sum` - Normalizes based on the sum of all values in the series.
+- `deviation` - Normalizes based on the standard deviation of the series.
+- `extent` - Normalizes based on the range (max - min) of the series.
+
 In addition to the named basis options you can define your own, e.g. to specify the exact date to index your data on:
 
 ```svelte live
@@ -101,20 +119,6 @@ In addition to the named basis options you can define your own, e.g. to specify 
         )} />
 </Plot>
 ```
-
-## Options
-
-The normalize transform accepts the following transform options:
-
-- `first` - Normalizes based on the first value in the series.
-- `last` - Normalizes based on the last value in the series.
-- `min` - Normalizes based on the minimum value in the series.
-- `max` - Normalizes based on the maximum value in the series.
-- `mean` - Normalizes based on the mean (average) value in the series.
-- `median` - Normalizes based on the median value in the series.
-- `sum` - Normalizes based on the sum of all values in the series.
-- `deviation` - Normalizes based on the standard deviation of the series.
-- `extent` - Normalizes based on the range (max - min) of the series.
 
 ## normalizeY
 
@@ -180,6 +184,8 @@ A specialized normalizeY that normalizes multiple y-value series indepenently fo
         stroke="Species" />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/e328626124904a89a0ddbe8a3816a7af?version=5)
 
 ## normalizeParallelX
 

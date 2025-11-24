@@ -70,7 +70,8 @@ html[data-theme='dark'] {
 }
 
 .admonition-icon {
-    display: flex;
+    display: inline;
+    vertical-align: bottom;
     align-items: center;
     margin-right: 0.3em;
     font-size: 1.5rem;
@@ -115,8 +116,13 @@ html[data-theme='dark'] {
 }
 
 .admonition-tip {
-    --admonition-color: #2ecc71;
+    --admonition-color: #23ac5c;
     --admonition-bg: rgb(46 204 113 / 10%);
+}
+
+.admonition-secondary {
+    --admonition-color: #6c869f;
+    --admonition-bg: rgba(99, 112, 117, 0.1);
 }
 
 .admonition-warning {

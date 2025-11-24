@@ -38,6 +38,7 @@ examples:
     - image/image-beeswarm
     - line/geo-line
     - line/gradient-line
+    - line/indexed-stocks
     - line/running-mean
     - line/parallel-x
     - line/parallel-y-hl
