@@ -114,18 +114,24 @@
 
     const useCompactNotation = $derived(
         (() => {
-            const magnitudes =
-                plot.scales.y.domain
-                    ?.filter(
-                        (d): d is number => typeof d === 'number' && Number.isFinite(d) && d !== 0
-                    )
-                    .map((d) => Math.abs(d)) ?? [];
+            const domain =
+                plot.scales.y.domain?.filter(
+                    (d): d is number => typeof d === 'number' && Number.isFinite(d)
+                ) ?? [];
 
-            if (!magnitudes.length) return false;
+            if (!domain.length) return false;
 
-            const lo = Math.min(...magnitudes);
-            const hi = Math.max(...magnitudes);
-            return Math.floor(Math.log10(lo)) !== Math.floor(Math.log10(hi));
+            const crossesZero = Math.min(...domain) <= 0 && Math.max(...domain) >= 0;
+
+            const exponents = new Set(
+                domain.map((d) =>
+                    d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))
+                )
+            );
+
+            if (crossesZero) exponents.add(-Infinity);
+
+            return exponents.size > 1;
         })()
     );
 
