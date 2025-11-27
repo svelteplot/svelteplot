@@ -114,6 +114,17 @@
               )
     );
 
+    const useCompactNotation = $derived(
+        new Set(
+            ticks
+                .filter(
+                    (tick): tick is number =>
+                        typeof tick === 'number' && Number.isFinite(tick)
+                )
+                .map((tick) => (tick === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(tick)))))
+        ).size > 1
+    );
+
     const tickFmt = $derived(tickFormat || plot.options.x.tickFormat);
 
     const useTickFormat = $derived(
@@ -132,10 +143,8 @@
                   : // auto
                     (d: RawValue) =>
                         Intl.NumberFormat(plot.options.locale, {
-                            // use compact notation if range covers multipe magnitudes
-                            ...(new Set(ticks.map(Math.log10).map(Math.round)).size > 1
-                                ? { notation: 'compact' }
-                                : {}),
+                            // use compact notation if range covers multiple magnitudes
+                            ...(useCompactNotation ? { notation: 'compact' } : {}),
                             ...DEFAULTS.numberFormat,
                             style: plot.options.x.percent ? 'percent' : 'decimal'
                         }).format(d)
