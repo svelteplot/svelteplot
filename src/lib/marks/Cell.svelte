@@ -4,9 +4,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface CellMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            BaseRectMarkProps<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
         data: Datum[];
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;

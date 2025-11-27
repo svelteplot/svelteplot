@@ -3,19 +3,18 @@
     For creating a two-dimensional brush selection
 -->
 <script lang="ts" generics="Datum extends DataRecord">
-    interface BrushMarkProps
-        extends Pick<
-            BaseMarkProps<Datum>,
-            | 'cursor'
-            | 'stroke'
-            | 'strokeDasharray'
-            | 'strokeOpacity'
-            | 'strokeWidth'
-            | 'strokeLinecap'
-            | 'strokeDashoffset'
-            | 'strokeLinejoin'
-            | 'strokeMiterlimit'
-        > {
+    interface BrushMarkProps extends Pick<
+        BaseMarkProps<Datum>,
+        | 'cursor'
+        | 'stroke'
+        | 'strokeDasharray'
+        | 'strokeOpacity'
+        | 'strokeWidth'
+        | 'strokeLinecap'
+        | 'strokeDashoffset'
+        | 'strokeLinejoin'
+        | 'strokeMiterlimit'
+    > {
         brush: Brush;
         /**
          * limit brushing to x or y dimension

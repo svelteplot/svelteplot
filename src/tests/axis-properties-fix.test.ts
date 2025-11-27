@@ -26,11 +26,10 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
     }
 
     // AxisX interface (fill no longer excluded)
-    interface AxisXMarkProps
-        extends Omit<
-            BaseMarkProps<any>,
-            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
-        > {
+    interface AxisXMarkProps extends Omit<
+        BaseMarkProps<any>,
+        'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+    > {
         data?: any[];
         tickSize?: number;
         tickPadding?: number;
@@ -39,11 +38,10 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
     }
 
     // AxisY interface (fill no longer excluded, has its own textAnchor)
-    interface AxisYMarkProps
-        extends Omit<
-            BaseMarkProps<any>,
-            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
-        > {
+    interface AxisYMarkProps extends Omit<
+        BaseMarkProps<any>,
+        'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+    > {
         data?: any[];
         tickSize?: number;
         tickPadding?: number;

@@ -21,9 +21,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
 
     interface WaffleYMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            WaffleOptions<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {
         data?: Datum[];
         /**
          * bound to a babd scale

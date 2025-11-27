@@ -5,9 +5,7 @@
 
 <script lang="ts" generics="Datum extends DataRow">
     interface BarYMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            BaseRectMarkProps<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
         data: Datum[];
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;

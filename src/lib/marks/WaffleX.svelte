@@ -20,9 +20,7 @@
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
 
     interface WaffleXMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            WaffleOptions<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {
         data?: Datum[];
         /**
          * bound to a quantitative scale

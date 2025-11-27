@@ -3,8 +3,7 @@
 
 <script lang="ts">
     interface SphereMarkProps
-        extends BaseMarkProps<GeoJSON.GeoJsonObject>,
-            LinkableMarkProps<GeoJSON.GeoJsonObject> {}
+        extends BaseMarkProps<GeoJSON.GeoJsonObject>, LinkableMarkProps<GeoJSON.GeoJsonObject> {}
 
     import Geo from './Geo.svelte';
     import type { BaseMarkProps, LinkableMarkProps, PlotDefaults } from '../types/index.js';

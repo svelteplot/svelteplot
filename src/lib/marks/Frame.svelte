@@ -4,7 +4,8 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface FrameMarkProps
-        extends Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
+        extends
+            Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
             BaseRectMarkProps<Datum>,
             LinkableMarkProps<Datum> {
         fill?: string;

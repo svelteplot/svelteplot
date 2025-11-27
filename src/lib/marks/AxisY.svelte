@@ -18,11 +18,10 @@
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
-    interface AxisYMarkProps
-        extends Omit<
-            BaseMarkProps<Datum>,
-            'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
-        > {
+    interface AxisYMarkProps extends Omit<
+        BaseMarkProps<Datum>,
+        'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+    > {
         data?: Datum[];
         automatic?: boolean;
         title?: string | false | null;
