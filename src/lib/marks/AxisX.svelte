@@ -18,6 +18,7 @@
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { extent } from 'd3-array';
 
     interface AxisXMarkProps extends Omit<
         BaseMarkProps<Datum>,
@@ -114,6 +115,21 @@
               )
     );
 
+    const useCompactNotation = $derived.by(() => {
+        const range =
+            extent(plot.scales.x.domain).filter(
+                (d): d is number => typeof d === 'number' && Number.isFinite(d)
+            ) ?? [];
+
+        if (range[0] === undefined || range[1] === undefined) return false;
+        const crossesZero = range[0] <= 0 && range[1] >= 0;
+        if (crossesZero) return true;
+        const magnitudes = range.map((d) =>
+            d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))
+        );
+        return magnitudes[0] !== magnitudes[1];
+    });
+
     const tickFmt = $derived(tickFormat || plot.options.x.tickFormat);
 
     const useTickFormat = $derived(
@@ -132,10 +148,8 @@
                   : // auto
                     (d: RawValue) =>
                         Intl.NumberFormat(plot.options.locale, {
-                            // use compact notation if range covers multipe magnitudes
-                            ...(new Set(ticks.map(Math.log10).map(Math.round)).size > 1
-                                ? { notation: 'compact' }
-                                : {}),
+                            // use compact notation if range covers multiple magnitudes
+                            ...(useCompactNotation ? { notation: 'compact' } : {}),
                             ...DEFAULTS.numberFormat,
                             style: plot.options.x.percent ? 'percent' : 'decimal'
                         }).format(d)
