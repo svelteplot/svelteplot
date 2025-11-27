@@ -113,11 +113,20 @@
     );
 
     const useCompactNotation = $derived(
-        new Set(
-            ticks
-                .filter((tick): tick is number => typeof tick === 'number' && Number.isFinite(tick))
-                .map((tick) => (tick === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(tick)))))
-        ).size > 1
+        (() => {
+            const magnitudes =
+                plot.scales.y.domain
+                    ?.filter(
+                        (d): d is number => typeof d === 'number' && Number.isFinite(d) && d !== 0
+                    )
+                    .map((d) => Math.abs(d)) ?? [];
+
+            if (!magnitudes.length) return false;
+
+            const lo = Math.min(...magnitudes);
+            const hi = Math.max(...magnitudes);
+            return Math.floor(Math.log10(lo)) !== Math.floor(Math.log10(hi));
+        })()
     );
 
     const tickFmt = $derived(tickFormat || plot.options.y.tickFormat);
