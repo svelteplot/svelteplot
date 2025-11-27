@@ -18,6 +18,7 @@
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { extent } from 'd3-array';
 
     interface AxisXMarkProps extends Omit<
         BaseMarkProps<Datum>,
@@ -114,23 +115,20 @@
               )
     );
 
-    const useCompactNotation = $derived(
-        (() => {
-            const domain =
-                plot.scales.x.domain?.filter(
-                    (d): d is number => typeof d === 'number' && Number.isFinite(d)
-                ) ?? [];
+    const useCompactNotation = $derived.by(() => {
+        const range =
+            extent(plot.scales.x.domain).filter(
+                (d): d is number => typeof d === 'number' && Number.isFinite(d)
+            ) ?? [];
 
-            if (!domain.length) return false;
-            const crossesZero =
-                (domain[0] <= 0 && domain[1] >= 0) || (domain[0] >= 0 && domain[1] <= 0);
-            const exponents = new Set(
-                domain.map((d) => (d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))))
-            );
-            if (crossesZero) exponents.add(-Infinity);
-            return exponents.size > 1;
-        })()
-    );
+        if (range[0] === undefined || range[1] === undefined) return false;
+        const crossesZero = range[0] <= 0 && range[1] >= 0;
+        if (crossesZero) return true;
+        const magnitudes = range.map((d) =>
+            d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))
+        );
+        return magnitudes[0] !== magnitudes[1];
+    });
 
     const tickFmt = $derived(tickFormat || plot.options.x.tickFormat);
 
