@@ -117,10 +117,7 @@
     const useCompactNotation = $derived(
         new Set(
             ticks
-                .filter(
-                    (tick): tick is number =>
-                        typeof tick === 'number' && Number.isFinite(tick)
-                )
+                .filter((tick): tick is number => typeof tick === 'number' && Number.isFinite(tick))
                 .map((tick) => (tick === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(tick)))))
         ).size > 1
     );
