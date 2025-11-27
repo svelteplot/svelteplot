@@ -122,17 +122,12 @@
                 ) ?? [];
 
             if (!domain.length) return false;
-
-            const crossesZero = Math.min(...domain) <= 0 && Math.max(...domain) >= 0;
-
+            const crossesZero =
+                (domain[0] <= 0 && domain[1] >= 0) || (domain[0] >= 0 && domain[1] <= 0);
             const exponents = new Set(
-                domain.map((d) =>
-                    d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))
-                )
+                domain.map((d) => (d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))))
             );
-
             if (crossesZero) exponents.add(-Infinity);
-
             return exponents.size > 1;
         })()
     );
