@@ -35,7 +35,10 @@ export type ReducerName =
 const niceReduceNames: Partial<Record<ReducerName, string>> = {
     count: 'Frequency',
     deviation: 'Standard Deviation',
-    mean: 'Average'
+    mean: 'Average',
+    median: 'Median',
+    min: 'Minimum',
+    max: 'Maximum'
 };
 
 const StaticReducer: Record<ReducerName, ReducerFunc> = {

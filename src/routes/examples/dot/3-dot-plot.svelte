@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Dot plot';
+    export const description =
+        'Recreation of an example dot chart from "The Elements of Graphing Data" by William Cleveland (1985) showing number of speakers for world languages with more than 70 million speakers on a log base 2 scale';
     export const data = {
         languages: '/data/languages.csv'
     };
@@ -21,7 +23,11 @@
         label: 'NUMBER OF SPEAKERS',
         labelAnchor: 'center'
     }}
-    y={{ type: 'point', label: '' }}>
+    y={{
+        type: 'point',
+        label: false,
+        tickFormat: (d) => d.toUpperCase()
+    }}>
     <GridY strokeDasharray="1,3" strokeOpacity={0.5} />
     <Dot
         data={languages.filter(

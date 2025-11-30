@@ -208,6 +208,19 @@ export type IrisRow = {
     Value: number;
 };
 
+export type CarsRow = {
+    // manufactor,model,economy (mpg),cylinders,displacement (cc),power (hp),weight (lb),0-60 mph (s),year
+    manufactor: string;
+    model: string;
+    ['economy (mpg)']: number;
+    cylinders: number;
+    ['displacement (cc)']: number;
+    ['power (hp)']: number;
+    ['weight (lb)']: number;
+    ['0-60 mph (s)']: number;
+    year: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];

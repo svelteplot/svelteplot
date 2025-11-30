@@ -180,6 +180,57 @@ groupY({ data, y: 'sex' }, { x: 'count' });
 
 ## groupZ
 
+Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ channel to create new groups and compute output channels.
+
+```svelte live
+<script>
+    import { Plot, Dot, groupZ, RuleY } from 'svelteplot';
+    import { page } from '$app/state';
+    let { penguins } = $derived(page.data.data);
+</script>
+
+
+<Plot frame grid marginTop={35}>
+    <Dot
+        data={penguins}
+        x="culmen_length_mm"
+        y="culmen_depth_mm"
+        fx="species"
+        opacity={0.35} />
+    <RuleY
+        {...groupZ(
+            {
+                data: penguins,
+                y: 'culmen_depth_mm',
+                fx: 'species'
+            },
+            { y: 'mean' }
+        )}
+        strokeWidth={2} />
+</Plot>
+```
+
+```svelte
+<Plot frame grid>
+    <Dot
+        data={penguins}
+        x="culmen_length_mm"
+        y="culmen_depth_mm"
+        fx="species"
+        opacity={0.35} />
+    <RuleY
+        {...groupZ(
+            {
+                data: penguins,
+                y: 'culmen_depth_mm',
+                fx: 'species'
+            },
+            { y: 'mean' }
+        )}
+        strokeWidth={2} />
+</Plot>
+```
+
 ## group
 
 Groups on _x_ and _y_ channels as an additional _z_, _fill_, or _stroke_ channel to create new groups and compute output channels.
@@ -188,35 +239,35 @@ Groups on _x_ and _y_ channels as an additional _z_, _fill_, or _stroke_ channel
 <script>
     import { group, Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { sales } = $derived(page.data.data);
 </script>
 
-<Plot x={{ tickRotate: -90 }} grid>
+<Plot x={{ tickRotate: -45 }} r={{ range: [0,20] }} inset={20} grid>
     <Dot
         {...group(
             {
-                data: penguins,
-                x: 'island',
-                y: 'species',
-                r: 'body_mass_g'
+                data: sales,
+                x: 'market',
+                y: 'segment',
+                r: 'value'
             },
-            { r: 'mean' }
+            { r: 'sum' }
         )}
         fill />
 </Plot>
 ```
 
 ```svelte
-<Plot x={{ tickRotate: -90 }} grid>
+<Plot x={{ tickRotate: -45 }} r={{ range: [0,20] }} grid>
     <Dot
         {...group(
             {
-                data: penguins,
-                x: 'island',
-                y: 'species',
-                r: 'body_mass_g'
+                data: sales,
+                x: 'market',
+                y: 'segment',
+                r: 'value'
             },
-            { r: 'mean' }
+            { r: 'sum' }
         )}
         fill />
 </Plot>

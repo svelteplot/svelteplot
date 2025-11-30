@@ -38,6 +38,8 @@ export { default as RectX } from './RectX.svelte';
 export { default as RectY } from './RectY.svelte';
 export { default as RegressionX } from './RegressionX.svelte';
 export { default as RegressionY } from './RegressionY.svelte';
+export { default as SummaryX } from './SummaryX.svelte';
+export { default as SummaryY } from './SummaryY.svelte';
 export { default as RuleX } from './RuleX.svelte';
 export { default as RuleY } from './RuleY.svelte';
 export { default as Sphere } from './Sphere.svelte';
