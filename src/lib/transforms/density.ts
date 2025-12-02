@@ -1,0 +1,297 @@
+/**
+ * implementation based on science.js by Jason Davies
+ */
+
+/**
+ * Observable Density mark is relying on d3.densityContours which implements 2D KDE
+ * with an box blur from d3.blur2, which represents the uniform kernel.
+ *
+ * This implementation provides a more general approach to 2D KDE with different kernels.
+ *
+ */
+
+import { extent, nice, quantile, quantileSorted, ticks, variance } from 'd3-array';
+import { sampleSize } from 'es-toolkit';
+import { maybeInterval } from 'svelteplot/helpers/autoTicks';
+import { groupFacetsAndZ } from 'svelteplot/helpers/group';
+import isDataRecord from 'svelteplot/helpers/isDataRecord';
+import { resolveChannel } from 'svelteplot/helpers/resolve';
+import type { TransformArg } from 'svelteplot/types';
+
+// 2D Gaussian kernel function
+function gaussian2D(dx, dy, bwX, bwY) {
+    return (
+        Math.exp(-0.5 * ((dx * dx) / (bwX * bwX) + (dy * dy) / (bwY * bwY))) /
+        (2 * Math.PI * bwX * bwY)
+    );
+}
+
+// kde2d function
+function kde2d(data, evalXs, evalYs, bwX, bwY) {
+    const n = data.length;
+    const density = [];
+    for (let xi = 0; xi < evalXs.length; xi++) {
+        for (let yi = 0; yi < evalYs.length; yi++) {
+            let sum = 0;
+            for (let i = 0; i < n; i++) {
+                const dx = evalXs[xi] - data[i][0];
+                const dy = evalYs[yi] - data[i][1];
+                sum += gaussian2D(dx, dy, bwX, bwY);
+            }
+            // Store: [x, y, density]
+            density.push([evalXs[xi], evalYs[yi], sum / n]);
+        }
+    }
+}
+
+type DensityOptions = {
+    /**
+     * The kernel function to use for smoothing.
+     */
+    kernel?:
+        | 'uniform'
+        | 'triangular'
+        | 'epanechnikov'
+        | 'quartic'
+        | 'triweight'
+        | 'gaussian'
+        | 'cosine'
+        | ((u: number) => number);
+    /**
+     * The bandwidth to use for smoothing. Can be a fixed number or a function that computes the bandwidth based on the data.
+     */
+    bandwidth?: number | ((data: number[]) => number);
+    /**
+     * If an interval is provided, the smoothing will be computed over that interval instead of the raw data points.
+     */
+    interval?: number | string;
+    /**
+     *
+     */
+    trim?: boolean;
+};
+
+// see https://github.com/jasondavies/science.js/blob/master/src/stats/kernel.js
+const KERNEL = {
+    uniform(u: number): number {
+        if (u <= 1 && u >= -1) return 0.5;
+        return 0;
+    },
+    triangular(u: number): number {
+        if (u <= 1 && u >= -1) return 1 - Math.abs(u);
+        return 0;
+    },
+    epanechnikov(u: number): number {
+        if (u <= 1 && u >= -1) return 0.75 * (1 - u * u);
+        return 0;
+    },
+    quartic(u: number): number {
+        if (u <= 1 && u >= -1) {
+            const tmp = 1 - u * u;
+            return (15 / 16) * tmp * tmp;
+        }
+        return 0;
+    },
+    triweight(u: number): number {
+        if (u <= 1 && u >= -1) {
+            const tmp = 1 - u * u;
+            return (35 / 32) * tmp * tmp * tmp;
+        }
+        return 0;
+    },
+    gaussian(u: number): number {
+        return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * u * u);
+    },
+    cosine(u: number): number {
+        if (u <= 1 && u >= -1) return (Math.PI / 4) * Math.cos((Math.PI / 2) * u);
+        return 0;
+    }
+};
+
+/**
+ * One-dimensional kernel density estimation
+ */
+export function densityX<T>(args: TransformArg<T>, options: DensityOptions): TransformArg<T> {
+    return density1d('x', args, options);
+}
+
+/**
+ * One-dimensional kernel density estimation
+ */
+export function densityY<T>(args: TransformArg<T>, options: DensityOptions): TransformArg<T> {
+    return density1d('y', args, options);
+}
+
+const CHANNELS = {
+    x: Symbol('x'),
+    y: Symbol('y')
+};
+
+function bandwidthScott(x: number[]) {
+    const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
+    const xvar = variance(x);
+    const bw = 1.06 * Math.min(Math.sqrt(xvar), iqr / 1.34) * Math.pow(x.length, -1 / 5);
+    return bw;
+}
+
+function bandwidthSilverman(x: number[]) {
+    const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
+    const xvar = variance(x);
+
+    const hi = Math.sqrt(xvar);
+    let lo;
+    if (!(lo = Math.min(hi, iqr / 1.34))) {
+      (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
+    }
+    return .9 * lo * Math.pow(x.length, -.2);
+}
+
+const VALUE = Symbol('value');
+
+function density1d<T>(
+    independent: 'x' | 'y',
+    { data, ...channels }: TransformArg<T>,
+    options: DensityOptions = {}
+): TransformArg<T> {
+    const { kernel, bandwidth, interval, trim } = {
+        kernel: 'epanechnikov',
+        bandwidth: bandwidthSilverman,
+        interval: undefined,
+        trim: false,
+        ...options
+    };
+    // one-dimensional kernel density estimation
+    const k = maybeKernel(kernel || KERNEL.epanechnikov);
+
+    const outData = [];
+
+    const isRawDataArray =
+        Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
+
+    // compute bandwidth before grouping
+    const resolvedData = isRawDataArray
+        ? data.map((d) => ({ [VALUE]: d } as any))
+        : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d }));
+        
+    const values = resolvedData.map((d) => d[VALUE]);
+
+    // compute bandwidth from full data
+    const bw =
+            typeof bandwidth === 'function'
+                ? bandwidth(values.toSorted((a, b) => a - b))
+                : bandwidth;
+
+    const res = groupFacetsAndZ(resolvedData, channels, (items, props) => {
+        const values = items.map((d) => d[VALUE]);
+        const I = maybeInterval(interval ?? bw / 5);
+        let [min, max] = extent(values);
+        if (!trim) {
+            const r = max - min;
+            min -= r * 0.2;
+            max += r * 0.2;
+        }
+        const atValues = I.range(min, I.offset(max));
+
+        let kdeValues = kde1d(values as number[], atValues, k, bw)
+            .filter(([x, density]) => x != null && !isNaN(density))
+            .sort((a, b) => a[0] - b[0]);
+
+        if (!trim) {
+            // trim zero values at begin and end except first and last
+            const firstNonZero = kdeValues.findIndex(([x, v]) => v > 0);
+            const lastNonZero =
+                kdeValues.length - 1 - [...kdeValues].reverse().findIndex(([x, v]) => v > 0);
+            kdeValues = kdeValues.slice(
+                firstNonZero > 0 ? firstNonZero - 1 : 0,
+                lastNonZero < kdeValues.length - 1 ? lastNonZero + 2 : kdeValues.length
+            );
+        }
+
+        outData.push(
+            ...kdeValues.map(([x, density]) => ({
+                ...props,
+                [CHANNELS.x]: independent === 'x' ? x : density,
+                [CHANNELS.y]: independent === 'y' ? x : density
+            }))
+        );
+    });
+
+    return {
+        ...CHANNELS,
+        ...res,
+        data: outData
+    };
+}
+
+/**
+ * Two-dimensional kernel density estimation
+ *
+ */
+export function density<T>(
+    { data, ...options }: TransformArg<T>,
+    { kernel, bandwidth }: DensityOptions
+): TransformArg<T> {}
+
+// function kde1d(values: number[], kernel: (u: number) => number, bandwidth: number) {
+//     const n = values.length;
+//     return values.map((x) => {
+//         let sum = 0;
+//         for (let i = 0; i < n; i++) {
+//             sum += kernel((x - values[i]) / bandwidth);
+//         }
+//         return sum / (n * bandwidth);
+//     });
+// }
+
+function kde1d(values: number[], atValues: number[], kernel: (u: number) => number, bw: number) {
+    const n = values.length;
+    return atValues.map((x) => {
+        let sum = 0;
+        for (let i = 0; i < n; i++) {
+            sum += kernel((x - values[i]) / bw);
+        }
+        return [x, sum / (n * bw)];
+    });
+}
+
+function maybeKernel(kernel: DensityOptions['kernel']): (u: number) => number {
+    if (typeof kernel === 'function') return kernel;
+    return KERNEL[kernel] || KERNEL.epanechnikov;
+}
+
+// See <http://en.wikipedia.org/wiki/Kernel_(statistics)>.
+// science.stats.kernel = {
+//   uniform: function(u) {
+//     if (u <= 1 && u >= -1) return .5;
+//     return 0;
+//   },
+//   triangular: function(u) {
+//     if (u <= 1 && u >= -1) return 1 - Math.abs(u);
+//     return 0;
+//   },
+//   epanechnikov: function(u) {
+//     if (u <= 1 && u >= -1) return .75 * (1 - u * u);
+//     return 0;
+//   },
+//   quartic: function(u) {
+//     if (u <= 1 && u >= -1) {
+//       var tmp = 1 - u * u;
+//       return (15 / 16) * tmp * tmp;
+//     }
+//     return 0;
+//   },
+//   triweight: function(u) {
+//     if (u <= 1 && u >= -1) {
+//       var tmp = 1 - u * u;
+//       return (35 / 32) * tmp * tmp * tmp;
+//     }
+//     return 0;
+//   },
+//   gaussian: function(u) {
+//     return 1 / Math.sqrt(2 * Math.PI) * Math.exp(-.5 * u * u);
+//   },
+//   cosine: function(u) {
+//     if (u <= 1 && u >= -1) return Math.PI / 4 * Math.cos(Math.PI / 2 * u);
+//     return 0;
+//   }
+// };
