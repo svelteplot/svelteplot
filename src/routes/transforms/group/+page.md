@@ -189,7 +189,6 @@ Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ chann
     let { penguins } = $derived(page.data.data);
 </script>
 
-
 <Plot frame grid marginTop={35}>
     <Dot
         data={penguins}
@@ -242,7 +241,11 @@ Groups on _x_ and _y_ channels as an additional _z_, _fill_, or _stroke_ channel
     let { sales } = $derived(page.data.data);
 </script>
 
-<Plot x={{ tickRotate: -45 }} r={{ range: [0,20] }} inset={20} grid>
+<Plot
+    x={{ tickRotate: -45 }}
+    r={{ range: [0, 20] }}
+    inset={20}
+    grid>
     <Dot
         {...group(
             {
@@ -258,7 +261,7 @@ Groups on _x_ and _y_ channels as an additional _z_, _fill_, or _stroke_ channel
 ```
 
 ```svelte
-<Plot x={{ tickRotate: -45 }} r={{ range: [0,20] }} grid>
+<Plot x={{ tickRotate: -45 }} r={{ range: [0, 20] }} grid>
     <Dot
         {...group(
             {

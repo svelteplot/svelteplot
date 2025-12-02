@@ -4,11 +4,11 @@
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
-    import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
     import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -136,8 +136,9 @@
 
     <div class="svp-code-block-wrapper">
         <div class="svp-code-block">
-            <HighlightSvelte
+            <CodeBlock
                 lang="svelte"
+                isDark={ds.isDark}
                 code={cleanCode(
                     pagesSrc[plotKey].substring(
                         pages[plotKey].fullCode

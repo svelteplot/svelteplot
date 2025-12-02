@@ -202,6 +202,14 @@ export type Presidents2Row = {
 };
 
 export type IrisRow = {
+    Species: string;
+    'Sepal.Length': number;
+    'Sepal.Width': number;
+    'Petal.Length': number;
+    'Petal.Width': number;
+};
+
+export type Iris2Row = {
     id: number;
     Species: string;
     Measurement: 'Sepal.Length' | 'Sepal.Width' | 'Petal.Length' | 'Petal.Width';

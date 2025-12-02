@@ -145,7 +145,7 @@ A specialized normalizeY that normalizes multiple y-value series indepenently fo
     } from 'svelteplot';
 
     import { page } from '$app/state';
-    let { iris } = $derived(page.data.data);
+    let { iris2 } = $derived(page.data.data);
 </script>
 
 <Plot
@@ -155,7 +155,7 @@ A specialized normalizeY that normalizes multiple y-value series indepenently fo
     <Line
         {...normalizeParallelY(
             {
-                data: iris,
+                data: iris2,
                 x: 'Measurement',
                 y: 'Value',
                 z: 'Id'
@@ -204,14 +204,14 @@ A specialized normalizeX that normalizes multiple x-value series for each y-valu
     } from 'svelteplot';
 
     import { page } from '$app/state';
-    let { iris } = $derived(page.data.data);
+    let { iris2 } = $derived(page.data.data);
 </script>
 
 <Plot grid height={300} color={{ legend: true }}>
     <Line
         {...normalizeParallelX(
             {
-                data: iris,
+                data: iris2,
                 x: 'Value',
                 y: 'Measurement',
                 z: 'Id'

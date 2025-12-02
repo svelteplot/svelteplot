@@ -141,7 +141,12 @@ You can combine the rule marks with the group transform to show the mean, median
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleY, groupZ, Dot } from '$lib/index.js';
+    import {
+        Plot,
+        RuleY,
+        groupZ,
+        Dot
+    } from '$lib/index.js';
 
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
@@ -179,7 +184,6 @@ You can combine the rule marks with the group transform to show the mean, median
     )}
     strokeWidth={2} />
 ```
-
 
 ## RuleX
 

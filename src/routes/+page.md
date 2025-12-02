@@ -16,6 +16,7 @@ actions:
 examples:
     - area/smoothed-area
     - area/streamgraph
+    - area/violin
     - arrow/metro
     - axis/datawrapper-ticks
     - bar/faceted-bars

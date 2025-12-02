@@ -1,7 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
-    import themeOptions from 'virtual:sveltepress/theme-default';
-
     /**
      * @typedef {object} Props
      * @property {string} [code] - The code value
@@ -18,13 +15,13 @@
         highlightedCode = await codeToHtml(code, {
             lang,
             themes: {
-                dark: themeOptions.highlighter.themeDark ?? 'night-owl',
-                light: themeOptions.highlighter.themeDark ?? 'vitesse-light'
+                dark: 'github-dark',
+                light: 'github-light'
             }
         });
     }
 
-    onMount(() => {
+    $effect(() => {
         loadShikiAndHighlight();
     });
 </script>
