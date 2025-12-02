@@ -10,8 +10,7 @@
  *
  */
 
-import { extent, nice, quantile, quantileSorted, ticks, variance } from 'd3-array';
-import { sampleSize } from 'es-toolkit';
+import { extent, quantileSorted, variance } from 'd3-array';
 import { maybeInterval } from 'svelteplot/helpers/autoTicks';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import isDataRecord from 'svelteplot/helpers/isDataRecord';
@@ -111,14 +110,20 @@ const KERNEL = {
 /**
  * One-dimensional kernel density estimation
  */
-export function densityX<T>(args: TransformArg<T>, options: DensityOptions): TransformArg<T> {
+export function densityX<T>(
+    args: TransformArg<T>,
+    options: DensityOptions & { channel: 'y' | 'y1' | 'y2' }
+): TransformArg<T> {
     return density1d('x', args, options);
 }
 
 /**
  * One-dimensional kernel density estimation
  */
-export function densityY<T>(args: TransformArg<T>, options: DensityOptions): TransformArg<T> {
+export function densityY<T>(
+    args: TransformArg<T>,
+    options: DensityOptions & { channel: 'x' | 'x1' | 'x2' }
+): TransformArg<T> {
     return density1d('y', args, options);
 }
 
@@ -141,23 +146,34 @@ function bandwidthSilverman(x: number[]) {
     const hi = Math.sqrt(xvar);
     let lo;
     if (!(lo = Math.min(hi, iqr / 1.34))) {
-      (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
+        (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
     }
-    return .9 * lo * Math.pow(x.length, -.2);
+    return 0.9 * lo * Math.pow(x.length, -0.2);
 }
 
 const VALUE = Symbol('value');
+
+function roundToTerminating(x: number, sig = 2) {
+    if (!isFinite(x) || x === 0) return x;
+    const exp = Math.floor(Math.log10(Math.abs(x)));
+    const decimals = Math.max(0, sig - 1 - exp);
+    const factor = 10 ** decimals; // denominator 10^decimals → terminating decimal
+    return Math.round(x * factor) / factor;
+}
 
 function density1d<T>(
     independent: 'x' | 'y',
     { data, ...channels }: TransformArg<T>,
     options: DensityOptions = {}
 ): TransformArg<T> {
-    const { kernel, bandwidth, interval, trim } = {
+    const densityChannel = independent === 'x' ? 'y' : 'x';
+
+    const { kernel, bandwidth, interval, trim, channel } = {
         kernel: 'epanechnikov',
         bandwidth: bandwidthSilverman,
         interval: undefined,
         trim: false,
+        channel: densityChannel,
         ...options
     };
     // one-dimensional kernel density estimation
@@ -170,27 +186,26 @@ function density1d<T>(
 
     // compute bandwidth before grouping
     const resolvedData = isRawDataArray
-        ? data.map((d) => ({ [VALUE]: d } as any))
+        ? data.map((d) => ({ [VALUE]: d }) as any)
         : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d }));
-        
+
     const values = resolvedData.map((d) => d[VALUE]);
 
     // compute bandwidth from full data
     const bw =
-            typeof bandwidth === 'function'
-                ? bandwidth(values.toSorted((a, b) => a - b))
-                : bandwidth;
+        typeof bandwidth === 'function' ? bandwidth(values.toSorted((a, b) => a - b)) : bandwidth;
 
     const res = groupFacetsAndZ(resolvedData, channels, (items, props) => {
         const values = items.map((d) => d[VALUE]);
-        const I = maybeInterval(interval ?? bw / 5);
+        const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
+        console.log({ bw }, bw / 5, roundToTerminating(bw / 5));
         let [min, max] = extent(values);
         if (!trim) {
             const r = max - min;
             min -= r * 0.2;
             max += r * 0.2;
         }
-        const atValues = I.range(min, I.offset(max));
+        const atValues = I.range(I.floor(min), I.offset(max));
 
         let kdeValues = kde1d(values as number[], atValues, k, bw)
             .filter(([x, density]) => x != null && !isNaN(density))
@@ -207,6 +222,8 @@ function density1d<T>(
             );
         }
 
+        console.log('kdeValues', kdeValues);
+
         outData.push(
             ...kdeValues.map(([x, density]) => ({
                 ...props,
@@ -217,7 +234,8 @@ function density1d<T>(
     });
 
     return {
-        ...CHANNELS,
+        [independent]: CHANNELS[independent],
+        [channel]: CHANNELS[densityChannel],
         ...res,
         data: outData
     };
