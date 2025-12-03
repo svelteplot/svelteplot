@@ -9,6 +9,8 @@ import highlighter, { initHighlighter } from './markdown/highlighter.js';
 import installPkg from './markdown/install-pkg.js';
 import links from './markdown/links.js';
 import liveCode from './markdown/live-code.js';
+import mathml from './markdown/mathml.js';
+import remarkMath from 'remark-math';
 import createPreCorePlugins from './vite-plugins/create-pre-core-plugins.js';
 
 export { SERVICE_WORKER_PATH } from './constants.js';
@@ -64,7 +66,7 @@ const defaultTheme: any = (options) => {
         globalLayout: '$theme/components/GlobalLayout.svelte',
         pageLayout: '$theme/components/PageLayout.svelte',
         vitePlugins,
-        remarkPlugins: [liveCode, admonitions, links, anchors, codeImport, installPkg],
+        remarkPlugins: [remarkMath, mathml, liveCode, admonitions, links, anchors, codeImport, installPkg],
         highlighter,
         footnoteLabel: options?.i18n?.footnoteLabel
     } satisfies ResolvedTheme;

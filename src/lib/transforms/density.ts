@@ -11,6 +11,7 @@
  */
 
 import { extent, quantileSorted, variance } from 'd3-array';
+import { isValid } from 'svelteplot/helpers';
 import { maybeInterval } from 'svelteplot/helpers/autoTicks';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import isDataRecord from 'svelteplot/helpers/isDataRecord';
@@ -189,9 +190,10 @@ function density1d<T>(
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
 
     // compute bandwidth before grouping
-    const resolvedData = isRawDataArray
+    const resolvedData = (isRawDataArray
         ? data.map((d) => ({ [VALUE]: d }) as any)
-        : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d }));
+        : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d })))
+        .filter(d => isValid(d[VALUE]));
 
     const values = resolvedData.map((d) => d[VALUE]);
 

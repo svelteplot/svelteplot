@@ -10,7 +10,17 @@ import { createHighlighter } from 'shiki';
 import { themeOptionsRef } from '../index.js';
 import { processCommands } from './commands.js';
 
-const DEFAULT_SUPPORT_LANGUAGES: any[] = ['svelte', 'sh', 'js', 'html', 'ts', 'md', 'css', 'scss'];
+const DEFAULT_SUPPORT_LANGUAGES: any[] = [
+    'svelte',
+    'sh',
+    'js',
+    'html',
+    'ts',
+    'md',
+    'css',
+    'scss',
+    'latex'
+];
 
 const cache = new LRUCache<string, any>({ max: 200 });
 
