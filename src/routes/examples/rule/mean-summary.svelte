@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Group mean summary';
     export const description =
-        'Uses the <a href="/transforms/group#groupZ">groupZ</a> transform to add a mean summary line along the y-axis for each facet.';
+        'Uses the <a href="/transforms/group">groupZ</a> transform to add a mean summary line along the y-axis for each facet.';
     export const data = { penguins: '/data/penguins.csv' };
     export const transforms = ['group'];
 </script>
