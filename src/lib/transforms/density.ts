@@ -238,8 +238,6 @@ function density1d<T>(
             );
         }
 
-        console.log(kdeValues, groupProps);
-
         outData.push(
             ...kdeValues.map(([x, density]) => ({
                 ...groupProps,
@@ -248,10 +246,6 @@ function density1d<T>(
             }))
         );
     });
-
-    console.log(outData);
-
-    // TODO trim
 
     return {
         [independent]: CHANNELS[independent],
