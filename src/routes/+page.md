@@ -15,6 +15,8 @@ actions:
       type: flat
 examples:
     - area/smoothed-area
+    - area/density
+    - area/layered-density
     - area/streamgraph
     - area/violin
     - arrow/metro

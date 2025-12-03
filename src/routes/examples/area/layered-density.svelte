@@ -18,7 +18,6 @@
     } from 'svelteplot';
     import type { Iris2Row } from '../types';
     import { useDark } from 'svelteplot/ui/isDark.svelte';
-    import { isDark } from '../../../theme/components/layout';
 
     const ds = useDark();
     let { iris }: { olympians: Iris2Row[] } = $props();
