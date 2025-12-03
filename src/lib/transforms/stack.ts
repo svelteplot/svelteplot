@@ -113,6 +113,11 @@ function stackXY<T>(
             [S[byDim]]: resolveChannel(byDim, d, channels)
         })) as DataRecord[];
 
+        // keep original order of x values
+        const xOrder = Object.fromEntries(
+            Array.from(new Set(resolvedData.map((d) => d[S[secondDim]]))).map((d, i) => [d, i])
+        );
+
         // the final data ends up here
         const out = [];
 
@@ -127,7 +132,7 @@ function stackXY<T>(
             // This is required for offsets like 'wiggle' and 'inside-out'.
             let keys: any[];
             const groupedBySecondDim = d3Groups(facetData, (d) => d[S[secondDim]]).sort((a, b) =>
-                a[0] < b[0] ? -1 : 1
+                xOrder[a[0]] < xOrder[b[0]] ? -1 : 1
             );
             let stackData: any[];
 

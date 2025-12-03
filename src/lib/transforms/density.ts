@@ -256,24 +256,13 @@ function density1d<T>(
 }
 
 /**
- * Two-dimensional kernel density estimation
+ * TODO: Two-dimensional kernel density estimation
  *
  */
 export function density<T>(
     { data, ...options }: TransformArg<T>,
     { kernel, bandwidth }: DensityOptions
 ): TransformArg<T> {}
-
-// function kde1d(values: number[], kernel: (u: number) => number, bandwidth: number) {
-//     const n = values.length;
-//     return values.map((x) => {
-//         let sum = 0;
-//         for (let i = 0; i < n; i++) {
-//             sum += kernel((x - values[i]) / bandwidth);
-//         }
-//         return sum / (n * bandwidth);
-//     });
-// }
 
 function kde1d(values: number[], atValues: number[], kernel: (u: number) => number, bw: number) {
     const n = values.length;
