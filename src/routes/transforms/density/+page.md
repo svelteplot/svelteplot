@@ -43,9 +43,7 @@ Each group is formed from the current **fx**, **fy**, and **z** (or **fill**/**s
     label="Bandwidth (kg)" />
 <Checkbox bind:value={trim} label="Trim" />
 
-<Plot
-    grid
-    y={{ label: 'Density', percent: true }}>
+<Plot grid y={{ label: 'Density', percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
@@ -54,7 +52,7 @@ Each group is formed from the current **fx**, **fy**, and **z** (or **fill**/**s
                 x: 'weight',
                 fill: 'sex'
             },
-            { kernel,bandwidth,trim }
+            { kernel, bandwidth, trim }
         )}
         fillOpacity={0.6} />
 </Plot>
@@ -72,7 +70,7 @@ $$
 
 ## Options
 
-- **kernel** - The default is efficient and near-optimal for many cases; try Gaussian when you prefer smooth tails. Possible kernels are `uniform`, `triangular`, `epanechnikov`, `quartic`, `triweight`, `gaussian` or `cosine`. You can also pass a custom `(u:number) => number` kernel function. 
+- **kernel** - The default is efficient and near-optimal for many cases; try Gaussian when you prefer smooth tails. Possible kernels are `uniform`, `triangular`, `epanechnikov`, `quartic`, `triweight`, `gaussian` or `cosine`. You can also pass a custom `(u:number) => number` kernel function.
 - **bandwidth** - Number (same units as the independent axis) or `(values) => number`. Defaults to Silverman's rule scaled for the chosen kernel. Larger values smooth more; smaller values reveal more local structure.
 - **interval** - Numeric step or controlling where the density is evaluated. Defaults to a step of ~bandwidth/5 rounded to a terminating decimal.
 - **trim** - When `false` (default) the domain is padded by 20% and leading/trailing zero rows are dropped so areas land cleanly at zero. Set to `true` to evaluate only over the observed extent without padding or trimming.

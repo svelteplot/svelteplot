@@ -66,7 +66,16 @@ const defaultTheme: any = (options) => {
         globalLayout: '$theme/components/GlobalLayout.svelte',
         pageLayout: '$theme/components/PageLayout.svelte',
         vitePlugins,
-        remarkPlugins: [remarkMath, mathml, liveCode, admonitions, links, anchors, codeImport, installPkg],
+        remarkPlugins: [
+            remarkMath,
+            mathml,
+            liveCode,
+            admonitions,
+            links,
+            anchors,
+            codeImport,
+            installPkg
+        ],
         highlighter,
         footnoteLabel: options?.i18n?.footnoteLabel
     } satisfies ResolvedTheme;

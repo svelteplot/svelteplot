@@ -141,8 +141,7 @@ const BANDWIDTH_FACTOR = {
     quartic: 2.78,
     triweight: 3.15,
     cosine: 1.06
-}
-
+};
 
 function bandwidthSilverman(x: number[]) {
     const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
@@ -190,16 +189,19 @@ function density1d<T>(
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
 
     // compute bandwidth before grouping
-    const resolvedData = (isRawDataArray
-        ? data.map((d) => ({ [VALUE]: d }) as any)
-        : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d })))
-        .filter(d => isValid(d[VALUE]));
+    const resolvedData = (
+        isRawDataArray
+            ? data.map((d) => ({ [VALUE]: d }) as any)
+            : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d }))
+    ).filter((d) => isValid(d[VALUE]));
 
     const values = resolvedData.map((d) => d[VALUE]);
 
     // compute bandwidth from full data
     const bw =
-        typeof bandwidth === 'function' ? (BANDWIDTH_FACTOR[kernel] ?? 1) * bandwidth(values.toSorted((a, b) => a - b)) : bandwidth;
+        typeof bandwidth === 'function'
+            ? (BANDWIDTH_FACTOR[kernel] ?? 1) * bandwidth(values.toSorted((a, b) => a - b))
+            : bandwidth;
 
     const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
     let [min, max] = extent(values);
@@ -208,7 +210,7 @@ function density1d<T>(
         min = I.floor(min - r * 0.2);
         max = I.floor(max + r * 0.2);
     }
-    const atValues = I.range(I.floor(min), I.offset(max)).map(d => +d.toFixed(5));
+    const atValues = I.range(I.floor(min), I.offset(max)).map((d) => +d.toFixed(5));
     // let minX = Infinity;
     // let maxX = -Infinity;
 
@@ -230,13 +232,13 @@ function density1d<T>(
             // if (lastNonZero > -1 && lastNonZero < kdeValues.length - 1)
             //     maxX = Math.max(maxX, kdeValues[lastNonZero + 1][0]);
 
-            kdeValues = kdeValues.slice(firstNonZero < 1 ? 0 : firstNonZero-1, 
-                lastNonZero < 0 ? kdeValues.length : lastNonZero + 1);
-
-           
+            kdeValues = kdeValues.slice(
+                firstNonZero < 1 ? 0 : firstNonZero - 1,
+                lastNonZero < 0 ? kdeValues.length : lastNonZero + 1
+            );
         }
 
-         console.log(kdeValues, groupProps)
+        console.log(kdeValues, groupProps);
 
         outData.push(
             ...kdeValues.map(([x, density]) => ({
