@@ -13,12 +13,14 @@
     import {
         Plot,
         RuleY,
-        Line,
         AreaY,
         densityX
     } from 'svelteplot';
     import type { Iris2Row } from '../types';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { isDark } from '../../../theme/components/layout';
 
+    const ds = useDark();
     let { iris }: { olympians: Iris2Row[] } = $props();
 </script>
 
@@ -37,6 +39,8 @@
             },
             { trim: false, channel: 'y2' }
         )}
-        stroke="Measurement" />
+        stroke="Measurement"
+        curve="basis"
+        blend={ds.isDark ? 'screen' : 'multiply'} />
     <RuleY y={0} />
 </Plot>

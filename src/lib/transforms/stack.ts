@@ -94,6 +94,8 @@ function stackXY<T>(
     const byLow: 'x1' | 'y1' = `${byDim}1`;
     const byHigh: 'x2' | 'y2' = `${byDim}2`;
 
+    
+
     if (
         channels[byDim] != null &&
         channels[`${byLow}`] === undefined &&
@@ -113,6 +115,8 @@ function stackXY<T>(
             [S[byDim]]: resolveChannel(byDim, d, channels)
         })) as DataRecord[];
 
+        
+
         // the final data ends up here
         const out = [];
 
@@ -120,13 +124,14 @@ function stackXY<T>(
         // in separate panels
         const groups = d3Groups(resolvedData, (d) => d[FACET]);
 
+       
         for (const [, facetData] of groups) {
             // create a temporary dataset for stacking
             // If we have a grouping channel (fill/stroke/z), build objects keyed by group value
             // so that series identities remain consistent across the secondary dimension.
             // This is required for offsets like 'wiggle' and 'inside-out'.
             let keys: any[];
-            const groupedBySecondDim = d3Groups(facetData, (d) => d[S[secondDim]]);
+            const groupedBySecondDim = d3Groups(facetData, (d) => d[S[secondDim]]).sort((a,b) => a[0] < b[0] ? -1 : 1);
             let stackData: any[];
 
             const hasUniqueGroups =

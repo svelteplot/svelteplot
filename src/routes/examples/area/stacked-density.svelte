@@ -4,19 +4,38 @@
         iris: '/data/iris2.csv'
     };
     export const description =
-        'Stacked density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type stacked on top of each other.';
+        'Stacked density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type stacked on top of each other. Note that it may be better to use a <a href="layered-density">layered density plot</a> for better readability.';
     export const transforms = ['density'];
     export const sortKey = 111;
 </script>
 
 <script lang="ts">
-    import { Plot, AreaY, densityX } from 'svelteplot';
+    import {
+        Plot,
+        AreaY,
+        densityX,
+        Line
+    } from 'svelteplot';
     import type { Iris2Row } from '../types';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
+    import Select from 'svelteplot/ui/Select.svelte';
 
     let { iris }: { olympians: Iris2Row[] } = $props();
+    let kernel = $state('gaussian');
 </script>
 
+<Select
+    bind:value={kernel}
+    options={[
+        'gaussian',
+        'epanechnikov',
+        'uniform',
+        'triangular',
+        'triweight',
+        'cosine',
+        'quartic'
+    ]}
+    label="Kernel" />
 <Plot
     color={{ legend: true }}
     y={{ label: 'Density', percent: true }}
@@ -29,6 +48,7 @@
                 x: 'Value',
                 fill: 'Measurement'
             },
-            { trim: false }
-        )} />
+            { kernel }
+        )}
+        curve="basis" />
 </Plot>

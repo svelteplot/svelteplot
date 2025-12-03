@@ -132,12 +132,16 @@ const CHANNELS = {
     y: Symbol('y')
 };
 
-function bandwidthScott(x: number[]) {
-    const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
-    const xvar = variance(x);
-    const bw = 1.06 * Math.min(Math.sqrt(xvar), iqr / 1.34) * Math.pow(x.length, -1 / 5);
-    return bw;
+const BANDWIDTH_FACTOR = {
+    gaussian: 0.9,
+    epanechnikov: 2.34,
+    uniform: 1.06,
+    triangular: 1.34,
+    quartic: 2.78,
+    triweight: 3.15,
+    cosine: 1.06
 }
+
 
 function bandwidthSilverman(x: number[]) {
     const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
@@ -148,7 +152,7 @@ function bandwidthSilverman(x: number[]) {
     if (!(lo = Math.min(hi, iqr / 1.34))) {
         (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
     }
-    return 0.9 * lo * Math.pow(x.length, -0.2);
+    return lo * Math.pow(x.length, -0.2);
 }
 
 const VALUE = Symbol('value');
@@ -193,19 +197,21 @@ function density1d<T>(
 
     // compute bandwidth from full data
     const bw =
-        typeof bandwidth === 'function' ? bandwidth(values.toSorted((a, b) => a - b)) : bandwidth;
+        typeof bandwidth === 'function' ? (BANDWIDTH_FACTOR[kernel] ?? 1) * bandwidth(values.toSorted((a, b) => a - b)) : bandwidth;
 
-    const res = groupFacetsAndZ(resolvedData, channels, (items, props) => {
+    const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
+    let [min, max] = extent(values);
+    if (!trim) {
+        const r = max - min;
+        min = I.floor(min - r * 0.2);
+        max = I.floor(max + r * 0.2);
+    }
+    const atValues = I.range(I.floor(min), I.offset(max)).map(d => +d.toFixed(5));
+    // let minX = Infinity;
+    // let maxX = -Infinity;
+
+    const res = groupFacetsAndZ(resolvedData, channels, (items, groupProps) => {
         const values = items.map((d) => d[VALUE]);
-        const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
-        console.log({ bw }, bw / 5, roundToTerminating(bw / 5));
-        let [min, max] = extent(values);
-        if (!trim) {
-            const r = max - min;
-            min -= r * 0.2;
-            max += r * 0.2;
-        }
-        const atValues = I.range(I.floor(min), I.offset(max));
 
         let kdeValues = kde1d(values as number[], atValues, k, bw)
             .filter(([x, density]) => x != null && !isNaN(density))
@@ -214,24 +220,34 @@ function density1d<T>(
         if (!trim) {
             // trim zero values at begin and end except first and last
             const firstNonZero = kdeValues.findIndex(([x, v]) => v > 0);
+
+            // if (firstNonZero > 0) minX = Math.min(minX, kdeValues[firstNonZero - 1][0]);
             const lastNonZero =
                 kdeValues.length - 1 - [...kdeValues].reverse().findIndex(([x, v]) => v > 0);
-            kdeValues = kdeValues.slice(
-                firstNonZero > 0 ? firstNonZero - 1 : 0,
-                lastNonZero < kdeValues.length - 1 ? lastNonZero + 2 : kdeValues.length
-            );
+
+            // if (lastNonZero > -1 && lastNonZero < kdeValues.length - 1)
+            //     maxX = Math.max(maxX, kdeValues[lastNonZero + 1][0]);
+
+            kdeValues = kdeValues.slice(firstNonZero < 1 ? 0 : firstNonZero-1, 
+                lastNonZero < 0 ? kdeValues.length : lastNonZero + 1);
+
+           
         }
 
-        console.log('kdeValues', kdeValues);
+         console.log(kdeValues, groupProps)
 
         outData.push(
             ...kdeValues.map(([x, density]) => ({
-                ...props,
+                ...groupProps,
                 [CHANNELS.x]: independent === 'x' ? x : density,
                 [CHANNELS.y]: independent === 'y' ? x : density
             }))
         );
     });
+
+    console.log(outData);
+
+    // TODO trim
 
     return {
         [independent]: CHANNELS[independent],

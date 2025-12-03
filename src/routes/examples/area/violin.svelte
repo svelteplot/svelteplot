@@ -39,8 +39,8 @@
             {}
         )}
         stack={{ offset: 'center' }}
-        fillOpacity={0.5}
-        stroke="currentColor" />
+        stroke="currentColor"
+        fillOpacity={0.5} />
     <TickY
         {...groupZ(
             {
