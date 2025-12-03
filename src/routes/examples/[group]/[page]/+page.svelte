@@ -134,24 +134,28 @@
         </div>
     {/key}
 
-    <div class="svp-code-block-wrapper">
-        <div class="svp-code-block">
-            <CodeBlock
-                lang="svelte"
-                isDark={ds.isDark}
-                code={cleanCode(
-                    pagesSrc[plotKey].substring(
-                        pages[plotKey].fullCode
-                            ? pagesSrc[plotKey].indexOf(
-                                  '<script lang="ts">'
-                              )
-                            : pagesSrc[plotKey].lastIndexOf(
-                                  '</scr' + 'ipt>'
-                              ) + 9
-                    )
-                )} />
+    {#key plotKey}
+        <div class="svp-code-block-wrapper">
+            <div class="svp-code-block">
+                <CodeBlock
+                    lang="svelte"
+                    isDark={ds.isDark}
+                    code={cleanCode(
+                        pagesSrc[plotKey].substring(
+                            pages[plotKey].fullCode
+                                ? pagesSrc[plotKey].indexOf(
+                                      '<script lang="ts">'
+                                  )
+                                : pagesSrc[
+                                      plotKey
+                                  ].lastIndexOf(
+                                      '</scr' + 'ipt>'
+                                  ) + 9
+                        )
+                    )} />
+            </div>
         </div>
-    </div>
+    {/key}
 
     {#if pages[plotKey].repl}
         <p>
