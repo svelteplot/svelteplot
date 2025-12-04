@@ -82,11 +82,6 @@
 
     .column-container {
         container-type: inline-size;
-
-        h3 {
-            break-before: avoid-column;
-            text-transform: capitalize;
-        }
     }
 
     .example-grid {

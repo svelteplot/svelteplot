@@ -213,52 +213,6 @@
             }
         }
     }
-    .list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        width: 100%;
-        margin: 2rem 0;
-    }
-
-    .list > div {
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        row-gap: 0.3rem;
-
-        > a {
-            border: 1px solid #88888822;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            padding: 1.5ex;
-        }
-
-        &:hover {
-            > a {
-                border: 1px solid currentColor;
-            }
-            h4 a {
-                text-decoration: underline;
-            }
-        }
-    }
-
-    .list img {
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 3px;
-        transition: transform 0.2s ease-in-out;
-    }
-
-    .list h4 {
-        margin: 0rem;
-        font-weight: normal;
-        font-size: 13px;
-        line-height: 1;
-        > a {
-            text-decoration: none;
-        }
-    }
     .breadcrumb {
         a {
             text-transform: capitalize;

@@ -70,15 +70,6 @@
     .left {
         --at-apply: 'flex items-center';
     }
-    .doc-search {
-        --at-apply: 'flex-grow flex items-center relative transition-500 transition-left';
-    }
-    .doc-search.is-home {
-        --at-apply: 'left-2';
-    }
-    .doc-search.move {
-        --at-apply: 'sm:left-[15.5vw]';
-    }
 
     .navbar-pc {
         --at-apply: 'items-stretch flex';
