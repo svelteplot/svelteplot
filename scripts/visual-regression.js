@@ -171,8 +171,7 @@ const createLimiter = (limit) => {
         const item = queue.shift();
         if (!item) return;
         active++;
-        item
-            .fn()
+        item.fn()
             .then((res) => item.resolve(res))
             .catch((err) => item.reject(err))
             .finally(() => {
@@ -225,7 +224,7 @@ const main = async () => {
         let lastRenderLines = 0;
 
         let frame = 0;
-        const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+        const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
         let jobStarted = new Map();
 
@@ -238,14 +237,18 @@ const main = async () => {
             frame++;
             logUpdate(`
 Completed:
-${completed.length > 20 ? gray(`... and ${completed.length - 20} more\n`) : ''}${completed.slice(-20).map(x => `${gray(`- ${x.shortRoute} ${x.mode} `)}${okText}`).join('\n')}
+${completed.length > 20 ? gray(`... and ${completed.length - 20} more\n`) : ''}${completed
+                .slice(-20)
+                .map((x) => `${gray(`- ${x.shortRoute} ${x.mode} `)}${okText}`)
+                .join('\n')}
 
 Failed:
-${failures.map(x => `${gray(`- ${x.shortRoute} ${x.mode} `)}${failText}`).join('\n')}
+${failures.map((x) => `${gray(`- ${x.shortRoute} ${x.mode} `)}${failText}`).join('\n')}
 
 Running:
-${[...running].map(r => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} ${gray(((Date.now() - jobStarted.get(r))/ 1000).toFixed(1)+'s')}`).join('\n')}
-`)};
+${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} ${gray(((Date.now() - jobStarted.get(r)) / 1000).toFixed(1) + 's')}`).join('\n')}
+`);
+        };
         let i = setInterval(renderRunning, 80);
 
         const runExample = async (urlPath) => {
@@ -384,8 +387,6 @@ ${[...running].map(r => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} ${
                 // console.log(`- completed ${shortRoute}  ${failText}`);
             }
         };
-
-       
 
         await Promise.all(examplePaths.map((urlPath) => limit(() => runExample(urlPath))));
 
