@@ -209,7 +209,13 @@ Tipp: you can use the center stacking offset to create violin-style plots.
 </script>
 
 <Plot
-    x={{ axis: false, percent: true, label: 'Density', insetLeft: 10, insetRight: 10 }}
+    x={{
+        axis: false,
+        percent: true,
+        label: 'Density',
+        insetLeft: 10,
+        insetRight: 10
+    }}
     y={{ label: 'Weight (kg)', grid: true }}
     fx={{ label: 'Cylinders', axis: 'bottom', padding: 0 }}>
     <RuleX x={0} opacity={0.5} />
