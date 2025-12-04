@@ -2,6 +2,10 @@
 title: Density transform
 ---
 
+:::info
+added in 0.8.0
+:::
+
 The **density transform** turns a set of samples into a smooth probability density estimate using kernel density estimation (KDE). It's a smooth alternative to histograms when you want to compare distributions without choosing bin edges.
 
 ```svelte live
