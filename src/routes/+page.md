@@ -19,6 +19,7 @@ examples:
     - area/layered-density
     - area/streamgraph
     - area/violin
+    - area/ridgeline
     - arrow/metro
     - axis/datawrapper-ticks
     - bar/faceted-bars
