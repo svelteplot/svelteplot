@@ -2,11 +2,7 @@
 title: Density transform
 ---
 
-The **density transform** turns a set of samples into a smooth probability density estimate using kernel density estimation (KDE). It evaluates the kernel at regularly spaced positions, normalizes by the bandwidth and sample size, and writes the resulting densities to a channel you choose (`y`/`y1`/`y2` for [densityX](#densityX), `x`/`x1`/`x2` for [densityY](#densityY)). Densities within each group integrate to 1, so they're handy for comparing distributions by fill, stroke, or facets.
-
-:::info
-Each group is formed from the current **fx**, **fy**, and **z** (or **fill**/**stroke**) channels before density is computed. This lets you facet densities or estimate one curve per category without manual filtering.
-:::
+The **density transform** turns a set of samples into a smooth probability density estimate using kernel density estimation (KDE). It's a smooth alternative to histograms when you want to compare distributions without choosing bin edges.
 
 ```svelte live
 <script lang="ts">
@@ -53,8 +49,88 @@ Each group is formed from the current **fx**, **fy**, and **z** (or **fill**/**s
                 fill: 'sex'
             },
             { kernel, bandwidth, trim }
+        )} />
+</Plot>
+```
+
+```svelte
+<Plot grid y={{ label: 'Density', percent: true }}>
+    <RuleY y={0} />
+    <AreaY
+        {...densityX(
+            {
+                data: olympians,
+                x: 'weight',
+                fill: 'sex'
+            },
+            { kernel, bandwidth, trim }
+        )} />
+</Plot>
+```
+
+You can also overlay densities as lines; here are KDE curves for all four measurements in the iris dataset:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Line, densityX } from 'svelteplot';
+    import RuleY from 'svelteplot/marks/RuleY.svelte';
+    import { page } from '$app/state';
+
+    const measures = [
+        { key: 'Sepal.Length', label: 'Sepal length' },
+        { key: 'Sepal.Width', label: 'Sepal width' },
+        { key: 'Petal.Length', label: 'Petal length' },
+        { key: 'Petal.Width', label: 'Petal width' }
+    ];
+
+    let { iris } = $derived(page.data.data);
+
+    const tidyIris = $derived(
+        measures.flatMap(({ key, label }) =>
+            iris.map((d) => ({
+                Measurement: label,
+                Value: d[key]
+            }))
+        )
+    );
+</script>
+
+<Plot
+    height={300}
+    color={{ legend: true }}
+    y={{ label: 'Density', percent: true }}
+    grid>
+    <RuleY y={0} />
+    <Line
+        {...densityX(
+            {
+                data: tidyIris,
+                x: 'Value',
+                stroke: 'Measurement'
+            },
+            { bandwidth: 0.5 }
         )}
-        fillOpacity={0.6} />
+        strokeWidth={1.8} />
+</Plot>
+```
+
+```svelte
+<Plot
+    height={300}
+    color={{ legend: true }}
+    y={{ label: 'Density', percent: true }}
+    grid>
+    <RuleY y={0} />
+    <Line
+        {...densityX(
+            {
+                data: tidyIris,
+                x: 'Value',
+                stroke: 'Measurement'
+            },
+            { bandwidth: 0.5 }
+        )}
+        strokeWidth={1.8} />
 </Plot>
 ```
 
@@ -118,6 +194,57 @@ $$
 </Plot>
 ```
 
-:::tip
-For symmetric violins or mirrored ridgelines, send the density to `x2` (or `y2`) and set the corresponding baseline (`x1`/`y1`) to zero on the mark.
-:::
+Tipp: you can use the center stacking offset to create violin-style plots.
+
+```svelte live
+<script lang="ts">
+    import {
+        Plot,
+        AreaX,
+        RuleX,
+        densityY
+    } from 'svelteplot';
+    import { page } from '$app/state';
+    let { cars } = $derived(page.data.data);
+</script>
+
+<Plot
+    x={{ axis: false, percent: true, label: 'Density', insetLeft: 10, insetRight: 10 }}
+    y={{ label: 'Weight (kg)', grid: true }}
+    fx={{ label: 'Cylinders', axis: 'bottom', padding: 0 }}>
+    <RuleX x={0} opacity={0.5} />
+    <AreaX
+        {...densityY(
+            {
+                data: cars,
+                y: 'weight (lb)',
+                fx: 'cylinders'
+            },
+            { bandwidth: 350 }
+        )}
+        stack={{ offset: 'center' }}
+        stroke="currentColor"
+        fillOpacity={0.5} />
+</Plot>
+```
+
+```svelte
+<Plot
+    x={{ axis: false, percent: true, label: 'Density' }}
+    y={{ label: 'Weight (kg)', grid: true }}
+    fx={{ label: 'Cylinders', axis: 'bottom' }}>
+    <RuleX x={0} opacity={0.5} />
+    <AreaX
+        {...densityY(
+            {
+                data: cars,
+                y: 'weight (lb)',
+                fx: 'cylinders'
+            },
+            { bandwidth: 350 }
+        )}
+        stack={{ offset: 'center' }}
+        stroke="currentColor"
+        fillOpacity={0.5} />
+</Plot>
+```
