@@ -21,7 +21,7 @@
     import Select from 'svelteplot/ui/Select.svelte';
 
     let { iris }: { olympians: Iris2Row[] } = $props();
-    let kernel = $state('gaussian');
+    let kernel = $state('epanechnikov');
 </script>
 
 <Select

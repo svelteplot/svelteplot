@@ -113,7 +113,7 @@ const KERNEL = {
  */
 export function densityX<T>(
     args: TransformArg<T>,
-    options: DensityOptions & { channel: 'y' | 'y1' | 'y2' }
+    options: DensityOptions & { channel?: 'y' | 'y1' | 'y2' }
 ): TransformArg<T> {
     return density1d('x', args, options);
 }
@@ -123,7 +123,7 @@ export function densityX<T>(
  */
 export function densityY<T>(
     args: TransformArg<T>,
-    options: DensityOptions & { channel: 'x' | 'x1' | 'x2' }
+    options: DensityOptions & { channel?: 'x' | 'x1' | 'x2' }
 ): TransformArg<T> {
     return density1d('y', args, options);
 }
@@ -251,6 +251,7 @@ function density1d<T>(
         [independent]: CHANNELS[independent],
         [channel]: CHANNELS[densityChannel],
         ...res,
+        sort: [{ channel: CHANNELS[independent], order: 'ascending' }],
         data: outData
     };
 }
