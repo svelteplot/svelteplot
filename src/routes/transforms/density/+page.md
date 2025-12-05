@@ -367,3 +367,7 @@ You can pass a **weight** function with the channels to compute weighted densiti
         stack={{ offset: 'center' }} />
 </Plot>
 ```
+
+:::tip
+Tip: For more examples of the density transform, head over to the [examples section](/examples/density).
+:::
