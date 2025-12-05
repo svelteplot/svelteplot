@@ -13,6 +13,8 @@ import anchors from './anchors.js';
 import codeImport from './code-import.js';
 import installPkg from './install-pkg.js';
 import links from './links.js';
+import mathml from './mathml.js';
+import remarkMath from 'remark-math';
 
 const BASE_PATH = resolve(process.cwd(), '.sveltepress/live-code');
 const LIVE_CODE_MAP = resolve(BASE_PATH, 'live-code-map.json');
@@ -121,6 +123,8 @@ const liveCode: Plugin<any[], any> = function () {
                                                   mdContent: node.value,
                                                   filename: 'live-code.md',
                                                   remarkPlugins: [
+                                                      remarkMath,
+                                                      mathml,
                                                       admonitions,
                                                       links,
                                                       anchors,

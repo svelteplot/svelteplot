@@ -31,8 +31,8 @@ describe('stackY transform', () => {
         }));
         expect(result).toEqual([
             { x: 1, y1: 0, y2: 10, fill: 'A' },
-            { x: 2, y1: 0, y2: 30, fill: 'A' },
             { x: 1, y1: 10, y2: 30, fill: 'B' },
+            { x: 2, y1: 0, y2: 30, fill: 'A' },
             { x: 2, y1: 30, y2: 70, fill: 'B' }
         ]);
     });
@@ -60,8 +60,8 @@ describe('stackY transform', () => {
         }));
         expect(result).toEqual([
             { x: 1, y1: -15, y2: -5, fill: 'A' },
-            { x: 2, y1: -35, y2: -5, fill: 'A' },
             { x: 1, y1: -5, y2: 15, fill: 'B' },
+            { x: 2, y1: -35, y2: -5, fill: 'A' },
             { x: 2, y1: -5, y2: 35, fill: 'B' }
         ]);
     });
@@ -89,8 +89,8 @@ describe('stackY transform', () => {
         }));
         expect(result).toEqual([
             { x: 1, y1: 0, y2: 0.3333333333333333, fill: 'A' },
-            { x: 2, y1: 0, y2: 0.42857142857142855, fill: 'A' },
             { x: 1, y1: 0.3333333333333333, y2: 1, fill: 'B' },
+            { x: 2, y1: 0, y2: 0.42857142857142855, fill: 'A' },
             { x: 2, y1: 0.42857142857142855, y2: 1, fill: 'B' }
         ]);
     });
@@ -124,12 +124,12 @@ describe('stackY transform', () => {
         }));
         expect(result).toEqual([
             { x: 1, y1: 0, y2: 10, fx: 'X', fill: 'A' },
-            { x: 2, y1: 0, y2: 30, fx: 'X', fill: 'A' },
             { x: 1, y1: 10, y2: 30, fx: 'X', fill: 'B' },
+            { x: 2, y1: 0, y2: 30, fx: 'X', fill: 'A' },
             { x: 2, y1: 30, y2: 70, fx: 'X', fill: 'B' },
             { x: 1, y1: 0, y2: 15, fx: 'Y', fill: 'A' },
-            { x: 2, y1: 0, y2: 35, fx: 'Y', fill: 'A' },
             { x: 1, y1: 15, y2: 40, fx: 'Y', fill: 'B' },
+            { x: 2, y1: 0, y2: 35, fx: 'Y', fill: 'A' },
             { x: 2, y1: 35, y2: 80, fx: 'Y', fill: 'B' }
         ]);
     });
@@ -205,8 +205,8 @@ describe('stackX transform', () => {
         }));
         expect(result).toEqual([
             { y: 1, x1: 0, x2: 10, fill: 'A' },
-            { y: 2, x1: 0, x2: 30, fill: 'A' },
             { y: 1, x1: 10, x2: 30, fill: 'B' },
+            { y: 2, x1: 0, x2: 30, fill: 'A' },
             { y: 2, x1: 30, x2: 70, fill: 'B' }
         ]);
     });

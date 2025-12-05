@@ -2,7 +2,7 @@
     export const title = 'Parallel coordinates (3)';
     export const description =
         'Parallel coordinate plot for the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, scaled to the standard deviation of each variable with one species highlighted. Inspired by the  <a href="https://r-graph-gallery.com/parallel-plot-ggally.html#custom">ggparcoord example</a> in R.';
-    export const data = { iris: '/data/iris.csv' };
+    export const data = { iris: '/data/iris2.csv' };
     export const sortKey = 103;
     export const transforms = ['normalize'];
     export const repl =
@@ -15,10 +15,10 @@
         Line,
         normalizeParallelY
     } from 'svelteplot';
-    import type { IrisRow } from '../types';
+    import type { Iris2Row } from '../types';
     import Select from 'svelteplot/ui/Select.svelte';
 
-    let { iris }: { iris: IrisRow[] } = $props();
+    let { iris }: { iris: Iris2Row[] } = $props();
 
     let highlight = $state('setosa');
 </script>

@@ -1,6 +1,7 @@
 export { bin, binX, binY } from './bin.js';
 export { bollingerX, bollingerY } from './bollinger.js';
 export { geoCentroid } from './centroid.js';
+export { densityX, densityY } from './density.js';
 export { filter } from './filter.js';
 export { map, mapX, mapY } from './map.js';
 export { normalizeX, normalizeY, normalizeParallelX, normalizeParallelY } from './normalize.js';

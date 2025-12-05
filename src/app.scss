@@ -217,9 +217,6 @@ html {
             &.active {
                 opacity: 1;
             }
-            .active-icon {
-                display: none;
-            }
         }
     }
 
@@ -361,5 +358,9 @@ html {
         .svp-code-block-wrapper {
             background-color: #f2f2f6;
         }
+    }
+
+    .tml-display {
+        font-size: 1.25rem;
     }
 }

@@ -3,6 +3,6 @@ import type { PageLoad } from './$types.js';
 
 export const load: PageLoad = async ({ fetch }) => {
     return {
-        data: await loadDatasets(['aapl'], fetch)
+        data: await loadDatasets(['aapl', 'penguins'], fetch)
     };
 };

@@ -68,14 +68,15 @@
         ...getPlotDefaults().axisX
     };
 
+    const { ticks: magicTicks } = $derived({ ...DEFAULTS, ...markProps });
+
     const {
-        ticks: magicTicks,
-        data = Array.isArray(magicTicks) ? magicTicks : [],
+        data,
         automatic = false,
         title,
         anchor,
         facetAnchor = 'auto',
-        interval = typeof magicTicks === 'string' ? magicTicks : undefined,
+        interval,
         tickSize,
         tickFontSize,
         tickPadding,
@@ -83,11 +84,17 @@
         tickFormat,
         tickClass,
         class: className,
-        tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
+        tickCount,
         tickSpacing,
         text = true,
         ...options
-    }: AxisXMarkProps = $derived({ ...DEFAULTS, ...markProps });
+    }: AxisXMarkProps = $derived({
+        data: Array.isArray(magicTicks) ? magicTicks : [],
+        tickCount: typeof magicTicks === 'number' ? magicTicks : undefined,
+        interval: typeof magicTicks === 'string' ? magicTicks : undefined,
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

@@ -137,6 +137,54 @@ Or candlestick ([demo](https://svelte.dev/playground/f2b2ada0c65d403c92777250c14
 </Plot>
 ```
 
+You can combine the rule marks with the group transform to show the mean, median, or other statistics of your data:
+
+```svelte live
+<script lang="ts">
+    import {
+        Plot,
+        RuleY,
+        groupZ,
+        Dot
+    } from '$lib/index.js';
+
+    import { page } from '$app/state';
+    let { penguins } = $derived(page.data.data);
+</script>
+
+<Plot frame grid marginTop={35}>
+    <Dot
+        data={penguins}
+        x="culmen_length_mm"
+        y="culmen_depth_mm"
+        fx="species"
+        opacity={0.35} />
+    <RuleY
+        {...groupZ(
+            {
+                data: penguins,
+                y: 'culmen_depth_mm',
+                fx: 'species'
+            },
+            { y: 'mean' }
+        )}
+        strokeWidth={2} />
+</Plot>
+```
+
+```svelte
+<RuleY
+    {...groupZ(
+        {
+            data: penguins,
+            y: 'culmen_depth_mm',
+            fx: 'species'
+        },
+        { y: 'mean' }
+    )}
+    strokeWidth={2} />
+```
+
 ## RuleX
 
 For vertical lines

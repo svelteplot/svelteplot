@@ -4,11 +4,11 @@
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
-    import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
     import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -134,23 +134,28 @@
         </div>
     {/key}
 
-    <div class="svp-code-block-wrapper">
-        <div class="svp-code-block">
-            <HighlightSvelte
-                lang="svelte"
-                code={cleanCode(
-                    pagesSrc[plotKey].substring(
-                        pages[plotKey].fullCode
-                            ? pagesSrc[plotKey].indexOf(
-                                  '<script lang="ts">'
-                              )
-                            : pagesSrc[plotKey].lastIndexOf(
-                                  '</scr' + 'ipt>'
-                              ) + 9
-                    )
-                )} />
+    {#key plotKey}
+        <div class="svp-code-block-wrapper">
+            <div class="svp-code-block">
+                <CodeBlock
+                    lang="svelte"
+                    isDark={ds.isDark}
+                    code={cleanCode(
+                        pagesSrc[plotKey].substring(
+                            pages[plotKey].fullCode
+                                ? pagesSrc[plotKey].indexOf(
+                                      '<script lang="ts">'
+                                  )
+                                : pagesSrc[
+                                      plotKey
+                                  ].lastIndexOf(
+                                      '</scr' + 'ipt>'
+                                  ) + 9
+                        )
+                    )} />
+            </div>
         </div>
-    </div>
+    {/key}
 
     {#if pages[plotKey].repl}
         <p>
@@ -206,52 +211,6 @@
                 background-color: transparent;
                 font-family: var(--svp-code-font);
             }
-        }
-    }
-    .list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        width: 100%;
-        margin: 2rem 0;
-    }
-
-    .list > div {
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        row-gap: 0.3rem;
-
-        > a {
-            border: 1px solid #88888822;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            padding: 1.5ex;
-        }
-
-        &:hover {
-            > a {
-                border: 1px solid currentColor;
-            }
-            h4 a {
-                text-decoration: underline;
-            }
-        }
-    }
-
-    .list img {
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 3px;
-        transition: transform 0.2s ease-in-out;
-    }
-
-    .list h4 {
-        margin: 0rem;
-        font-weight: normal;
-        font-size: 13px;
-        line-height: 1;
-        > a {
-            text-decoration: none;
         }
     }
     .breadcrumb {

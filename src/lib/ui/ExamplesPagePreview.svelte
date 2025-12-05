@@ -47,18 +47,19 @@
                 {#each groupPages
                     .sort(sortPages)
                     .filter((p) => !p.endsWith('/_index.svelte')) as page (page)}
+                    {@const imageKey = `../../snapshots/${page
+                        .replace('./', '')
+                        .replace('.svelte', ds.isDark ? '.dark.png' : '.png')}`}
                     <a
                         animate:slide
                         href={resolve(page.replace('./', './examples/').replace('.svelte', ''))}
                         ><div>
-                            <enhanced:img
-                                title={pages[page].title}
-                                src={exampleImages[
-                                    `../../snapshots/${page
-                                        .replace('./', '')
-                                        .replace('.svelte', ds.isDark ? '.dark.png' : '.png')}`
-                                ].default}
-                                alt={pages[page].title} />
+                            {#if exampleImages[imageKey]}
+                                <enhanced:img
+                                    title={pages[page].title}
+                                    src={exampleImages[imageKey].default}
+                                    alt={pages[page].title} />
+                            {/if}
                             <div class="title">{pages[page].title}</div>
                         </div></a>
                 {/each}
@@ -81,11 +82,6 @@
 
     .column-container {
         container-type: inline-size;
-
-        h3 {
-            break-before: avoid-column;
-            text-transform: capitalize;
-        }
     }
 
     .example-grid {

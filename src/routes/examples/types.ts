@@ -202,10 +202,31 @@ export type Presidents2Row = {
 };
 
 export type IrisRow = {
+    Species: string;
+    'Sepal.Length': number;
+    'Sepal.Width': number;
+    'Petal.Length': number;
+    'Petal.Width': number;
+};
+
+export type Iris2Row = {
     id: number;
     Species: string;
     Measurement: 'Sepal.Length' | 'Sepal.Width' | 'Petal.Length' | 'Petal.Width';
     Value: number;
+};
+
+export type CarsRow = {
+    // manufactor,model,economy (mpg),cylinders,displacement (cc),power (hp),weight (lb),0-60 mph (s),year
+    manufactor: string;
+    model: string;
+    ['economy (mpg)']: number;
+    cylinders: number;
+    ['displacement (cc)']: number;
+    ['power (hp)']: number;
+    ['weight (lb)']: number;
+    ['0-60 mph (s)']: number;
+    year: number;
 };
 
 export type ExamplesData = {

@@ -65,15 +65,16 @@
         ...getPlotDefaults().axisY
     };
 
+    const { ticks: magicTicks } = $derived({ ...DEFAULTS, ...markProps });
+
     const {
-        ticks: magicTicks,
-        data = Array.isArray(magicTicks) ? magicTicks : [],
+        data,
         automatic = false,
         title,
         anchor = 'left',
         class: className,
         facetAnchor = 'auto',
-        interval = typeof magicTicks === 'string' ? magicTicks : undefined,
+        interval,
         lineAnchor = 'center',
         textAnchor,
         tickSize,
@@ -81,11 +82,17 @@
         tickPadding,
         tickFormat,
         tickClass,
-        tickCount = typeof magicTicks === 'number' ? magicTicks : undefined,
+        tickCount,
         tickSpacing,
         text = true,
         ...options
-    }: AxisYMarkProps = $derived({ ...DEFAULTS, ...markProps });
+    }: AxisYMarkProps = $derived({
+        data: Array.isArray(magicTicks) ? magicTicks : [],
+        tickCount: typeof magicTicks === 'number' ? magicTicks : undefined,
+        interval: typeof magicTicks === 'string' ? magicTicks : undefined,
+        ...DEFAULTS,
+        ...markProps
+    });
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());
@@ -174,7 +181,7 @@
         facetAnchor !== 'auto' ? facetAnchor : anchor === 'left' ? 'left-empty' : 'right-empty'
     );
 
-    const showAxis = $state(
+    const showAxis = $derived(
         useFacetAnchor === 'left'
             ? left
             : useFacetAnchor === 'right'
