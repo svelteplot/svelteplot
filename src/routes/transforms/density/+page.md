@@ -43,7 +43,7 @@ The **density transform** turns a set of samples into a smooth probability densi
     label="Bandwidth (kg)" />
 <Checkbox bind:value={trim} label="Trim" />
 
-<Plot grid y={{  percent: true }}>
+<Plot grid y={{ percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
@@ -56,6 +56,8 @@ The **density transform** turns a set of samples into a smooth probability densi
         )} />
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/06996438ec3944a1b07dcb53b8ba3537?version=5)
 
 ```svelte
 <Plot grid y={{ percent: true }}>
@@ -72,14 +74,13 @@ The **density transform** turns a set of samples into a smooth probability densi
 </Plot>
 ```
 
-You can also display densities as lines, as in this example showing density curves for all four measurements in the iris dataset. 
-
+You can also display densities as lines, as in this example showing density curves for all four measurements in the iris dataset.
 
 ```svelte live
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import {Slider} from '$lib/ui';
+    import { Slider } from '$lib/ui';
     import { page } from '$app/state';
 
     const measures = [
@@ -99,7 +100,6 @@ You can also display densities as lines, as in this example showing density curv
             }))
         )
     );
-
 </script>
 
 <Plot
@@ -147,7 +147,7 @@ Densities are computed at regular intervals along the x-axis (for densityX), def
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import {Slider} from '$lib/ui';
+    import { Slider } from '$lib/ui';
     import { page } from '$app/state';
 
     const measures = [
@@ -171,7 +171,12 @@ Densities are computed at regular intervals along the x-axis (for densityX), def
     let interval = $state(0.2);
 </script>
 
-<Slider bind:value={interval} min={0.1} max={0.5} step={0.01} label="Interval" />
+<Slider
+    bind:value={interval}
+    min={0.1}
+    max={0.5}
+    step={0.01}
+    label="Interval" />
 <Plot
     height={300}
     color={{ legend: true }}
@@ -198,14 +203,19 @@ You can use the **weight** option to compute weighted densities:
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import {Slider} from '$lib/ui';
+    import { Slider } from '$lib/ui';
     import { page } from '$app/state';
 
     let { penguins } = $derived(page.data.data);
     let skew = $state(0);
 </script>
 
-<Slider bind:value={skew} min={-1} max={1} step={0.1} label="Skew (-F/+M)" />
+<Slider
+    bind:value={skew}
+    min={-1}
+    max={1}
+    step={0.1}
+    label="Skew (-F/+M)" />
 <Plot
     height={300}
     color={{ legend: true }}
@@ -219,9 +229,10 @@ You can use the **weight** option to compute weighted densities:
                 data: penguins,
                 x: 'body_mass_g',
                 stroke: 'species',
-                weight: (d) => d.sex === "FEMALE" ? 1 - skew : 1 + skew
+                weight: (d) =>
+                    d.sex === 'FEMALE' ? 1 - skew : 1 + skew
             },
-            { bandwidth: 250,  }
+            { bandwidth: 250 }
         )}
         strokeWidth={1.8} />
 </Plot>

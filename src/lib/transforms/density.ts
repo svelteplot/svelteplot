@@ -168,7 +168,7 @@ function density1d<T>(
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
 
     // compute bandwidth before grouping
-    const resolvedData:T[] = (
+    const resolvedData: T[] = (
         isRawDataArray
             ? data.map(
                   (d) =>
@@ -241,8 +241,9 @@ function density1d<T>(
         [independent]: CHANNELS[independent],
         [channel]: CHANNELS[densityChannel],
         ...res,
-       [ORIGINAL_NAME_KEYS[densityChannel]]: 'Density',
-       [ORIGINAL_NAME_KEYS[independent]]: typeof channels[independent] === 'string' ? channels[independent] : undefined,
+        [ORIGINAL_NAME_KEYS[densityChannel]]: 'Density',
+        [ORIGINAL_NAME_KEYS[independent]]:
+            typeof channels[independent] === 'string' ? channels[independent] : undefined,
         sort: [{ channel: CHANNELS[independent], order: 'ascending' }],
         data: outData
     };

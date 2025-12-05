@@ -43,7 +43,7 @@ describe('density transform', () => {
             bandwidth: 1,
             interval: 1,
             trim: true,
-            kernel: 'triangular',
+            kernel: 'triangular'
         });
 
         expect(data.map((d) => d[channels.x])).toEqual([0, 1]);
