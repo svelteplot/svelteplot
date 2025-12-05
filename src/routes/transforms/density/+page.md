@@ -289,6 +289,7 @@ You can pass a **weight** function with the channels to compute weighted densiti
 - **interval** - Numeric step or controlling where the density is evaluated. Defaults to a step of ~bandwidth/5 rounded to a terminating decimal.
 - **trim** - When `false` (default) the domain is padded by 20% and leading/trailing zero rows are dropped so areas land cleanly at zero. Set to `true` to evaluate only over the observed extent without padding or trimming.
 - **channel** - Target channel for the computed density (`y` | `y1` | `y2` for densityX, `x` | `x1` | `x2` for densityY). Useful when you need explicit lower/upper bounds for stacking or symmetrical plots.
+- **cumulative** - Set to `true` or `1` to compute the cumulative density function (CDF) instead of the probability density function (PDF). Set to `-1` to compute the complementary CDF (1 - CDF). Defaults to `false`.
 
 ## densityX
 

@@ -45,6 +45,7 @@ examples:
     - line/indexed-stocks
     - line/running-mean
     - line/parallel-x
+    - line/penguins-cdf
     - line/parallel-y-hl
     - link/spherical-link
     - rect/binned

@@ -43,10 +43,13 @@ type DensityOptions<T> = {
      */
     interval?: number | string;
     /**
-     *
+     * If true, the density values will be trimmed to the range of the data.
      */
     trim?: boolean;
-    weight?: (d: T) => number;
+    /**
+     * If true, the density values will be cumulative.
+     */
+    cumulative?: false | 1 | -1;
 };
 
 // see https://github.com/jasondavies/science.js/blob/master/src/stats/kernel.js
@@ -151,11 +154,12 @@ function density1d<T>(
 ): TransformArg<T> {
     const densityChannel = independent === 'x' ? 'y' : 'x';
 
-    const { kernel, bandwidth, interval, trim, channel } = {
+    const { kernel, bandwidth, interval, trim, channel, cumulative } = {
         kernel: 'epanechnikov',
         bandwidth: bandwidthSilverman,
         interval: undefined,
         trim: false,
+        cumulative: false,
         channel: densityChannel,
         ...options
     };
@@ -207,7 +211,7 @@ function density1d<T>(
         const values = items.map((d) => d[VALUE]);
         const weights = items.map((d) => d[WEIGHT]);
 
-        let kdeValues = kde1d(values as number[], weights, atValues, k, bw)
+        let kdeValues = kde1d(values as number[], weights, atValues, k, bw, cumulative)
             .filter(([x, density]) => x != null && !isNaN(density))
             .sort((a, b) => a[0] - b[0]);
 
@@ -241,7 +245,7 @@ function density1d<T>(
         [independent]: CHANNELS[independent],
         [channel]: CHANNELS[densityChannel],
         ...res,
-        [ORIGINAL_NAME_KEYS[densityChannel]]: 'Density',
+        [ORIGINAL_NAME_KEYS[densityChannel]]: cumulative === false ? 'Density' : 'CDF',
         [ORIGINAL_NAME_KEYS[independent]]:
             typeof channels[independent] === 'string' ? channels[independent] : undefined,
         sort: [{ channel: CHANNELS[independent], order: 'ascending' }],
@@ -254,18 +258,52 @@ function kde1d(
     weights: number[],
     atValues: number[],
     kernel: (u: number) => number,
-    bw: number
+    bw: number,
+    cumulative: false | 1 | -1
 ) {
     const n = values.length;
     const weightSum = weights.reduce((a, b) => a + b, 0);
-    return atValues.map((x) => {
+    const densities = atValues.map((x) => {
         let sum = 0;
         for (let i = 0; i < n; i++) {
             const u = (x - values[i]) / bw;
             sum += weights[i] * kernel(u);
         }
-        return [x, sum / (weightSum * bw)];
+        return [x, sum / (weightSum * bw)] as [number, number];
     });
+
+    if (!cumulative) return densities;
+
+    const totalArea = densities.reduce((acc, curr, i) => {
+        if (i === 0) return acc;
+        const dx = densities[i][0] - densities[i - 1][0];
+        return acc + ((densities[i - 1][1] + curr[1]) / 2) * dx;
+    }, 0);
+    if (totalArea === 0) return densities;
+
+    if (cumulative === -1) {
+        let area = 0;
+        const cdf: [number, number][] = new Array(densities.length);
+        for (let i = densities.length - 1; i >= 0; i--) {
+            if (i < densities.length - 1) {
+                const dx = densities[i + 1][0] - densities[i][0];
+                area += ((densities[i + 1][1] + densities[i][1]) / 2) * dx;
+            }
+            cdf[i] = [densities[i][0], area / totalArea];
+        }
+        return cdf;
+    }
+
+    let area = 0;
+    const cdf: [number, number][] = new Array(densities.length);
+    for (let i = 0; i < densities.length; i++) {
+        if (i > 0) {
+            const dx = densities[i][0] - densities[i - 1][0];
+            area += ((densities[i - 1][1] + densities[i][1]) / 2) * dx;
+        }
+        cdf[i] = [densities[i][0], area / totalArea];
+    }
+    return cdf;
 }
 
 function maybeKernel(kernel: Kernel): (u: number) => number {

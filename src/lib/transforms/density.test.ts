@@ -96,6 +96,46 @@ describe('density transform', () => {
         expect(integrate(series)).toBeCloseTo(1, 1);
     });
 
+    it('returns cumulative density (ascending)', () => {
+        const { data, ...channels } = densityX(
+            {
+                data: [{ value: 0 }, { value: 5 }],
+                x: 'value'
+            },
+            { bandwidth: 1, interval: 0.5, trim: false, kernel: 'uniform', cumulative: true }
+        );
+
+        const series = data
+            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
+            .sort((a, b) => a.x - b.x);
+
+        expect(series[0].y).toBeCloseTo(0, 2);
+        expect(series.at(-1)?.y ?? 0).toBeCloseTo(1, 1);
+        for (let i = 1; i < series.length; i++) {
+            expect(series[i].y).toBeGreaterThanOrEqual(series[i - 1].y);
+        }
+    });
+
+    it('returns cumulative density (descending)', () => {
+        const { data, ...channels } = densityX(
+            {
+                data: [{ value: 0 }, { value: 5 }],
+                x: 'value'
+            },
+            { bandwidth: 1, interval: 0.5, trim: false, kernel: 'uniform', cumulative: -1 }
+        );
+
+        const series = data
+            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
+            .sort((a, b) => a.x - b.x);
+
+        expect(series[0].y).toBeCloseTo(1, 1);
+        expect(series.at(-1)?.y ?? 0).toBeLessThanOrEqual(0.2);
+        for (let i = 1; i < series.length; i++) {
+            expect(series[i].y).toBeLessThanOrEqual(series[i - 1].y);
+        }
+    });
+
     it('respects trim option to avoid padded evaluation ranges', () => {
         const input = {
             data: [
