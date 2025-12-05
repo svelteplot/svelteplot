@@ -20,10 +20,10 @@
     "prettier.trailingComma": "none",
     "prettier.printWidth": 100,
     "prettier.documentSelectors": [
-        "*.svelte",
-        "*.md",
-        "**/examples/**/*.svelte",
-        "src/routes/examples/**/*.svelte"
+        "svelte",
+        "typescript",
+        "javascript",
+        "markdown"
     ],
     "svelte.plugin.svelte.format.enable": false,
     "eslint.probe": ["javascript", "typescript", "svelte"],
