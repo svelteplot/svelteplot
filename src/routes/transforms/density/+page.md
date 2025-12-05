@@ -80,7 +80,7 @@ If you don't want to stack the densities but overlay them you can set the output
     import { Plot, AreaY, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
     import { page } from '$app/state';
-     import { useDark } from '$lib/ui/isDark.svelte';
+    import { useDark } from '$lib/ui/isDark.svelte';
 
     const ds = useDark();
 
@@ -112,7 +112,7 @@ If you don't want to stack the densities but overlay them you can set the output
                 fill: 'sex'
             },
             { kernel, bandwidth, trim }
-        )} 
+        )}
         blend="multiply" />
 </Plot>
 ```
@@ -241,7 +241,7 @@ Densities are computed at regular intervals along the x-axis (for densityX), def
 </Plot>
 ```
 
-You can pass a **weight** function with the channels to compute weighted densities. In this example we can smoothly change between the female and male distributions of penguin body masses by adjusting the weights via a slider. 
+You can pass a **weight** function with the channels to compute weighted densities. In this example we can smoothly change between the female and male distributions of penguin body masses by adjusting the weights via a slider.
 
 ```svelte live
 <script lang="ts">
@@ -281,8 +281,6 @@ You can pass a **weight** function with the channels to compute weighted densiti
         strokeWidth={1.8} />
 </Plot>
 ```
-
-
 
 ## Options
 
