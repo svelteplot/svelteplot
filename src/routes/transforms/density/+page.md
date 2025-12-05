@@ -43,7 +43,7 @@ The **density transform** turns a set of samples into a smooth probability densi
     label="Bandwidth (kg)" />
 <Checkbox bind:value={trim} label="Trim" />
 
-<Plot grid y={{ label: 'Density', percent: true }}>
+<Plot grid y={{  percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
@@ -58,7 +58,7 @@ The **density transform** turns a set of samples into a smooth probability densi
 ```
 
 ```svelte
-<Plot grid y={{ label: 'Density', percent: true }}>
+<Plot grid y={{ percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
@@ -72,12 +72,14 @@ The **density transform** turns a set of samples into a smooth probability densi
 </Plot>
 ```
 
-You can also overlay densities as lines; here are KDE curves for all four measurements in the iris dataset:
+You can also display densities as lines, as in this example showing density curves for all four measurements in the iris dataset. 
+
 
 ```svelte live
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
+    import {Slider} from '$lib/ui';
     import { page } from '$app/state';
 
     const measures = [
@@ -97,12 +99,13 @@ You can also overlay densities as lines; here are KDE curves for all four measur
             }))
         )
     );
+
 </script>
 
 <Plot
     height={300}
     color={{ legend: true }}
-    y={{ label: 'Density', percent: true }}
+    y={{ percent: true }}
     grid>
     <RuleY y={0} />
     <Line
@@ -122,7 +125,7 @@ You can also overlay densities as lines; here are KDE curves for all four measur
 <Plot
     height={300}
     color={{ legend: true }}
-    y={{ label: 'Density', percent: true }}
+    y={{ percent: true }}
     grid>
     <RuleY y={0} />
     <Line
@@ -133,6 +136,92 @@ You can also overlay densities as lines; here are KDE curves for all four measur
                 stroke: 'Measurement'
             },
             { bandwidth: 0.5 }
+        )}
+        strokeWidth={1.8} />
+</Plot>
+```
+
+Densities are computed at regular intervals along the x-axis (for densityX), defaulting to 1/5th of the bandwidth. You can adjust the **interval** option:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Line, densityX } from 'svelteplot';
+    import RuleY from 'svelteplot/marks/RuleY.svelte';
+    import {Slider} from '$lib/ui';
+    import { page } from '$app/state';
+
+    const measures = [
+        { key: 'Sepal.Length', label: 'Sepal length' },
+        { key: 'Sepal.Width', label: 'Sepal width' },
+        { key: 'Petal.Length', label: 'Petal length' },
+        { key: 'Petal.Width', label: 'Petal width' }
+    ];
+
+    let { iris } = $derived(page.data.data);
+
+    const tidyIris = $derived(
+        measures.flatMap(({ key, label }) =>
+            iris.map((d) => ({
+                Measurement: label,
+                Value: d[key]
+            }))
+        )
+    );
+
+    let interval = $state(0.2);
+</script>
+
+<Slider bind:value={interval} min={0.1} max={0.5} step={0.01} label="Interval" />
+<Plot
+    height={300}
+    color={{ legend: true }}
+    y={{ percent: true }}
+    grid>
+    <RuleY y={0} />
+    <Line
+        {...densityX(
+            {
+                data: tidyIris,
+                x: 'Value',
+                stroke: 'Measurement'
+            },
+            { bandwidth: 0.5, interval }
+        )}
+        marker
+        strokeWidth={1.8} />
+</Plot>
+```
+
+You can use the **weight** option to compute weighted densities:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Line, densityX } from 'svelteplot';
+    import RuleY from 'svelteplot/marks/RuleY.svelte';
+    import {Slider} from '$lib/ui';
+    import { page } from '$app/state';
+
+    let { penguins } = $derived(page.data.data);
+    let skew = $state(0);
+</script>
+
+<Slider bind:value={skew} min={-1} max={1} step={0.1} label="Skew (-F/+M)" />
+<Plot
+    height={300}
+    color={{ legend: true }}
+    x={{ domain: [2400, 6550], label: 'Body mass (g)' }}
+    y={{ percent: true }}
+    grid>
+    <RuleY y={0} />
+    <Line
+        {...densityX(
+            {
+                data: penguins,
+                x: 'body_mass_g',
+                stroke: 'species',
+                weight: (d) => d.sex === "FEMALE" ? 1 - skew : 1 + skew
+            },
+            { bandwidth: 250,  }
         )}
         strokeWidth={1.8} />
 </Plot>
@@ -216,11 +305,10 @@ Tipp: you can use the center stacking offset to create violin-style plots.
     x={{
         axis: false,
         percent: true,
-        label: 'Density',
         insetLeft: 10,
         insetRight: 10
     }}
-    y={{ label: 'Weight (kg)', grid: true }}
+    y={{ grid: true }}
     fx={{ label: 'Cylinders', axis: 'bottom', padding: 0 }}>
     <RuleX x={0} opacity={0.5} />
     <AreaX

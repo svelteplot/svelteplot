@@ -9,54 +9,31 @@
  * This implementation provides a more general approach to 2D KDE with different kernels.
  *
  */
-
 import { extent, quantileSorted, variance } from 'd3-array';
-import { isValid } from 'svelteplot/helpers';
-import { maybeInterval } from 'svelteplot/helpers/autoTicks';
-import { groupFacetsAndZ } from 'svelteplot/helpers/group';
-import isDataRecord from 'svelteplot/helpers/isDataRecord';
-import { resolveChannel } from 'svelteplot/helpers/resolve';
-import type { TransformArg } from 'svelteplot/types';
+import { isValid } from '$lib/helpers';
+import { maybeInterval } from '$lib/helpers/autoTicks';
+import { groupFacetsAndZ } from '$lib/helpers/group';
+import isDataRecord from '$lib/helpers/isDataRecord';
+import { resolveChannel } from '$lib/helpers/resolve';
+import type { TransformArg } from '$lib/types';
+import { ORIGINAL_NAME_KEYS } from '$lib/constants.js';
 
-// 2D Gaussian kernel function
-function gaussian2D(dx, dy, bwX, bwY) {
-    return (
-        Math.exp(-0.5 * ((dx * dx) / (bwX * bwX) + (dy * dy) / (bwY * bwY))) /
-        (2 * Math.PI * bwX * bwY)
-    );
-}
+type Kernel =
+    | 'uniform'
+    | 'triangular'
+    | 'epanechnikov'
+    | 'quartic'
+    | 'triweight'
+    | 'gaussian'
+    | 'cosine'
+    | ((u: number) => number);
 
-// kde2d function
-function kde2d(data, evalXs, evalYs, bwX, bwY) {
-    const n = data.length;
-    const density = [];
-    for (let xi = 0; xi < evalXs.length; xi++) {
-        for (let yi = 0; yi < evalYs.length; yi++) {
-            let sum = 0;
-            for (let i = 0; i < n; i++) {
-                const dx = evalXs[xi] - data[i][0];
-                const dy = evalYs[yi] - data[i][1];
-                sum += gaussian2D(dx, dy, bwX, bwY);
-            }
-            // Store: [x, y, density]
-            density.push([evalXs[xi], evalYs[yi], sum / n]);
-        }
-    }
-}
-
-type DensityOptions = {
+type DensityOptions<T> = {
     /**
      * The kernel function to use for smoothing.
      */
-    kernel?:
-        | 'uniform'
-        | 'triangular'
-        | 'epanechnikov'
-        | 'quartic'
-        | 'triweight'
-        | 'gaussian'
-        | 'cosine'
-        | ((u: number) => number);
+    kernel?: Kernel;
+
     /**
      * The bandwidth to use for smoothing. Can be a fixed number or a function that computes the bandwidth based on the data.
      */
@@ -69,6 +46,7 @@ type DensityOptions = {
      *
      */
     trim?: boolean;
+    weight?: (d: T) => number;
 };
 
 // see https://github.com/jasondavies/science.js/blob/master/src/stats/kernel.js
@@ -113,7 +91,7 @@ const KERNEL = {
  */
 export function densityX<T>(
     args: TransformArg<T>,
-    options: DensityOptions & { channel?: 'y' | 'y1' | 'y2' }
+    options: DensityOptions<T> & { channel?: 'y' | 'y1' | 'y2' }
 ): TransformArg<T> {
     return density1d('x', args, options);
 }
@@ -123,7 +101,7 @@ export function densityX<T>(
  */
 export function densityY<T>(
     args: TransformArg<T>,
-    options: DensityOptions & { channel?: 'x' | 'x1' | 'x2' }
+    options: DensityOptions<T> & { channel?: 'x' | 'x1' | 'x2' }
 ): TransformArg<T> {
     return density1d('y', args, options);
 }
@@ -156,6 +134,7 @@ function bandwidthSilverman(x: number[]) {
 }
 
 const VALUE = Symbol('value');
+const WEIGHT = Symbol('weight');
 
 function roundToTerminating(x: number, sig = 2) {
     if (!isFinite(x) || x === 0) return x;
@@ -167,8 +146,8 @@ function roundToTerminating(x: number, sig = 2) {
 
 function density1d<T>(
     independent: 'x' | 'y',
-    { data, ...channels }: TransformArg<T>,
-    options: DensityOptions = {}
+    { data, weight, ...channels }: TransformArg<T>,
+    options: DensityOptions<T> = {}
 ): TransformArg<T> {
     const densityChannel = independent === 'x' ? 'y' : 'x';
 
@@ -189,11 +168,21 @@ function density1d<T>(
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
 
     // compute bandwidth before grouping
-    const resolvedData = (
+    const resolvedData:T[] = (
         isRawDataArray
-            ? data.map((d) => ({ [VALUE]: d }) as any)
-            : data.map((d) => ({ [VALUE]: resolveChannel(independent, d, channels), ...d }))
-    ).filter((d) => isValid(d[VALUE]));
+            ? data.map(
+                  (d) =>
+                      ({
+                          [VALUE]: d,
+                          [WEIGHT]: typeof weight === 'function' ? weight(d) : 1
+                      }) as any
+              )
+            : data.map((d) => ({
+                  [VALUE]: resolveChannel(independent, d, channels),
+                  [WEIGHT]: typeof weight === 'function' ? weight(d) : 1,
+                  ...d
+              }))
+    ).filter((d) => isValid(d[VALUE]) && isValid(d[WEIGHT]) && d[WEIGHT] >= 0);
 
     const values = resolvedData.map((d) => d[VALUE]);
 
@@ -216,8 +205,9 @@ function density1d<T>(
 
     const res = groupFacetsAndZ(resolvedData, channels, (items, groupProps) => {
         const values = items.map((d) => d[VALUE]);
+        const weights = items.map((d) => d[WEIGHT]);
 
-        let kdeValues = kde1d(values as number[], atValues, k, bw)
+        let kdeValues = kde1d(values as number[], weights, atValues, k, bw)
             .filter(([x, density]) => x != null && !isNaN(density))
             .sort((a, b) => a[0] - b[0]);
 
@@ -251,32 +241,33 @@ function density1d<T>(
         [independent]: CHANNELS[independent],
         [channel]: CHANNELS[densityChannel],
         ...res,
+       [ORIGINAL_NAME_KEYS[densityChannel]]: 'Density',
+       [ORIGINAL_NAME_KEYS[independent]]: typeof channels[independent] === 'string' ? channels[independent] : undefined,
         sort: [{ channel: CHANNELS[independent], order: 'ascending' }],
         data: outData
     };
 }
 
-/**
- * TODO: Two-dimensional kernel density estimation
- *
- */
-export function density<T>(
-    { data, ...options }: TransformArg<T>,
-    { kernel, bandwidth }: DensityOptions
-): TransformArg<T> {}
-
-function kde1d(values: number[], atValues: number[], kernel: (u: number) => number, bw: number) {
+function kde1d(
+    values: number[],
+    weights: number[],
+    atValues: number[],
+    kernel: (u: number) => number,
+    bw: number
+) {
     const n = values.length;
+    const weightSum = weights.reduce((a, b) => a + b, 0);
     return atValues.map((x) => {
         let sum = 0;
         for (let i = 0; i < n; i++) {
-            sum += kernel((x - values[i]) / bw);
+            const u = (x - values[i]) / bw;
+            sum += weights[i] * kernel(u);
         }
-        return [x, sum / (n * bw)];
+        return [x, sum / (weightSum * bw)];
     });
 }
 
-function maybeKernel(kernel: DensityOptions['kernel']): (u: number) => number {
+function maybeKernel(kernel: Kernel): (u: number) => number {
     if (typeof kernel === 'function') return kernel;
     return KERNEL[kernel] || KERNEL.epanechnikov;
 }

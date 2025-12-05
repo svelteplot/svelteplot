@@ -70,7 +70,6 @@
     .left {
         --at-apply: 'flex items-center';
     }
-
     .navbar-pc {
         --at-apply: 'items-stretch flex';
     }
