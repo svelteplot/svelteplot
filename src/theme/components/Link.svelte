@@ -35,10 +35,13 @@
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
     href={isExternal ? to : resolve(toWithBase)}
-    class="link"
-    class:no-inline={!inline}
-    class:active
-    class:highlight
+    class={[
+        'link',
+        !inline ? 'no-inline' : '',
+        active ? 'active' : '',
+        highlight ? 'highlight' : '',
+        isExternal ? 'external' : ''
+    ]}
     {...isExternal ? { target: '_blank' } : {}}
     aria-label={label}>
     {@render pre?.()}
@@ -57,7 +60,7 @@
         --at-apply: 'text-svp-primary';
     }
     .link {
-        --at-apply: 'inline-flex hover:text-svp-hover cursor-pointer items-center transition-200 transition-color';
+        --at-apply: 'hover:text-svp-hover cursor-pointer items-center transition-200 transition-color';
     }
     .link.no-inline {
         --at-apply: 'flex';
