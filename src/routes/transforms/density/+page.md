@@ -43,7 +43,7 @@ The **density transform** turns a set of samples into a smooth probability densi
     label="Bandwidth (kg)" />
 <Checkbox bind:value={trim} label="Trim" />
 
-<Plot grid y={{ percent: true }}>
+<Plot height={250} grid y={{ percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
@@ -87,7 +87,7 @@ If you don't want to stack the densities but overlay them you can set the output
     let { olympians } = $derived(page.data.data);
 </script>
 
-<Plot grid y={{ percent: true }}>
+<Plot height={250} grid y={{ percent: true }}>
     <RuleY y={0} />
     <AreaY
         {...densityX(
