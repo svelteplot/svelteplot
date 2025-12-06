@@ -29,6 +29,7 @@ export type MarkType =
     | 'text'
     | 'tickX'
     | 'tickY'
+    | 'trail'
     | 'waffleX'
     | 'waffleY';
 
