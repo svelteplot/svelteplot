@@ -57,6 +57,7 @@ examples:
     - rule/data-rules
     - tick/tick-x
     - trail/countries
+    - trail/napoleon
     - vector/spike-map
     - vector/wind
     - waffle/custom-symbol

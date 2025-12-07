@@ -108,6 +108,7 @@ export type BaseMarkProps<T> = Partial<{
     strokeDashoffset: ConstantAccessor<number, T>;
     mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode, T>;
     clipPath: string;
+    mask: string;
     imageFilter: ConstantAccessor<string, T>;
     shapeRendering: ConstantAccessor<CSS.Property.ShapeRendering, T>;
     paintOrder: ConstantAccessor<string, T>;

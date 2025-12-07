@@ -8,7 +8,6 @@
     import Prev from '../../../../theme/components/icons/Prev.svelte';
     import { useDark } from 'svelteplot/ui/isDark.svelte';
     import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
-    import { Grid } from 'wx-svelte-grid';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true

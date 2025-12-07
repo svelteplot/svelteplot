@@ -21,6 +21,7 @@
          * radius for point features
          */
         r?: ChannelAccessor<Datum>;
+        svgFilter?: ConstantAccessor<string | undefined, Datum>;
     }
     import { getContext } from 'svelte';
     import type {
@@ -111,6 +112,7 @@
                                 d={path(geometry)}
                                 {style}
                                 class={[styleClass]}
+                                filter={resolveProp(args.svgFilter, d.datum, undefined)}
                                 {@attach addEventHandlers({
                                     getPlotState,
                                     options: args,

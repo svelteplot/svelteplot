@@ -12,6 +12,7 @@
         sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
         defined?: ConstantAccessor<boolean, Datum>;
         canvas?: boolean;
+        cap?: 'butt' | 'round';
     }
     import type {
         DataRecord,
@@ -39,6 +40,7 @@
         curve: 'linear',
         r: 3,
         canvas: false,
+        cap: 'round',
         ...getPlotDefaults().trail
     };
 
@@ -46,6 +48,7 @@
         data = [{} as Datum],
         curve,
         canvas,
+        cap,
         class: className,
         ...options
     }: TrailMarkProps = $derived({
@@ -111,6 +114,7 @@
                         )}
                         {@const pathString = trailPath(samples, defined, d3Path(), {
                             curve,
+                            cap,
                             samplesPerSegment: 8
                         })}
                         {@const [style, styleClass] = resolveStyles(
