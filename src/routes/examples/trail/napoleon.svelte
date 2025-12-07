@@ -1,6 +1,6 @@
 <script module lang="ts">
     export const title = 'Napoleons March';
-    export const description = `A trail plot showing Napoleon's march on and retreat from Moscow in 1812 (based on <a href="https://en.wikipedia.org/wiki/Charles_Joseph_Minard#The_map_of_Napoleon's_Russian_campaign">Charles Minard's famous chart</a>), overlaid on a map of todays country borders. `;
+    export const description = `A trail plot showing Napoleon's march on and retreat from Moscow in 1812 (based on <a href="https://en.wikipedia.org/wiki/Charles_Joseph_Minard#The_map_of_Napoleon's_Russian_campaign">Charles Minard's famous chart</a>), overlaid on a map of todays country borders. Data from <a href="https://friendly.github.io/HistData/reference/Minard.html">HistData R pacakge</a>.`;
     export const data = {
         countries10m: '/data/countries-10m.json',
         minard: '/data/minard_troops.csv'
@@ -79,19 +79,19 @@
 </script>
 
 <Plot
+    projection={{
+        type: 'conic-equal-area',
+        inset: 20,
+        domain // computed from troop coordinates
+    }}
     r={{
         range: [0, 24],
         // note that Minard's original chart
         // used a linear scale for troop sizes
         type: 'linear'
-    }}
-    projection={{
-        type: 'conic-equal-area',
-        inset: 20,
-        domain // computed from troop coordinates
     }}>
     <Graticule
-        opacity={0.1}
+        opacity={0.2}
         step={1}
         strokeDasharray="2,2" />
     <!-- define countries to show -->
@@ -138,6 +138,7 @@
         dy={-4}
         rotate={(d) => -10 + (d.lon - 23.8) * -0.5}
         fill="currentColor"
+        stroke="var(--svelteplot-bg)"
         lineAnchor="middle"
         textAnchor="middle" />
     <!-- country borders -->
@@ -164,7 +165,7 @@
         .country-label {
             letter-spacing: 1px;
             text-transform: uppercase;
-            opacity: 0.25;
+            fill-opacity: 0.25;
         }
     }
 </style>

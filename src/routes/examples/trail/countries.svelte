@@ -83,7 +83,8 @@
         fill="Country"
         z="Country"
         opacity={0.7}
-        curve="basis"
+        curve="catmull-rom"
+        tension={1}
         blend={ds.isDark ? 'screen' : 'multiply'} />
     <!-- dots on last year and every five -->
     <Dot

@@ -8,11 +8,16 @@
         y?: ChannelAccessor<Datum>;
         z?: ChannelAccessor<Datum>;
         r?: ChannelAccessor<Datum>;
-        curve?: 'linear' | 'basis';
+        curve?: CurveName | CurveFactory;
+        tension?: number;
         sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
         defined?: ConstantAccessor<boolean, Datum>;
         canvas?: boolean;
         cap?: 'butt' | 'round';
+        /**
+         * Samples per segment for curve interpolation
+         */
+        resolution?: number | 'auto';
     }
     import type {
         DataRecord,
@@ -21,7 +26,8 @@
         ConstantAccessor,
         RawValue,
         PlotContext,
-        ScaledDataRecord
+        ScaledDataRecord,
+        CurveName
     } from 'svelteplot/types';
     import Mark from '../Mark.svelte';
     import { getContext } from 'svelte';
@@ -33,6 +39,7 @@
     import TrailCanvas from './helpers/TrailCanvas.svelte';
     import { addEventHandlers } from './helpers/events';
     import { last } from 'es-toolkit';
+    import type { CurveFactory } from 'd3-shape';
 
     let markProps: TrailMarkProps = $props();
 
@@ -40,13 +47,17 @@
         curve: 'linear',
         r: 3,
         canvas: false,
+        resolution: 'auto',
         cap: 'round',
+        tension: 0,
         ...getPlotDefaults().trail
     };
 
     const {
         data = [{} as Datum],
         curve,
+        resolution,
+        tension,
         canvas,
         cap,
         class: className,
@@ -115,7 +126,10 @@
                         {@const pathString = trailPath(samples, defined, d3Path(), {
                             curve,
                             cap,
-                            samplesPerSegment: 8
+                            tension,
+                            ...(typeof resolution === 'number'
+                                ? { samplesPerSegment: resolution }
+                                : {})
                         })}
                         {@const [style, styleClass] = resolveStyles(
                             plot,

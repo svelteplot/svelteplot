@@ -3,6 +3,7 @@ import path from 'path';
 import puppeteer from 'puppeteer';
 import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
+import { setTimeout } from 'timers/promises';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -116,6 +117,8 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
+    await setTimeout(1000);
+
     // Wait for the Plot component to be rendered
     await page.waitForSelector('.content figure.svelteplot ', {
         timeout: 10000
@@ -132,7 +135,7 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         });
 
         // Wait a bit for theme to apply
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        await setTimeout(300);
     } else {
         // Ensure light mode
         await page.evaluate(() => {
@@ -141,7 +144,7 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         });
 
         // Wait a bit for theme to apply
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        await setTimeout(300);
     }
 
     // Get the Plot SVG element
@@ -187,9 +190,9 @@ const screenshotExamples = async () => {
                 width: SCREENSHOT_WIDTH,
                 height: 800,
                 deviceScaleFactor: DEVICE_PIXEL_RATIO
-            },
+            }
             // Launch Chrome in headless mode
-            headless: 'new'
+            // headless: 'new'
         });
 
         // Get all example Svelte files

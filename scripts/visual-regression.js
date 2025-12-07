@@ -26,7 +26,7 @@ const DIFF_THRESHOLD = parseFloat(process.env.VR_DIFF_THRESHOLD || '0.01');
 // Start the development server and return server instance and local URL
 const startServer = () => {
     console.log(dim('Starting development server...'));
-    const server = exec('pnpm dev');
+    const server = exec('pnpm preview');
 
     return new Promise((resolve) => {
         let serverUrl = null;

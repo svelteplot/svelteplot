@@ -1,15 +1,19 @@
 import { TAU } from '$lib/constants.js';
 import type { Path } from 'd3-path';
+import { maybeCurve } from '$lib/helpers/curves.js';
+import type { CurveName } from '$lib/types/index.js';
+import type { CurveFactory } from 'd3-shape';
 
 export type TrailContext = CanvasRenderingContext2D | Path;
 
-export type TrailCurve = 'linear' | 'basis';
+export type TrailCurve = CurveName | CurveFactory;
 export type TrailCap = 'round' | 'butt';
 
 export type TrailOptions = {
     curve?: TrailCurve;
     samplesPerSegment?: number;
     cap?: TrailCap;
+    tension?: number;
 };
 
 export type TrailSample = { x: number; y: number; r: number };
@@ -24,14 +28,15 @@ export function trailPath(
     context: TrailContext,
     options: TrailOptions = {}
 ): string | void {
-    const { curve = 'linear', cap = 'round' } = options;
+    const { curve = 'linear', cap = 'round', tension = 0.5 } = options;
     const samplesPerSegment =
         options.samplesPerSegment ?? estimateSamplesPerSegment(samples, defined);
+    const curveFactory = maybeCurve(curve, tension);
 
     let drawSamples = samples;
     let drawDefined = defined;
 
-    if (curve === 'basis') {
+    if (curve !== 'linear' || tension !== 0) {
         const smoothedSamples: TrailSample[] = [];
         const smoothedDefined: boolean[] = [];
 
@@ -53,7 +58,7 @@ export function trailPath(
                 i += 1;
             }
 
-            const resampled = resampleBasis(segment, Math.max(1, samplesPerSegment));
+            const resampled = resampleCurve(segment, curveFactory, Math.max(1, samplesPerSegment));
             smoothedSamples.push(...resampled);
             smoothedDefined.push(...new Array(resampled.length).fill(true));
 
@@ -104,9 +109,7 @@ export function trailPath(
                 const dirPrev = hasPrev
                     ? normalizeVec(curr.x - prev.x, curr.y - prev.y)
                     : normalizeVec(next.x - curr.x, next.y - curr.y);
-                const dirNext = hasNext
-                    ? normalizeVec(next.x - curr.x, next.y - curr.y)
-                    : dirPrev;
+                const dirNext = hasNext ? normalizeVec(next.x - curr.x, next.y - curr.y) : dirPrev;
 
                 const normPrev: [number, number] = [-dirPrev[1], dirPrev[0]];
                 const normNext: [number, number] = [-dirNext[1], dirNext[0]];
@@ -156,13 +159,7 @@ export function trailPath(
     let y1 = 0;
     let r1 = 0;
 
-    function point(
-        x2: number,
-        y2: number,
-        r2: number,
-        isStartOfRun: boolean,
-        isEndOfRun: boolean
-    ) {
+    function point(x2: number, y2: number, r2: number, isStartOfRun: boolean, isEndOfRun: boolean) {
         if (ready) {
             let ux = y1 - y2;
             let uy = x2 - x1;
@@ -237,54 +234,211 @@ export function trailPath(
     return typeof context.toString === 'function' ? context.toString() : undefined;
 }
 
-function resampleBasis(points: TrailSample[], samplesPerSegment: number): TrailSample[] {
+function resampleCurve(
+    points: TrailSample[],
+    curveFactory: CurveFactory,
+    samplesPerSegment: number
+): TrailSample[] {
+    if (points.length === 0) return [];
+
+    const commands: Command[] = [];
+    let pendingRadius = points[0].r;
+    let currentRadius = points[0].r;
+    let currentPoint: [number, number] | null = null;
+
+    const ctx: CurveContext = {
+        beginPath() {},
+        closePath() {},
+        moveTo(x, y) {
+            currentPoint = [x, y];
+            currentRadius = pendingRadius;
+            commands.push({ type: 'move', to: [x, y], r: currentRadius });
+        },
+        lineTo(x, y) {
+            const from = currentPoint ?? [x, y];
+            commands.push({
+                type: 'line',
+                from: [from[0], from[1], currentRadius],
+                to: [x, y, pendingRadius]
+            });
+            currentPoint = [x, y];
+            currentRadius = pendingRadius;
+        },
+        bezierCurveTo(x1, y1, x2, y2, x, y) {
+            const from = currentPoint ?? [x, y];
+            commands.push({
+                type: 'cubic',
+                from: [from[0], from[1], currentRadius],
+                cp1: [x1, y1],
+                cp2: [x2, y2],
+                to: [x, y, pendingRadius]
+            });
+            currentPoint = [x, y];
+            currentRadius = pendingRadius;
+        },
+        quadraticCurveTo(x1, y1, x, y) {
+            const from = currentPoint ?? [x, y];
+            commands.push({
+                type: 'quad',
+                from: [from[0], from[1], currentRadius],
+                cp: [x1, y1],
+                to: [x, y, pendingRadius]
+            });
+            currentPoint = [x, y];
+            currentRadius = pendingRadius;
+        },
+        arc() {},
+        rect() {}
+    };
+
+    const curve = curveFactory(ctx as unknown as CanvasRenderingContext2D);
+    curve.lineStart();
+    for (let idx = 0; idx < points.length; idx += 1) {
+        const pt = points[idx];
+        pendingRadius = pt.r;
+        curve.point(pt.x, pt.y);
+    }
+    curve.lineEnd();
+
+    const geom = flattenCommands(commands, samplesPerSegment);
+    if (geom.length === 0) return geom;
+
+    // Re-map radii along the resampled path using the original cumulative
+    // length as the parameter to avoid curve-specific radius drift.
+    const origCum: number[] = [0];
+    for (let i = 1; i < points.length; i += 1) {
+        const dx = points[i].x - points[i - 1].x;
+        const dy = points[i].y - points[i - 1].y;
+        origCum.push(origCum[i - 1] + Math.hypot(dx, dy));
+    }
+    const origTotal = origCum[origCum.length - 1] || 1;
+
+    const resCum: number[] = [0];
+    for (let i = 1; i < geom.length; i += 1) {
+        const dx = geom[i].x - geom[i - 1].x;
+        const dy = geom[i].y - geom[i - 1].y;
+        resCum.push(resCum[i - 1] + Math.hypot(dx, dy));
+    }
+    const resTotal = resCum[resCum.length - 1] || 1;
+
+    const radiusAt = (target: number) => {
+        let idx = 1;
+        while (idx < origCum.length && origCum[idx] < target) idx += 1;
+        if (idx === origCum.length) return points[points.length - 1].r;
+        const t0 = origCum[idx - 1];
+        const t1 = origCum[idx];
+        const r0 = points[idx - 1].r;
+        const r1 = points[idx].r;
+        const t = t1 === t0 ? 0 : (target - t0) / (t1 - t0);
+        return lerp(r0, r1, t);
+    };
+
+    for (let i = 0; i < geom.length; i += 1) {
+        const frac = resCum[i] / resTotal;
+        geom[i].r = Number(radiusAt(frac * origTotal).toFixed(2));
+    }
+
+    return geom;
+}
+
+type Command =
+    | { type: 'move'; to: [number, number]; r: number }
+    | { type: 'line'; from: [number, number, number]; to: [number, number, number] }
+    | {
+          type: 'cubic';
+          from: [number, number, number];
+          cp1: [number, number];
+          cp2: [number, number];
+          to: [number, number, number];
+      }
+    | {
+          type: 'quad';
+          from: [number, number, number];
+          cp: [number, number];
+          to: [number, number, number];
+      };
+
+type CurveContext = {
+    beginPath: () => void;
+    closePath: () => void;
+    moveTo: (x: number, y: number) => void;
+    lineTo: (x: number, y: number) => void;
+    bezierCurveTo: (x1: number, y1: number, x2: number, y2: number, x: number, y: number) => void;
+    quadraticCurveTo: (x1: number, y1: number, x: number, y: number) => void;
+    arc: () => void;
+    rect: () => void;
+};
+
+function flattenCommands(
+    commands: Command[],
+    samplesPerSegment: number,
+    precision = 2
+): TrailSample[] {
     const result: TrailSample[] = [];
+    let last: [number, number, number] | null = null;
 
-    if (points.length === 0) return result;
+    const round = (v: number) => {
+        const m = 10 ** precision;
+        return Math.round(v * m) / m;
+    };
 
-    const n = points.length;
-    result.push(points[0]);
+    const pushPoint = (x: number, y: number, r: number) => {
+        x = round(x);
+        y = round(y);
+        r = round(r);
+        if (!last || last[0] !== x || last[1] !== y || last[2] !== r) {
+            result.push({ x, y, r });
+            last = [x, y, r];
+        }
+    };
 
-    for (let i = 0; i < n - 1; i += 1) {
-        const p0 = i === 0 ? points[0] : points[i - 1];
-        const p1 = points[i];
-        const p2 = points[i + 1];
-        const p3 = i + 2 < n ? points[i + 2] : points[i + 1];
-        const r1 = points[i].r;
-        const r2 = points[i + 1].r;
-
-        for (let step = 1; step <= samplesPerSegment; step += 1) {
-            const t = step / samplesPerSegment;
-            const { x, y } = catmullRom(p0, p1, p2, p3, t);
-            result.push({ x, y, r: lerp(r1, r2, t) });
+    for (const cmd of commands) {
+        if (cmd.type === 'move') {
+            pushPoint(cmd.to[0], cmd.to[1], cmd.r);
+            continue;
+        }
+        if (cmd.type === 'line') {
+            const [x1, y1, r1] = cmd.from;
+            const [x2, y2, r2] = cmd.to;
+            for (let step = 1; step <= samplesPerSegment; step += 1) {
+                const t = step / samplesPerSegment;
+                pushPoint(lerp(x1, x2, t), lerp(y1, y2, t), lerp(r1, r2, t));
+            }
+            continue;
+        }
+        if (cmd.type === 'cubic') {
+            const [x0, y0, r0] = cmd.from;
+            const [x1, y1] = cmd.cp1;
+            const [x2, y2] = cmd.cp2;
+            const [x3, y3, r3] = cmd.to;
+            for (let step = 1; step <= samplesPerSegment; step += 1) {
+                const t = step / samplesPerSegment;
+                pushPoint(cubic(x0, x1, x2, x3, t), cubic(y0, y1, y2, y3, t), lerp(r0, r3, t));
+            }
+            continue;
+        }
+        if (cmd.type === 'quad') {
+            const [x0, y0, r0] = cmd.from;
+            const [cx, cy] = cmd.cp;
+            const [x1, y1, r1] = cmd.to;
+            for (let step = 1; step <= samplesPerSegment; step += 1) {
+                const t = step / samplesPerSegment;
+                pushPoint(quad(x0, cx, x1, t), quad(y0, cy, y1, t), lerp(r0, r1, t));
+            }
         }
     }
 
     return result;
 }
 
-function catmullRom(
-    p0: TrailSample,
-    p1: TrailSample,
-    p2: TrailSample,
-    p3: TrailSample,
-    t: number
-): { x: number; y: number } {
-    const t2 = t * t;
-    const t3 = t2 * t;
-    const x =
-        0.5 *
-        (2 * p1.x +
-            (-p0.x + p2.x) * t +
-            (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
-            (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3);
-    const y =
-        0.5 *
-        (2 * p1.y +
-            (-p0.y + p2.y) * t +
-            (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
-            (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3);
-    return { x, y };
+function cubic(p0: number, p1: number, p2: number, p3: number, t: number): number {
+    const it = 1 - t;
+    return it * it * it * p0 + 3 * it * it * t * p1 + 3 * it * t * t * p2 + t * t * t * p3;
+}
+
+function quad(p0: number, p1: number, p2: number, t: number): number {
+    const it = 1 - t;
+    return it * it * p0 + 2 * it * t * p1 + t * t * p2;
 }
 
 function lerp(a: number, b: number, t: number): number {
