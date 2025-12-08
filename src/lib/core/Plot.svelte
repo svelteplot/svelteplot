@@ -539,7 +539,7 @@
             viewBox="0 0 {width} {height}">
             {@render facetAxes?.()}
             <FacetGrid marks={explicitMarks}>
-                {#if children}
+                {#if children && width > 10 && height > 10}
                     {@render children({
                         width,
                         height,
