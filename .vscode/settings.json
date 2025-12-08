@@ -19,12 +19,7 @@
     "prettier.tabWidth": 4,
     "prettier.trailingComma": "none",
     "prettier.printWidth": 100,
-    "prettier.documentSelectors": [
-        "svelte",
-        "typescript",
-        "javascript",
-        "markdown"
-    ],
+    "prettier.documentSelectors": ["svelte", "typescript", "javascript", "markdown"],
     "svelte.plugin.svelte.format.enable": false,
     "eslint.probe": ["javascript", "typescript", "svelte"],
     "eslint.useFlatConfig": true,
