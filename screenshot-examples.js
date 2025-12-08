@@ -13,8 +13,23 @@ const OUTPUT_DIR = path.join(__dirname, 'src', 'snapshots');
 const SCREENSHOT_WIDTH = 600;
 const DEVICE_PIXEL_RATIO = 2;
 
+const normalizeTarget = (target) =>
+    target
+        .replace(/^-{2,}/, '')
+        .replace(/^\//, '')
+        .replace(/^examples\//, '')
+        .replace(/\.svelte$/, '')
+        .replace(/\/$/, '');
+
+const TARGETS = process.argv
+    .slice(2)
+    .map((arg) => normalizeTarget(arg))
+    .filter(Boolean);
+
 // Only take missing screenshots if ENV variable is set
 const ONLY_MISSING = process.env.ONLY_MISSING == 1;
+// When a target is provided we always capture it, even if a screenshot exists
+const SKIP_EXISTING = ONLY_MISSING && TARGETS.length === 0;
 
 // Start the development server and return server instance and local URL
 const startServer = () => {
@@ -117,8 +132,6 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
-    await setTimeout(1000);
-
     // Wait for the Plot component to be rendered
     await page.waitForSelector('.content figure.svelteplot ', {
         timeout: 10000
@@ -131,20 +144,20 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
             // Force any theme-aware components to re-render
-            window.dispatchEvent(new Event('theme-change'));
+            // window.dispatchEvent(new Event('theme-change'));
         });
 
         // Wait a bit for theme to apply
-        await setTimeout(300);
+        // await setTimeout(300);
     } else {
         // Ensure light mode
         await page.evaluate(() => {
             document.documentElement.classList.remove('dark');
-            window.dispatchEvent(new Event('theme-change'));
+            // window.dispatchEvent(new Event('theme-change'));
         });
 
         // Wait a bit for theme to apply
-        await setTimeout(300);
+        // await setTimeout(300);
     }
 
     // Get the Plot SVG element
@@ -152,8 +165,12 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         document.querySelector('.content .screenshot')
     );
 
+    console.log({ elementHandle });
+
     // Take a screenshot of the element
     const boundingBox = await elementHandle.boundingBox();
+
+    console.log({ boundingBox });
 
     if (!boundingBox) {
         console.error(
@@ -161,6 +178,8 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         );
         return false;
     }
+
+    console.log('before screenshot');
 
     // Take the screenshot
     await page.screenshot({
@@ -190,16 +209,39 @@ const screenshotExamples = async () => {
                 width: SCREENSHOT_WIDTH,
                 height: 800,
                 deviceScaleFactor: DEVICE_PIXEL_RATIO
-            }
+            },
             // Launch Chrome in headless mode
-            // headless: 'new'
+            headless: false //'new'
         });
 
-        // Get all example Svelte files
-        let svelteFiles = await getSvelteFiles(EXAMPLES_DIR);
-        console.log(`Found ${svelteFiles.length} example files to screenshot`);
+        // Build the list of Svelte files to process (optionally filtered by CLI args)
+        let svelteFiles;
+        if (TARGETS.length) {
+            const missing = [];
+            svelteFiles = [];
+            for (const target of TARGETS) {
+                const filePath = path.join(EXAMPLES_DIR, `${target}.svelte`);
+                try {
+                    await fs.access(filePath);
+                    svelteFiles.push(filePath);
+                } catch {
+                    missing.push(target);
+                }
+            }
+            if (missing.length) {
+                throw new Error(`Could not find example(s): ${missing.join(', ')}`);
+            }
+            console.log(
+                `Targeting ${svelteFiles.length} example(s):`,
+                svelteFiles.map((f) => filePathToUrlPath(f))
+            );
+        } else {
+            // Get all example Svelte files
+            svelteFiles = await getSvelteFiles(EXAMPLES_DIR);
+            console.log(`Found ${svelteFiles.length} example files to screenshot`);
+        }
 
-        if (ONLY_MISSING) {
+        if (SKIP_EXISTING) {
             // Filter to only include files that don't have screenshots ()
             const existingScreenshots = (await getExistingScreenshots(OUTPUT_DIR)).map((file) =>
                 path.relative(OUTPUT_DIR, file)
@@ -219,10 +261,7 @@ const screenshotExamples = async () => {
                 );
             });
 
-            console.log(
-                `Filtered down to ${svelteFiles.length} files needing screenshots`,
-                svelteFiles
-            );
+            console.log(`Filtered down to ${svelteFiles.length} files needing screenshots`);
         }
 
         // Process each file
@@ -238,7 +277,7 @@ const screenshotExamples = async () => {
 
             // Open the page
             const page = await browser.newPage();
-            await page.goto(`${serverUrl}examples/${urlPath}`, {
+            await page.goto(`${serverUrl}examples/${urlPath}?plain`, {
                 waitUntil: 'networkidle0',
                 timeout: 60000
             });
