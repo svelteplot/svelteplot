@@ -506,5 +506,3 @@ The example below demonstrates how to use the Area mark to create a custom area 
 ```
 
 [fork](https://svelte.dev/playground/cbb5a8b40c28429f916776cae3414588?version=5)
-
-
