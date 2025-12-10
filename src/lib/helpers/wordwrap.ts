@@ -71,17 +71,23 @@ const CHAR_W: Record<string, number> = {
  */
 export default function wordwrap(
     line: string,
-    {
-        maxCharactersPerLine,
-        maxLineWidth
-    }: { maxCharactersPerLine?: number; maxLineWidth?: number } = {},
-    {
-        minCharactersPerLine,
-        minLineWidth
-    }: { minCharactersPerLine?: number; minLineWidth?: number } = {},
-    fontSize: number = 12,
-    monospace: boolean = false
+    options: {
+        minCharactersPerLine?: number;
+        minLineWidth?: number;
+        maxCharactersPerLine?: number;
+        maxLineWidth?: number;
+        fontSize?: number;
+        monospace?: boolean;
+    } = {}
 ): string[] {
+    let {
+        minCharactersPerLine,
+        minLineWidth,
+        maxCharactersPerLine,
+        maxLineWidth,
+        fontSize,
+        monospace
+    } = { fontSize: 12, maxCharactersPerLine: 10, ...options };
     // Tokenized words (with hyphen-splitting applied) including trailing spaces/hyphens.
     const tokens: string[] = [];
 
@@ -103,24 +109,23 @@ export default function wordwrap(
         }
     });
 
-    const maxChars = maxCharactersPerLine || 40;
-
     if (!maxLineWidth) {
         // Fallback for max characters per line if not provided / falsy.
         // Convert character counts into approximate visual widths.
-        maxLineWidth = maxChars * CHAR_W.a;
+        maxLineWidth = maxCharactersPerLine * CHAR_W.a;
     }
 
     if (!minLineWidth) {
         // Estimate a good minimum line length:
         //  - start from either a provided value or
-        //  - clamp a scaled median word length between 3 and half of maxChars.
+        //  - clamp a scaled median word length between 3 and half of maxCharactersPerLine.
         const sortedWordLengths = tokens.map((t) => t.length).sort((a, b) => a - b);
         const medianIndex = Math.round(tokens.length / 2);
-        const medianWordLength = sortedWordLengths[medianIndex] ?? maxChars;
+        const medianWordLength = sortedWordLengths[medianIndex] ?? maxCharactersPerLine;
 
         const minChars =
-            minCharactersPerLine || Math.max(3, Math.min(maxChars * 0.5, 0.75 * medianWordLength));
+            minCharactersPerLine ||
+            Math.max(3, Math.min(maxCharactersPerLine * 0.5, 0.75 * medianWordLength));
 
         minLineWidth = minChars * CHAR_W.a;
     }
