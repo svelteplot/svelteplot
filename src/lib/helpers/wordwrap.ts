@@ -74,11 +74,11 @@ export default function wordwrap(
     {
         maxCharactersPerLine,
         maxLineWidth
-    }: { maxCharactersPerLine?: number; maxLineWidth?: number },
+    }: { maxCharactersPerLine?: number; maxLineWidth?: number } = {},
     {
         minCharactersPerLine,
         minLineWidth
-    }: { minCharactersPerLine?: number; minLineWidth?: number },
+    }: { minCharactersPerLine?: number; minLineWidth?: number } = {},
     fontSize: number = 12,
     monospace: boolean = false
 ): string[] {
