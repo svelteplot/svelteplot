@@ -16,7 +16,12 @@ describe('wordwrap helper', () => {
 
     test('splits into multiple lines when width is small', () => {
         const text = 'hello world';
-        const lines = wordwrap(text, { maxLineWidth: 40 }, { minCharactersPerLine: 1 }, 12, false);
+        const lines = wordwrap(text, {
+            maxLineWidth: 40,
+            minCharactersPerLine: 1,
+            fontSize: 12,
+            monospace: false
+        });
 
         expect(lines.length).toBeGreaterThan(1);
         expect(lines.join(' ')).toContain('hello');
