@@ -2,6 +2,10 @@
 title: Trail mark
 ---
 
+:::info
+added in 0.9.0
+:::
+
 Trail marks are similar to line marks, but can have variable widths determined by backing data. They are useful for visualizing paths or trajectories where the width of the path conveys additional information, such as intensity or volume.
 
 In the example below we use the line width to represent elevation along the 12th stage of the 2018 Tour de France.
