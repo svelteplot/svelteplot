@@ -143,12 +143,7 @@ The trail mark supports round and butt capping and different interpolating metho
                 {cap}
                 {curve}
                 opacity={0.4} />
-            <Line
-                {...args}
-                {curve}
-                fy={curve}
-                fx={cap}
-                stroke="black" />
+            <Line {...args} {curve} fy={curve} fx={cap} />
         {/each}
     {/each}
 </Plot>
