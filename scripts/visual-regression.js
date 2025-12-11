@@ -89,18 +89,20 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
+    await page.emulateMediaFeatures([
+        { name: 'prefers-color-scheme', value: isDarkMode ? 'dark' : 'light' }
+    ]);
+
     await page.waitForSelector('.content figure.svelteplot ', { timeout: 10000 });
 
     if (isDarkMode) {
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
-            window.dispatchEvent(new Event('theme-change'));
         });
         await new Promise((r) => setTimeout(r, 300));
     } else {
         await page.evaluate(() => {
             document.documentElement.classList.remove('dark');
-            window.dispatchEvent(new Event('theme-change'));
         });
         await new Promise((r) => setTimeout(r, 300));
     }

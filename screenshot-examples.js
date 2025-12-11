@@ -132,45 +132,22 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
+    await page.emulateMediaFeatures([
+        { name: 'prefers-color-scheme', value: isDarkMode ? 'dark' : 'light' }
+    ]);
+
     // Wait for the Plot component to be rendered
     await page.waitForSelector('.content figure.svelteplot ', {
         timeout: 10000
     });
-
-    // Toggle dark mode if needed
-    if (isDarkMode) {
-        // Toggle dark mode by setting the HTML class
-        // SveltePress uses 'html.dark' for dark mode
-        await page.evaluate(() => {
-            document.documentElement.classList.add('dark');
-            // Force any theme-aware components to re-render
-            // window.dispatchEvent(new Event('theme-change'));
-        });
-
-        // Wait a bit for theme to apply
-        // await setTimeout(300);
-    } else {
-        // Ensure light mode
-        await page.evaluate(() => {
-            document.documentElement.classList.remove('dark');
-            // window.dispatchEvent(new Event('theme-change'));
-        });
-
-        // Wait a bit for theme to apply
-        // await setTimeout(300);
-    }
 
     // Get the Plot SVG element
     const elementHandle = await page.evaluateHandle(() =>
         document.querySelector('.content .screenshot')
     );
 
-    console.log({ elementHandle });
-
     // Take a screenshot of the element
     const boundingBox = await elementHandle.boundingBox();
-
-    console.log({ boundingBox });
 
     if (!boundingBox) {
         console.error(
@@ -178,8 +155,6 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
         );
         return false;
     }
-
-    console.log('before screenshot');
 
     // Take the screenshot
     await page.screenshot({
