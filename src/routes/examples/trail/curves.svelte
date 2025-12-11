@@ -6,9 +6,10 @@
 </script>
 
 <script lang="ts">
-    import { Plot, Trail, Text } from 'svelteplot';
+    import { Plot, Trail } from 'svelteplot';
+    import type { CurveName } from 'svelteplot/types';
 
-    const curves = [
+    const curves: CurveName[] = [
         'linear',
         'catmull-rom',
         'natural',
@@ -16,7 +17,7 @@
         'bump-x',
         'step-after'
     ];
-    const caps = ['round', 'butt'];
+    const caps: ('round' | 'butt')[] = ['round', 'butt'];
 
     const data = [
         [1, 1, 0],
@@ -35,8 +36,8 @@
     r={{ range: [1, 20] }}
     fy={{ domain: curves }}
     fx={{ domain: caps }}>
-    {#each caps as cap}
-        {#each curves as curve}
+    {#each caps as cap (cap)}
+        {#each curves as curve (curve)}
             <Trail
                 {...args}
                 fy={curve}

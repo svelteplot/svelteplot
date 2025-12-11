@@ -116,11 +116,13 @@ export function createProjection(
             });
             invertTransform = ([x, y]) => [(x - tx) / k, (y - ty) / k];
         } else {
+            // eslint-disable-next-line no-console
             console.warn(
                 `Warning: the projection could not be fit to the specified domain; using the default scale.`
             );
         }
     } else if (domain != null) {
+        // eslint-disable-next-line no-console
         console.warn(
             `Warning: the projection could not be fit to the specified domain; using the default scale.`
         );
