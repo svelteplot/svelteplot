@@ -107,7 +107,14 @@
             {@const groupedTrailData = groupIndex(scaledData, groupByKey)}
             {#if canvas}
                 <!-- todo -->
-                <TrailCanvas />
+                <TrailCanvas
+                    {curve}
+                    {cap}
+                    {tension}
+                    {resolution}
+                    {usedScales}
+                    data={groupedTrailData}
+                    options={args} />
             {:else}
                 <g class={['trail', className]}>
                     {#each groupedTrailData as trailData, i (i)}
