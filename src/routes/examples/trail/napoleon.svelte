@@ -3,7 +3,7 @@
     export const description = `A trail plot showing Napoleon's march on and retreat from Moscow in 1812 (based on <a href="https://en.wikipedia.org/wiki/Charles_Joseph_Minard#The_map_of_Napoleon's_Russian_campaign">Charles Minard's famous chart</a>), overlaid on a map of todays country borders. Data from <a href="https://friendly.github.io/HistData/reference/Minard.html">HistData R pacakge</a>.`;
     export const data = {
         countries10m: '/data/countries-10m.json',
-        minard: '/data/minard_troops.csv'
+        minard: '/data/minard.csv'
     };
     export const sortKey = 55;
 </script>

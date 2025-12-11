@@ -19,13 +19,16 @@
     ];
     const caps: ('round' | 'butt')[] = ['round', 'butt'];
 
-    const data = [
-        [1, 1, 0],
-        [2, 2, 1],
-        [3, 1, 3]
-    ].map(([x, y, r]) => ({ x, y, r }));
-
-    const args = { data, x: 'x', y: 'y', r: 'r' };
+    const args = {
+        data: [
+            [1, 1, 0],
+            [2, 2, 1],
+            [3, 1, 3]
+        ].map(([x, y, r]) => ({ x, y, r })),
+        x: 'x',
+        y: 'y',
+        r: 'r'
+    };
 </script>
 
 <Plot

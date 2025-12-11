@@ -186,7 +186,7 @@ const screenshotExamples = async () => {
                 deviceScaleFactor: DEVICE_PIXEL_RATIO
             },
             // Launch Chrome in headless mode
-            headless: false //'new'
+            headless: 'new'
         });
 
         // Build the list of Svelte files to process (optionally filtered by CLI args)

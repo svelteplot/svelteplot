@@ -38,7 +38,6 @@
     import trailPath, { type TrailSample } from './helpers/trail.js';
     import TrailCanvas from './helpers/TrailCanvas.svelte';
     import { addEventHandlers } from './helpers/events';
-    import { last } from 'es-toolkit';
     import type { CurveFactory } from 'd3-shape';
 
     let markProps: TrailMarkProps = $props();
