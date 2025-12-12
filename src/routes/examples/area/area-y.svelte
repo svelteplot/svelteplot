@@ -2,6 +2,8 @@
     export const title = 'AreaY';
     export const data = { aapl: '/data/aapl.csv' };
     export const sortKey = 3;
+    export const repl =
+        'https://svelte.dev/playground/3a0e5ea3118e48378d9302ce35d992f8?version=latest';
 </script>
 
 <script lang="ts">
