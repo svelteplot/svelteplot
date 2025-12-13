@@ -170,7 +170,7 @@
               : optionsLabel !== undefined
                 ? optionsLabel
                 : plot.scales.y.autoTitle
-                  ? `↑ ${plot.scales.y.autoTitle}${plot.options.y.percent ? ' (%)' : ''}`
+                  ? `${!plot.options.y.reverse ? '↑' : '↓'} ${plot.scales.y.autoTitle}${plot.options.y.percent ? ' (%)' : ''}`
                   : ''
     );
 

@@ -83,6 +83,7 @@ export function createProjection(
 
     // Compute the frame dimensions and invoke the projection initializer.
     const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
+
     const dx = width - marginLeft - marginRight - insetLeft - insetRight;
     const dy = height - marginTop - marginBottom - insetTop - insetBottom;
 
@@ -99,7 +100,7 @@ export function createProjection(
     let invertTransform = (d) => d;
 
     // If a domain is specified, fit the projection to the frame.
-    if (domain != null) {
+    if (domain != null && dx > 0 && dy > 0) {
         const [[x0, y0], [x1, y1]] = geoPath(projInstance).bounds(domain);
         const k = Math.min(dx / (x1 - x0), dy / (y1 - y0));
 
@@ -115,10 +116,16 @@ export function createProjection(
             });
             invertTransform = ([x, y]) => [(x - tx) / k, (y - ty) / k];
         } else {
-            throw new Error(
+            // eslint-disable-next-line no-console
+            console.warn(
                 `Warning: the projection could not be fit to the specified domain; using the default scale.`
             );
         }
+    } else if (domain != null) {
+        // eslint-disable-next-line no-console
+        console.warn(
+            `Warning: the projection could not be fit to the specified domain; using the default scale.`
+        );
     }
 
     transform ??=

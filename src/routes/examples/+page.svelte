@@ -1,7 +1,8 @@
 <script module>
     export const frontmatter = {
         title: 'Examples',
-        description: ''
+        description:
+            'A collection of examples demonstrating how to use SveltePlot with various marks and transforms.'
     };
 </script>
 

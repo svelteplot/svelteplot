@@ -34,8 +34,8 @@ jobs:
               run: pnpm test
 
     publish-preview:
-        # Prevent this job from running on forks
-        if: github.repository == 'svelteplot/svelteplot' && github.event.pull_request.draft == false
+        # Prevent this job from running on forks and only publish for PRs opened by gka
+        if: github.repository == 'svelteplot/svelteplot' && github.event.pull_request.draft == false && github.event.pull_request.user.login == 'gka'
         needs: test
         runs-on: ubuntu-latest
         environment:

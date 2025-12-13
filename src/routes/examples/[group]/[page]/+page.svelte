@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { HighlightSvelte } from 'svelte-highlight';
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
@@ -199,7 +198,7 @@
     <h2>Not found</h2>
 {/if}
 
-<style>
+<style lang="scss">
     .svp-code-block-wrapper {
         margin-top: 2rem;
         :global {
@@ -247,5 +246,9 @@
 
     .trigger {
         --at-apply: ' block';
+    }
+    .svp-table {
+        // style the wx-svelte-grid table
+        --wx-table-border: #cccccc;
     }
 </style>

@@ -1,6 +1,16 @@
 <script lang="ts">
+    import { page } from '$app/state';
+
     import '../../../app.scss';
+
+    const groupTitle = $derived(page.params.group);
 </script>
+
+<svelte:head>
+    <title>
+        {groupTitle} - SveltePlot
+    </title>
+</svelte:head>
 
 <div class="theme-default--page-layout">
     <div class="content">

@@ -97,11 +97,6 @@
         Examples showing the use of the <a
             href={resolve(`/${type}s/${page.params.group}`)}
             >{page.params.group} {type}</a
-        >. Some of the examples here are based on examples
-        from the wonderful
-        <a
-            href="https://observablehq.com/@observablehq/plot-gallery"
-            >Observable Plot examples gallery</a
         >.
     </p>
     {#if indexKey}
