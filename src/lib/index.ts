@@ -6,6 +6,7 @@ export * from './transforms/index.js';
 
 // helpers
 export { formatMonth } from './helpers/formats.js';
+export { default as wordwrap } from './helpers/wordwrap.js';
 
 // hooks
 export * from './hooks/plotDefaults.js';

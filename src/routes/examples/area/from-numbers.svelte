@@ -2,6 +2,8 @@
     export const title = 'Area from numbers';
     export const description =
         'An area chart created from a simple array of numbers, demonstrating how to visualize numerical data using area marks.';
+    export const repl =
+        'https://svelte.dev/playground/619470549365485aa2eeeaa24d09c095?version=latest';
 </script>
 
 <script lang="ts">
