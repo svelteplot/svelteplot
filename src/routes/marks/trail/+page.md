@@ -48,7 +48,7 @@ In the example below we use the line width to represent elevation along the 12th
 </Plot>
 ```
 
-By default, the trail width (bound the to `r` channel) is scaled using a square-root scale from zero to to the maximum values in the data. Sometimes it is useful to use a linear scale instead, as in Minard's famous chart of Napoleon's 1812 Russian campaign below.
+By default, the trail width (bound to the `r` channel) is scaled using a square-root scale from zero to the maximum values in the data. Sometimes it is useful to use a linear scale instead, as in Minard's famous chart of Napoleon's 1812 Russian campaign below.
 
 ```svelte live
 <script lang="ts">
