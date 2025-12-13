@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Events';
     export const data = { riaa: '/data/riaa.csv' };
+    export const repl =
+        'https://svelte.dev/playground/1083c5aa80614da9b0d7b1c99b9ef505?version=latest';
 </script>
 
 <script lang="ts">
