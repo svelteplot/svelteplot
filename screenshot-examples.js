@@ -3,7 +3,6 @@ import path from 'path';
 import puppeteer from 'puppeteer';
 import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
-import { setTimeout } from 'timers/promises';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
