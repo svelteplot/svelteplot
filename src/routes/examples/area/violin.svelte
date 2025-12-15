@@ -7,6 +7,8 @@
         'Violin plot of the Sepal Length variable from the classic <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing the distribution of Sepal Length for each species along with median and interquartile range.';
     export const transforms = ['density'];
     export const sortKey = 115;
+    export const repl =
+        'https://svelte.dev/playground/65fa6e2118004aa1bc1d490cd8bab638?version=latest';
 </script>
 
 <script lang="ts">
