@@ -4,6 +4,8 @@
     export const data = { riaa: '/data/riaa.csv' };
     export const description =
         'A streamgraph showing RIAA music industry revenue by format over time. Based on an example from <a href="https://observablehq.com/@observablehq/plot-stack-offset">Observable Plot</a>.';
+    export const repl =
+        'https://svelte.dev/playground/6f2f2042d73a4307b6ef44ad093d3528?version=latest';
 </script>
 
 <script lang="ts">
