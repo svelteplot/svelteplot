@@ -26,7 +26,7 @@ const DIFF_THRESHOLD = parseFloat(process.env.VR_DIFF_THRESHOLD || '0.01');
 // Start the development server and return server instance and local URL
 const startServer = () => {
     console.log(dim('Starting development server...'));
-    const server = exec('pnpm dev');
+    const server = exec('pnpm preview');
 
     return new Promise((resolve) => {
         let serverUrl = null;
@@ -89,18 +89,20 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
+    await page.emulateMediaFeatures([
+        { name: 'prefers-color-scheme', value: isDarkMode ? 'dark' : 'light' }
+    ]);
+
     await page.waitForSelector('.content figure.svelteplot ', { timeout: 10000 });
 
     if (isDarkMode) {
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
-            window.dispatchEvent(new Event('theme-change'));
         });
         await new Promise((r) => setTimeout(r, 300));
     } else {
         await page.evaluate(() => {
             document.documentElement.classList.remove('dark');
-            window.dispatchEvent(new Event('theme-change'));
         });
         await new Promise((r) => setTimeout(r, 300));
     }

@@ -76,7 +76,10 @@
 
     const args = $derived(sort(recordizeXY({ data, ...options })));
 
-    function groupIndex(data: ScaledDataRecord[], groupByKey) {
+    /**
+     * Groups the data by the specified key
+     */
+    function groupIndex(data: ScaledDataRecord[], groupByKey: ChannelAccessor<Datum> | null) {
         if (!groupByKey) return [data];
         let group = [];
         const groups = [group];
@@ -95,7 +98,7 @@
         return groups;
     }
 
-    const groupByKey = $derived(args.z || args.stroke);
+    const groupByKey = $derived(args.z || args.stroke) as ChannelAccessor<Datum> | null;
 
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     const plot = $derived(getPlotState());

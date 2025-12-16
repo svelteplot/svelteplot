@@ -23,3 +23,10 @@ Use the Svelte MCP server for Svelte 5 and SvelteKit documentation and automatio
 - Static checks: `pnpm check` (svelte-check) and `pnpm lint`; format with `pnpm format`.
 - Unit tests: `pnpm test` (Vitest, jsdom).
 - Visual regression: `pnpm test:visual` (starts dev server, uses Puppeteer). Baselines live in `src/snapshots/`; latest/diff/report output to `static/__vr/`. Optional: set `VR_DIFF_THRESHOLD` to adjust tolerance and run `pnpm vr:report` to generate `static/__vr/report.html`.
+
+## Key Guidelines
+
+1. Follow Go best practices and idiomatic patterns
+2. Maintain existing code structure and organization
+3. Use dependency injection patterns where appropriate
+4. Write unit tests for new functionality. Use table-driven unit tests when possible.
