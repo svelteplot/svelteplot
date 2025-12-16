@@ -90,21 +90,6 @@
     });
 </script>
 
-<h3>Responsive Waffle Chart with 1:1 Aspect Ratio</h3>
-
-<p>
-    To keep waffle cells square within a fixed container, we
-    calculate the Plot dimensions using the correct aspect
-    ratio. This formula accounts for margins, band padding,
-    <code>unit</code> (value per cell), and
-    <code>multiple</code> (cells per row).
-</p>
-
-<p>
-    Drag the bottom-right corner of the box to resize and
-    test responsiveness.
-</p>
-
 <div
     class="resizable-container"
     style:height="{initialHeight}px"
