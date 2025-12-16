@@ -167,11 +167,13 @@
 
         if (!sort) return boxes.map(stripSortRef);
 
+        const [sort_, direction] = maybeSort(sort);
+
         const sortAccessor =
             typeof sort === 'function'
                 ? (d) => sort(d[SORT_REF])
                 : (d) => {
-                      switch (sort) {
+                      switch (sort_) {
                           case 'min':
                               return d[MIN];
                           case 'max':
@@ -186,12 +188,27 @@
                       }
                   };
 
-        const direction = typeof sort === 'string' ? -1 : 1;
+        console.log({ sort_, direction });
 
         return boxes
-            .toSorted((a, b) => compareValues(sortAccessor(a), sortAccessor(b)) * direction)
+            .toSorted(
+                (a, b) =>
+                    compareValues(sortAccessor(a), sortAccessor(b)) *
+                    direction *
+                    (orientation === 'x' ? -1 : 1)
+            )
             .map(stripSortRef);
     });
+
+    function maybeSort(
+        sort: string | ((d: Datum) => RawValue) | undefined
+    ): [string | ((d: Datum) => RawValue), 1 | -1] {
+        if (typeof sort !== 'string') return [sort, 1];
+        if (sort.startsWith('-')) {
+            return [sort.slice(1), -1];
+        }
+        return [sort, 1];
+    }
 
     const valueSymbol = $derived(orientation === 'y' ? Y : X);
     const groupSymbol = $derived(orientation === 'y' ? X : Y);

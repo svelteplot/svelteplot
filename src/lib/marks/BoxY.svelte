@@ -12,7 +12,18 @@
         /**
          * Custom sort order for grouped box plot data
          */
-        sort?: 'min' | 'max' | 'median' | 'p25' | 'p75' | ((d: Datum) => RawValue);
+        sort?:
+            | 'min'
+            | 'max'
+            | 'median'
+            | 'p25'
+            | 'p75'
+            | '-min'
+            | '-max'
+            | '-median'
+            | '-p25'
+            | '-p75'
+            | ((d: Datum) => RawValue);
         /**
          * Options for the rule marks that represent the min/max range
          */
