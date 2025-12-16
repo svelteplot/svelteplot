@@ -38,7 +38,7 @@ describe('DotY mark', () => {
         expect(dots.length).toBe(3);
 
         const positions = Array.from(dots).map(getTranslate);
-        
+
         // All dots should have the same x position (vertical line)
         const xPositions = positions.map(([x, _y]) => x);
         expect(xPositions[0]).toBe(xPositions[1]);

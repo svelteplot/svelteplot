@@ -38,7 +38,7 @@ describe('DotX mark', () => {
         expect(dots.length).toBe(3);
 
         const positions = Array.from(dots).map(getTranslate);
-        
+
         // All dots should have the same y position (horizontal line)
         const yPositions = positions.map(([_x, y]) => y);
         expect(yPositions[0]).toBe(yPositions[1]);
