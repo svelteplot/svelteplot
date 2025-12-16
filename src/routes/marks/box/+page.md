@@ -53,6 +53,7 @@ You can style box plots by passing separate options for the marks
 - **dot** - options passed to the dot marks representing the outliers
 - **tickMedian** - options passed to the tick marks representing the median
 - **tickMinMax** - options passed to the tick marks representing the lower and upper quartiles
+- **sort** - optional grouping sort; defaults to the natural (alphabetical) group order, or accepts `'min' | 'max' | 'median' | 'p25' | 'p75'` or a function receiving the first datum in the group
 
 ## BoxX
 
@@ -69,6 +70,7 @@ You can style box plots by passing separate options for the marks
         x="hwy"
         tickMinMax
         y="class"
+        sort="median"
         dot={{ fill: true }}
         bar={{
             stroke: 'currentColor'
@@ -83,6 +85,7 @@ You can style box plots by passing separate options for the marks
         x="hwy"
         tickMinMax
         y="class"
+        sort="median"
         dot={{ fill: true }}
         bar={{ stroke: 'currentColor' }} />
 </Plot>
@@ -102,6 +105,7 @@ You can style box plots by passing separate options for the marks
         data={mpg}
         x="class"
         y="hwy"
+        sort="min"
         tickMedian={{
             stroke: 'var(--svelteplot-bg)',
             strokeWidth: 3
@@ -115,6 +119,7 @@ You can style box plots by passing separate options for the marks
         data={mpg}
         x="class"
         y="hwy"
+        sort="min"
         tickMedian={{
             stroke: 'var(--svelteplot-bg)',
             strokeWidth: 3
