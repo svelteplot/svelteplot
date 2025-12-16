@@ -48,24 +48,6 @@
     let containerWidth = $state(initialWidth);
     let containerHeight = $state(initialHeight);
 
-    // Correct aspect ratio for 1:1 waffle cells
-    //
-    // From waffle.ts:
-    //   barwidth = xScale.bandwidth()
-    //   cx = barwidth / multiple  (cell width)
-    //   cy = scale * multiple     (cell height)
-    //   scale = innerHeight * unit / yDomain
-    //
-    // D3 band scale formula:
-    //   step = innerWidth / (n + padding)
-    //   bandwidth = step * (1 - padding) = innerWidth * (1 - padding) / (n + padding)
-    //
-    // For square cells: cx = cy
-    //   bandwidth / multiple = scale * multiple
-    //   (innerWidth * (1-p) / (n+p)) / multiple = (innerHeight * unit / yDomain) * multiple
-    //
-    // Solving for aspect ratio (innerWidth / innerHeight):
-    //   AR = (n + p) * unit * multiple² / (yDomain * (1 - p))
     const correctAspectRatio = $derived(
         ((categories + bandPadding) *
             unit *
