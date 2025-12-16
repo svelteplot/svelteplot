@@ -53,7 +53,7 @@ You can style box plots by passing separate options for the marks
 - **dot** - options passed to the dot marks representing the outliers
 - **tickMedian** - options passed to the tick marks representing the median
 - **tickMinMax** - options passed to the tick marks representing the lower and upper quartiles
-- **sort** - optional grouping sort; defaults to the natural (alphabetical) group order, or accepts `'min' | 'max' | 'median' | 'p25' | 'p75'` or a function receiving the first datum in the group
+- **sort** - optional grouping sort; defaults to the natural (alphabetical) group order, or accepts `'min' | 'max' | 'median' | 'p25' | 'p75'` or a function receiving the first datum in the group _added in 0.9.0_
 
 ## BoxX
 
