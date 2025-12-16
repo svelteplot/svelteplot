@@ -188,8 +188,6 @@
                       }
                   };
 
-        console.log({ sort_, direction });
-
         return boxes
             .toSorted(
                 (a, b) =>
