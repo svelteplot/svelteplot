@@ -43,6 +43,7 @@
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
+    import Up from '../../../theme/components/icons/Up.svelte';
 
     let markProps: BoxMarkProps = $props();
 
@@ -80,7 +81,7 @@
     const { data: grouped, ...groupChannels } = $derived(
         groupFn(
             {
-                data: data.filter((d) => resolveChannel(yProp, d, { x, y }) != null),
+                data: data.filter((d) => resolveChannel(xProp, d, { x, y }) != null),
                 x,
                 y,
                 [x1Prop]: xChannel,
@@ -121,44 +122,46 @@
                 : 0) || 0;
 
     const boxData = $derived.by(() => {
-        const boxes = grouped.map((row) => {
-            const medianKey = groupChannels[xProp];
-            const p25Key = groupChannels[x1Prop];
-            const p75Key = groupChannels[x2Prop];
-            const groupKey = groupChannels[yProp];
+        const boxes = grouped
+            .map((row) => {
+                const medianKey = groupChannels[xProp];
+                const p25Key = groupChannels[x1Prop];
+                const p75Key = groupChannels[x2Prop];
+                const groupKey = groupChannels[yProp];
 
-            const iqr = row[p75Key] - row[p25Key];
-            const whisker = iqr * 1.5;
-            const lower = row[p25Key] - whisker;
-            const upper = row[p75Key] + whisker;
-            const data = row[groupChannels.fill].map((d) => ({
-                ...d,
-                [orientation === 'y' ? Y : X]: resolveChannel(xProp, d, {
-                    x,
-                    y
-                })
-            }));
-            const valueSym = orientation === 'y' ? Y : X;
-            const groupSym = orientation === 'y' ? X : Y;
-            const outliers = data.filter((d) => d[valueSym] < lower || d[valueSym] > upper);
-            const inside = data
-                .filter((d) => d[valueSym] >= lower && d[valueSym] <= upper)
-                .sort((a, b) => a[valueSym] - b[valueSym]);
+                const iqr = row[p75Key] - row[p25Key];
+                const whisker = iqr * 1.5;
+                const lower = row[p25Key] - whisker;
+                const upper = row[p75Key] + whisker;
+                const data = row[groupChannels.fill].map((d) => ({
+                    ...d,
+                    [orientation === 'y' ? Y : X]: resolveChannel(xProp, d, {
+                        x,
+                        y
+                    })
+                }));
+                const valueSym = orientation === 'y' ? Y : X;
+                const groupSym = orientation === 'y' ? X : Y;
+                const outliers = data.filter((d) => d[valueSym] < lower || d[valueSym] > upper);
+                const inside = data
+                    .filter((d) => d[valueSym] >= lower && d[valueSym] <= upper)
+                    .sort((a, b) => a[valueSym] - b[valueSym]);
 
-            return {
-                ...data[0],
-                [SORT_REF]: row[groupChannels.fill]?.[0],
-                [groupSym]: row[groupKey],
-                [P25]: row[p25Key],
-                [MEDIAN]: row[medianKey],
-                [P75]: row[p75Key],
-                [MIN]: inside[0][valueSym],
-                [MAX]: inside.at(-1)[valueSym],
-                [FX]: resolveChannel('fx', data[0], { fx }, null),
-                [FY]: resolveChannel('fy', data[0], { fy }, null),
-                [OUTLIERS]: outliers
-            };
-        });
+                return {
+                    ...data[0],
+                    [SORT_REF]: row[groupChannels.fill]?.[0],
+                    [groupSym]: row[groupKey],
+                    [P25]: row[p25Key],
+                    [MEDIAN]: row[medianKey],
+                    [P75]: row[p75Key],
+                    [MIN]: inside.length ? inside[0][valueSym] : null,
+                    [MAX]: inside.length ? inside.at(-1)[valueSym] : null,
+                    [FX]: resolveChannel('fx', data[0], { fx }, null),
+                    [FY]: resolveChannel('fy', data[0], { fy }, null),
+                    [OUTLIERS]: outliers
+                };
+            })
+            .filter(Boolean);
 
         const stripSortRef = ({ [SORT_REF]: _, ...rest }) => rest;
 

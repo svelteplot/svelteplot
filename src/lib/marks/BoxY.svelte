@@ -43,6 +43,7 @@
     const DEFAULTS = {
         tickMedian: true,
         tickMinMax: false,
+        sort: 'median',
         ...getPlotDefaults().box,
         ...getPlotDefaults().boxY
     };
