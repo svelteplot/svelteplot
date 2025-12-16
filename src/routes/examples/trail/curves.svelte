@@ -1,12 +1,13 @@
 <script module>
     export const title = 'Trail curves';
     export const fullCode = true;
+    export const repl = `https://svelte.dev/playground/b93da293c02441a494baecd02ff7be0b`;
     export const description =
         'This example shows different curve types and line cap styles for Trail marks.';
 </script>
 
 <script lang="ts">
-    import { Plot, Trail } from 'svelteplot';
+    import { Plot, Trail, Line } from 'svelteplot';
     import type { CurveName } from 'svelteplot/types';
 
     const curves: CurveName[] = [
@@ -46,7 +47,10 @@
                 fy={curve}
                 fx={cap}
                 {cap}
-                {curve} />
+                {curve}
+                opacity={0.4} />
+            <!-- line for reference -->
+            <Line {...args} fy={curve} fx={cap} {curve} />
         {/each}
     {/each}
 </Plot>

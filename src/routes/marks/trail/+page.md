@@ -48,6 +48,8 @@ In the example below we use the line width to represent elevation along the 12th
 </Plot>
 ```
 
+[fork](https://svelte.dev/playground/18ab1c4389ca4728801e3c08bbaa9910)
+
 By default, the trail width (bound to the `r` channel) is scaled using a square-root scale from zero to the maximum values in the data. Sometimes it is useful to use a linear scale instead, as in Minard's famous chart of Napoleon's 1812 Russian campaign below.
 
 ```svelte live
@@ -148,6 +150,8 @@ The trail mark supports round and butt capping and different interpolating metho
     {/each}
 </Plot>
 ```
+
+[fork](https://svelte.dev/playground/b93da293c02441a494baecd02ff7be0b)
 
 :::tip
 You can find more examples in the [trail mark examples](/examples/trail).
