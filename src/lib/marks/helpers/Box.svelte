@@ -43,7 +43,6 @@
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
-    import Up from '../../../theme/components/icons/Up.svelte';
 
     let markProps: BoxMarkProps = $props();
 
