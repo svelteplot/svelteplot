@@ -51,11 +51,7 @@ describe('DotX mark', () => {
     });
 
     it('renders dots from object data', () => {
-        const testData = [
-            { value: 5 },
-            { value: 10 },
-            { value: 15 }
-        ];
+        const testData = [{ value: 5 }, { value: 10 }, { value: 15 }];
 
         const { container } = render(DotXTest, {
             props: {
@@ -71,7 +67,7 @@ describe('DotX mark', () => {
         expect(dots.length).toBe(3);
 
         const positions = Array.from(dots).map(getTranslate);
-        
+
         // All dots should have the same y position
         const yPositions = positions.map(([_x, y]) => y);
         expect(yPositions[0]).toBe(yPositions[1]);
