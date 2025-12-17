@@ -2,6 +2,8 @@
     export const title = 'Bended arrows';
     export const description = `Rising inequality (and population) in various U.S. cities from 1980 to 2015. Each arrow represents two observations of a city: the city’s population (x) and inequality (y) in 1980, and the same in 2015. Based on an example from <a href="https://observablehq.com/@observablehq/plot-arrow-variation-chart">Observable Plot</a>.`;
     export const data = { metros: '/data/metros.csv' };
+    export const repl =
+        'https://svelte.dev/playground/3fc8747da0694f88bf8c90b69fa41887?version=latest';
 </script>
 
 <script lang="ts">

@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Rotated axis labels';
     export const sortKey = 30;
+    export const repl =
+        'https://svelte.dev/playground/32f35494eaa643b18364c6316c4565d8?version=latest';
 </script>
 
 <script lang="ts">

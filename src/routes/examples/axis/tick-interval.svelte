@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Tick interval';
     export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/c499a53e132d45648ea40cefef57370f?version=latest';
 </script>
 
 <script>

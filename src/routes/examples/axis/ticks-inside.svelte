@@ -1,6 +1,8 @@
 <script module>
     export const title = 'Ticks inside';
     export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/3e0e96561a924f718ad019ea2fa55046?version=latest';
 </script>
 
 <script>
