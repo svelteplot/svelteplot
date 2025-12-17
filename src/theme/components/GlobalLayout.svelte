@@ -114,7 +114,7 @@
             'Noto Color Emoji';
     }
     :global(a) {
-        --at-apply: 'text-[#002211] dark:text-[#efefef] decoration-none';
+        --at-apply: 'text-[#213547] dark:text-[#e7e5e4] decoration-none';
     }
     :global(sup a) {
         --at-apply: 'c-svp-primary';
