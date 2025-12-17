@@ -126,6 +126,9 @@ export const CSS_URL = /^url\(#/; // just check for prefix
 
 export const INDEX = Symbol('index');
 
+export const PI = Math.PI;
+export const TAU = PI * 2;
+
 // export const CHANNEL_MAP: Record<ScaleName, ValueOf<typeof SCALE_TYPES>> = {
 // 	x: SCALE_TYPES.x,
 // 	y: SCALE_TYPES.y,

@@ -48,7 +48,10 @@
 </script>
 
 <svelte:head>
-    <title>{title ? `${title} - ${siteConfig.title}` : siteConfig.title}</title>
+    <title
+        >{title || page?.data?.title
+            ? `${title || page?.data?.title} - ${siteConfig.title}`
+            : siteConfig.title}</title>
     <meta name="description" content={description || siteConfig.description} />
 </svelte:head>
 

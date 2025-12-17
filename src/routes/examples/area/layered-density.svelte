@@ -7,6 +7,8 @@
         'Layered density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type stacked on top of each other.';
     export const transforms = ['density'];
     export const sortKey = 113;
+    export const repl =
+        'https://svelte.dev/playground/4b6abaf9dc234843bd335ad2e0324eec?version=latest';
 </script>
 
 <script lang="ts">

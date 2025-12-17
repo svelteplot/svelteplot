@@ -72,6 +72,7 @@ export default {
                 { title: 'Rule', to: '/marks/rule' },
                 { title: 'Text', to: '/marks/text' },
                 { title: 'Tick', to: '/marks/tick' },
+                { title: 'Trail', to: '/marks/trail' },
                 { title: 'Vector', to: '/marks/vector' },
                 { title: 'Waffle', to: '/marks/waffle' }
             ]
