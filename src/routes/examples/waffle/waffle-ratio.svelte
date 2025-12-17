@@ -1,6 +1,6 @@
 <script module>
     export let title = 'Waffle 1:1 Ratio';
-    export let description = `To keep waffle cells square within a fixed container, we calculate the Plot dimensions using the correct aspect ratio. This formula accounts for margins, band padding, <code>unit</code> (value per cell), and <code>multiple</code> (cells per row). Drag the bottom-right corner of the box to resize and test responsiveness.`
+    export let description = `To keep waffle cells square within a fixed container, we calculate the Plot dimensions using the correct aspect ratio. This formula accounts for margins, band padding, <code>unit</code> (value per cell), and <code>multiple</code> (cells per row). Drag the bottom-right corner of the box to resize and test responsiveness.`;
 </script>
 
 <script>
