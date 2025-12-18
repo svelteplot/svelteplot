@@ -2,6 +2,8 @@
     export const title = 'Slope chart axis';
     export const sortKey = 96;
     export const data = { metros: '/data/metros.csv' };
+    export const repl =
+        'https://svelte.dev/playground/2294d06d133a4d62a511f479cb6ae3d9?version=latest';
 </script>
 
 <script lang="ts">
