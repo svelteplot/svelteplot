@@ -1,6 +1,6 @@
 # SveltePlot
 
-![License](https://img.shields.io/npm/l/svelteplot.svg) ![Tests](https://github.com/svelteplot/svelteplot/actions/workflows/test.yml/badge.svg)
+![License](https://img.shields.io/npm/l/svelteplot.svg) ![Tests](https://github.com/svelteplot/svelteplot/actions/workflows/test.yml/badge.svg) [![Netlify Status](https://api.netlify.com/api/v1/badges/81163b24-76c1-4256-833c-919284f211ed/deploy-status)](https://app.netlify.com/projects/svelteplot/deploys)
 
 SveltePlot is a visualization framework based on the [layered grammar of graphics](https://vita.had.co.nz/papers/layered-grammar.html) ideas. It's API is heavily inspired by [Observable Plot](https://github.com/observablehq/plot). Created by Gregor Aisch.
 

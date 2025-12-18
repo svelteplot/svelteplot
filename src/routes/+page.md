@@ -102,9 +102,28 @@ _features:
           name: svelte-line
 ---
 
+<footer class={['text-gray-5', 'text-small']}>
+  <a class="text-gray-5" href="https://www.netlify.com">
+    This site is powered by Netlify
+  </a>
+</footer>
+
 <style lang="scss">
   main {
 
+  }
+  footer {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    a {
+      color: rgb(156 163 175  / var(--un-text-opacity));
+      text-decoration: none;
+      font-size: 0.9rem;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
   article {
    margin-left: auto;
