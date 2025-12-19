@@ -482,7 +482,7 @@ The example below demonstrates how to use the Area mark to create a custom area 
 <Plot grid>
     <Area
         data={aapl}
-        canvas={$useCanvas}
+        canvas
         x1="Date"
         y1={(d) =>
             baseline.find((b) => +b.date === +d.Date)
