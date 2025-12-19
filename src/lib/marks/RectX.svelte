@@ -9,10 +9,11 @@
 
     import Rect from './Rect.svelte';
     import { intervalY, stackX, recordizeX } from '$lib/index.js';
-    import type { DataRecord, PlotContext } from '../types/index.js';
-    import { getContext, type ComponentProps } from 'svelte';
+    import type { DataRecord } from '../types/index.js';
+    import { type ComponentProps } from 'svelte';
     import type { StackOptions } from '$lib/transforms/stack.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RectXMarkProps = $props();
 
@@ -30,8 +31,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(stackX(intervalY(recordizeX({ data, ...options }), { plot }), stack));
 </script>

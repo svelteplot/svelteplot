@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
-    import type { PlotContext } from '$lib/types/plot';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { MediaQuery } from 'svelte/reactivity';
     import type { Attachment } from 'svelte/attachments';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const darkMode = new MediaQuery('prefers-color-scheme: dark');
     let colorScheme = $state();
@@ -26,8 +25,7 @@
 
     let restProps: {} = $props();
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 </script>
 
 <!-- 

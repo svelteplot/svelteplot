@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import TrailTest from './trail.test.svelte';
 
@@ -91,5 +91,33 @@ describe('Trail mark', () => {
         const trail = container.querySelector('g.trail > path');
         const d = trail?.getAttribute('d') ?? '';
         expect(d.includes('Z M') || d.includes('ZM')).toBe(true);
+    });
+
+    it('accepts event handlers', () => {
+        const handleClick = vi.fn();
+        const { container } = render(TrailTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0, id: 'A' },
+                    { x: 1, y: 1, id: 'A' }
+                ],
+                x: 'x',
+                y: 'y',
+                r: 1,
+                resolution: 1,
+                cap: 'butt',
+                onclick: handleClick
+            }
+        });
+
+        const trail = container.querySelector('g.trail > path');
+        expect(trail).not.toBeNull();
+
+        trail?.dispatchEvent(new MouseEvent('click'));
+        expect(handleClick).toHaveBeenCalled();
+
+        // check argument
+        const eventArgs = handleClick.mock.calls[0];
+        expect(eventArgs[1].id).toBe('A');
     });
 });

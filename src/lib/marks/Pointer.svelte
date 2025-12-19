@@ -23,8 +23,8 @@
         onupdate?: (data: Datum[]) => void;
     }
 
-    import { getContext, type Snippet } from 'svelte';
-    import type { ChannelAccessor, DataRow, PlotContext } from '../types/index.js';
+    import { type Snippet } from 'svelte';
+    import type { ChannelAccessor, DataRow } from '../types/index.js';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
     import { projectXY } from '$lib/helpers/scales.js';
@@ -32,9 +32,9 @@
     import { indexData, RAW_VALUE } from 'svelteplot/transforms/recordize.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const POINTER_X = Symbol('pointerX');
     const POINTER_Y = Symbol('pointerY');

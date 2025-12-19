@@ -15,9 +15,9 @@
     import { intervalX, recordizeX, sort, stackX } from 'svelteplot/transforms';
     import type { StackOptions } from 'svelteplot/transforms/stack';
     import Mark from '$lib/Mark.svelte';
-    import { getContext } from 'svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface WaffleXMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {
@@ -58,8 +58,7 @@
         ...options
     }: WaffleXMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         stackX(

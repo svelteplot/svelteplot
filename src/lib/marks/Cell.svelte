@@ -10,7 +10,6 @@
         y?: ChannelAccessor<Datum>;
     }
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         BaseRectMarkProps,
@@ -18,13 +17,13 @@
         LinkableMarkProps
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
     import { recordizeY, sort } from '$lib/index.js';
     import { resolveChannel } from '../helpers/resolve.js';
 
     import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: CellMarkProps = $props();
 
@@ -41,8 +40,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         options.sort !== undefined

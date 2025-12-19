@@ -23,10 +23,8 @@
         r?: ChannelAccessor<Datum>;
         svgFilter?: ConstantAccessor<string | undefined, Datum>;
     }
-    import { getContext } from 'svelte';
     import type {
         DataRecord,
-        PlotContext,
         BaseMarkProps,
         ConstantAccessor,
         LinkableMarkProps,
@@ -43,9 +41,9 @@
     import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
     import Anchor from './helpers/Anchor.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let markProps: GeoMarkProps = $props();
 
@@ -114,7 +112,7 @@
                                 class={[styleClass]}
                                 filter={resolveProp(args.svgFilter, d.datum, undefined)}
                                 {@attach addEventHandlers({
-                                    getPlotState,
+                                    plot,
                                     options: args,
                                     datum: d?.datum
                                 })}>

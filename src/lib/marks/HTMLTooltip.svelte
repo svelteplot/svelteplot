@@ -12,16 +12,16 @@
         fy?: ChannelAccessor<Datum>;
         children: Snippet<[{ datum: Datum }]>;
     }
-    import { getContext, type Snippet } from 'svelte';
-    import type { ChannelAccessor, DataRow, PlotContext } from '../types/index.js';
-
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    import { type Snippet } from 'svelte';
+    import type { ChannelAccessor, DataRow } from '../types/index.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
     import { projectX, projectY } from '$lib/helpers/scales.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
+
+    const plot = usePlot();
 
     let { data, x, y, r, fx, fy, children }: HTMLTooltipMarkProps = $props();
 

@@ -34,10 +34,11 @@
     }
     import { getContext, untrack } from 'svelte';
     import Rect from '$lib/marks/Rect.svelte';
-    import type { BaseMarkProps, DataRecord, PlotContext } from 'svelteplot/types/index.js';
+    import type { BaseMarkProps, DataRecord } from 'svelteplot/types/index.js';
     import { clientToLayerCoordinates } from './helpers/events.js';
     import Frame from '$lib/marks/Frame.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let { brush: brushExternal = $bindable({ enabled: false }), ...markProps }: BrushMarkProps =
         $props();
@@ -85,8 +86,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const xScaleFn = $derived(plot.scales.x.fn);
     const yScaleFn = $derived(plot.scales.y.fn);

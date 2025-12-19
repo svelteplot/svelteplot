@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
-    import type { PlotContext, RawValue } from '$lib/index.js';
+    import type { RawValue } from '$lib/index.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {
         id,
@@ -10,8 +10,7 @@
         stops: { x: RawValue; color: string }[];
     } = $props();
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const projectedStops = $derived(
         stops

@@ -12,9 +12,8 @@
         dotClass?: ConstantAccessor<string, Datum>;
     }
 
-    import { getContext, type Snippet } from 'svelte';
+    import { type Snippet } from 'svelte';
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -33,6 +32,7 @@
     import Anchor from './helpers/Anchor.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { isOrdinalScale } from 'svelteplot/helpers/scales.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const DEFAULTS = {
         ...getPlotDefaults().dot
@@ -48,8 +48,7 @@
         ...options
     }: DotMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     function getSymbolPath(symbolType, size) {
         return d3Symbol(maybeSymbol(symbolType), size)();
@@ -113,7 +112,7 @@
                                 ]}
                                 {style}
                                 {@attach addEventHandlers({
-                                    getPlotState,
+                                    plot,
                                     options: args,
                                     datum: d?.datum
                                 })} />

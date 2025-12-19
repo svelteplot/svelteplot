@@ -11,11 +11,10 @@
         ConstantAccessor,
         DataRecord,
         Mark,
-        PlotContext,
         PlotScales
     } from 'svelteplot/types/index.js';
     import { addEventHandlers } from './events.js';
-    import { getContext } from 'svelte';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     type MarkerPathProps = BaseMarkProps<Datum> & {
         /**
@@ -78,7 +77,7 @@
 
     const id = randomId();
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
+    const plot = usePlot();
 
     const points = $derived(text && d != null ? d.split(/[LMC]/).slice(1) : []);
     const hasPath = $derived(points.length > 0);
@@ -96,7 +95,7 @@
     class={className}
     stroke-width={strokeWidth_}
     {@attach addEventHandlers({
-        getPlotState,
+        plot,
         options: mark.options,
         datum: datum
     })}>
@@ -127,7 +126,7 @@
         {d}
         {style}
         {@attach addEventHandlers({
-            getPlotState,
+            plot,
             options: mark.options,
             datum: datum
         })} />
