@@ -262,12 +262,10 @@
     let facetWidth: number | null = $state(null);
     let facetHeight: number | null = $state(null);
 
-    let plotState: PlotState = $state(computePlotState());
-    let plotState2 = setPlot(computePlotState());
+    let plotState = setPlot(computePlotState());
 
     $effect(() => {
-        plotState = computePlotState();
-        plotState2.update(computePlotState());
+        plotState.update(computePlotState());
     });
 
     function computePlotState() {
@@ -339,8 +337,7 @@
             if (facetHeight !== h) facetHeight = h;
         },
         updatePlotState() {
-            plotState = computePlotState();
-            plotState2.update(plotState);
+            plotState.update(computePlotState());
         }
     });
 
@@ -547,7 +544,7 @@
                         width,
                         height,
                         options: plotOptions,
-                        scales: plotState2.scales,
+                        scales: plotState.scales,
                         mapXY,
                         hasProjection,
                         hasExplicitAxisX,
@@ -563,7 +560,7 @@
                     width,
                     height,
                     options: plotOptions,
-                    scales: plotState2.scales,
+                    scales: plotState.scales,
                     mapXY,
                     hasProjection,
                     hasExplicitAxisX,

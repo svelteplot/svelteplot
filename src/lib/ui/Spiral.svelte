@@ -32,4 +32,4 @@
     style:animation-duration="{duration}s"
     stroke="currentColor"
     fill="none"
-    {...restProps} /> <text>{plot.width}</text>
+    {...restProps} />

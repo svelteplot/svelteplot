@@ -1,9 +1,11 @@
 import { getContext } from 'svelte';
-import type { Plot } from 'svelteplot';
-import type { PlotScales } from 'svelteplot/types';
 import type { PlotContext, PlotOptions } from 'svelteplot/types/plot';
+import type { PlotScales, PlotState as TPlotState } from 'svelteplot/types';
 
-class PlotState {
+/**
+ * Internal state representation of a Plot.
+ */
+class PlotState implements TPlotState {
     // Define properties and methods for PlotState as needed
     width: number = $state(50);
     height: number = $state(50);
@@ -33,8 +35,15 @@ class PlotState {
     update(newState: Partial<PlotState>) {
         Object.assign(this, newState);
     }
+
+    get publicState() {
+        return new PublicPlotState(this);
+    }
 }
 
+/**
+ * A public-facing wrapper around PlotState that exposes only read-only properties.
+ */
 class PublicPlotState {
     #plotState: PlotState;
     constructor(plotState: PlotState) {
@@ -76,22 +85,13 @@ class PublicPlotState {
     }
 }
 
-let state: PlotState | null = null;
-let publicState: PublicPlotState | null = null;
-
 export function setPlot(initialState: PlotState): PlotState {
-    if (!state) {
-        state = new PlotState({
-            ...initialState
-        });
-        publicState = new PublicPlotState(state);
-    }
-    return state;
+    return new PlotState({
+        ...initialState
+    });
 }
 
-export function usePlot(): PlotState {
-    if (!publicState) {
-        throw new Error('usePlot must be used within a Plot component');
-    }
-    return publicState;
+export function usePlot(): Readonly<TPlotState> {
+    const { getPlotState } = getContext<PlotContext>('svelteplot');
+    return getPlotState().publicState;
 }
