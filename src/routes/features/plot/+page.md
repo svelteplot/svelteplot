@@ -368,6 +368,8 @@ You can use the **usePlot** hook to access the internal plot state. This is usef
 </script>
 ```
 
+[fork](https://svelte.dev/playground/5c3de18e253b4107b197f6fed3077634?)
+
 ### setPlotDefaults
 
 This allows you to set d[efault plot options](/features/defaults) globally for all Plot components in your app.
