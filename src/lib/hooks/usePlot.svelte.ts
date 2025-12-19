@@ -83,6 +83,9 @@ class PublicPlotState {
     get hasFilledDotMarks() {
         return this.#plotState.hasFilledDotMarks;
     }
+    get css() {
+        return this.#plotState.css;
+    }
 }
 
 export function setPlot(initialState: PlotState): PlotState {
