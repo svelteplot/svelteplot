@@ -10,3 +10,4 @@ export { default as wordwrap } from './helpers/wordwrap.js';
 
 // hooks
 export * from './hooks/plotDefaults.js';
+export { usePlot } from './hooks/usePlot.svelte.js';

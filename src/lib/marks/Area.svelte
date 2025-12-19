@@ -19,7 +19,6 @@
 
     import Mark from '../Mark.svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import { getContext } from 'svelte';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { groups as d3Groups } from 'd3-array';
     import { area, type CurveFactory } from 'd3-shape';
@@ -31,7 +30,6 @@
 
     import type {
         CurveName,
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -43,6 +41,7 @@
     import type { StackOptions } from '$lib/transforms/stack.js';
     import { addEventHandlers } from './helpers/events';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: AreaMarkProps = $props();
 
@@ -64,8 +63,7 @@
         ...options
     }: AreaMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const groupByKey = $derived(options.z || options.fill || options.stroke);
 
@@ -144,7 +142,7 @@
                                 clip-path={options.clipPath}
                                 d={areaPath(areaData)}
                                 {@attach addEventHandlers({
-                                    getPlotState,
+                                    plot,
                                     options,
                                     datum: datum?.datum
                                 })}

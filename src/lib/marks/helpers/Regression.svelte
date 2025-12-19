@@ -1,10 +1,5 @@
 <script module lang="ts">
-    import type {
-        BaseMarkProps,
-        ChannelAccessor,
-        FacetContext,
-        PlotContext
-    } from '../../types/index.js';
+    import type { BaseMarkProps, ChannelAccessor, FacetContext } from '../../types/index.js';
 
     type RegressionType = 'linear' | 'quad' | 'poly' | 'exp' | 'log' | 'pow' | 'loess';
 
@@ -65,8 +60,9 @@
         throw new Error('unknown regression ' + name);
     }
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
+
+    const plot = usePlot();
 
     let {
         data,

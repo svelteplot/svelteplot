@@ -346,6 +346,48 @@ to add events and scoped styles.
 </style>
 ```
 
+## Hooks
+
+### usePlot
+
+:::info
+added in 0.9
+:::
+
+You can use the **usePlot** hook to access the internal plot state. This is useful for creating custom marks that need to interact with the plot scales or options.
+
+```svelte
+<script>
+    import { usePlot } from 'svelteplot';
+
+    const plot = usePlot();
+    // reactive access to things like
+    // plot.width
+    // plot.facetWidth
+    // plot.scales.x.fn() raw x scale
+</script>
+```
+
+[fork](https://svelte.dev/playground/5c3de18e253b4107b197f6fed3077634?)
+
+### setPlotDefaults
+
+This allows you to set d[efault plot options](/features/defaults) globally for all Plot components in your app.
+
+```svelte
+<script>
+    import { setPlotDefaults } from 'svelteplot';
+
+    setPlotDefaults({
+        grid: true,
+        frame: true,
+        line: {
+            curve: 'monotoneX'
+        }
+    });
+</script>
+```
+
 ## Core plot
 
 SveltePlot provides a lot of convenience features with the unfortunate side-effect of blowing up the bundle size a bit. In situations where this is a concern, you may use a more light-weight version of the Plot component. Note that you need to explicitly include all marks that you want, such as grids or axis marks.

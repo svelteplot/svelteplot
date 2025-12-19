@@ -25,7 +25,6 @@
     import { getContext } from 'svelte';
     import { resolveChannel, resolveProp, resolveScaledStyles } from '../helpers/resolve.js';
     import type {
-        PlotContext,
         BaseMarkProps,
         ChannelAccessor,
         DataRow,
@@ -37,9 +36,9 @@
     import { isValid } from '../helpers/index.js';
     import { testFilter, parseInset } from '$lib/helpers/index.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let markProps: TickXMarkProps = $props();
     const DEFAULTS = {

@@ -2,7 +2,6 @@
     import type {
         Mark,
         BaseMarkProps,
-        PlotContext,
         ScaledDataRecord,
         UsedScales,
         CurveName,
@@ -12,10 +11,10 @@
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { resolveColor } from './canvas.js';
-    import { getContext } from 'svelte';
     import type { CurveFactory } from 'd3-shape';
     import { trailPath, type TrailSample } from './trail';
     import { resolveProp, resolveScaledStyleProps } from 'svelteplot/helpers/resolve';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface TrailCanvasProps<Datum> {
         curve?: CurveName | CurveFactory;
@@ -46,8 +45,7 @@
         return value == null ? 1 : +value;
     }
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const render = ((canvas: HTMLCanvasElement) => {
         const context = canvas.getContext('2d');

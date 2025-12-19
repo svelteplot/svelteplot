@@ -37,9 +37,7 @@
         inset?: ConstantAccessor<number, Datum>;
         sweep?: SweepOption;
     }
-    import { getContext } from 'svelte';
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -57,6 +55,7 @@
     import { sort } from '$lib/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: ArrowMarkProps = $props();
 
@@ -76,8 +75,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args: ArrowMarkProps = $derived(
         sort(
@@ -134,7 +132,7 @@
                     <g
                         class={[className]}
                         {@attach addEventHandlers({
-                            getPlotState,
+                            plot,
                             options,
                             datum: d?.datum
                         })}>

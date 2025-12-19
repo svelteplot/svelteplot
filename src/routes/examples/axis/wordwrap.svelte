@@ -2,6 +2,8 @@
     export const title = 'Word wrap axis labels';
     export const description =
         'Demonstration of word-wrapping long axis labels to prevent overlap.';
+    export const repl =
+        'https://svelte.dev/playground/ad8ab15ecaa94777b78e55028093cfb1?version=latest';
 </script>
 
 <script>

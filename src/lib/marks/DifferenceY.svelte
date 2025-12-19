@@ -49,19 +49,17 @@
         BaseMarkProps,
         ChannelAccessor,
         CurveName,
-        DataRecord,
-        PlotContext
+        DataRecord
     } from 'svelteplot/types/index.js';
     import { Line, Area } from '$lib/marks/index.js';
     import { randomId, coalesce } from '$lib/helpers/index.js';
-    import { getContext } from 'svelte';
     import { extent, max, min } from 'd3-array';
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import type { CurveFactory } from 'd3-shape';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let markProps: DifferenceYMarkProps = $props();
 

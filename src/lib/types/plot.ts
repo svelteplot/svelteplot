@@ -77,6 +77,7 @@ export type PlotState = {
      */
     hasFilledDotMarks: boolean;
     css: ((d: string) => string) | null;
+    publicState: Readonly<PlotState>;
 };
 
 export type PlotContext = {

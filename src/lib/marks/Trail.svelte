@@ -25,12 +25,10 @@
         BaseMarkProps,
         ConstantAccessor,
         RawValue,
-        PlotContext,
         ScaledDataRecord,
         CurveName
     } from 'svelteplot/types';
     import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
     import { path as d3Path } from 'd3-path';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
@@ -39,6 +37,7 @@
     import TrailCanvas from './helpers/TrailCanvas.svelte';
     import { addEventHandlers } from './helpers/events';
     import type { CurveFactory } from 'd3-shape';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: TrailMarkProps = $props();
 
@@ -68,8 +67,7 @@
 
     const args = $derived(sort({ data, ...options })) as TrailMarkProps;
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     /**
      * Groups the data by the specified key
@@ -151,7 +149,7 @@
                             {style}
                             class={styleClass}
                             {@attach addEventHandlers({
-                                getPlotState,
+                                plot,
                                 options: mark.options,
                                 datum: trailData[0].datum
                             })} />

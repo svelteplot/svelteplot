@@ -23,20 +23,15 @@
         class: string | null;
         children: Snippet<{ datum: Datum; x: number; y: number }>;
     }
-    import { getContext, type Snippet } from 'svelte';
-    import type {
-        ChannelAccessor,
-        ConstantAccessor,
-        DataRecord,
-        PlotContext
-    } from '../types/index.js';
-
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    import { type Snippet } from 'svelte';
+    import type { ChannelAccessor, ConstantAccessor, DataRecord } from '../types/index.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     import { resolveChannel } from '$lib/helpers/resolve.js';
     import { projectX, projectY, projectXY } from '$lib/helpers/scales.js';
     import { isValid } from '$lib/helpers/index.js';
+
+    const plot = usePlot();
 
     let {
         data = [{} as Datum],
