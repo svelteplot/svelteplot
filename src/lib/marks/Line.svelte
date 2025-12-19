@@ -23,7 +23,6 @@
     }
     import type {
         CurveName,
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
