@@ -1,5 +1,9 @@
 <script>
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte';
+
     let { numTurns = 4, finalRadius = 10, duration = 2, ...restProps } = $props();
+
+    const plot = usePlot();
 
     const pathD = $derived.by(() => {
         const numPoints = 100;
@@ -28,4 +32,4 @@
     style:animation-duration="{duration}s"
     stroke="currentColor"
     fill="none"
-    {...restProps} />
+    {...restProps} /> <text>{plot.width}</text>

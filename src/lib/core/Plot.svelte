@@ -31,6 +31,7 @@
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
     import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
     import { maybeNumber } from 'svelteplot/helpers/index.js';
+    import { setPlot, usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     // automatic margins can be applied by the marks, registered
     // with their respective unique identifier as keys
@@ -261,11 +262,12 @@
     let facetWidth: number | null = $state(null);
     let facetHeight: number | null = $state(null);
 
-    // eslint-disable-next-line svelte/prefer-writable-derived
     let plotState: PlotState = $state(computePlotState());
+    let plotState2 = setPlot(computePlotState());
 
     $effect(() => {
         plotState = computePlotState();
+        plotState2.update(computePlotState());
     });
 
     function computePlotState() {
@@ -338,6 +340,7 @@
         },
         updatePlotState() {
             plotState = computePlotState();
+            plotState2.update(plotState);
         }
     });
 
@@ -544,7 +547,7 @@
                         width,
                         height,
                         options: plotOptions,
-                        scales: plotState.scales,
+                        scales: plotState2.scales,
                         mapXY,
                         hasProjection,
                         hasExplicitAxisX,
@@ -560,7 +563,7 @@
                     width,
                     height,
                     options: plotOptions,
-                    scales: plotState.scales,
+                    scales: plotState2.scales,
                     mapXY,
                     hasProjection,
                     hasExplicitAxisX,
