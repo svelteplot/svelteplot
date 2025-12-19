@@ -23,7 +23,6 @@
     }
     import type {
         CurveName,
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -33,7 +32,6 @@
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
-    import { getContext } from 'svelte';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { line, type CurveFactory, type Line as D3Line } from 'd3-shape';
     import { geoPath } from 'd3-geo';
@@ -48,6 +46,7 @@
     import { recordizeXY } from '$lib/transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LineMarkProps = $props();
 
@@ -100,8 +99,7 @@
 
     const groupByKey = $derived(args.z || args.stroke) as ChannelAccessor<Datum> | null;
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const linePath: D3Line<ScaledDataRecord> = $derived(
         plot.scales.projection && curve === 'auto'

@@ -13,11 +13,9 @@
     }
     import Mark from '../Mark.svelte';
     import GroupMultiple from '$lib/marks/helpers/GroupMultiple.svelte';
-    import { getContext } from 'svelte';
     import { recordizeY } from '$lib/transforms/recordize.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -25,6 +23,7 @@
     } from '../types/index.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RuleYMarkProps = $props();
     const DEFAULTS = {
@@ -40,8 +39,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
     const args = $derived(recordizeY({ data, ...options }, { withIndex: false }));
 </script>
 

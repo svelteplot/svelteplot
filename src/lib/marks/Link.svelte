@@ -34,9 +34,7 @@
          */
         text?: ConstantAccessor<string, Datum>;
     }
-    import { getContext } from 'svelte';
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ConstantAccessor,
@@ -58,6 +56,7 @@
     import { sort } from 'svelteplot/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LinkMarkProps = $props();
     const DEFAULTS = {
@@ -75,8 +74,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         replaceChannels(

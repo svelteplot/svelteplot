@@ -8,15 +8,8 @@
         y1?: ChannelAccessor<Datum>;
         y2?: ChannelAccessor<Datum>;
     }
-    import { getContext } from 'svelte';
     import Mark from '../Mark.svelte';
-    import type {
-        PlotContext,
-        BaseMarkProps,
-        RawValue,
-        DataRecord,
-        ChannelAccessor
-    } from '../types/index.js';
+    import type { BaseMarkProps, RawValue, DataRecord, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { autoTicks } from '$lib/helpers/autoTicks.js';
     import { testFilter } from '$lib/helpers/index.js';
@@ -24,6 +17,7 @@
     import isDataRecord from '$lib/helpers/isDataRecord';
     import { INDEX } from '$lib/constants';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: GridXMarkProps = $props();
 
@@ -41,8 +35,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const autoTickCount = $derived(
         Math.max(3, Math.round(plot.facetWidth / plot.options.x.tickSpacing))

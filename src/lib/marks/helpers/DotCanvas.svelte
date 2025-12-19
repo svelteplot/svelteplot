@@ -3,20 +3,18 @@
         PlotState,
         Mark,
         BaseMarkProps,
-        ScaledDataRecord,
-        PlotContext
+        ScaledDataRecord
     } from 'svelteplot/types/index.js';
     import { resolveProp } from '$lib/helpers/resolve.js';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
     import { symbol as d3Symbol } from 'd3-shape';
     import type { Attachment } from 'svelte/attachments';
     import CanvasLayer from './CanvasLayer.svelte';
-    import { getContext } from 'svelte';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { resolveColor } from './canvas.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let {
         mark,

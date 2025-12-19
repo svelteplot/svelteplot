@@ -2,18 +2,17 @@
     import type {
         Mark,
         BaseMarkProps,
-        PlotContext,
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
     import { CSS_VAR } from '$lib/constants.js';
     import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
-    import { getContext } from 'svelte';
     import { type GeoPath } from 'd3-geo';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {
         mark,
@@ -27,8 +26,7 @@
         usedScales: UsedScales;
     } = $props();
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     function maybeOpacity(value) {
         return value == null ? 1 : +value;

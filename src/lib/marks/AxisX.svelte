@@ -6,7 +6,6 @@
     import Mark from '../Mark.svelte';
     import BaseAxisX from './helpers/BaseAxisX.svelte';
     import type {
-        PlotContext,
         BaseMarkProps,
         RawValue,
         ConstantAccessor,
@@ -19,6 +18,7 @@
     import { resolveScaledStyles } from '$lib/helpers/resolve.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { extent } from 'd3-array';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface AxisXMarkProps extends Omit<
         BaseMarkProps<Datum>,
@@ -96,8 +96,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const autoTickCount = $derived(
         tickCount != null

@@ -2,17 +2,16 @@
     import type {
         Mark,
         BaseMarkProps,
-        PlotContext,
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
     import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
-    import { getContext } from 'svelte';
     import { type Area } from 'd3-shape';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { resolveColor } from './canvas.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {
         mark,
@@ -26,8 +25,7 @@
         areaPath: Area<ScaledDataRecord>;
     } = $props();
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     function maybeOpacity(value: unknown) {
         return value == null ? 1 : +value;
