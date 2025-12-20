@@ -2,6 +2,8 @@
     export let title = 'Shuffled Bars';
     export const transforms = ['sort'];
     export const data = { alphabet: '/data/alphabet.csv' };
+    export const repl =
+        'https://svelte.dev/playground/8e0edb58a7104a6eb984d2e390bc27de?version=latest';
 </script>
 
 <script>
