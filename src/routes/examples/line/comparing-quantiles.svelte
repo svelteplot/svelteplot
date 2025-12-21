@@ -10,8 +10,7 @@
 </script>
 
 <script lang="ts">
-    import { Slider } from '$lib/ui';
-    import { Plot, Line, mapX, windowY } from 'svelteplot';
+    import { Plot, Line, mapX } from 'svelteplot';
     import type { OlympiansRow } from '../types';
 
     let { olympians }: { olympians: OlympiansRow[] } =
