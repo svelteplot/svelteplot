@@ -9,10 +9,11 @@
     import { scaleBand } from 'd3-scale';
     import Facet from './Facet.svelte';
     import { getEmptyFacets } from '../helpers/facets.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState, updateDimensions } = getContext<PlotContext>('svelteplot');
+    const { updateDimensions } = getContext<PlotContext>('svelteplot');
     // we need the plot context for the overall width & height
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let {
         children,
@@ -32,17 +33,27 @@
     // any "faceted" data points. this can happen when fx and fy are combined and
     // certain combinations don't yield results
     const emptyFacets = $derived(getEmptyFacets(marks, fxValues, fyValues));
-
+    $inspect(plot.options.fx);
     // create band scales for fx and fy
     const facetXScale = $derived(
         scaleBand()
-            .paddingInner(fxValues.length > 1 ? 0.1 : 0)
+            .paddingOuter(0)
+            .paddingInner(
+                fxValues.length > 1
+                    ? (plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
+                    : 0
+            )
             .domain(fxValues)
             .rangeRound([0, plot.plotWidth])
     );
     const facetYScale = $derived(
         scaleBand()
-            .paddingInner(fyValues.length > 1 ? 0.1 : 0)
+            .paddingOuter(0)
+            .paddingInner(
+                fyValues.length > 1
+                    ? (plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
+                    : 0
+            )
             .domain(fyValues)
             .rangeRound([0, plot.plotHeight])
     );
