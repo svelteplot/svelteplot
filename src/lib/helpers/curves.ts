@@ -1,4 +1,4 @@
-import type { Curve } from '../types/index.js';
+import type { CurveName } from '../types/index.js';
 import {
     curveBasis,
     curveBasisClosed,
@@ -27,7 +27,7 @@ import {
 } from 'd3-shape';
 
 const curves = new Map<
-    Curve,
+    CurveName,
     CurveFactory | CurveBundleFactory | CurveCardinalFactory | CurveCatmullRomFactory
 >([
     ['basis', curveBasis],
