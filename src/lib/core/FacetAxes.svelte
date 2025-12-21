@@ -38,6 +38,7 @@
 {#if fxValues.length > 1 && plot.options.fx.axis}
     <g transform="translate({plot.options.marginLeft}, 0)">
         <BaseAxisX
+            class="facet-axis-x"
             scaleFn={facetXScale}
             scaleType="band"
             ticks={fxValues}
@@ -56,6 +57,7 @@
 {#if fyValues.length > 1 && plot.options.fy.axis}
     <g transform="translate(0, {plot.options.marginTop})">
         <BaseAxisY
+            class="facet-axis-y"
             scaleFn={facetYScale}
             scaleType="band"
             ticks={fyValues}
