@@ -3,15 +3,18 @@
     export const description =
         'See also the <a href="/examples/geo/us-choropleth-canvas">Canvas version</a>';
     export const sortKey = 1;
+    export const data = {
+        us: '/data/us-counties-10m.json',
+        unemployment: '/data/unemployment.csv'
+    };
 </script>
 
 <script>
     import { Plot } from 'svelteplot';
     import Geo from 'svelteplot/marks/Geo.svelte';
     import * as topojson from 'topojson-client';
-    import { page } from '$app/state';
 
-    const { us, unemployment } = $derived(page.data.data);
+    const { us, unemployment } = $props();
     const rateMap = $derived(
         new Map(unemployment.map((d) => [d.id, +d.rate]))
     );

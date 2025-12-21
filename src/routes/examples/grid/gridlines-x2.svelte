@@ -2,12 +2,12 @@
     export const title = 'Crop grid x lines to data';
     export const description =
         'Use x1 and x2 channels to let grid lines stop at a data value';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script>
     import { Plot, Line, GridY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot>

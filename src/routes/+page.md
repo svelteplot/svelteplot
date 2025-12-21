@@ -1,7 +1,7 @@
 ---
 title: SveltePlot
 description: The best visualizations are built with <span>Svelte.</span>
-heroImage: /logo.png
+heroImage: /logo.svg
 tagline: A Svelte-native visualization framework based on the layered grammar of graphics principles.
 actions:
     - label: Getting started
@@ -13,6 +13,56 @@ actions:
     - label: Examples
       to: /examples
       type: flat
+examples:
+    - area/smoothed-area
+    - area/density
+    - area/layered-density
+    - area/streamgraph
+    - area/violin
+    - area/ridgeline
+    - arrow/metro
+    - axis/datawrapper-ticks
+    - bar/faceted-bars
+    - box/box-x-faceted
+    - box/box-y
+    - box/box-y-facet
+    - brush/overview-detail
+    - cell/temperatures-threshold
+    - custom/histogram-topline
+    - difference/anomaly-baseline
+    - difference/apple-yoy
+    - difference/trade-balance
+    - dot/1-colored-scatterplot
+    - dot/beeswarm-bubbles
+    - dot/dot-faceted
+    - dot/dodge-faceted
+    - geo/earthquakes
+    - geo/us-choropleth
+    - image/image-scatter
+    - image/image-beeswarm
+    - line/geo-line
+    - line/gradient-line
+    - line/indexed-stocks
+    - line/running-mean
+    - line/parallel-x
+    - line/penguins-cdf
+    - line/parallel-y-hl
+    - link/spherical-link
+    - rect/binned
+    - rect/marimekko
+    - rect/marimekko-faceted
+    - rect/stacked-histogram
+    - regression/grouped
+    - regression/log
+    - rule/data-rules
+    - tick/tick-x
+    - trail/countries
+    - trail/napoleon
+    - trail/tdf
+    - vector/spike-map
+    - vector/wind
+    - waffle/custom-symbol
+    - waffle/stacked-x
 _features:
     - title: Marks
       description: SveltePlot comes with a powerful set of built-in marks for building for your visualizations
@@ -20,47 +70,60 @@ _features:
           type: iconify
           collection: carbon
           name: roadmap
-      link: /features/scales
     - title: Automatic scales
       description: Scale types and domains are automatically inferred from your data, unless you customize them
       icon:
           type: iconify
           collection: ri
           name: ruler-line
-      link: /features/scales
     - title: Fully reactive
       description: Everything in SveltePlot is fully reactive, the plot just updates when the data or configuration changes
       icon:
           type: iconify
           collection: ri
           name: svelte-line
-      link: /features/interactivity
     - title: TypeScript
       description: All components are fully typed and documented to integrate with VSCode
       icon:
           type: iconify
           collection: nonicons
           name: typescript-16
-      link: /features/scales
     - title: Customizable
       description: All components are fully typed and documented to integrate with VSCode
       icon:
           type: iconify
           collection: nonicons
           name: typescript-16
-      link: /features/scales
     - title: Written in Svelte5 & TypeScript
       description: All components and props are fully reactive, typed and documented!
       icon:
           type: iconify
           collection: ri
           name: svelte-line
-      link: /features/scales
 ---
+
+<footer class={['text-gray-5', 'text-small']}>
+  <a class="text-gray-5" href="https://www.netlify.com">
+    This site is powered by Netlify
+  </a>
+</footer>
 
 <style lang="scss">
   main {
 
+  }
+  footer {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    a {
+      color: rgb(156 163 175  / var(--un-text-opacity));
+      text-decoration: none;
+      font-size: 0.9rem;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
   article {
    margin-left: auto;

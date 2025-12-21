@@ -1,16 +1,17 @@
 <script module>
     export const title = 'BoxX (faceted)';
     export const sortKey = 20;
+    export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/1c44cb004f414d1d81f1b144237d8341';
 </script>
 
 <script lang="ts">
     import { Plot, BoxX } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { PenguinsRow } from '../types';
 
-    let { penguins } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { penguins }: { penguins: PenguinsRow[] } =
+        $props();
 </script>
 
 <Plot

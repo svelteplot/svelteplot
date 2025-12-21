@@ -8,22 +8,19 @@
         ChannelAccessor,
         BaseMarkProps,
         LinkableMarkProps,
-        PlotContext,
         BorderRadius
     } from '$lib/types';
     import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults';
-    import { getContext } from 'svelte';
     import { intervalY, recordizeY, sort, stackY } from '$lib/transforms';
     import Mark from 'svelteplot/Mark.svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface WaffleYMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            WaffleOptions<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {
         data?: Datum[];
         /**
          * bound to a babd scale
@@ -58,8 +55,7 @@
         ...options
     }: WaffleYMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         stackY(

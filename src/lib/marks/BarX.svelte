@@ -4,9 +4,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface BarXMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            BaseRectMarkProps<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
         data: Datum[];
         x?: ChannelAccessor<Datum>;
         x1?: ChannelAccessor<Datum>;
@@ -21,7 +19,6 @@
     }
 
     import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
     import { stackX, recordizeX, intervalX, sort } from '$lib/index.js';
 
     import type { StackOptions } from '$lib/transforms/stack.js';
@@ -29,13 +26,13 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
     import type {
-        PlotContext,
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
         LinkableMarkProps
     } from '../types/index.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const DEFAULTS = {
         fill: 'currentColor',
@@ -52,8 +49,7 @@
         ...options
     }: BarXMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         stackX(

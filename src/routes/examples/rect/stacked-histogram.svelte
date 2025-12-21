@@ -1,19 +1,22 @@
 <script module lang="ts">
     export const title = 'Stacked histogram';
     export const description =
-        'A stacked histogram showing the distribution of Olympic athletes’ weights, colored by sex.';
+        'A stacked histogram showing the distribution of Olympic athletes’ weights, colored by sex. Based on an example from <a href="https://observablehq.com/@observablehq/plot-vertical-histogram">Observable Plot</a>.';
     export const transforms = ['bin'];
     export const sortKey = 41;
+    export const repl =
+        'https://svelte.dev/playground/db322b8d3f1f47718bf822eb385d9a1e?version=5';
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { OlympiansRow } from '../types';
 
-    let { olympians } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { olympians }: { olympians: OlympiansRow[] } =
+        $props();
 </script>
 
 <Plot

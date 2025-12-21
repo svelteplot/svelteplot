@@ -2,13 +2,13 @@
     export const title = 'Simple line';
     export const description =
         "The classic line chart example you've seen a million times.";
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot y={{ grid: true }}>

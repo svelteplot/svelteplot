@@ -4,7 +4,7 @@ description: This page explains how to start using SveltePlot.
 ---
 
 :::caution
-Welcome! SveltePlot is still in an alpha stage, and its API may change. The documentation is still incomplete and of varying quality. Use at your own risk, and please [get in touch](https://discord.gg/pp2wRJqtHV) if you'd like to contribute.
+⚠️ Welcome! SveltePlot is still in an alpha stage, and its API may change. The documentation may be incomplete and of varying quality. Use at your own risk, and please [get in touch](https://discord.gg/pp2wRJqtHV) if you'd like to contribute.
 :::
 
 ## Try SveltePlot online

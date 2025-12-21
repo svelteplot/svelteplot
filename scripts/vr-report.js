@@ -95,7 +95,7 @@ async function generate() {
         const urlPath = String(r.route || '').replace(/^examples\//, '');
         const suffix = r.mode === 'dark' ? '.dark' : '';
         // Use paths relative to report.html location (static/__vr/)
-        const baselineUrl = `../examples/${urlPath}${suffix}.png`;
+        const baselineUrl = `../src/snapshots/${urlPath}${suffix}.png`;
         const latestUrl = `latest/${urlPath}${suffix}.png`;
         const diffUrl = `diff/${urlPath}${suffix}.png`;
         const pct = r.percentage !== undefined ? (r.percentage * 100).toFixed(3) + '%' : '-';

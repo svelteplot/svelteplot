@@ -1,15 +1,13 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { HighlightSvelte } from 'svelte-highlight';
     import codeStyleLight from 'svelte-highlight/styles/atom-one-light';
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
-
-    import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
-    import { codepenEmbed } from 'svelte-highlight/styles';
+    import Next from '../../../../theme/components/icons/Next.svelte';
+    import Prev from '../../../../theme/components/icons/Prev.svelte';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
@@ -20,19 +18,26 @@
         import: 'default'
     });
 
-    const parentPage = $derived(
-        Object.keys(pages).find(
-            (d) =>
-                d
-                    .replace(/^..\/..\//, '')
-                    .replace('.svelte', '') ===
-                `${page.params.group}/_index`
+    const sortedPages = Object.entries(pages)
+        .filter(([key]) => key.split('/').length === 4)
+        // sort by sortKey if present
+        .sort(([a, aMod], [b, bMod]) => {
+            const aKey = aMod.sortKey ?? 10;
+            const bKey = bMod.sortKey ?? 10;
+            return aKey - bKey;
+        })
+        // now sort by the part after the second slash
+        .sort(([a], [b]) =>
+            a.split('/')[2].localeCompare(b.split('/')[2])
         )
-    );
+        .map(([key, mod]) => key);
+
+    let { data } = $props();
 
     const key = $derived(
         `${page.params.group}/${page.params.page}`
     );
+
     const plotKey = $derived(
         Object.keys(pages).find(
             (d) =>
@@ -42,6 +47,41 @@
         )
     );
     const mod = $derived(plotKey ? pages[plotKey] : null);
+
+    const [prevPage, nextPage] = $derived.by(() => {
+        if (!plotKey) return [null, null];
+        const keys = sortedPages.map((d) =>
+            d
+                .replace(/^..\/..\//, '')
+                .replace('.svelte', '')
+        );
+        const index = keys.indexOf(key);
+        let prev = null;
+        let next = null;
+        const prevNext = [
+            index > 0 ? keys[index - 1] : null,
+            index >= 0 && index < keys.length - 1
+                ? keys[index + 1]
+                : null
+        ];
+
+        return prevNext.map((key) => ({
+            key,
+            title: key
+                ? pages[
+                      Object.keys(pages).find(
+                          (d) =>
+                              d
+                                  .replace(/^..\/..\//, '')
+                                  .replace(
+                                      '.svelte',
+                                      ''
+                                  ) === key
+                      )!
+                  ].title
+                : null
+        }));
+    });
 
     function cleanCode(code: string) {
         if (code.includes('<script lang="ts">')) {
@@ -67,11 +107,13 @@
         }
         return code.trim();
     }
+
+    const ds = useDark();
 </script>
 
 <svelte:head>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-    {@html $isDark ? codeStyleDark : codeStyleLight}
+    {@html ds.isDark ? codeStyleDark : codeStyleLight}
 </svelte:head>
 
 {#if plotKey}
@@ -79,33 +121,40 @@
         <a href={resolve('/examples')}>Examples</a>
         <span>/</span>
         <a href={resolve(`/examples/${page.params.group}`)}
-            >{pages[parentPage].title}</a>
+            >{page.params.group}</a>
     </div>
     <h1 class="page-title">{mod.title}</h1>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {#if mod.description}<p>{@html mod.description}</p>{/if}
 
-    <div class="screenshot">
-        <mod.default />
-    </div>
-
-    <div class="svp-code-block-wrapper">
-        <div class="svp-code-block">
-            <HighlightSvelte
-                lang="svelte"
-                code={cleanCode(
-                    pagesSrc[plotKey].substring(
-                        pages[plotKey].fullCode
-                            ? pagesSrc[plotKey].indexOf(
-                                  '<script lang="ts">'
-                              )
-                            : pagesSrc[plotKey].lastIndexOf(
-                                  '</scr' + 'ipt>'
-                              ) + 9
-                    )
-                )} />
+    {#key data}
+        <div class="screenshot">
+            <mod.default {...data} />
         </div>
-    </div>
+    {/key}
+
+    {#key plotKey}
+        <div class="svp-code-block-wrapper">
+            <div class="svp-code-block">
+                <CodeBlock
+                    lang="svelte"
+                    isDark={ds.isDark}
+                    code={cleanCode(
+                        pagesSrc[plotKey].substring(
+                            pages[plotKey].fullCode
+                                ? pagesSrc[plotKey].indexOf(
+                                      '<script lang="ts">'
+                                  )
+                                : pagesSrc[
+                                      plotKey
+                                  ].lastIndexOf(
+                                      '</scr' + 'ipt>'
+                                  ) + 9
+                        )
+                    )} />
+            </div>
+        </div>
+    {/key}
 
     {#if pages[plotKey].repl}
         <p>
@@ -114,11 +163,42 @@
                 >Open in Svelte playground</a>
         </p>
     {/if}
+
+    <!-- show links to prev and next page -->
+    <div class="page-switcher">
+        {#each [prevPage, nextPage] as page, i (i)}
+            <div
+                class={[
+                    !!page.key && 'switcher',
+                    i === 1 && 'right'
+                ]}>
+                {#if page.key}
+                    <a
+                        href={resolve(
+                            `/examples/${page.key}`
+                        )}
+                        class="trigger">
+                        <div class="title">
+                            {#if i === 0}
+                                <Prev />
+                            {/if}
+                            <div class="title-label">
+                                {page.title}
+                            </div>
+                            {#if i === 1}
+                                <Next />
+                            {/if}
+                        </div>
+                    </a>
+                {/if}
+            </div>
+        {/each}
+    </div>
 {:else}
     <h2>Not found</h2>
 {/if}
 
-<style>
+<style lang="scss">
     .svp-code-block-wrapper {
         margin-top: 2rem;
         :global {
@@ -132,53 +212,43 @@
             }
         }
     }
-    .list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        width: 100%;
-        margin: 2rem 0;
-    }
-
-    .list > div {
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        row-gap: 0.3rem;
-
-        > a {
-            border: 1px solid #88888822;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            padding: 1.5ex;
+    .breadcrumb {
+        a {
+            text-transform: capitalize;
         }
-
-        &:hover {
-            > a {
-                border: 1px solid currentColor;
-            }
-            h4 a {
-                text-decoration: underline;
-            }
+        span {
+            opacity: 0.5;
         }
     }
 
-    .list img {
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 3px;
-        transition: transform 0.2s ease-in-out;
+    .page-switcher {
+        --at-apply: 'grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 mt-8';
+    }
+    .switcher {
+        --at-apply: ' flex-grow cursor-pointer transition-300 transition-colors';
     }
 
-    .list h4 {
-        margin: 0rem;
-        font-weight: normal;
-        font-size: 13px;
-        line-height: 1;
-        > a {
-            text-decoration: none;
-        }
+    .title {
+        --at-apply: 'flex items-center ';
     }
-    .breadcrumb span {
-        opacity: 0.5;
+    .right .title {
+        --at-apply: 'justify-end';
+    }
+    .title-label {
+        --at-apply: 'ml-2';
+    }
+    .right .title-label {
+        --at-apply: 'mr-2 ml-none';
+    }
+    .right {
+        --at-apply: 'text-right';
+    }
+
+    .trigger {
+        --at-apply: ' block';
+    }
+    .svp-table {
+        // style the wx-svelte-grid table
+        --wx-table-border: #cccccc;
     }
 </style>

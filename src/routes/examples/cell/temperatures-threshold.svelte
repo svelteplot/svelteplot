@@ -1,17 +1,17 @@
 <script module>
     export const title = 'Threshold scale';
     export const description =
-        'A responsive cell plot that flips coordinates based on the width of the container, displaying Seattle temperatures for 2015.';
+        'A responsive cell plot that flips coordinates based on the width of the container, displaying Seattle temperatures for 2015. Based on an example from <a href="https://observablehq.com/@observablehq/plot-seattle-temperature-heatmap">Observable Plot</a>.';
     export const repl =
         'https://svelte.dev/playground/6e1188793b71467e94308d57503c15b4?version=5.33.14';
     export const fullCode = true;
+    export const data = { seattle: '/data/seattle.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Cell, formatMonth } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { seattle } = $derived(page.data.data);
+    let { seattle } = $props();
 
     let clientWidth = $state(500);
 

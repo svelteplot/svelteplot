@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Area with point scale';
+    export const repl =
+        'https://svelte.dev/playground/6104e06de04d423f9e44bad6ba8eccf1?version=latest';
 </script>
 
 <script lang="ts">

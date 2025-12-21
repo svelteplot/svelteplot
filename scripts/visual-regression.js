@@ -2,14 +2,17 @@
 import fs from 'fs/promises';
 import path from 'path';
 import puppeteer from 'puppeteer';
+import pixelmatch from 'pixelmatch';
+import { PNG } from 'pngjs';
 import { exec } from 'child_process';
+import logUpdate from 'log-update';
 import { gray, red, greenBright, dim } from 'yoctocolors';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
-const EXAMPLES_BASELINE_DIR = path.join(__dirname, '..', 'static', 'examples');
+const EXAMPLES_BASELINE_DIR = path.join(__dirname, '..', 'src', 'snapshots');
 const VR_ROOT_DIR = path.join(__dirname, '..', 'static', '__vr');
 const VR_LATEST_DIR = path.join(VR_ROOT_DIR, 'latest');
 const VR_DIFF_DIR = path.join(VR_ROOT_DIR, 'diff');
@@ -23,7 +26,7 @@ const DIFF_THRESHOLD = parseFloat(process.env.VR_DIFF_THRESHOLD || '0.01');
 // Start the development server and return server instance and local URL
 const startServer = () => {
     console.log(dim('Starting development server...'));
-    const server = exec('pnpm dev');
+    const server = exec('pnpm preview');
 
     return new Promise((resolve) => {
         let serverUrl = null;
@@ -86,12 +89,20 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     const themeSuffix = isDarkMode ? '.dark' : '';
     const finalOutputPath = outputPath.replace('.png', `${themeSuffix}.png`);
 
+    await page.emulateMediaFeatures([
+        { name: 'prefers-color-scheme', value: isDarkMode ? 'dark' : 'light' }
+    ]);
+
     await page.waitForSelector('.content figure.svelteplot ', { timeout: 10000 });
 
     if (isDarkMode) {
         await page.evaluate(() => {
             document.documentElement.classList.add('dark');
-            window.dispatchEvent(new Event('theme-change'));
+        });
+        await new Promise((r) => setTimeout(r, 300));
+    } else {
+        await page.evaluate(() => {
+            document.documentElement.classList.remove('dark');
         });
         await new Promise((r) => setTimeout(r, 300));
     }
@@ -111,97 +122,84 @@ const takeScreenshot = async (page, urlPath, outputPath, isDarkMode = false) => 
     return true;
 };
 
-// Compare two images by URL within the browser using Canvas, return diff and dataURL
-const compareImages = async (page, baselineUrl, latestUrl, diffOutPath, serverUrl) => {
-    // Ensure the page has the same origin as the images to avoid canvas taint
-    try {
-        await page.goto(serverUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    } catch {}
-    const result = await page.evaluate(
-        async (bUrl, lUrl) => {
-            const loadImage = (src) =>
-                new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = () => resolve(img);
-                    img.onerror = reject;
-                    img.src = src;
-                });
+// Compare two images via pixelmatch in Node (faster than round-tripping through the browser)
+const compareImages = async (baselinePath, latestPath, diffOutPath) => {
+    const [baselineBuffer, latestBuffer] = await Promise.all([
+        fs.readFile(baselinePath),
+        fs.readFile(latestPath)
+    ]);
 
-            const baseline = await loadImage(bUrl);
-            const latest = await loadImage(lUrl);
+    const baseline = PNG.sync.read(baselineBuffer);
+    const latest = PNG.sync.read(latestBuffer);
 
-            const w = Math.min(baseline.naturalWidth, latest.naturalWidth);
-            const h = Math.min(baseline.naturalHeight, latest.naturalHeight);
+    const width = Math.min(baseline.width, latest.width);
+    const height = Math.min(baseline.height, latest.height);
+    const sizeMismatch = baseline.width !== latest.width || baseline.height !== latest.height;
 
-            // If sizes differ, we still compare the overlap; mark size mismatch
-            const sizeMismatch =
-                baseline.naturalWidth !== latest.naturalWidth ||
-                baseline.naturalHeight !== latest.naturalHeight;
+    const cropTo = (img) => {
+        if (img.width === width && img.height === height) return img;
+        const out = new PNG({ width, height });
+        for (let y = 0; y < height; y++) {
+            const srcStart = y * img.width * 4;
+            const destStart = y * width * 4;
+            img.data.copy(out.data, destStart, srcStart, srcStart + width * 4);
+        }
+        return out;
+    };
 
-            const canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(baseline, 0, 0);
-            const a = ctx.getImageData(0, 0, w, h);
-            ctx.clearRect(0, 0, w, h);
-            ctx.drawImage(latest, 0, 0);
-            const b = ctx.getImageData(0, 0, w, h);
+    const a = cropTo(baseline);
+    const b = cropTo(latest);
+    const diff = new PNG({ width, height });
+    const mismatched = pixelmatch(a.data, b.data, diff.data, width, height, {
+        threshold: 0.1,
+        includeAA: false
+    });
 
-            const diff = ctx.createImageData(w, h);
-            let mismatched = 0;
-            const perChannelThreshold = 5; // tolerate minor AA
+    await ensureDirectoryExists(path.dirname(diffOutPath));
+    await fs.writeFile(diffOutPath, PNG.sync.write(diff));
 
-            for (let i = 0; i < a.data.length; i += 4) {
-                const dr = Math.abs(a.data[i] - b.data[i]);
-                const dg = Math.abs(a.data[i + 1] - b.data[i + 1]);
-                const db = Math.abs(a.data[i + 2] - b.data[i + 2]);
-                const da = Math.abs(a.data[i + 3] - b.data[i + 3]);
-                const isDifferent =
-                    dr > perChannelThreshold ||
-                    dg > perChannelThreshold ||
-                    db > perChannelThreshold ||
-                    da > perChannelThreshold;
-                if (isDifferent) {
-                    mismatched++;
-                    // highlight diff in red
-                    diff.data[i] = 255;
-                    diff.data[i + 1] = 0;
-                    diff.data[i + 2] = 0;
-                    diff.data[i + 3] = 255;
-                } else {
-                    // copy latest pixel faintly for context
-                    diff.data[i] = b.data[i] * 0.3;
-                    diff.data[i + 1] = b.data[i + 1] * 0.3;
-                    diff.data[i + 2] = b.data[i + 2] * 0.3;
-                    diff.data[i + 3] = 255;
-                }
-            }
-            ctx.putImageData(diff, 0, 0);
-            const diffDataUrl = canvas.toDataURL('image/png');
-            const total = a.data.length / 4;
-            const percentage = total ? mismatched / total : 0;
-            return { width: w, height: h, mismatched, percentage, diffDataUrl, sizeMismatch };
-        },
-        baselineUrl,
-        latestUrl
-    );
+    const total = width * height;
+    const percentage = total ? mismatched / total : 0;
+    return { width, height, mismatched, percentage, sizeMismatch };
+};
 
-    // Write diff image to disk
-    if (result && result.diffDataUrl) {
-        const base64 = result.diffDataUrl.replace(/^data:image\/png;base64,/, '');
-        await ensureDirectoryExists(path.dirname(diffOutPath));
-        await fs.writeFile(diffOutPath, Buffer.from(base64, 'base64'));
-    }
-    return result;
+// Limit concurrent promises to avoid overloading the dev server
+const createLimiter = (limit) => {
+    let active = 0;
+    const queue = [];
+
+    const next = () => {
+        if (active >= limit) return;
+        const item = queue.shift();
+        if (!item) return;
+        active++;
+        item.fn()
+            .then((res) => item.resolve(res))
+            .catch((err) => item.reject(err))
+            .finally(() => {
+                active--;
+                next();
+            });
+    };
+
+    return (fn) =>
+        new Promise((resolve, reject) => {
+            queue.push({ fn, resolve, reject });
+            next();
+        });
 };
 
 const main = async () => {
+    // empty out previous latest and diff images
+    await fs.rm(VR_LATEST_DIR, { recursive: true, force: true });
+    await fs.rm(VR_DIFF_DIR, { recursive: true, force: true });
+
     await ensureDirectoryExists(VR_LATEST_DIR);
     await ensureDirectoryExists(VR_DIFF_DIR);
 
     const { server, url: serverUrl } = await startServer();
 
+    const completed = [];
     const failures = [];
     const records = [];
 
@@ -220,113 +218,181 @@ const main = async () => {
             greenBright(' ✓ ') + dim(`Found ${examplePaths.length} baseline example(s)\n\n`)
         );
 
-        // ANSI colors for status
-        const GREEN = '\x1b[32m';
-        const RED = '\x1b[31m';
-        const RESET = '\x1b[0m';
+        const okText = greenBright(`[OK]`);
+        const failText = red(`[FAILED]`);
+        const concurrency = Math.max(1, parseInt(process.env.VR_CONCURRENCY || '4', 10));
+        const limit = createLimiter(concurrency);
+        const running = new Set();
+        let lastRenderLines = 0;
 
-        for (const urlPath of examplePaths) {
+        let frame = 0;
+        const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+        let jobStarted = new Map();
+
+        const renderRunning = () => {
+            for (const r of running) {
+                if (!jobStarted.has(r)) {
+                    jobStarted.set(r, Date.now());
+                }
+            }
+            frame++;
+            logUpdate(`
+Completed:
+${completed.length > 20 ? gray(`... and ${completed.length - 20} more\n`) : ''}${completed
+                .slice(-20)
+                .map((x) => `${gray(`- ${x.shortRoute} ${x.mode} `)}${okText}`)
+                .join('\n')}
+
+Failed:
+${failures.map((x) => `${gray(`- ${x.shortRoute} ${x.mode} `)}${failText}`).join('\n')}
+
+Running:
+${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} ${gray(((Date.now() - jobStarted.get(r)) / 1000).toFixed(1) + 's')}`).join('\n')}
+`);
+        };
+        let i = setInterval(renderRunning, 80);
+
+        const runExample = async (urlPath) => {
             const route = `examples/${urlPath}`;
             const latestBase = path.join(VR_LATEST_DIR, urlPath + '.png');
             const latestDir = path.dirname(latestBase);
             await ensureDirectoryExists(latestDir);
 
-            // Print progress line and append result when done
-            process.stdout.write(
-                `${dim(' - processing ')}${route.split('/').slice(1).join('/')}  `
-            );
+            const shortRoute = route.split('/').slice(1).join('/');
+            running.add(shortRoute);
+            renderRunning();
 
             let routeFailed = false;
+            let page;
 
-            const page = await browser.newPage();
-            await page.goto(`${serverUrl}${route}`, { waitUntil: 'networkidle0', timeout: 60000 });
-
-            // light
-            await takeScreenshot(page, urlPath, latestBase, false);
-            // dark
-            await takeScreenshot(page, urlPath, latestBase, true);
-            await page.close();
-
-            // Compare light
-            for (const mode of ['light', 'dark']) {
-                const suffix = mode === 'dark' ? '.dark' : '';
-                const baselinePng = path.join(EXAMPLES_BASELINE_DIR, urlPath + `${suffix}.png`);
-                const latestPng = path.join(VR_LATEST_DIR, urlPath + `${suffix}.png`);
-                const diffPng = path.join(VR_DIFF_DIR, urlPath + `${suffix}.png`);
-
-                // Ensure baseline exists; if not, skip compare
-                let baselineExists = false;
+            try {
                 try {
-                    await fs.access(baselinePng);
-                    baselineExists = true;
-                } catch {}
-                if (!baselineExists) {
+                    page = await browser.newPage();
+                    await page.goto(`${serverUrl}${route}`, {
+                        waitUntil: 'networkidle0',
+                        timeout: 60000
+                    });
+
+                    // light
+                    await takeScreenshot(page, urlPath, latestBase, false);
+                    // dark
+                    await takeScreenshot(page, urlPath, latestBase, true);
+                } catch (err) {
                     const rec = {
                         route,
-                        mode,
-                        status: 'missing-baseline',
-                        baseline: baselinePng,
-                        latest: latestPng
+                        shortRoute,
+                        mode: '-',
+                        status: 'error',
+                        error: String(err)
                     };
                     records.push(rec);
                     failures.push(rec);
-                    console.warn(`Missing baseline: ${baselinePng}`);
                     routeFailed = true;
-                    continue;
-                }
-
-                const comparePage = await browser.newPage();
-                const baselineUrl = `${serverUrl}${path.posix.join('examples', urlPath + `${suffix}.png`)}`;
-                const latestUrl = `${serverUrl}${path.posix.join('__vr', 'latest', urlPath + `${suffix}.png`)}`;
-                let res;
-                try {
-                    res = await compareImages(
-                        comparePage,
-                        baselineUrl,
-                        latestUrl,
-                        diffPng,
-                        serverUrl
-                    );
-                } catch (e) {
-                    res = {
-                        width: 0,
-                        height: 0,
-                        mismatched: 0,
-                        percentage: 1,
-                        sizeMismatch: false,
-                        error: String(e)
-                    };
+                    running.delete(shortRoute);
+                    renderRunning();
+                    // console.log(`- completed ${shortRoute}  ${failText}`);
+                    return;
                 } finally {
-                    await comparePage.close();
+                    if (page) await page.close().catch(() => {});
                 }
 
-                const passed = !res.sizeMismatch && res.percentage <= DIFF_THRESHOLD;
+                // Compare light
+                for (const mode of ['light', 'dark']) {
+                    const suffix = mode === 'dark' ? '.dark' : '';
+                    const baselinePng = path.join(EXAMPLES_BASELINE_DIR, urlPath + `${suffix}.png`);
+                    const latestPng = path.join(VR_LATEST_DIR, urlPath + `${suffix}.png`);
+                    const diffPng = path.join(VR_DIFF_DIR, urlPath + `${suffix}.png`);
+
+                    // Ensure baseline exists; if not, skip compare
+                    let baselineExists = false;
+                    try {
+                        await fs.access(baselinePng);
+                        baselineExists = true;
+                    } catch {}
+                    if (!baselineExists) {
+                        const rec = {
+                            route,
+                            shortRoute,
+                            mode,
+                            status: 'missing-baseline',
+                            baseline: baselinePng,
+                            latest: latestPng
+                        };
+                        records.push(rec);
+                        failures.push(rec);
+                        console.warn(`Missing baseline: ${baselinePng}`);
+                        routeFailed = true;
+                        continue;
+                    }
+
+                    let res;
+
+                    try {
+                        res = await compareImages(baselinePng, latestPng, diffPng);
+                    } catch (e) {
+                        console.log(e);
+                        res = {
+                            shortRoute,
+                            width: 0,
+                            height: 0,
+                            mismatched: 0,
+                            percentage: 1,
+                            sizeMismatch: false,
+                            error: String(e)
+                        };
+                    }
+
+                    const passed = !res.sizeMismatch && res.percentage <= DIFF_THRESHOLD;
+                    const rec = {
+                        route,
+                        shortRoute,
+                        mode,
+                        width: res.width,
+                        height: res.height,
+                        mismatched: res.mismatched,
+                        percentage: res.percentage,
+                        threshold: DIFF_THRESHOLD,
+                        sizeMismatch: res.sizeMismatch,
+                        baseline: baselinePng,
+                        latest: latestPng,
+                        diff: diffPng,
+                        status: passed ? 'passed' : 'failed'
+                    };
+
+                    records.push(rec);
+
+                    if (!passed) {
+                        failures.push(rec);
+                        routeFailed = true;
+                    } else {
+                        completed.push(rec);
+                    }
+                }
+
+                // Append final status to the same line
+                running.delete(shortRoute);
+                // renderRunning();
+                // console.log(`- completed ${shortRoute}  ${statusText}`);
+            } catch (err) {
                 const rec = {
                     route,
-                    mode,
-                    width: res.width,
-                    height: res.height,
-                    mismatched: res.mismatched,
-                    percentage: res.percentage,
-                    threshold: DIFF_THRESHOLD,
-                    sizeMismatch: res.sizeMismatch,
-                    baseline: baselinePng,
-                    latest: latestPng,
-                    diff: diffPng,
-                    status: passed ? 'passed' : 'failed'
+                    mode: '-',
+                    status: 'error',
+                    error: String(err)
                 };
                 records.push(rec);
-                if (!passed) {
-                    failures.push(rec);
-                    routeFailed = true;
-                }
+                failures.push(rec);
+                routeFailed = true;
+                running.delete(shortRoute);
+                // renderRunning();
+                // console.log(`- completed ${shortRoute}  ${failText}`);
             }
+        };
 
-            // Append final status to the same line
-            const okText = greenBright(`[OK]`);
-            const failText = red(`[FAILED]`);
-            process.stdout.write(`${routeFailed ? failText : okText}\n`);
-        }
+        await Promise.all(examplePaths.map((urlPath) => limit(() => runExample(urlPath))));
+
+        clearInterval(i);
 
         await browser.close();
     } catch (err) {
@@ -361,9 +427,11 @@ const main = async () => {
     for (const r of records) {
         const pct = r.percentage !== undefined ? (r.percentage * 100).toFixed(3) + '%' : '-';
         const marker = r.status === 'passed' ? '✓' : r.status === 'failed' ? '✗' : '!';
-        console.log(
-            `${marker} ${String(r.mode || '-').padEnd(5)} ${r.route} diff=${pct}${r.sizeMismatch ? ' (size mismatch)' : ''}`
-        );
+        if (r.status !== 'passed') {
+            console.log(
+                `${marker} ${String(r.mode || '-').padEnd(5)} ${r.route} diff=${pct}${r.sizeMismatch ? ' (size mismatch)' : ''}`
+            );
+        }
     }
     const passedCount = records.filter((r) => r.status === 'passed').length;
     const failedCount = records.filter((r) => r.status !== 'passed').length;

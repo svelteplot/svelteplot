@@ -2,7 +2,7 @@
 title: Normalize transform
 ---
 
-Useful for normalizing data series of varying magnitude such as stock prices of different companies.
+Useful for normalizing data series of different measurement units or varying magnitude such as stock prices of different companies.
 
 ```svelte live
 <script>
@@ -58,6 +58,24 @@ Useful for normalizing data series of varying magnitude such as stock prices of 
 </Plot>
 ```
 
+:::tip
+👀 You find more examples using the normalize transform in the [examples section](/examples/normalize).
+:::
+
+## Options
+
+The normalize transform supports the following named basis options:
+
+- `first` - Normalizes based on the first value in the series.
+- `last` - Normalizes based on the last value in the series.
+- `min` - Normalizes based on the minimum value in the series.
+- `max` - Normalizes based on the maximum value in the series.
+- `mean` - Normalizes based on the mean (average) value in the series.
+- `median` - Normalizes based on the median value in the series.
+- `sum` - Normalizes based on the sum of all values in the series.
+- `deviation` - Normalizes based on the standard deviation of the series.
+- `extent` - Normalizes based on the range (max - min) of the series.
+
 In addition to the named basis options you can define your own, e.g. to specify the exact date to index your data on:
 
 ```svelte live
@@ -102,6 +120,106 @@ In addition to the named basis options you can define your own, e.g. to specify 
 </Plot>
 ```
 
-## NormalizeY
+## normalizeY
 
-## NormalizeX
+Normalizes the y-values of a data series based on a specified basis.
+
+## normalizeX
+
+Normalizes the x-values of a data series based on a specified basis.
+
+## normalizeParallelY
+
+:::info
+added in 0.7.1
+:::
+
+A specialized normalizeY that normalizes multiple y-value series indepenently for each x-value. Under the hood this is just the `normalizeY` and `sort` transforms [combined](https://github.com/svelteplot/svelteplot/blob/main/src/lib/transforms/normalize.ts#L116-L132).
+
+```svelte live
+<script lang="ts">
+    import {
+        Plot,
+        Line,
+        normalizeParallelY
+    } from 'svelteplot';
+
+    import { page } from '$app/state';
+    let { iris2 } = $derived(page.data.data);
+</script>
+
+<Plot
+    grid
+    y={{ label: 'Standard deviation' }}
+    color={{ legend: true }}>
+    <Line
+        {...normalizeParallelY(
+            {
+                data: iris2,
+                x: 'Measurement',
+                y: 'Value',
+                z: 'Id'
+            },
+            'deviation'
+        )}
+        strokeOpacity={0.5}
+        stroke="Species"
+        marker="dot" />
+</Plot>
+```
+
+```svelte
+<Plot grid color={{ legend: true }}>
+    <Line
+        {...normalizeParallelY(
+            {
+                data: iris,
+                x: 'Measurement',
+                y: 'Value',
+                z: 'Id'
+            },
+            'deviation'
+        )}
+        strokeOpacity={0.5}
+        stroke="Species" />
+</Plot>
+```
+
+[fork](https://svelte.dev/playground/e328626124904a89a0ddbe8a3816a7af?version=5)
+
+## normalizeParallelX
+
+:::info
+added in 0.7.1
+:::
+
+A specialized normalizeX that normalizes multiple x-value series for each y-value.
+
+```svelte live
+<script lang="ts">
+    import {
+        Plot,
+        Line,
+        normalizeParallelX
+    } from 'svelteplot';
+
+    import { page } from '$app/state';
+    let { iris2 } = $derived(page.data.data);
+</script>
+
+<Plot grid height={300} color={{ legend: true }}>
+    <Line
+        {...normalizeParallelX(
+            {
+                data: iris2,
+                x: 'Value',
+                y: 'Measurement',
+                z: 'Id'
+            },
+            'extent'
+        )}
+        strokeOpacity={0.5}
+        stroke="Species"
+        marker="dot" />
+</Plot>
+```

@@ -4,9 +4,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface RectMarkProps
-        extends BaseMarkProps<Datum>,
-            LinkableMarkProps<Datum>,
-            BaseRectMarkProps<Datum> {
+        extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
         data: Datum[];
         x?: ChannelAccessor<Datum>;
         x1?: ChannelAccessor<Datum>;
@@ -18,10 +16,8 @@
         className?: string;
     }
     import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
     import { intervalX, intervalY } from '$lib/index.js';
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         BaseRectMarkProps,
@@ -32,6 +28,7 @@
     import RectPath from './helpers/RectPath.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RectMarkProps = $props();
 
@@ -48,8 +45,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const args = $derived(
         intervalY(intervalX({ data, ...options }, { plot }), { plot }) as RectMarkProps

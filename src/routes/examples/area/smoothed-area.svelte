@@ -1,15 +1,18 @@
 <script module>
     export const title = 'Area with rolling mean';
     export const description =
-        'An area chart showing daily high and low temperatures with smoothed rolling window lines.';
+        'An area chart showing daily high and low temperatures with smoothed rolling window lines. Based on an example from <a href="https://observablehq.com/@observablehq/plot-window-line-area">Observable Plot</a>.';
     export const transforms = ['window'];
+    export const data = { sftemp: '/data/sftemp.csv' };
+    export const repl =
+        'https://svelte.dev/playground/1ebfd73017f74970866d24f1f05979ec?version=latest';
 </script>
 
 <script lang="ts">
     import { Plot, AreaY, Line, windowY } from 'svelteplot';
-    import { page } from '$app/state';
 
-    let { sftemp } = $derived(page.data.data);
+    let { sftemp } = $props();
+
     let k = $state(20);
     let reduce = $state('mean');
     let anchor = $state('middle');

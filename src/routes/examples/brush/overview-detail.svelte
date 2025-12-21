@@ -1,6 +1,9 @@
 <script module lang="ts">
     export const title = 'Overview and detail';
     export const fullCode = true;
+    export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/548cc13907f0439688d6b7f237fd62fc?version=latest';
 </script>
 
 <script lang="ts">
@@ -12,9 +15,8 @@
         RectX,
         BrushX
     } from 'svelteplot';
-    import { page } from '$app/state';
 
-    const { aapl } = $derived(page.data.data);
+    const { aapl } = $props();
 
     let brush = $state({
         enabled: true,

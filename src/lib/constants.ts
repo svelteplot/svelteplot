@@ -91,8 +91,15 @@ export const VALID_SCALE_TYPES: Record<ScaleName, Set<ScaleType>> = {
         'quantile',
         'quantize',
         'threshold'
-    ])
-    // ...
+    ]),
+    symbol: new Set(['categorical', 'ordinal']),
+    opacity: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    r: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    length: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    fx: new Set(['band']),
+    fy: new Set(['band']),
+    // projection is a special type not mapping to a D3 scale
+    projection: new Set()
 };
 
 /**
@@ -125,6 +132,9 @@ export const CSS_RGBA = /^rgba\(/; // just check for prefix
 export const CSS_URL = /^url\(#/; // just check for prefix
 
 export const INDEX = Symbol('index');
+
+export const PI = Math.PI;
+export const TAU = PI * 2;
 
 // export const CHANNEL_MAP: Record<ScaleName, ValueOf<typeof SCALE_TYPES>> = {
 // 	x: SCALE_TYPES.x,

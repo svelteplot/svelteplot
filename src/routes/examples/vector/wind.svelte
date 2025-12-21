@@ -1,13 +1,15 @@
 <script module>
     export const title = 'Flow plot';
+
+    export const description = `Based on an example from <a href="https://observablehq.com/@observablehq/plot-wind-map">Observable Plot</a> that is based on a <a href="https://github.com/gicentre/litvis/blob/main/examples/windVectors.md">LitVis example</a>.`;
+    export const data = { wind: '/data/wind.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Vector } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { WindRow } from '../types';
 
-    let { wind } = $derived(page.data.data) as ExamplesData;
+    let { wind }: { wind: WindRow[] } = $props();
 </script>
 
 <Plot

@@ -1,13 +1,12 @@
 <script module>
     export let title = 'Simple Bars';
     export let sortKey = 1;
+    export const repl =
+        'https://svelte.dev/playground/53c515c1c4ae4302852a8b76078a5a2b?version=latest';
 </script>
 
 <script>
     import { Plot, BarY, RuleY } from 'svelteplot';
-
-    import { page } from '$app/state';
-    let { alphabet } = $derived(page.data.data);
 
     const data = [
         { fruit: 'Apples', quantity: 212 },

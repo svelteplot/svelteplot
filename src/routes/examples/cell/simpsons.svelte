@@ -1,15 +1,17 @@
 <script module lang="ts">
     export let title = 'Cell Plot';
+    export const description = `Ratings of Simpsons episodes, arranged by season. Based on an example from <a href="https://observablehq.com/@observablehq/plot-simpsons-ratings">Observable Plot</a>.`;
+    export const data = { simpsons: '/data/simpsons.csv' };
+    export const repl =
+        'https://svelte.dev/playground/9ef931425ebb46c9b5ab8971decc2b00?version=5';
 </script>
 
 <script lang="ts">
     import { Plot, Cell, Text } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
+    import type { SimpsonsRow } from '../types';
 
-    let { simpsons } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    let { simpsons }: { simpsons: SimpsonsRow[] } =
+        $props();
 </script>
 
 <Plot

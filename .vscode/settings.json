@@ -19,14 +19,16 @@
     "prettier.tabWidth": 4,
     "prettier.trailingComma": "none",
     "prettier.printWidth": 100,
-    "prettier.documentSelectors": [
-        "*.svelte",
-        "*.md",
-        "**/examples/**/*.svelte",
-        "src/routes/examples/**/*.svelte"
-    ],
+    "prettier.documentSelectors": ["svelte", "typescript", "javascript", "markdown"],
     "svelte.plugin.svelte.format.enable": false,
     "eslint.probe": ["javascript", "typescript", "svelte"],
     "eslint.useFlatConfig": true,
-    "eslint.workingDirectories": [{ "mode": "auto" }]
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "[svg]": {
+        "editor.defaultFormatter": "jock.svg"
+    }
 }

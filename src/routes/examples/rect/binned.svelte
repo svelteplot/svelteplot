@@ -1,34 +1,31 @@
 <script module>
     export const title = 'Binned Rectangles';
     export const description =
-        'A simple example of a binned rectangle plot showing the distribution of Olympian weights.';
+        'A simple example of a binned rectangle plot showing the distribution of Olympian weights. Based on an example from <a href="https://observablehq.com/@observablehq/plot-olympians-heatmap">Observable Plot</a>.';
     export const sortKey = 20;
     export const transforms = ['bin'];
+    export const data = {
+        olympians: '/data/olympians.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Rect, bin } from 'svelteplot';
-    import { page } from '$app/state';
-    import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    import type { SveltepressContext } from '@sveltepress/theme-default/context';
-    import type { ExamplesData } from '../types';
+    import type { OlympiansRow } from '../types';
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
 
-    let { olympians } = $derived(
-        page.data.data as ExamplesData
-    );
+    let { olympians }: { olympians: OlympiansRow[] } =
+        $props();
 
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
+    const ds = useDark();
 </script>
 
 <Plot
     opacity={{
-        range: [$isDark ? 0 : 0.4, 1],
+        range: [ds.isDark ? 0 : 0.4, 1],
         type: 'sqrt'
     }}
-    color={{ scheme: $isDark ? 'magma' : 'rdpu' }}>
+    color={{ scheme: ds.isDark ? 'magma' : 'rdpu' }}>
     <Rect
         {...bin(
             { data: olympians, x: 'weight', y: 'height' },

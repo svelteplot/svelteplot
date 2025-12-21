@@ -69,13 +69,12 @@
         return Array.isArray(tick)
             ? tick
             : typeof tick === 'string' && isBandScale && options.wordwrap !== false
-              ? wordwrap(
-                    tick,
-                    { maxLineWidth: bandWidth * 0.9 },
-                    { minCharactersPerLine: 4 },
-                    +resolveProp(tickFontSize, {}, 11),
-                    false
-                )
+              ? wordwrap(tick, {
+                    maxLineWidth: bandWidth * 0.9,
+                    minCharactersPerLine: 4,
+                    fontSize: +resolveProp(tickFontSize, {}, 11),
+                    monospace: false
+                })
               : [tick];
     }
 

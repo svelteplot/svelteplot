@@ -1,15 +1,14 @@
 <script module>
     export const title = 'Multiple SVG marks';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, CustomMark } from 'svelteplot';
     import Spiral from '$lib/ui/Spiral.svelte';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { penguins } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { PenguinsRow } from '../types';
+    let { penguins }: { penguins: PenguinsRow[] } =
+        $props();
 </script>
 
 <Plot

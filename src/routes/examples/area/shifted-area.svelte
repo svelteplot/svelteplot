@@ -3,12 +3,15 @@
     export const description =
         'An area plot with the area shifted up and down along the y-axis.';
     export const transforms = ['shift'];
+    export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/51d7711302964d5282e756346b639d84?version=latest';
 </script>
 
 <script lang="ts">
     import { Plot, Line, AreaY, shiftY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot y={{ grid: true }}>

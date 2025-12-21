@@ -1,3 +1,10 @@
+/**
+ * This implementation is based on the waffle chart implementation in Observable Plot!
+ * https://github.com/observablehq/plot/blob/main/src/marks/waffle.js
+ *
+ * Kept the comments from the original implementation for clarity.
+ */
+
 // A waffle is approximately a rectangular shape, but may have one or two corner
 // cuts if the starting or ending value is not an even multiple of the number of
 // columns (the width of the waffle in cells). We can represent any waffle by

@@ -126,7 +126,11 @@ function stackXY<T>(
             // so that series identities remain consistent across the secondary dimension.
             // This is required for offsets like 'wiggle' and 'inside-out'.
             let keys: any[];
+
             const groupedBySecondDim = d3Groups(facetData, (d) => d[S[secondDim]]);
+            // .sort((a, b) =>
+            //     xOrder[a[0]] - xOrder[b[0]]
+            // );
             let stackData: any[];
 
             const hasUniqueGroups =
@@ -201,7 +205,7 @@ function stackXY<T>(
         }
 
         return {
-            data: out,
+            data: out.sort((a, b) => a[INDEX] - b[INDEX]),
             ...channels,
             [byDim]: undefined,
             ...(typeof channels[byDim] === 'string' && !channels[ORIGINAL_NAME_KEYS[byDim]]

@@ -41,11 +41,11 @@ export function clientToLayerCoordinates(
 export function addEventHandlers<T extends DataRow>({
     options,
     datum,
-    getPlotState
+    plot
 }: {
     options: BaseMarkProps<T>;
     datum: DataRecord;
-    getPlotState: () => PlotState;
+    plot: PlotState;
 }): Attachment {
     const events = pick(options, [
         'onclick',
@@ -85,7 +85,7 @@ export function addEventHandlers<T extends DataRow>({
         for (const [eventName, eventHandler] of Object.entries(events)) {
             if (eventHandler) {
                 const wrappedHandler = (origEvent: Event) => {
-                    const { scales, body, options } = getPlotState();
+                    const { scales, body, options: plotOptions } = plot;
                     if (origEvent instanceof MouseEvent || origEvent instanceof PointerEvent) {
                         let facetEl = origEvent.target as SVGElement;
                         while (
@@ -101,9 +101,9 @@ export function addEventHandlers<T extends DataRow>({
                             facetEl?.firstElementChild ?? body
                         ).getBoundingClientRect();
                         const relativeX =
-                            origEvent.clientX - facetRect.left + (options.marginLeft ?? 0);
+                            origEvent.clientX - facetRect.left + (plotOptions.marginLeft ?? 0);
                         const relativeY =
-                            origEvent.clientY - facetRect.top + (options.marginTop ?? 0);
+                            origEvent.clientY - facetRect.top + (plotOptions.marginTop ?? 0);
 
                         if (scales.projection) {
                             const [x, y] = scales.projection.invert([relativeX, relativeY]);

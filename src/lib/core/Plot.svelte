@@ -31,6 +31,7 @@
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
     import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
     import { maybeNumber } from 'svelteplot/helpers/index.js';
+    import { setPlot, usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     // automatic margins can be applied by the marks, registered
     // with their respective unique identifier as keys
@@ -67,7 +68,7 @@
         unknown: '#cccccc99',
         sortOrdinalDomains: true,
         categoricalColorScheme: 'observable10',
-        pointScaleHeight: 18,
+        pointScaleHeight: 20,
         bandScaleHeight: 30,
         locale: 'en-US',
         numberFormat: {
@@ -208,6 +209,12 @@
         isOneDimensional && explicitScales.has('x') ? 1 : preScales.y.domain.length
     );
 
+    const defaultPointScaleHeight = $derived(
+        explicitScales.has('r') && plotOptions.r.range
+            ? plotOptions.r.range[1] * 2
+            : DEFAULTS.pointScaleHeight
+    );
+
     // compute the (automatic) height based on various factors:
     // - if the plot used a projection and the projection requires an aspect ratio,
     //   we use it, but adjust for the facet counts
@@ -239,7 +246,7 @@
                                 : preScales.y.type === 'band'
                                   ? yFacetCount * yDomainCount * DEFAULTS.bandScaleHeight
                                   : preScales.y.type === 'point'
-                                    ? yFacetCount * yDomainCount * DEFAULTS.pointScaleHeight
+                                    ? yFacetCount * yDomainCount * defaultPointScaleHeight
                                     : DEFAULTS.height) +
                             plotOptions.marginTop +
                             plotOptions.marginBottom
@@ -255,11 +262,10 @@
     let facetWidth: number | null = $state(null);
     let facetHeight: number | null = $state(null);
 
-    // eslint-disable-next-line svelte/prefer-writable-derived
-    let plotState: PlotState = $state(computePlotState());
+    let plotState = setPlot(computePlotState());
 
     $effect(() => {
-        plotState = computePlotState();
+        plotState.update(computePlotState());
     });
 
     function computePlotState() {
@@ -331,7 +337,7 @@
             if (facetHeight !== h) facetHeight = h;
         },
         updatePlotState() {
-            plotState = computePlotState();
+            plotState.update(computePlotState());
         }
     });
 

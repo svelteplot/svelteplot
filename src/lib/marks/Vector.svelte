@@ -29,7 +29,6 @@
         canvas?: boolean;
     }
     import type {
-        PlotContext,
         DataRecord,
         BaseMarkProps,
         ChannelAccessor,
@@ -47,6 +46,7 @@
     import { addEventHandlers } from './helpers/events.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const defaultRadius = 3.5;
 
@@ -72,8 +72,7 @@
         ...markProps
     });
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
     const testFacet = $derived(getTestFacet());
@@ -203,7 +202,7 @@
                                   : `translate(0, ${d.length / 2})`}"
                             {style}
                             {@attach addEventHandlers({
-                                getPlotState,
+                                plot,
                                 options: args,
                                 datum: d?.datum
                             })}

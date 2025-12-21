@@ -1,5 +1,9 @@
 <script module>
     export const title = 'AreaY';
+    export const data = { aapl: '/data/aapl.csv' };
+    export const sortKey = 3;
+    export const repl =
+        'https://svelte.dev/playground/3a0e5ea3118e48378d9302ce35d992f8?version=latest';
 </script>
 
 <script lang="ts">
@@ -8,9 +12,9 @@
         AreaY,
         setPlotDefaults
     } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    import type { AaplRow } from '../types';
+
+    let { aapl }: { aapl: AaplRow[] } = $props();
 
     setPlotDefaults({
         height: 100

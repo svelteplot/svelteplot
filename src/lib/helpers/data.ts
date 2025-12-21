@@ -2,7 +2,7 @@ import { csvParse, autoType } from 'd3-dsv';
 
 type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
-async function loadCSV(fetch: Fetch, dataset: string): Promise<any[]> {
+export async function loadCSV(fetch: Fetch, dataset: string): Promise<any[]> {
     const res = await fetch(`/data/${dataset}.csv`);
     const text = await res.text();
     return csvParse(text, autoType);

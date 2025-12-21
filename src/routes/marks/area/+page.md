@@ -435,6 +435,8 @@ Additional options include:
 - **curve**: Curve type for interpolation between points
   (options: linear, basis, cardinal, step, etc.)
 
+The example below demonstrates how to use the Area mark to create a custom area chart with a dynamically calculated baseline, showing both the upper and lower bounds with lines.
+
 ```svelte live
 <script lang="ts">
     import { Plot, Area, Line } from '$lib/index.js';
@@ -476,4 +478,31 @@ Additional options include:
 </Plot>
 ```
 
-This example demonstrates using the Area mark to create a custom area chart with a dynamically calculated baseline, showing both the upper and lower bounds with lines.
+```svelte
+<Plot grid>
+    <Area
+        data={aapl}
+        canvas
+        x1="Date"
+        y1={(d) =>
+            baseline.find((b) => +b.date === +d.Date)
+                ?.value || 0}
+        y2="Close"
+        opacity={0.25}
+        fill="steelblue" />
+    <Line
+        data={aapl}
+        x="Date"
+        y="Close"
+        stroke="steelblue" />
+    <Line
+        data={baseline}
+        x="date"
+        y="value"
+        stroke="steelblue"
+        strokeOpacity={0.5}
+        strokeDasharray="3,3" />
+</Plot>
+```
+
+[fork](https://svelte.dev/playground/cbb5a8b40c28429f916776cae3414588?version=5)

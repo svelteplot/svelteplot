@@ -1,10 +1,11 @@
 <script lang="ts">
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { getContext, type ComponentProps } from 'svelte';
-    import type { PlotContext, ScaledDataRecord, UsedScales } from '$lib/index.js';
+    import { type ComponentProps } from 'svelte';
+    import type { ScaledDataRecord, UsedScales } from '$lib/index.js';
     import type Text from '../Text.svelte';
     import { CSS_VAR } from 'svelteplot/constants';
     import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const LINE_ANCHOR = {
         bottom: 'auto',
@@ -12,8 +13,7 @@
         top: 'hanging'
     } as const;
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let {
         textLines,

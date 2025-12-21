@@ -1,14 +1,17 @@
 <script module>
     export const title = 'Dot plot';
+    export const description =
+        'Recreation of an example dot chart from "The Elements of Graphing Data" by William Cleveland (1985) showing number of speakers for world languages with more than 70 million speakers on a log base 2 scale';
+    export const data = {
+        languages: '/data/languages.csv'
+    };
 </script>
 
 <script lang="ts">
     import { Plot, Dot, GridY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { languages } = $derived(
-        page.data.data
-    ) as ExamplesData;
+    import type { LanguagesRow } from '../types';
+    let { languages }: { languages: LanguagesRow[] } =
+        $props();
 </script>
 
 <Plot
@@ -20,7 +23,11 @@
         label: 'NUMBER OF SPEAKERS',
         labelAnchor: 'center'
     }}
-    y={{ type: 'point', label: '' }}>
+    y={{
+        type: 'point',
+        label: false,
+        tickFormat: (d) => d.toUpperCase()
+    }}>
     <GridY strokeDasharray="1,3" strokeOpacity={0.5} />
     <Dot
         data={languages.filter(

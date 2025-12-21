@@ -1,9 +1,12 @@
 <script module>
     export const title = 'Datawrapper-style ticks';
     export const sortKey = 99;
+    export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/64f4cbaf8ad14002898da2ed3a0fffb3?version=latest';
 </script>
 
-<script>
+<script lang="ts">
     import {
         Plot,
         AxisX,
@@ -11,8 +14,8 @@
         GridX,
         RuleY
     } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot>

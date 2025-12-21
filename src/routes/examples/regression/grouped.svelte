@@ -2,13 +2,13 @@
     export const title = 'Grouped regression';
 
     export const description =
-        'Regression lines grouped by a categorical variable, with different colors for each group.';
+        'Regression lines grouped by a categorical variable, with different colors for each group. Based on an example from <a href="https://observablehq.com/@observablehq/plot-linear-regression-simpson" target="_blank" rel="noopener noreferrer">Observable Plot</a>.';
+    export const data = { penguins: '/data/penguins.csv' };
 </script>
 
 <script>
     import { Plot, Dot, RegressionY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+    let { penguins } = $props();
 </script>
 
 <Plot grid height={500} color={{ legend: true }}>

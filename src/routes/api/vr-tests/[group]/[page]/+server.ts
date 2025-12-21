@@ -30,8 +30,9 @@ export const POST: RequestHandler = async ({ params }) => {
     }
 
     const staticDir = path.resolve('static');
+    const srcDir = path.resolve('src');
     const latestBase = path.join(staticDir, '__vr', 'latest', group, page);
-    const baselineBase = path.join(staticDir, 'examples', group, page);
+    const baselineBase = path.join(srcDir, 'snapshots', group, page);
 
     const variants = [
         { mode: 'light', suffix: '' },

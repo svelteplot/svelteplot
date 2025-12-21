@@ -1,14 +1,30 @@
 <script>
     import { resolve } from '$app/paths';
+    import { useDark } from './isDark.svelte';
     let { examples } = $props();
+
+    const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
+        eager: true,
+        query: {
+            enhanced: true,
+            w: 640
+        }
+    });
+
+    const ds = useDark();
 </script>
 
 <div class="list">
     {#each examples as page, i (i)}
         <a href={resolve(page.url)}>
             <div>
-                {#if page.screenshot}
-                    <img src={page.screenshot} alt={page.title} />{/if}
+                {#if exampleImages[`../../snapshots/${page.key}.png`]}
+                    <enhanced:img
+                        src={ds.isDark
+                            ? exampleImages[`../../snapshots/${page.key}.dark.png`].default.img.src
+                            : exampleImages[`../../snapshots/${page.key}.png`].default.img.src}
+                        alt={page.title} />
+                {/if}
             </div>
             <h4>
                 {page.title}
@@ -49,7 +65,7 @@
         }
     }
 
-    .list img {
+    .list :global(img) {
         width: 100%;
         box-sizing: border-box;
         border-radius: 3px;

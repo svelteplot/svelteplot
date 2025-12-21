@@ -1,11 +1,12 @@
 <script module>
     export const title = 'Line grouping';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot color={{ scheme: 'rainbow' }}>

@@ -1,11 +1,9 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
     import { symbol as d3Symbol } from 'd3-shape';
     import { maybeSymbol } from '$lib/helpers/symbols.js';
-    import type { PlotContext } from '../types/index.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    let plot = $derived(getPlotState());
+    const plot = usePlot();
 
     // TODO: allow styling of legend
 </script>

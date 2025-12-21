@@ -58,16 +58,16 @@ The [binX](#binX) transform takes **x** as input and outputs **x1** and **x2** r
         binX,
         stackY
     } from 'svelteplot';
-
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
     import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
+
+    const ds = useDark();
 
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 </script>
 
-<Plot color={{ scheme: $isDark ? 'turbo' : 'YlGnBu' }}>
+<Plot color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
     <RectY
         {...binX(
             { data: olympians, x: 'weight', fy: 'sex' },
@@ -77,7 +77,7 @@ The [binX](#binX) transform takes **x** as input and outputs **x1** and **x2** r
 ```
 
 ```svelte
-<Plot color={{ scheme: $isDark ? 'turbo' : 'YlGnBu' }}>
+<Plot color={{ scheme: isDark ? 'turbo' : 'YlGnBu' }}>
     <RectY
         {...binX(
             { data: olympians, x: 'weight', fy: 'sex' },
@@ -203,13 +203,12 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
         binX,
         stackY
     } from 'svelteplot';
-
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
     import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
 
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
+    const ds = useDark();
 </script>
 
 <Plot
@@ -227,7 +226,7 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
             },
             { y2: 'count' }
         )}
-        blend={$isDark ? 'screen' : 'multiply'} />
+        blend={ds.isDark ? 'screen' : 'multiply'} />
     <RuleY data={[0]} />
 </Plot>
 ```
@@ -244,7 +243,7 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
             },
             { y2: 'count' }
         )}
-        blend={$isDark ? 'screen' : 'multiply'} />
+        blend={isDark ? 'screen' : 'multiply'} />
     <RuleY data={[0]} />
 </Plot>
 ```
@@ -593,8 +592,9 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
     import { getContext } from 'svelte';
-    import { SVELTEPRESS_CONTEXT_KEY } from '@sveltepress/theme-default/context';
-    const { isDark } = getContext(SVELTEPRESS_CONTEXT_KEY);
+    import { useDark } from 'svelteplot/ui/isDark.svelte';
+
+    const ds = useDark();
 
     let args = $derived(
         bin(
@@ -607,7 +607,7 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
 {#if olympians}
     <Plot
         testid="olympians-binned"
-        color={{ scheme: $isDark ? 'turbo' : 'YlGnBu' }}>
+        color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
         <Rect {...args} inset={0} />
     </Plot>
 {/if}

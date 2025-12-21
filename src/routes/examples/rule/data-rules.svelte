@@ -2,13 +2,13 @@
     export const title = 'Data rules';
     export const description =
         'Note that you probably want to use TickY instead of a faceted RuleY.';
+    export const data = { aapl: '/data/aapl.csv' };
 </script>
 
 <script lang="ts">
     import { Plot, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    import type { ExamplesData } from '../types';
-    let { aapl } = $derived(page.data.data) as ExamplesData;
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 
     const monthNames = [
         'Jan',

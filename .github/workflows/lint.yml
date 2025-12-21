@@ -1,5 +1,9 @@
 name: Lint Check
 
+permissions:
+    contents: read
+    pull-requests: write
+
 on:
     push:
         branches: [main]
@@ -12,6 +16,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
             - name: Install pnpm
               uses: pnpm/action-setup@v3
@@ -30,3 +36,56 @@ jobs:
 
             - name: Run linting
               run: pnpm run lint
+
+            - name: Count TypeScript errors on PR branch
+              run: |
+                  pnpm lint:types --pretty false > ts-errors-pr.log 2>&1 || true
+                  TS_ERRORS_PR=$(grep -o "error TS[0-9]\\+" ts-errors-pr.log | wc -l | tr -d ' ' || true)
+                  echo "TS_ERRORS_PR=${TS_ERRORS_PR}" >> "$GITHUB_ENV"
+                  echo "TypeScript errors on PR branch: ${TS_ERRORS_PR}"
+
+            - name: Count TypeScript errors on main branch
+              run: |
+                  CURRENT_REF=$(git rev-parse HEAD)
+                  git fetch origin main --depth=1
+                  git checkout origin/main
+                  pnpm lint:types --pretty false > ts-errors-main.log 2>&1 || true
+                  TS_ERRORS_MAIN=$(grep -o "error TS[0-9]\\+" ts-errors-main.log | wc -l | tr -d ' ' || true)
+                  echo "TS_ERRORS_MAIN=${TS_ERRORS_MAIN}" >> "$GITHUB_ENV"
+                  echo "TypeScript errors on main branch: ${TS_ERRORS_MAIN}"
+                  git checkout "${CURRENT_REF}"
+
+            - name: Log TypeScript error diff
+              env:
+                  TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
+                  TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
+              run: |
+                  ERROR_DIFF=$((TS_ERRORS_PR - TS_ERRORS_MAIN))
+                  echo "TypeScript error difference (PR - main): ${ERROR_DIFF}"
+
+            - name: Comment TypeScript error diff on PR
+              if: ${{ github.event_name == 'pull_request' }}
+              uses: actions/github-script@v7
+              env:
+                  TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
+                  TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
+              with:
+                  script: |
+                      const prErrors = Number(process.env.TS_ERRORS_PR || 0);
+                      const mainErrors = Number(process.env.TS_ERRORS_MAIN || 0);
+                      const diff = prErrors - mainErrors;
+                      const sign = diff > 0 ? `+${diff}` : `${diff}`;
+                      const emoji = diff > 0 ? '⚠️' : diff < 0 ? '🎉' : 'ℹ️';
+                      const body = [
+                        '**TypeScript error report:**',
+                        `- This branch: ${prErrors}`,
+                        `- main branch: ${mainErrors}`,
+                        `- Difference (PR - main): ${sign} ${emoji}`
+                      ].join('\n');
+
+                      await github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body
+                      });

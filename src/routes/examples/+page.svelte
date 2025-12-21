@@ -1,37 +1,16 @@
 <script module>
     export const frontmatter = {
         title: 'Examples',
-        description: 'Some description'
+        description:
+            'A collection of examples demonstrating how to use SveltePlot with various marks and transforms.'
     };
-
-    // list of maybe 9 nice examples showcases
-    const showcase = [
-        'line/gradient-line',
-        'dot/1-colored-scatterplot',
-        'geo/us-choropleth',
-        'geo/earthquakes',
-        'area/streamgraph',
-        'regression/grouped',
-        'vector/spike-map',
-        'vector/wind',
-        'axis/datawrapper-ticks'
-    ];
 </script>
 
 <script lang="ts">
     import { groupBy } from 'es-toolkit';
-    import {
-        SVELTEPRESS_CONTEXT_KEY,
-        type SveltepressContext
-    } from '@sveltepress/theme-default/context';
     import { getContext } from 'svelte';
-    import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
     import { resolve } from '$app/paths';
-    import ExamplesPageList from 'svelteplot/ui/ExamplesPageList.svelte';
-
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
+    import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';
 
     const pages = import.meta.glob('./**/*.svelte', {
         eager: true
@@ -50,28 +29,6 @@
             (d) => !d.startsWith('./[group]')
         ),
         (d) => d.split('/')[1]
-    );
-
-    const examples = $derived(
-        showcase
-            .map((url) =>
-                Object.keys(pages).find(
-                    (p) => p === `./${url}.svelte`
-                )
-            )
-            .map((page) => ({
-                page,
-                title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: resolve(
-                    `/examples/${page
-                        .replace(/^..\//, '')
-                        .replace(
-                            '.svelte',
-                            $isDark ? '.dark.png' : '.png'
-                        )}`
-                )
-            }))
     );
 
     const pagesByTransform = $derived(
@@ -94,13 +51,57 @@
 
 <p>
     It's easiest to learn a new framework by digging into
-    examples.
+    examples. A lot of the examples here are based on
+    examples from the wonderful <a
+        href="https://observablehq.com/plot"
+        >Observable Plot examples gallery</a
+    >.
 </p>
 
 <!-- <ExamplesGrid {examples} /> -->
+<h3>Jump to mark</h3>
+<ul class="quick-links">
+    {#each Object.keys(paths).sort( (a, b) => a.localeCompare(b) ) as group (group)}
+        <li>
+            <a href={resolve(`/examples/${group}`)}
+                >{group}</a>
+        </li>
+    {/each}
+</ul>
 
-<ExamplesPageList {paths} {pages} />
+<h3>Jump to transform</h3>
+<ul class="quick-links">
+    {#each Object.keys(pagesByTransform).sort( (a, b) => a.localeCompare(b) ) as group (group)}
+        <li>
+            <a href={resolve(`/examples/${group}`)}
+                >{group}</a>
+        </li>
+    {/each}
+</ul>
 
-<h2>Organized by transforms</h2>
+<ExamplesPagePreview {paths} {pages} />
 
-<ExamplesPageList paths={pagesByTransform} {pages} />
+<!-- <ExamplesPageList {paths} {pages} /> -->
+
+<ExamplesPagePreview paths={pagesByTransform} {pages} />
+
+<style>
+    h3 {
+        margin: 0;
+    }
+    .quick-links {
+        display: block;
+        margin: 0 0 1rem 0;
+        padding: 0;
+        li {
+            display: inline-block;
+            font-size: 0.875rem;
+            margin: 0;
+            padding: 0 1.25rem 0.25rem 0;
+
+            a {
+                text-transform: capitalize;
+            }
+        }
+    }
+</style>

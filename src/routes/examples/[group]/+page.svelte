@@ -2,14 +2,6 @@
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
-    import {
-        SVELTEPRESS_CONTEXT_KEY,
-        type SveltepressContext
-    } from '@sveltepress/theme-default/context';
-    const { isDark } = getContext<SveltepressContext>(
-        SVELTEPRESS_CONTEXT_KEY
-    );
-
     import { getContext } from 'svelte';
     import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
 
@@ -83,25 +75,32 @@
             .map((page) => ({
                 page,
                 title: pages[page].title,
-                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`,
-                screenshot: resolve(
-                    `/examples/${page
-                        .replace(/^..\//, '')
-                        .replace(
-                            '.svelte',
-                            $isDark ? '.dark.png' : '.png'
-                        )}`
-                )
+                key: page
+                    .replace(/^..\//, '')
+                    .replace('.svelte', ''),
+                url: `/examples/${page.replace(/^..\//, './').replace('.svelte', '')}`
             }))
+    );
+
+    const type: 'mark' | 'transform' = $derived(
+        pagesByTransform[page.params.group]
+            ? 'transform'
+            : 'mark'
     );
 </script>
 
 {#if subPages.length}
     <a href={resolve('/examples')}>Examples</a>
+
+    <h1>{page.params.group}</h1>
+    <p>
+        Examples showing the use of the <a
+            href={resolve(`/${type}s/${page.params.group}`)}
+            >{page.params.group} {type}</a
+        >.
+    </p>
     {#if indexKey}
         <indexMod.default />
-    {:else}
-        <h1>{page.params.group} examples</h1>
     {/if}
     <ExamplesGrid {examples} />
 {:else}

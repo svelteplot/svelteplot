@@ -195,4 +195,49 @@ describe('AxisY mark', () => {
         expect(checkTicks.mock.calls[0]).toStrictEqual([0, 0, [0, 20, 40, 60, 80, 100]]);
         expect(checkTicks.mock.calls[1]).toStrictEqual([20, 1, [0, 20, 40, 60, 80, 100]]);
     });
+
+    it('keeps plain notation within a single magnitude domain', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { domain: [100, 900] } },
+                axisArgs: { data: [100, 500, 900] }
+            }
+        });
+
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick') as NodeListOf<SVGGElement>
+        );
+        const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(tickValues).toStrictEqual(['100', '500', '900']);
+    });
+
+    it('switches to compact notation when domain spans magnitudes', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { type: 'log', domain: [0.001, 1000] } },
+                axisArgs: { data: [0.001, 1, 1000] }
+            }
+        });
+
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick') as NodeListOf<SVGGElement>
+        );
+        const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(tickValues).toStrictEqual(['0.001', '1', '1K']);
+    });
+
+    it('switches to compact notation when domain crosses zero across magnitudes', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { domain: [-10000, 10000] } },
+                axisArgs: { data: [-10000, 0, 10000] }
+            }
+        });
+
+        const ticks = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick') as NodeListOf<SVGGElement>
+        );
+        const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
+        expect(tickValues).toStrictEqual(['-10K', '0', '10K']);
+    });
 });

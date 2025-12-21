@@ -4,7 +4,8 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface FrameMarkProps
-        extends Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
+        extends
+            Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
             BaseRectMarkProps<Datum>,
             LinkableMarkProps<Datum> {
         fill?: string;
@@ -20,17 +21,12 @@
         insetBottom?: number;
     }
     import Mark from '../Mark.svelte';
-    import { getContext } from 'svelte';
-    import type {
-        PlotContext,
-        BaseRectMarkProps,
-        LinkableMarkProps,
-        DataRecord
-    } from '../types/index.js';
+    import type { BaseRectMarkProps, LinkableMarkProps, DataRecord } from '../types/index.js';
     import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
     import { resolveProp } from 'svelteplot/helpers/resolve';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: FrameMarkProps = $props();
 
@@ -60,8 +56,7 @@
     const dx = $derived(resolveProp(options.dx, null, 0) || 0);
     const dy = $derived(resolveProp(options.dy, null, 0) || 0);
 
-    const { getPlotState } = getContext<PlotContext>('svelteplot');
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 </script>
 
 <Mark type="frame" {automatic}>

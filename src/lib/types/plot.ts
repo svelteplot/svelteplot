@@ -51,6 +51,7 @@ import type {
     Text,
     TickX,
     TickY,
+    Trail,
     Vector
 } from '../marks/index.js';
 import type WaffleX from 'svelteplot/marks/WaffleX.svelte';
@@ -76,6 +77,7 @@ export type PlotState = {
      */
     hasFilledDotMarks: boolean;
     css: ((d: string) => string) | null;
+    publicState: Readonly<PlotState>;
 };
 
 export type PlotContext = {
@@ -341,6 +343,10 @@ export type PlotDefaults = {
      * default props for tickY marks
      */
     tickY: Partial<Omit<ComponentProps<typeof TickY>, IgnoreDefaults>>;
+    /**
+     * default props for tickY marks
+     */
+    trail: Partial<Omit<ComponentProps<typeof Trail>, IgnoreDefaults>>;
     /**
      * default props for vector marks
      */

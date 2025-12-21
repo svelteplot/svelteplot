@@ -1,12 +1,13 @@
 <script module>
     export const title = 'Brush filter';
+    export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/28e886728790471eb8e6124d3f28351b?version=latest';
 </script>
 
 <script>
     import { Plot, Dot, Rect, Brush } from 'svelteplot';
-    import { page } from '$app/state';
-
-    const { penguins } = $derived(page.data.data);
+    const { penguins } = $props();
 
     let brush = $state({
         enabled: true,

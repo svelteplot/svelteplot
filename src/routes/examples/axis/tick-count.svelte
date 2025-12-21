@@ -1,11 +1,13 @@
 <script module>
     export const title = 'Tick count';
+    export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/0a5a9e00b3e34fcfab657be80a818fd3?version=latest';
 </script>
 
 <script>
     import { Plot, AxisX, AxisY, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+    let { aapl } = $props();
 </script>
 
 <Plot marginTop={30}>

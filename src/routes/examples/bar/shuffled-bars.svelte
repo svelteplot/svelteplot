@@ -1,14 +1,15 @@
 <script module>
     export let title = 'Shuffled Bars';
-    export const transforms = ['shuffle'];
+    export const transforms = ['sort'];
+    export const data = { alphabet: '/data/alphabet.csv' };
+    export const repl =
+        'https://svelte.dev/playground/8e0edb58a7104a6eb984d2e390bc27de?version=latest';
 </script>
 
 <script>
     import { Plot, BarY, RuleY, shuffle } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { alphabet } = $derived(page.data.data);
-
+    let { alphabet } = $props();
     let seed = $state(42);
 </script>
 

@@ -3,11 +3,10 @@
     Wrapper around the vector mark with presets suitable for spike maps 
 -->
 <script lang="ts" generics="Datum extends DataRecord">
-    interface SpikeMarkProps
-        extends Omit<
-            ComponentProps<typeof Vector>,
-            'data' | 'x' | 'y' | 'r' | 'length' | 'rotate'
-        > {
+    interface SpikeMarkProps extends Omit<
+        ComponentProps<typeof Vector>,
+        'data' | 'x' | 'y' | 'r' | 'length' | 'rotate'
+    > {
         data: Datum[];
         x: ChannelAccessor<Datum>;
         y: ChannelAccessor<Datum>;

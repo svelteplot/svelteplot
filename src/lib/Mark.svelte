@@ -151,7 +151,7 @@
                     // check if the mark has defined an accessor for this channel
                     if (options?.[channel] !== undefined && out[channel] === undefined) {
                         // resolve value
-                        out[channel] = resolveChannel(channel, row, options);
+                        out[channel] = resolveChannel(channel, row, options, index);
                         if (options[channel] === INDEX) {
                             const scale = plot.scales[CHANNEL_SCALE[channel]];
                             if (scale.type === 'band' || scale.type === 'point') {

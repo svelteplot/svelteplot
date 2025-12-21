@@ -3,11 +3,10 @@
 -->
 
 <script lang="ts">
-    interface GraticuleMarkProps
-        extends Omit<
-            BaseMarkProps<GeoJSON.GeoJsonObject>,
-            'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'cursor'
-        > {
+    interface GraticuleMarkProps extends Omit<
+        BaseMarkProps<GeoJSON.GeoJsonObject>,
+        'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'cursor'
+    > {
         step?: number;
         stepX?: number;
         stepY?: number;

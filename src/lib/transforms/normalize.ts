@@ -1,6 +1,7 @@
 import { mapX, mapY } from './map.js';
 import type { TransformArg, RawValue, MapIndexObject } from '$lib/types/index.js';
 import { min, max, mean, median, sum, deviation, extent } from 'd3-array';
+import { sort } from './sort.js';
 
 type NormalizeBasis =
     | 'deviation'
@@ -103,3 +104,55 @@ const normalizeMean = normalizeAccessor(mean);
 const normalizeMedian = normalizeAccessor(median);
 const normalizeMin = normalizeAccessor(min);
 const normalizeSum = normalizeAccessor(sum);
+
+/**
+ * Convenience wrapper for normalizeY for parallel coordinates.
+ *
+ * Channels:
+ * - x: the categorical axis (e.g., 'Measurement')
+ * - y: the value to normalize (e.g., 'Value')
+ * - z: the grouping variable (e.g., 'Id')
+ */
+export function normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis) {
+    return sort({
+        ...normalizeY(
+            {
+                ...args,
+                // use x as the grouping variable for normalization to normalize
+                // each axis independently
+                z: args.x
+            },
+            basis
+        ),
+        // restore original grouping by line
+        z: args.z,
+        // sort by original order
+        sort: args.z
+    });
+}
+
+/**
+ * Convenience wrapper for normalizeY for parallel coordinates.
+ *
+ * Channels:
+ * - x: the categorical axis (e.g., 'Measurement')
+ * - y: the value to normalize (e.g., 'Value')
+ * - z: the grouping variable (e.g., 'Id')
+ */
+export function normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis) {
+    return sort({
+        ...normalizeX(
+            {
+                ...args,
+                // use x as the grouping variable for normalization to normalize
+                // each axis independently
+                z: args.y
+            },
+            basis
+        ),
+        // restore original grouping by line
+        z: args.z,
+        // sort by original order
+        sort: args.z
+    });
+}
