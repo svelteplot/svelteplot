@@ -11,9 +11,10 @@ import type {
 import { count, rank } from 'd3-array';
 import { groupFacetsAndZ } from '$lib/helpers/group.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';
+import { sort } from './sort';
 
 export function map<T>(args: TransformArg<T>, options: MapOptions) {
-    const { data, ...channels } = args;
+    const { data, ...channels } = sort(args);
     const newChannels: Channels = {};
     const newData: DataRecord[] = [];
 
