@@ -13,8 +13,19 @@
 
 <Plot
     height={400}
-    fx={{ domain: ['A', 'B', 'C'], padding: 0.2 }}
+    fx={{
+        domain: ['Panel A', 'Panel B', 'Panel C'],
+        axis: 'bottom',
+        padding: 0.2
+    }}
     x={{ domain: [0, 1] }}
     y={{ domain: [0, 1] }}
     grid
     frame />
+
+<style>
+    :global(.facet-axis-x text) {
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>

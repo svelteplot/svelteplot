@@ -33,7 +33,7 @@
     // any "faceted" data points. this can happen when fx and fy are combined and
     // certain combinations don't yield results
     const emptyFacets = $derived(getEmptyFacets(marks, fxValues, fyValues));
-    $inspect(plot.options.fx);
+
     // create band scales for fx and fy
     const facetXScale = $derived(
         scaleBand()
@@ -51,7 +51,7 @@
             .paddingOuter(0)
             .paddingInner(
                 fyValues.length > 1
-                    ? (plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
+                    ? (plot.options.fy?.paddingInner ?? plot.options.fy?.padding ?? 0.1)
                     : 0
             )
             .domain(fyValues)
