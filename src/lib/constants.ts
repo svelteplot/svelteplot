@@ -91,8 +91,15 @@ export const VALID_SCALE_TYPES: Record<ScaleName, Set<ScaleType>> = {
         'quantile',
         'quantize',
         'threshold'
-    ])
-    // ...
+    ]),
+    symbol: new Set(['categorical', 'ordinal']),
+    opacity: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    r: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    length: new Set(['linear', 'log', 'symlog', 'sqrt', 'pow']),
+    fx: new Set(['band']),
+    fy: new Set(['band']),
+    // projection is a special type not mapping to a D3 scale
+    projection: new Set()
 };
 
 /**
