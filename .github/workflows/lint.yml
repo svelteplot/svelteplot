@@ -12,6 +12,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
             - name: Install pnpm
               uses: pnpm/action-setup@v3
@@ -30,3 +32,29 @@ jobs:
 
             - name: Run linting
               run: pnpm run lint
+
+            - name: Count TypeScript errors on PR branch
+              run: |
+                  pnpm lint:types -- --pretty false > ts-errors-pr.log || true
+                  TS_ERRORS_PR=$(grep -c "^error TS" ts-errors-pr.log || true)
+                  echo "TS_ERRORS_PR=${TS_ERRORS_PR}" >> "$GITHUB_ENV"
+                  echo "TypeScript errors on PR branch: ${TS_ERRORS_PR}"
+
+            - name: Count TypeScript errors on main branch
+              run: |
+                  CURRENT_REF=$(git rev-parse HEAD)
+                  git fetch origin main --depth=1
+                  git checkout origin/main
+                  pnpm lint:types -- --pretty false > ts-errors-main.log || true
+                  TS_ERRORS_MAIN=$(grep -c "^error TS" ts-errors-main.log || true)
+                  echo "TS_ERRORS_MAIN=${TS_ERRORS_MAIN}" >> "$GITHUB_ENV"
+                  echo "TypeScript errors on main branch: ${TS_ERRORS_MAIN}"
+                  git checkout "${CURRENT_REF}"
+
+            - name: Log TypeScript error diff
+              env:
+                  TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
+                  TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
+              run: |
+                  ERROR_DIFF=$((TS_ERRORS_PR - TS_ERRORS_MAIN))
+                  echo "TypeScript error difference (PR - main): ${ERROR_DIFF}"
