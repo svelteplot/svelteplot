@@ -78,7 +78,7 @@ jobs:
                       const emoji = diff > 0 ? '⚠️' : diff < 0 ? '🎉' : 'ℹ️';
                       const body = [
                         '**TypeScript error report:**',
-                        `- PR branch: ${prErrors}`,
+                        `- This branch: ${prErrors}`,
                         `- main branch: ${mainErrors}`,
                         `- Difference (PR - main): ${sign} ${emoji}`
                       ].join('\n');
