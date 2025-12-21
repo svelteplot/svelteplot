@@ -45,7 +45,10 @@
             tickFormat={plot.options.fx.tickFormat || ((d) => d)}
             tickFontSize={11}
             tickSize={0}
-            tickPadding={5}
+            tickPadding={plot.options.x.axis === plot.options.fx.axis ||
+            plot.options.x.axis === 'both'
+                ? 25
+                : 5}
             anchor={plot.options.fx.axis}
             options={plot.options.fx.axisOptions || {}}
             {...plot.options.fx.axisProps || {}}
