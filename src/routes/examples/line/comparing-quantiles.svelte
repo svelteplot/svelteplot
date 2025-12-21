@@ -4,7 +4,7 @@
         olympians: '/data/olympians.csv'
     };
     export const description =
-        'You can use the <a href="/transform/map">map transform</a> to compare different distributions against their quantiles.';
+        'You can use the <a href="/transforms/map">map transform</a> to compare different distributions against their quantiles.';
     export const transforms = ['map'];
     export const sortKey = 80;
 </script>
