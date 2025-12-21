@@ -1,10 +1,10 @@
 <script module>
     export const title = 'Facet padding';
     export const description =
-        'You can add minor ticks lines by adding a second axis and disabling the text labels.';
-    export const data = { aapl: '/data/aapl.csv' };
+        'You can adjust the padding between facets using the `padding` or `paddingInner` options on the `fx` and `fy` options.';
     export const repl =
-        'https://svelte.dev/playground/2e803e9ce10f42a9a3a854c958329a70?version=latest';
+        'https://svelte.dev/playground/5e77eedbf0c047b68bfbff5cfefced6b';
+    export const sortKey = 99;
 </script>
 
 <script>
