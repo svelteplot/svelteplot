@@ -41,7 +41,10 @@ declare module 'unified' {
 
 declare module 'temml/dist/temml.mjs' {
     const temml: {
-        renderToString: (value: string, options?: { displayMode?: boolean; throwOnError?: boolean }) => string;
+        renderToString: (
+            value: string,
+            options?: { displayMode?: boolean; throwOnError?: boolean }
+        ) => string;
     };
     export default temml;
 }

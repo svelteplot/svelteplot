@@ -46,4 +46,3 @@ pnpm vi:report
 ```
 
 To see the differences side by side you can open http://localhost:5173/\_\_vr/report.html
-
