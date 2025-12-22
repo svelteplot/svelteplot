@@ -49,12 +49,8 @@ export function autoTicks(
 ) {
     if (ticks) return ticks;
     if (interval) {
-        const numericDomain = domain.filter((d): d is number => typeof d === 'number');
-        if (!numericDomain.length) return [];
-        const [lo, hi] = extent(numericDomain);
-        if (lo == null || hi == null) return [];
+        const [lo, hi] = extent(domain as number[]) as [number, number];
         const I = maybeInterval(interval);
-        if (!I) return [];
         return I.range(lo, I.offset(hi)).filter((d: number) => d >= lo && d <= hi);
     }
     return typeof scaleFn.ticks === 'function' ? scaleFn.ticks(count) : [];
