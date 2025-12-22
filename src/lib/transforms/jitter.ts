@@ -4,8 +4,14 @@ import { randomUniform, randomNormal } from 'd3-random';
 import { isDate } from '$lib/helpers/typeChecks.js';
 import { durations, parseTimeInterval } from '$lib/helpers/time.js';
 
-const JITTER_X = Symbol('jitterX');
-const JITTER_Y = Symbol('jitterY');
+const JITTER = {
+    x: Symbol('jitterX'),
+    x1: Symbol('jitterX1'),
+    x2: Symbol('jitterX2'),
+    y: Symbol('jitterY'),
+    y1: Symbol('jitterY1'),
+    y2: Symbol('jitterY2')
+};
 
 type JitterOptions = {
     type: 'uniform' | 'normal';
@@ -20,45 +26,56 @@ type JitterOptions = {
     source?: () => number;
 };
 
-export function jitterX(
-    { data, ...channels }: TransformArg<DataRecord>,
-    options: JitterOptions
-): TransformArg<DataRecord> {
-    return jitter('x', data, channels, options);
+export function jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformArg<T> {
+    return jitter(args, { x: options });
 }
 
-export function jitterY(
-    { data, ...channels }: TransformArg<DataRecord>,
-    options: JitterOptions
-): TransformArg<DataRecord> {
-    return jitter('y', data, channels, options);
+export function jitterY<T>(args: TransformArg<T>, options: JitterOptions): TransformArg<T> {
+    return jitter(args, { y: options });
 }
 
-export function jitter(
-    channel: 'x' | 'y',
-    data: DataRecord[],
-    channels: Channels,
-    options: JitterOptions
-): TransformArg<DataRecord> {
-    if (channels[channel]) {
-        const type = options?.type ?? 'uniform';
-        const width = parseNumber(options?.width ?? 0.35);
-        const std = parseNumber(options?.std ?? 0.15);
-        // @todo support time interval strings as width/std parameters
+type PositionalScale = 'x' | 'x1' | 'x2' | 'y' | 'y1' | 'y2';
 
-        // Use the provided source or default to Math.random
-        const rng = options?.source ?? Math.random;
-        const random =
-            type === 'uniform'
-                ? randomUniform.source(rng)(-width, width)
-                : randomNormal.source(rng)(0, std);
-
-        const accKey = channel === 'x' ? JITTER_X : JITTER_Y;
+export function jitter<T>(
+    { data, ...channels }: TransformArg<T>,
+    options: Partial<Record<PositionalScale, JitterOptions>>
+): TransformArg<T> {
+    const jitterChannels = (Object.keys(options) as PositionalScale[]).filter((ch) => channels[ch]);
+    // if no jitter channels are defined return early
+    if (!jitterChannels.length)
         return {
-            data: data.map((row) => {
+            data,
+            ...channels
+        };
+
+    // construct jitter functions
+    const jitterFns: Record<PositionalScale, () => number> = Object.fromEntries(
+        Object.entries(options).map(([key, opts]) => {
+            const type = opts?.type ?? 'uniform';
+            const width = parseNumber(opts?.width ?? 0.35);
+            const std = parseNumber(opts?.std ?? 0.15);
+            // @todo support time interval strings as width/std parameters
+
+            // Use the provided source or default to Math.random
+            const rng = opts?.source ?? Math.random;
+            const random =
+                type === 'uniform'
+                    ? randomUniform.source(rng)(-width, width)
+                    : randomNormal.source(rng)(0, std);
+
+            return [key, random];
+        })
+    ) as Record<PositionalScale, () => number>;
+
+    return {
+        data: data.map((row) => {
+            let newRow: T = { ...row };
+            jitterChannels.forEach((channel) => {
                 const value = resolveChannel(channel, row, channels);
-                return {
-                    ...row,
+                const random = jitterFns[channel];
+                const accKey = JITTER[channel as PositionalScale];
+                newRow = {
+                    ...newRow,
                     [accKey]:
                         typeof value === 'number'
                             ? value + random()
@@ -66,15 +83,14 @@ export function jitter(
                               ? new Date(value.getTime() + random())
                               : value
                 };
-            }),
-            ...channels,
-            // point channel to new accessor symbol
-            [channel]: accKey
-        };
-    }
-    return {
-        data,
-        ...channels
+            });
+            return newRow;
+        }),
+        ...channels,
+        // point the jittered channels to new accessor symbols
+        ...Object.fromEntries(
+            jitterChannels.map((channel) => [channel, JITTER[channel as PositionalScale]])
+        )
     };
 }
 
@@ -83,7 +99,7 @@ function parseNumber(value: number | string): number {
     if (typeof value === 'string') {
         try {
             const [name, period] = parseTimeInterval(value);
-            return durations.get(name) * period;
+            return (durations.get(name) ?? 0) * period;
         } catch (err) {
             return 0;
         }
