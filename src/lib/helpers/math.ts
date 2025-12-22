@@ -117,15 +117,17 @@ function inverseT(p: number, df: number) {
     const b = 48 / (a * a);
     let c = (((20700 * a) / b - 98) * a - 16) * a + 96.36;
     const d = ((94.5 / (b + c) - 3) / b + 1) * sqrt(a * PI * 0.5) * df;
-    let x: number | false = d * p;
+    let x: number = d * p;
     let y = pow(x, 2 / df);
 
     if (y > 0.05 + a) {
         // The procedure normdev(p) is assumed to return a negative normal
         // deviate at the lower tail probability level p, e.g. -2.32 for p = 0.01.
-        x = normdev(p / 2);
-        if (x === false) {
+        const _x = normdev(p / 2);
+        if (_x === false) {
             throw new Error('normdev returned false for p/2 in inverseT');
+        } else {
+            x = _x;
         }
         y = x * x;
         if (df < 5) c = c + 0.3 * (df - 4.5) * (x + 0.6);
