@@ -1,10 +1,10 @@
 <script module>
-    export const title = 'Quantile comparison';
+    export const title = 'Quantile plot';
     export const data = {
         olympians: '/data/olympians.csv'
     };
     export const description =
-        'You can use the <a href="/transforms/map">map transform</a> to compare different distributions against their quantiles.';
+        'You can use the <a href="/transforms/map">map transform</a> to compare different distributions against their quantiles. This is sometimes referred to as <a href="https://www.sciencedirect.com/topics/mathematics/quantile-plot">quantile plot</a>.';
     export const transforms = ['map'];
     export const sortKey = 80;
 </script>
