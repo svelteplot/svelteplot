@@ -58,3 +58,18 @@ declare module 'svg-path-parser' {
     };
     export default mod;
 }
+
+declare module '*.svelte' {
+    import type { ComponentType } from 'svelte';
+    export type MarkerShape =
+        | 'dot'
+        | 'circle'
+        | 'circle-stroke'
+        | 'arrow'
+        | 'arrow-reverse'
+        | 'tick'
+        | 'tick-x'
+        | 'tick-y';
+    const component: ComponentType;
+    export default component;
+}

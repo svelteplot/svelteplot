@@ -21,7 +21,7 @@ type ChannelAlias = { channel: ScaledChannelName };
 
 export function resolveProp<K, T>(
     accessor: ConstantAccessor<K, T>,
-    datum: DataRecord | null,
+    datum: DataRecord<T> | null,
     _defaultValue: K | null = null
 ): K | typeof _defaultValue {
     if (typeof accessor === 'function') {
