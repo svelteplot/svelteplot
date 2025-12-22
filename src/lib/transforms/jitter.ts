@@ -14,17 +14,12 @@ const JITTER = {
 };
 
 type JitterOptions = {
-    type: 'uniform' | 'normal';
-    /** width for uniform jittering */
-    width: number;
-    /** standard deviation for normal jittering */
-    std: number;
     /**
      * optional random number source that produces values in range [0,1)
      * useful for testing with a deterministic source
      */
     source?: () => number;
-};
+} & ({ type: 'uniform'; width?: number | string } | { type: 'normal'; std?: number | string });
 
 export function jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformArg<T> {
     return jitter(args, { x: options });
