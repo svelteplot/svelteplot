@@ -90,7 +90,13 @@ describe('Cell mark', () => {
 	it('supports custom inset', () => {
 		const { container } = render(CellTest, {
 			props: {
-				plotArgs: { width: 200, height: 200 },
+				plotArgs: {
+					width: 200,
+					height: 200,
+					margin: 0,
+					x: { padding: 0 },
+					y: { padding: 0 }
+				},
 				cellArgs: {
 					data: testData,
 					x: 'x',
@@ -105,9 +111,10 @@ describe('Cell mark', () => {
 		expect(cells.length).toBe(4);
 
 		const cellDims = Array.from(cells).map(getRectDims);
-		// With inset, cells should be smaller
-		expect(cellDims[0].w).toBeLessThan(100);
-		expect(cellDims[0].h).toBeLessThan(100);
+		// With 200x200 plot, margin: 0, 2x2 cells, padding: 0, and inset of 2
+		// Each cell is (100 - 2*2) = 96x96
+		expect(cellDims[0].w).toBe(96);
+		expect(cellDims[0].h).toBe(96);
 	});
 
 	it('uses path for rounded rects', () => {
