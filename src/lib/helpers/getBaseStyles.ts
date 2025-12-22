@@ -32,7 +32,7 @@ const styleDefaults: Partial<Record<MarkStyleProps, string | null>> = {
     fontWeight: 'normal'
 };
 
-export function getBaseStylesObject(datum: DataRow, props: Partial<Channels<DataRow>>) {
+export function getBaseStylesObject<T>(datum: T, props: Partial<Channels<T>>) {
     return Object.fromEntries(
         (Object.entries(styleProps) as [MarkStyleProps, string][])
             .filter(([key, cssKey]) => cssKey && props[key] != null)
@@ -40,14 +40,14 @@ export function getBaseStylesObject(datum: DataRow, props: Partial<Channels<Data
                 cssKey,
                 maybeToPixel(
                     cssKey,
-                    (resolveProp(props[key] as any, datum as any, styleDefaults[key] || null) ??
+                    (resolveProp(props[key] as any, datum as T, styleDefaults[key] || null) ??
                         '') as string | number
                 )
             ])
     );
 }
 
-export default function (datum: DataRow, props: Partial<Channels<DataRow>>) {
+export default function <T>(datum: T, props: Partial<Channels<T>>) {
     return Object.entries(getBaseStylesObject(datum, props))
         .map(([key, value]) => `${key}: ${value}`)
         .join(';');
