@@ -49,7 +49,8 @@ export function autoTicks(
 ) {
     if (ticks) return ticks;
     if (interval) {
-        const [lo, hi] = extent(domain as number[]) as [number, number];
+        const [lo, hi] = extent(domain as number[]);
+        if (lo == null || hi == null) return [];
         const I = maybeInterval(interval);
         return I.range(lo, I.offset(hi)).filter((d: number) => d >= lo && d <= hi);
     }
