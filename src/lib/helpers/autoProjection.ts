@@ -90,7 +90,7 @@ function scaleProjection(createProjection: ProjectionInitializer, kx: number, ky
         type: ({ width, height, rotate, precision = 0.15, clip }: ProjectionOptions) => {
             const projection = createProjection();
             if (precision != null) projection.precision?.(precision);
-            if (rotate != null) projection.rotate?.(rotate as [number, number, number]);
+            if (rotate != null) projection.rotate?.(rotate);
             if (typeof clip === 'number') projection.clipAngle?.(clip);
             projection.scale(Math.min(width / kx, height / ky));
             projection.translate([width / 2, height / 2]);
