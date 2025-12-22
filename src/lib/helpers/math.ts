@@ -123,7 +123,10 @@ function inverseT(p: number, df: number) {
     if (y > 0.05 + a) {
         // The procedure normdev(p) is assumed to return a negative normal
         // deviate at the lower tail probability level p, e.g. -2.32 for p = 0.01.
-        x = normdev(p / 2) as number;
+        x = normdev(p / 2);
+        if (x === false) {
+            throw new Error('normdev returned false for p/2 in inverseT');
+        }
         y = x * x;
         if (df < 5) c = c + 0.3 * (df - 4.5) * (x + 0.6);
         c = (((0.05 * d * x - 5) * x - 7) * x - 2) * x + b + c;
