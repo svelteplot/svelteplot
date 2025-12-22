@@ -2,7 +2,7 @@
 title: Jitter transform
 ---
 
-:::
+:::info
 added in 0.2.7
 :::
 
@@ -106,7 +106,7 @@ Jitters along the y dimension:
 
 ## jitter
 
-:::
+:::info
 added in 0.9.1
 :::
 
