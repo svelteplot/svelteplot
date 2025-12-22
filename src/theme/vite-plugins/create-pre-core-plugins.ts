@@ -23,7 +23,7 @@ function getIconSafelist(themeOptions?: DefaultThemeOptions): string[] {
     if (!icons) return [];
     const iconSafelist: string[] = [];
     for (const prefix in icons) {
-        icons[prefix].forEach((name) => {
+        icons[prefix].forEach((name: string) => {
             iconSafelist.push(`i-${prefix}-${name}`);
         });
     }
