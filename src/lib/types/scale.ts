@@ -219,7 +219,7 @@ export type PlotScale = {
     uniqueScaleProps: Set<ChannelAccessor>;
     skip: Map<ScaledChannelName, Set<symbol>>;
     fn: ScaleLinear<RawValue, number> &
-        ScaleBand<RawValue> &
+        ScaleBand<RawValue[]> &
         ScaleOrdinal<string | Date, number> &
         ScaleOrdinal<string | Date, string>;
 };

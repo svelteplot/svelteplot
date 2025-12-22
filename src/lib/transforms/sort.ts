@@ -28,7 +28,7 @@ export function sort<T>(
         // sort data
         return {
             data: isComparator
-                ? data.toSorted(channels.sort as (a: DataRecord, b: DataRecord) => number)
+                ? data.toSorted(channels.sort as (a: T, b: T) => number)
                 : data
                       .map((d) => ({
                           ...d,
