@@ -2,6 +2,10 @@
 title: Jitter transform
 ---
 
+:::
+added in 0.2.7
+:::
+
 The **jitter transform** adds random noise to data points, which is useful for revealing overlapping points in scatter plots and reducing overplotting.
 
 :::info
@@ -101,6 +105,10 @@ Jitters along the y dimension:
 ```
 
 ## jitter
+
+:::
+added in 0.9.1
+:::
 
 You can use the generic `jitter` transform to jitter along multiple dimensions simulatenously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
 
