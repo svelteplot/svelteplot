@@ -8,7 +8,7 @@ export default function mergeDeep<T extends ObjectType>(
     target: Partial<T>,
     ...sources: Partial<T>[]
 ): T {
-    if (!sources.length) return target;
+    if (!sources.length) return target as T;
     const source = sources.shift();
 
     if (isObject(target) && isObject(source)) {
@@ -19,7 +19,7 @@ export default function mergeDeep<T extends ObjectType>(
                 } else {
                     target[key] = Object.assign({}, target[key]);
                 }
-                mergeDeep(target[key], source[key]);
+                mergeDeep(target[key] as T, source[key]);
             } else if (source[key] !== null) {
                 Object.assign(target, { [key]: source[key] });
             }
