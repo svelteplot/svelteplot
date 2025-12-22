@@ -100,6 +100,25 @@ Jitters along the y dimension:
     )} />
 ```
 
+## jitter
+
+You can use the generic `jitter` transform to jitter along multiple dimensions simulatenously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
+
+```svelte
+<Dot
+    {...jitter(
+        {
+            data: cars,
+            x: 'displacement (cc)',
+            y: 'cylinders'
+        },
+        {
+            x: { type: 'normal' },
+            y: { type: 'uniform', width: 0.5 }
+        }
+    )} />
+```
+
 ## Temporal jittering
 
 Jittering also works for temporal data. When jittering Date objects, random time offsets are added to each date value:
