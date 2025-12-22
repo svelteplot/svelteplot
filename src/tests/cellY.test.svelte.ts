@@ -208,8 +208,7 @@ describe('CellY mark', () => {
 			{ season: 2, rating: 8.1 }
 		];
 
-		// Import groupY from svelteplot
-		// Note: This simulates using groupY transform manually
+		// Manually simulate grouped data (mean values by season)
 		const groupedData = [
 			{ y: 1, fill: 8.35 }, // mean of 8.5 and 8.2
 			{ y: 2, fill: 8.0 } // mean of 7.9 and 8.1

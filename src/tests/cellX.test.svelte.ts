@@ -208,8 +208,7 @@ describe('CellX mark', () => {
 			{ season: 2, rating: 8.1 }
 		];
 
-		// Import groupX from svelteplot
-		// Note: This simulates using groupX transform manually
+		// Manually simulate grouped data (mean values by season)
 		const groupedData = [
 			{ x: 1, fill: 8.35 }, // mean of 8.5 and 8.2
 			{ x: 2, fill: 8.0 } // mean of 7.9 and 8.1
