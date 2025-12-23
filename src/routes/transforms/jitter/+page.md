@@ -110,7 +110,7 @@ Jitters along the y dimension:
 added in 0.9.1
 :::
 
-You can use the generic `jitter` transform to jitter along multiple dimensions simulatenously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
+You can use the generic `jitter` transform to jitter along multiple dimensions simultaneously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
 
 ```svelte
 <Dot
