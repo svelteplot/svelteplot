@@ -12,25 +12,25 @@ export type BollingerOptions = {
     k?: number;
 };
 
-export function bollingerX(
-    args: TransformArg<DataRecord>,
+export function bollingerX<T>(
+    args: TransformArg<T>,
     options: BollingerOptions = {}
-): TransformArg<DataRecord> {
+): TransformArg<T> {
     return bollingerDim('x', args, options);
 }
 
-export function bollingerY(
-    args: TransformArg<DataRecord>,
+export function bollingerY<T>(
+    args: TransformArg<T>,
     options: BollingerOptions = {}
-): TransformArg<DataRecord> {
+): TransformArg<T> {
     return bollingerDim('y', args, options);
 }
 
-export function bollingerDim(
+export function bollingerDim<T>(
     dim: 'x' | 'y',
-    { data, ...channels }: TransformArg<DataRecord>,
+    { data, ...channels }: TransformArg<T>,
     options: BollingerOptions = {}
-) {
+): TransformArg<T> {
     const { n = 20, k = 2 } = options;
     const bands = bollinger(
         data.map((datum: DataRecord) => resolveChannel(dim, datum, channels)) as number[],

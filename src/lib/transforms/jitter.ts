@@ -47,8 +47,8 @@ export function jitter<T>(
     const jitterFns: Record<PositionalScale, () => number> = Object.fromEntries(
         Object.entries(options).map(([key, opts]) => {
             const type = opts?.type ?? 'uniform';
-            const width = parseNumber(opts?.width ?? 0.35);
-            const std = parseNumber(opts?.std ?? 0.15);
+            const width = opts?.type === 'uniform' ? parseNumber(opts?.width ?? 0.35) : 0;
+            const std = opts?.type === 'normal' ? parseNumber(opts?.std ?? 0.15) : 0;
             // @todo support time interval strings as width/std parameters
 
             // Use the provided source or default to Math.random
