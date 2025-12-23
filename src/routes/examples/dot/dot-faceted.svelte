@@ -6,6 +6,8 @@
         penguins: '/data/penguins.csv'
     };
     export const sortKey = 101;
+    export const repl =
+        'https://svelte.dev/playground/0523035dd3674b79918ff60bc008316d?version=latest';
 </script>
 
 <script lang="ts">

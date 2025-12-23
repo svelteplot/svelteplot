@@ -3,6 +3,8 @@
     export const sortKey = 30;
     export const transforms = ['dodge'];
     export const data = { cars: '/data/cars.csv' };
+    export const repl =
+        'https://svelte.dev/playground/15701199b28c41b59e2036ad1f1d79c9?version=latest';
 </script>
 
 <script lang="ts">

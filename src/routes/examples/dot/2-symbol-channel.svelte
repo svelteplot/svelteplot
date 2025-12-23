@@ -1,6 +1,8 @@
 <script module>
     export let title = 'Symbol channel';
     export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/95252b7d421c412b87fc5e07b0110d53?version=latest';
 </script>
 
 <script lang="ts">
