@@ -14,6 +14,8 @@ import type {
     YScaleOptions
 } from './index.js';
 import type { Snippet } from 'svelte';
+import type { GenericMarkOptions, Mark } from './index.js';
+import type { Clip } from '../helpers/projection.js';
 
 import type {
     Area,

@@ -70,7 +70,8 @@ export type MarkStyleProps =
 import type { MouseEventHandler } from 'svelte/elements';
 import type { ChannelAccessor, ConstantAccessor, DataRecord, RawValue } from './index.js';
 import type * as CSS from 'csstype';
-import type { ScaledChannelName, ScaleName } from './scale.js';
+import type { ScaledChannelName } from './channel.js';
+import type { ScaleName } from './scale.js';
 import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.js';
 
 export type BaseMarkProps<T> = Partial<{

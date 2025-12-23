@@ -18,13 +18,26 @@ export { SERVICE_WORKER_PATH } from './constants.js';
 const VIRTUAL_PWA = 'virtual:pwa-info';
 const VIRTUAL_PWA_SVELTE_REGISTER = 'virtual:pwa-register/svelte';
 
+type HighlighterOptions = {
+    languages?: unknown[];
+    themeDark?: string;
+    themeLight?: string;
+    twoslash?: boolean | Record<string, unknown>;
+};
+
+type ThemeOptions = {
+    pwa?: Parameters<typeof SvelteKitPWA>[0];
+    i18n?: { footnoteLabel?: string; expansionTitle?: string };
+    highlighter?: HighlighterOptions;
+} & Record<string, unknown>;
+
 export const themeOptionsRef: {
-    value?: any;
+    value?: ThemeOptions;
 } = {
     value: undefined
 };
 
-const defaultTheme: any = (options) => {
+const defaultTheme = (options: ThemeOptions = {}): ResolvedTheme => {
     themeOptionsRef.value = options;
     const vitePlugins = (async (corePlugin) => {
         const plugins = [...(await createPreCorePlugins(options)), corePlugin];

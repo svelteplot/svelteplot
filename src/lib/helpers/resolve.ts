@@ -21,22 +21,27 @@ type ChannelAlias = { channel: ScaledChannelName };
 
 export function resolveProp<K, T>(
     accessor: ConstantAccessor<K, T>,
-    datum: DataRecord | null,
+    datum: DataRecord<T> | null,
     _defaultValue: K | null = null
 ): K | typeof _defaultValue {
     if (typeof accessor === 'function') {
+        const accessorFn = accessor as ((d: T, index: number) => K) & (() => K);
         // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
-        // "recordized" by the recordize transform. We want to hide this wrapping to the user
+        // "recordized" by the recordi e transform. We want to hide this wrapping to the user
         // so we're passing the original value to accessor functions instead of our wrapped record
         return datum == null
-            ? accessor()
-            : accessor(datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum, datum[INDEX]);
-    } else if (
-        (typeof accessor === 'string' || typeof accessor === 'symbol') &&
-        datum &&
-        datum[accessor] !== undefined
-    ) {
-        return datum[accessor] as K;
+            ? accessorFn()
+            : accessorFn(datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum, datum[INDEX]);
+    } else {
+        const accessorValue = accessor as K;
+        // accessor may be a
+        if (
+            (typeof accessorValue === 'string' || typeof accessorValue === 'symbol') &&
+            datum &&
+            datum[accessorValue] !== undefined
+        ) {
+            return datum[accessor] as K;
+        }
     }
 
     return isRawValue(accessor) ? accessor : _defaultValue;

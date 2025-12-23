@@ -8,7 +8,7 @@ export const pkgRe = /^@install-pkg\((\S+)(,\S+)?\)/;
 type PackageManager = 'npm' | 'yarn' | 'pnpm';
 
 const installPkg: Plugin<any[], any> = () => {
-    return async (tree) => {
+    return async (tree: any) => {
         const tasks: any[] = [];
         visit(tree, (node, idx, parent) => {
             if (node.type === 'paragraph' && node.children) {

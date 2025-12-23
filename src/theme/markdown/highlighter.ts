@@ -32,7 +32,9 @@ const shikiHighlighterInstance: {
 };
 
 const _highlighter: Highlighter = async (code, lang) => {
-    const highlighterConfig = themeOptionsRef.value?.highlighter;
+    const highlighterConfig = (themeOptionsRef.value?.highlighter ?? {}) as
+        | DefaultThemeOptions['highlighter']
+        | undefined;
     const darkTheme = highlighterConfig?.themeDark ?? 'night-owl';
     const lightTheme = highlighterConfig?.themeLight ?? 'vitesse-light';
 

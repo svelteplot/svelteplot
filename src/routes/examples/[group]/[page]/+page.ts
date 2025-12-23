@@ -1,5 +1,13 @@
+import type { PageLoad } from './$types';
+
+type ExampleModule = {
+    title?: string;
+    description?: string;
+    data?: Record<string, string>;
+};
+
 import { loadCSV, loadJSON } from '../../helpers';
-const pages = import.meta.glob('../../**/*.svelte', {
+const pages = import.meta.glob<ExampleModule>('../../**/*.svelte', {
     eager: true
 });
 
@@ -9,9 +17,9 @@ function titleCase(s: string): string {
     });
 }
 
-export const load = async ({ params, fetch }) => {
+export const load: PageLoad = async ({ params, fetch }) => {
     const { group, page } = params;
-    const pageMeta = { ...pages[`../../${group}/${page}.svelte`] };
+    const pageMeta = { ...(pages[`../../${group}/${page}.svelte`] ?? {}) };
     const { title, description } = pageMeta;
     if (pageMeta.data) {
         const data = Object.fromEntries(
