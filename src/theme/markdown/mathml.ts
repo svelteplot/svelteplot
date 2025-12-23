@@ -5,11 +5,11 @@ import temml from 'temml/dist/temml.mjs';
 const MATH_LANGS = new Set(['math', 'latex', 'tex']);
 
 const mathml: Plugin = () => {
-    return (tree) => {
+    return (tree: any) => {
         visit(tree, 'code', (node: any, index, parent: any) => {
             const lang = (node.lang || '').toLowerCase();
             if (!MATH_LANGS.has(lang) || index == null || !parent) return;
-            const mathml = renderToString(node.value || '', {
+            const mathml = temml.renderToString(node.value || '', {
                 displayMode: true,
                 throwOnError: false
             });

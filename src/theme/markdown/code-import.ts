@@ -8,7 +8,7 @@ import { visit } from 'unist-util-visit';
 export const importRe = /^@code\((\S+)(,\d+(,\d+)?)?\)/;
 
 const codeImport: Plugin<any[], any> = () => {
-    return async (tree, vFile) => {
+    return async (tree: any, vFile: any) => {
         visit(tree, (node, idx, parent) => {
             if (node.type === 'paragraph' && node.children) {
                 const [textNode] = node.children;

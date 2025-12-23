@@ -16,6 +16,7 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --check src && eslint src",
+        "lint:types": "tsc --noEmit",
         "format": "prettier --write .",
         "test:unit": "vitest",
         "prepack": "npx svelte-package",

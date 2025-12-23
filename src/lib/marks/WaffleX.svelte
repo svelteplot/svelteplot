@@ -95,7 +95,7 @@
             <g class={['waffle-x', className]}>
                 <pattern {...pattern}>
                     {#if symbol}
-                        {@render symbol(rect)}
+                        {@render symbol({ ...rect, style, styleClass, datum: d.datum })}
                     {:else if hasBorderRadius}
                         <path
                             d={roundedRect(rect.x, rect.y, rect.width, rect.height, borderRadius)}

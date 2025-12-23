@@ -2,13 +2,15 @@
     @component
     For arbitrary rectangles with fixed y position, requires band x scale
 -->
-<script lang="ts">
+<script lang="ts" generics="Datum extends DataRow">
     import Cell from './Cell.svelte';
     import { recordizeY } from '$lib/index.js';
     import type { ComponentProps } from 'svelte';
-    import type { TransformArgsRow } from 'svelteplot/types/index.js';
+    import type { DataRow, TransformArgsRow } from 'svelteplot/types/index.js';
 
-    interface CellXMarkProps extends Omit<ComponentProps<typeof Cell>, 'y'> {}
+    interface CellXMarkProps extends Omit<ComponentProps<typeof Cell>, 'y' | 'data'> {
+        data: Datum[];
+    }
 
     let { data = [{}], ...options }: CellXMarkProps = $props();
 
@@ -16,7 +18,7 @@
         recordizeY({
             data,
             ...options
-        } as TransformArgsRow)
+        } as TransformArgsRow<Datum>)
     );
 </script>
 

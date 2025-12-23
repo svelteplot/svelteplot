@@ -2,6 +2,8 @@
     export const title = 'BoxY (faceted)';
     export const sortKey = 20;
     export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/11103eb6e5f1441ab6533b2e204001b1?version=latest';
 </script>
 
 <script lang="ts">

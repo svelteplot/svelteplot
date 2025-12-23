@@ -68,4 +68,26 @@ describe('WaffleX mark', () => {
         const customSymbols = container.querySelectorAll('.waffle-x pattern > circle.unit-symbol');
         expect(customSymbols.length).toBe(data.length);
     });
+
+    it('passes datum parameter to symbol snippet', () => {
+        const { container } = render(WaffleXSymbolTest, {
+            props: {
+                plotArgs: {},
+                waffleArgs: {
+                    data,
+                    y: 'label',
+                    x1: 'low',
+                    x2: 'high'
+                }
+            }
+        });
+
+        // Verify that the datum parameter is accessible and contains the correct label
+        const customSymbols = container.querySelectorAll('.waffle-x pattern > circle.unit-symbol');
+        expect(customSymbols.length).toBe(data.length);
+
+        // Check that each circle has the correct data-label attribute from datum
+        expect(customSymbols[0].getAttribute('data-label')).toBe('A');
+        expect(customSymbols[1].getAttribute('data-label')).toBe('B');
+    });
 });

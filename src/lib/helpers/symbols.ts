@@ -33,7 +33,23 @@ const symbolHexagon = {
     }
 };
 
-const symbols = new Map([
+type BuiltinSymbol =
+    | 'asterisk'
+    | 'circle'
+    | 'cross'
+    | 'diamond'
+    | 'diamond2'
+    | 'hexagon'
+    | 'plus'
+    | 'square'
+    | 'square2'
+    | 'star'
+    | 'times'
+    | 'triangle'
+    | 'triangle2'
+    | 'wye';
+
+const symbols: Map<BuiltinSymbol, SymbolType> = new Map([
     ['asterisk', symbolAsterisk],
     ['circle', symbolCircle],
     ['cross', symbolCross],
@@ -55,15 +71,15 @@ function isSymbolObject(value: SymbolType | string): value is SymbolType {
     return value && typeof value.draw === 'function';
 }
 
-export function isSymbol(value: string | SymbolType) {
+export function isSymbol(value: any): value is SymbolType | BuiltinSymbol {
     if (isSymbolObject(value)) return true;
     if (typeof value !== 'string') return false;
-    return symbols.has(value.toLowerCase());
+    return symbols.has(value.toLowerCase() as BuiltinSymbol);
 }
 
 export function maybeSymbol(symbol: SymbolType | string) {
     if (symbol == null || isSymbolObject(symbol)) return symbol;
-    const value = symbols.get(`${symbol}`.toLowerCase());
+    const value = symbols.get(`${symbol}`.toLowerCase() as BuiltinSymbol);
     if (value) return value;
     throw new Error(`invalid symbol: ${symbol}`);
 }
