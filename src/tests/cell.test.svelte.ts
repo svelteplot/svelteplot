@@ -4,7 +4,14 @@ import CellTest from './cell.test.svelte';
 import { getRectDims, getPathDims } from './utils';
 import { tick } from 'svelte';
 
-const testData = [
+type CellDatum = {
+    x: string;
+    y: string;
+    value: number;
+    url?: string;
+};
+
+const testData: CellDatum[] = [
     { x: 'A', y: '1', value: 10 },
     { x: 'B', y: '1', value: 20 },
     { x: 'A', y: '2', value: 30 },
@@ -151,7 +158,7 @@ describe('Cell mark', () => {
                     data: testData,
                     x: 'x',
                     y: 'y',
-                    fill: (d: any) => (d.value > 25 ? 'red' : 'blue')
+                    fill: (d: CellDatum) => (d.value > 25 ? 'red' : 'blue')
                 }
             }
         });
@@ -168,7 +175,7 @@ describe('Cell mark', () => {
     });
 
     it('supports hyperlinks with href prop', () => {
-        const linkedData = [
+        const linkedData: CellDatum[] = [
             { x: 'A', y: '1', value: 10, url: '/page1' },
             { x: 'B', y: '1', value: 20, url: '/page2' }
         ];
@@ -289,12 +296,12 @@ describe('Cell mark', () => {
                 plotArgs: {},
                 cellArgs: {
                     data: testData,
-                    x: (d, index) => {
+                    x: (d: CellDatum, index: number) => {
                         xIndex(index);
                         return d.x;
                     },
                     y: 'y',
-                    fill: (d, index) => {
+                    fill: (d: CellDatum, index: number) => {
                         fillIndex(index);
                         return 'steelblue';
                     }

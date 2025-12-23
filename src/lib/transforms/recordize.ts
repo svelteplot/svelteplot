@@ -1,5 +1,10 @@
 import isDataRecord from '$lib/helpers/isDataRecord.js';
-import type { TransformArgsRow, TransformArgsRecord } from '$lib/types/index.js';
+import type {
+    TransformArgsRow,
+    TransformArgsRecord,
+    DataRecord,
+    DataRow
+} from '$lib/types/index.js';
 import { INDEX } from '$lib/constants';
 
 export const X = Symbol('x');
@@ -16,9 +21,9 @@ export function indexData<T extends object>(data: T[]): (T & { [INDEX]: number }
  * in which the values are interpreted as x channel and their index as y
  */
 export function recordizeX<T>(
-    { data, ...channels }: TransformArgsRow<T>,
+    { data, ...channels }: TransformArgsRow<DataRow>,
     { withIndex } = { withIndex: true }
-): TransformArgsRecord<T> {
+): TransformArgsRecord<DataRecord> {
     const dataIsRawValueArray =
         !isDataRecord(data[0]) && !Array.isArray(data[0]) && channels.x == null;
     if (dataIsRawValueArray) {
@@ -43,9 +48,9 @@ export function recordizeX<T>(
  * in which the values are interpreted as y channel and their index as yx
  */
 export function recordizeY<T>(
-    { data, ...channels }: TransformArgsRow<T>,
+    { data, ...channels }: TransformArgsRow<DataRow>,
     { withIndex } = { withIndex: true }
-): TransformArgsRecord<T> {
+): TransformArgsRecord<DataRecord> {
     if (!data) return { data, ...channels };
     const dataIsRawValueArray =
         !isDataRecord(data[0]) && !Array.isArray(data[0]) && channels.y == null;

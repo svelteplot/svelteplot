@@ -3,6 +3,8 @@ import { render } from '@testing-library/svelte';
 import CellXTest from './cellX.test.svelte';
 import { getRectDims, getPathDims } from './utils';
 
+type CellXDatum = { value?: number; category?: string; x?: number; fill?: number };
+
 describe('CellX mark', () => {
     it('renders cells from simple number array', () => {
         const { container } = render(CellXTest, {
@@ -50,7 +52,7 @@ describe('CellX mark', () => {
     });
 
     it('renders cells from object data', () => {
-        const testData = [{ value: 5 }, { value: 10 }, { value: 15 }];
+        const testData: CellXDatum[] = [{ value: 5 }, { value: 10 }, { value: 15 }];
 
         const { container } = render(CellXTest, {
             props: {
@@ -85,7 +87,7 @@ describe('CellX mark', () => {
     });
 
     it('supports custom fill channel with object data', () => {
-        const testData = [
+        const testData: CellXDatum[] = [
             { category: 'A', value: 5 },
             { category: 'B', value: 10 },
             { category: 'C', value: 15 }
