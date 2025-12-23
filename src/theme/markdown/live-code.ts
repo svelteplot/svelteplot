@@ -60,7 +60,7 @@ const liveCode: Plugin<any[], any> = function () {
 
     if (!existsSync(LIVE_CODE_MAP)) writeFileSync(LIVE_CODE_MAP, '{}');
 
-    return async (tree, vFile) => {
+    return async (tree: any, vFile: any) => {
         let hasScript = false;
         const liveCodePaths: LiveCodePathItem[] = [];
         const asyncNodeOperations: Promise<any>[] = [];

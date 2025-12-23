@@ -25,17 +25,17 @@ export type ScaleOptions = {
      * Set a custom domain for the scale instead of auto-computing the domain
      * from the mark data channels.
      */
-    domain?: RawValue[];
+    domain: RawValue[];
     /**
      * Set a custom range for the scale.
      */
-    range?: RawValue[];
+    range: RawValue[];
     /**
      * Reverse the scale.
      */
     reverse: boolean;
-    label?: string | false;
-    interval?: string | number;
+    label: string | false;
+    interval: string | number;
     // quantitative scales
     clamp: boolean;
     /**
@@ -62,22 +62,22 @@ export type ScaleOptions = {
     /**
      * set the inner padding for band scales
      */
-    paddingInner?: number;
+    paddingInner: number;
     /**
      * set the outer padding for band scales
      */
-    paddingOuter?: number;
+    paddingOuter: number;
     // position scales
-    insetLeft?: number;
-    insetRight?: number;
-    insetTop?: number;
-    insetBottom?: number;
-    ticks?: (number | Date)[];
+    insetLeft: number;
+    insetRight: number;
+    insetTop: number;
+    insetBottom: number;
+    ticks: (number | Date)[];
     tickSpacing: number;
     // log scales
-    base?: number;
+    base: number;
     // sorting for band and point scales
-    sort?:
+    sort:
         | ChannelAccessor
         | ((a: RawValue, b: RawValue) => number)
         | {
@@ -85,7 +85,7 @@ export type ScaleOptions = {
               order: 'ascending' | 'descending';
           };
     // symlog scales
-    constant?: number;
+    constant: number;
 };
 
 export type ColorScaleOptions = ScaleOptions & {
@@ -219,7 +219,7 @@ export type PlotScale = {
     uniqueScaleProps: Set<ChannelAccessor>;
     skip: Map<ScaledChannelName, Set<symbol>>;
     fn: ScaleLinear<RawValue, number> &
-        ScaleBand<RawValue> &
+        ScaleBand<RawValue[]> &
         ScaleOrdinal<string | Date, number> &
         ScaleOrdinal<string | Date, string>;
 };

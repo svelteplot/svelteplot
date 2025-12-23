@@ -106,7 +106,7 @@ Hill, G. W. (1981) Remark on Algorithm 396, ACM Transactions on Mathematical Sof
 
 Excel: TINV(); R: qt()
 */
-function inverseT(p, df) {
+function inverseT(p: number, df: number) {
     const { sin, cos, sqrt, pow, exp, PI } = Math;
     //   let a, b, c, d, t, x, y;
 
@@ -117,13 +117,18 @@ function inverseT(p, df) {
     const b = 48 / (a * a);
     let c = (((20700 * a) / b - 98) * a - 16) * a + 96.36;
     const d = ((94.5 / (b + c) - 3) / b + 1) * sqrt(a * PI * 0.5) * df;
-    let x = d * p;
+    let x: number = d * p;
     let y = pow(x, 2 / df);
 
     if (y > 0.05 + a) {
         // The procedure normdev(p) is assumed to return a negative normal
         // deviate at the lower tail probability level p, e.g. -2.32 for p = 0.01.
-        x = normdev(p / 2);
+        const _x = normdev(p / 2);
+        if (_x === false) {
+            throw new Error('normdev returned false for p/2 in inverseT');
+        } else {
+            x = _x;
+        }
         y = x * x;
         if (df < 5) c = c + 0.3 * (df - 4.5) * (x + 0.6);
         c = (((0.05 * d * x - 5) * x - 7) * x - 2) * x + b + c;
@@ -147,7 +152,7 @@ function inverseT(p, df) {
 // https://stats.stackexchange.com/questions/101318/understanding-shape-and-calculation-of-confidence-bands-in-linear-regression
 export function confidenceInterval(
     data: { x: number; y: number }[],
-    predict,
+    predict: (x: number) => number,
     confidenceLevel: number
 ) {
     const mean = sum(data, (d) => d.x) / data.length;
@@ -160,7 +165,7 @@ export function confidenceInterval(
     const sy = Math.sqrt(b / (data.length - 2));
     const t = inverseT(+confidenceLevel, data.length - 2);
 
-    return function (x) {
+    return function (x: number) {
         const Y = predict(x);
         const se = sy * Math.sqrt(1 / data.length + Math.pow(x - mean, 2) / a);
         return { x, left: Y - t * se, right: Y + t * se };

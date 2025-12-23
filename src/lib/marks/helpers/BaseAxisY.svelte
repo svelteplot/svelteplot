@@ -36,6 +36,7 @@
         };
         plot: PlotState;
         text: boolean | null;
+        class: string;
     };
 
     let {
@@ -54,7 +55,8 @@
         title,
         plot,
         options,
-        text = true
+        text = true,
+        class: className = 'axis-y'
     }: BaseAxisYProps = $props();
 
     const LINE_ANCHOR = {
@@ -153,7 +155,7 @@
     });
 </script>
 
-<g class="axis-y">
+<g class={className}>
     {#each positionedTicks as tick, t (tick[RAW_VALUE])}
         {#if testFilter(tick, options) && !tick.hidden}
             {@const tickClass_ = resolveProp(tickClass, tick)}

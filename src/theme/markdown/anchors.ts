@@ -8,7 +8,7 @@ export interface Anchor {
 }
 
 const anchors: Plugin<any[], any> = () => {
-    return (tree, vFile) => {
+    return (tree: any, vFile: any) => {
         const anchors: Anchor[] = [];
         visit(tree, (node, idx, parent) => {
             if (node.type === 'heading' && !node.data?.anchorAdded) {

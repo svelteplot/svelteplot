@@ -1,3 +1,4 @@
+import type { GeoProjection } from 'd3-geo';
 import {
     geoAlbers,
     geoAlbersUsa,
@@ -17,21 +18,33 @@ import {
 } from 'd3-geo';
 import { constant } from './index.js';
 
-const identity = constant({ stream: (stream) => stream });
+const identity = constant({ stream: (stream: any) => stream });
 
 const reflectY = constant({
     ...geoTransform({
-        point(x, y) {
+        point(x: number, y: number) {
             this.stream.point(x, -y);
         }
     }),
-    invert(x, y) {
+    invert(x: number, y: number) {
         return [x, -y];
     }
 });
 
 const pi = Math.PI;
 const tau = 2 * pi;
+
+type ProjectionInitializer = () => GeoProjection;
+
+type ProjectionOptions = {
+    width: number;
+    height: number;
+    rotate?: [number, number] | [number, number, number];
+    precision?: number;
+    clip?: number | null;
+    parallels?: [number, number];
+    domain?: any;
+};
 
 export function namedProjection(projection: string) {
     switch (`${projection}`.toLowerCase()) {
@@ -72,9 +85,9 @@ export function namedProjection(projection: string) {
     }
 }
 
-function scaleProjection(createProjection, kx, ky) {
+function scaleProjection(createProjection: ProjectionInitializer, kx: number, ky: number) {
     return {
-        type: ({ width, height, rotate, precision = 0.15, clip }) => {
+        type: ({ width, height, rotate, precision = 0.15, clip }: ProjectionOptions) => {
             const projection = createProjection();
             if (precision != null) projection.precision?.(precision);
             if (rotate != null) projection.rotate?.(rotate);
@@ -87,14 +100,18 @@ function scaleProjection(createProjection, kx, ky) {
     };
 }
 
-function conicProjection(createProjection, kx, ky) {
+function conicProjection(createProjection: ProjectionInitializer, kx: number, ky: number) {
     const { type, aspectRatio } = scaleProjection(createProjection, kx, ky);
     return {
-        type: (options) => {
+        type: (options: ProjectionOptions) => {
             const { parallels, domain, width, height } = options;
             const projection = type(options);
             if (parallels != null) {
-                projection.parallels(parallels);
+                (
+                    projection as GeoProjection & {
+                        parallels?: (p: [number, number]) => GeoProjection;
+                    }
+                ).parallels?.(parallels);
                 if (domain === undefined) {
                     projection.fitSize([width, height], { type: 'Sphere' });
                 }
