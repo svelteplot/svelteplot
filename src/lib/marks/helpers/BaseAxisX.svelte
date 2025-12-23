@@ -42,6 +42,7 @@
         };
         text: boolean;
         plot: PlotState;
+        class: string;
     };
 
     let {
@@ -59,6 +60,7 @@
         options,
         plot,
         title,
+        class: className = 'axis-x',
         text = true
     }: BaseAxisXProps = $props();
 
@@ -176,7 +178,7 @@
     });
 </script>
 
-<g class="axis-x">
+<g class={className}>
     {#each positionedTicks as tick, t (tick[RAW_VALUE])}
         {#if testFilter(tick, options) && !tick.hidden}
             {@const tickClass_ = resolveProp(tickClass, tick)}

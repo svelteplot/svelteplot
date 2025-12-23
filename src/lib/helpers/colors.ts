@@ -112,7 +112,7 @@ export function isCategoricalScheme(scheme: string) {
 
 type SchemeGetter = (n: number) => readonly string[];
 
-const ordinalSchemes = new Map<ColorScheme, SchemeGetter>([
+const ordinalSchemes = new Map<string, SchemeGetter>([
     // diverging
     ['brbg', scheme11(schemeBrBG, interpolateBrBG)],
     ['prgn', scheme11(schemePRGn, interpolatePRGn)],
@@ -165,7 +165,7 @@ const ordinalSchemes = new Map<ColorScheme, SchemeGetter>([
     ['sinebow', schemeicyclical(interpolateSinebow)]
 ]);
 
-export function isOrdinalScheme(scheme: ColorScheme) {
+export function isOrdinalScheme(scheme: ColorScheme): boolean {
     return ordinalSchemes.has(`${scheme}`.toLowerCase());
 }
 
@@ -204,22 +204,23 @@ function schemeicyclical(interpolate: (d: number) => string) {
     return (n: number) => quantize(interpolate, Math.floor(n) + 1).slice(0, -1);
 }
 
-export function ordinalScheme(scheme: string) {
+export function ordinalScheme(scheme: ColorScheme | string) {
     const s = `${scheme}`.toLowerCase();
-    if (!ordinalSchemes.has(s)) throw new Error(`unknown ordinal scheme: ${s}`);
-    return ordinalSchemes.get(s);
+    const match = ordinalSchemes.get(s);
+    if (!match) throw new Error(`unknown ordinal scheme: ${s}`);
+    return match;
 }
 
-export function ordinalRange(scheme: string, length: number) {
+export function ordinalRange(scheme: ColorScheme | string, length: number) {
     const s = ordinalScheme(scheme);
-    const r = typeof s === 'function' ? s({ length }) : s;
+    const r = typeof s === 'function' ? s(length) : s;
     return r.length !== length ? r.slice(0, length) : r;
 }
 
 // If the specified domain contains only booleans (ignoring null and undefined),
 // returns a corresponding range where false is mapped to the low color and true
 // is mapped to the high color of the specified scheme.
-export function maybeBooleanRange(domain: boolean[], scheme = 'greys') {
+export function maybeBooleanRange(domain: boolean[], scheme: ColorScheme | string = 'greys') {
     const range = new Set();
     const [f, t] = ordinalRange(scheme, 2);
     for (const value of domain) {
@@ -288,7 +289,7 @@ export function isQuantitativeScheme(scheme: string) {
     return quantitativeSchemes.has(String(scheme).toLowerCase());
 }
 
-export function quantitativeScheme(scheme: string) {
+export function quantitativeScheme(scheme: ColorScheme | string) {
     const s = `${scheme}`.toLowerCase();
     if (!quantitativeSchemes.has(s)) throw new Error(`unknown quantitative scheme: ${s}`);
     return quantitativeSchemes.get(s);

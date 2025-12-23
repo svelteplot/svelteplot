@@ -9,10 +9,11 @@
     import { scaleBand } from 'd3-scale';
     import Facet from './Facet.svelte';
     import { getEmptyFacets } from '../helpers/facets.js';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const { getPlotState, updateDimensions } = getContext<PlotContext>('svelteplot');
+    const { updateDimensions } = getContext<PlotContext>('svelteplot');
     // we need the plot context for the overall width & height
-    const plot = $derived(getPlotState());
+    const plot = usePlot();
 
     let {
         children,
@@ -36,13 +37,23 @@
     // create band scales for fx and fy
     const facetXScale = $derived(
         scaleBand()
-            .paddingInner(fxValues.length > 1 ? 0.1 : 0)
+            .paddingOuter(0)
+            .paddingInner(
+                fxValues.length > 1
+                    ? (plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
+                    : 0
+            )
             .domain(fxValues)
             .rangeRound([0, plot.plotWidth])
     );
     const facetYScale = $derived(
         scaleBand()
-            .paddingInner(fyValues.length > 1 ? 0.1 : 0)
+            .paddingOuter(0)
+            .paddingInner(
+                fyValues.length > 1
+                    ? (plot.options.fy?.paddingInner ?? plot.options.fy?.padding ?? 0.1)
+                    : 0
+            )
             .domain(fyValues)
             .rangeRound([0, plot.plotHeight])
     );

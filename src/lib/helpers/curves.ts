@@ -1,4 +1,4 @@
-import type { Curve } from '../types/index.js';
+import type { CurveName } from '../types/index.js';
 import {
     curveBasis,
     curveBasisClosed,
@@ -27,7 +27,7 @@ import {
 } from 'd3-shape';
 
 const curves = new Map<
-    Curve,
+    CurveName,
     CurveFactory | CurveBundleFactory | CurveCardinalFactory | CurveCatmullRomFactory
 >([
     ['basis', curveBasis],
@@ -52,9 +52,9 @@ const curves = new Map<
     ['step-before', curveStepBefore]
 ]);
 
-export function maybeCurve(curve: Curve | CurveFactory = curveLinear, tension: number) {
+export function maybeCurve(curve: CurveName | CurveFactory = curveLinear, tension: number) {
     if (typeof curve === 'function') return curve; // custom curve
-    const c = curves.get(`${curve}`.toLowerCase() as Curve);
+    const c = curves.get(`${curve}`.toLowerCase() as CurveName);
     if (!c) throw new Error(`unknown curve: ${curve}`);
     if (tension !== undefined) {
         if ('beta' in c) {

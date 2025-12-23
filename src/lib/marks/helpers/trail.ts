@@ -2,7 +2,7 @@ import { TAU } from '$lib/constants.js';
 import type { Path } from 'd3-path';
 import { maybeCurve } from '$lib/helpers/curves.js';
 import type { CurveName } from '$lib/types/index.js';
-import type { CurveFactory } from 'd3-shape';
+import type { CurveBundleFactory, CurveFactory } from 'd3-shape';
 
 export type TrailContext = CanvasRenderingContext2D | Path;
 
@@ -236,7 +236,7 @@ export function trailPath(
 
 function resampleCurve(
     points: TrailSample[],
-    curveFactory: CurveFactory,
+    curveFactory: CurveFactory | CurveBundleFactory,
     samplesPerSegment: number
 ): TrailSample[] {
     if (points.length === 0) return [];

@@ -18,7 +18,7 @@ function interval<T>(dim: 'x' | 'y', plot: PlotState, { data, ...options }: Tran
         options[`${dim}2`] == null
     ) {
         // derive x1 and x2 from x+interval
-        const interval = maybeInterval(options.interval as string | number, plot.scales[dim].type);
+        const interval = maybeInterval(options.interval as string | number);
         const newData = data.map((row) => {
             const val = resolveChannel(dim, row, options);
             return {
