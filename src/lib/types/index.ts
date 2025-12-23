@@ -57,7 +57,7 @@ export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
 export type TransformArg<T> = Channels<T> & BaseMarkProps<T> & { data: T[] };
 export type MapArg<T> = Channels<T> & { data: T[] };
 
-export type TransformArgsRow<T extends RawValue & object> = Partial<Channels<T>> & { data: T[] };
+export type TransformArgsRow<T extends RawValue | object> = Partial<Channels<T>> & { data: T[] };
 export type TransformArgsRecord<T extends object> = Partial<Channels<T>> & { data: T[] };
 
 export type AutoMarginStores = {
