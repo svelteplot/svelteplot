@@ -9,7 +9,8 @@
 <script lang="ts">
     import { Plot, Dot, jitter } from 'svelteplot';
     import { randomLcg } from 'd3-random';
-    let { cars } = $props();
+    let { cars }: { cars: CarsRow[] } = $props();
+    import type { CarsRow } from '../types';
 
     const source = randomLcg(42);
 </script>
