@@ -74,7 +74,7 @@
     const markerColors = $derived({
         fill: 'none',
         [MARKERS[shape].color]: color,
-        ...(MARKERS[shape].bg ? { [MARKERS[shape].bg as string]: 'var(--svelteplot-bg)' } : {})
+        ...(MARKERS[shape].bg ? { [MARKERS[shape].bg as string]: 'var(--svp-bg)' } : {})
     });
 </script>
 

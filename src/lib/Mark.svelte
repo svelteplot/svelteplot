@@ -325,7 +325,7 @@
 
 <style>
     text {
-        stroke: var(--plot-bg);
+        stroke: var(--svp-bg);
         fill: crimson;
         font-size: 11px;
         stroke-width: 3px;
