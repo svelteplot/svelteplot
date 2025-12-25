@@ -60,6 +60,8 @@ export type MapArg<T> = Channels<T> & { data: T[] };
 export type TransformArgsRow<T extends RawValue | object> = Partial<Channels<T>> & { data: T[] };
 export type TransformArgsRecord<T extends object> = Partial<Channels<T>> & { data: T[] };
 
+export type TransformReturn<C extends TransformArg<T>, T> = C & Required<Pick<Channels<T>, 'data'>>;
+
 export type AutoMarginStores = {
     autoMarginTop: Writable<Map<string, number>>;
     autoMarginLeft: Writable<Map<string, number>>;

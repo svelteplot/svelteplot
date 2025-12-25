@@ -2,6 +2,10 @@
 title: Jitter transform
 ---
 
+:::info
+added in 0.2.7
+:::
+
 The **jitter transform** adds random noise to data points, which is useful for revealing overlapping points in scatter plots and reducing overplotting.
 
 :::info
@@ -97,6 +101,29 @@ Jitters along the y dimension:
     {...jitterY(
         { data: cars, y: 'cylinders' },
         { type: 'normal' }
+    )} />
+```
+
+## jitter
+
+:::info
+added in 0.9.1
+:::
+
+You can use the generic `jitter` transform to jitter along multiple dimensions simultaneously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
+
+```svelte
+<Dot
+    {...jitter(
+        {
+            data: cars,
+            x: 'displacement (cc)',
+            y: 'cylinders'
+        },
+        {
+            x: { type: 'normal' },
+            y: { type: 'uniform', width: 0.5 }
+        }
     )} />
 ```
 

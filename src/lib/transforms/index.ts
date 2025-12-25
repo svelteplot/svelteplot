@@ -7,7 +7,7 @@ export { map, mapX, mapY } from './map.js';
 export { normalizeX, normalizeY, normalizeParallelX, normalizeParallelY } from './normalize.js';
 export { group, groupX, groupY, groupZ } from './group.js';
 export { intervalX, intervalY } from './interval.js';
-export { jitterX, jitterY } from './jitter.js';
+export { jitter, jitterX, jitterY } from './jitter.js';
 export { recordizeX, recordizeY } from './recordize.js';
 export { renameChannels, replaceChannels } from './rename.js';
 export {

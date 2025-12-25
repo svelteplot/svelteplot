@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { bollingerX, bollingerY } from './bollinger.js';
-import type { TransformArg } from '../src/lib/types/index.js';
+import type { TransformArg } from 'svelteplot/types/index.js';
 
 describe('bollinger transform', () => {
     const mockData = [
