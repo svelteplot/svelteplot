@@ -578,12 +578,8 @@
 </figure>
 
 <style>
-    :root {
-        --plot-bg: white;
-        --plot-fg: currentColor;
-    }
-
     figure {
+        --svp-bg: var(--svelteplot-bg, white);
         margin: 0;
         padding: 0;
     }

@@ -177,17 +177,13 @@
 </svelte:boundary>
 
 <style>
-    :root {
-        --plot-bg: white;
-        --plot-fg: currentColor;
-    }
     .error {
         font-size: 11px;
         stroke-width: 3px;
         font-weight: bold;
     }
     text.error {
-        stroke: var(--plot-bg);
+        stroke: var(--svelteplot-bg, white);
         fill: crimson;
         paint-order: stroke fill;
     }
