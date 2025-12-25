@@ -3,6 +3,8 @@
     export const description =
         'Difference between US exports to and imports from the UK, with areas colored by sign.';
     export const data = { trade: '/data/trade.csv' };
+    export const repl =
+        'https://svelte.dev/playground/e0ae67c6975c44b0b89e40e0e7c037b4?version=latest';
 </script>
 
 <script lang="ts">

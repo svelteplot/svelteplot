@@ -1,6 +1,8 @@
 <script module>
     export let title = 'Color scatterplot';
     export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/0dec5f64f30c4da5a6bf848918f38e74?version=latest';
 </script>
 
 <script lang="ts">

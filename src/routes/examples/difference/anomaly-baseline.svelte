@@ -3,6 +3,8 @@
     export const description =
         'Temperature anomalies relative to a zero baseline, with positive and negative areas colored separately.';
     export const data = { gistemp: '/data/gistemp.csv' };
+    export const repl =
+        'https://svelte.dev/playground/de3388a0f5f546e69be365d2734c955f?version=latest';
 </script>
 
 <script lang="ts">

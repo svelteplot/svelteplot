@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Dots from coordinates array';
+    export const repl =
+        'https://svelte.dev/playground/ffc5b17194d645ff9b3cc3ad79f65ecb?version=latest';
 </script>
 
 <script lang="ts">

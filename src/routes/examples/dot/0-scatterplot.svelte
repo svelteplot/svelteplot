@@ -1,6 +1,8 @@
 <script module>
     export let title = 'Scatterplot';
     export const data = { penguins: '/data/penguins.csv' };
+    export const repl =
+        'https://svelte.dev/playground/144c4a0c30dc45ed96b77d0995b33519?version=latest';
 </script>
 
 <script lang="ts">

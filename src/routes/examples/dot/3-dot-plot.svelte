@@ -5,6 +5,8 @@
     export const data = {
         languages: '/data/languages.csv'
     };
+    export const repl =
+        'https://svelte.dev/playground/d1ccdd93145a4d8ca6b3c51714c84169?version=latest';
 </script>
 
 <script lang="ts">
