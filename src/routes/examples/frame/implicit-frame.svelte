@@ -2,6 +2,8 @@
     export const title = 'Implicit frame';
     export const description =
         'A Plot with the frame option creates an implicit frame.';
+    export const repl =
+        'https://svelte.dev/playground/9a0f848d41a7404ea636ffbbe8902831?version=latest';
 </script>
 
 <script>

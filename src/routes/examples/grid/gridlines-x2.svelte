@@ -3,6 +3,8 @@
     export const description =
         'Use x1 and x2 channels to let grid lines stop at a data value';
     export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/50fe3ab6444d4daf9f9a2805a9ff9828?version=latest';
 </script>
 
 <script>
