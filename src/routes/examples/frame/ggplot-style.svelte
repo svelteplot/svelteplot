@@ -3,6 +3,8 @@
     export const description =
         'A frame with a light gray fill and white grid lines, similar to ggplot2 style.';
     export const data = { aapl: '/data/aapl.csv' };
+    export const repl =
+        'https://svelte.dev/playground/92fc8477b933424e8726c2311207c05d?version=latest';
 </script>
 
 <script lang="ts">

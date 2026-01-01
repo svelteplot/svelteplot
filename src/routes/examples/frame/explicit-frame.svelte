@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Explicit frame';
+    export const repl =
+        'https://svelte.dev/playground/0e2f588180a247daa574bb15fc6a40b9?version=latest';
 </script>
 
 <script>
