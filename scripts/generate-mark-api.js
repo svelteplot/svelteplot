@@ -20,11 +20,7 @@ for (let i = 0; i < args.length; i += 2) {
 
 const MARKS_DIR = path.resolve('src/lib/marks');
 const INDEX_OUT_DIR = path.resolve(options.index || 'src/routes/api/marks');
-const EXPANDED_TYPE_NAMES = new Set([
-    'StackOptions',
-    'DodgeXOptions',
-    'DodgeYOptions'
-]);
+const EXPANDED_TYPE_NAMES = new Set(['StackOptions', 'DodgeXOptions', 'DodgeYOptions']);
 
 const runAll = options.all === 'true' || options.all === '1';
 
@@ -131,13 +127,7 @@ function getTypeAliasMap(sourceFile) {
 
 async function parseSource(filePath) {
     const contents = await readFile(filePath, 'utf8');
-    return ts.createSourceFile(
-        filePath,
-        contents,
-        ts.ScriptTarget.ES2022,
-        true,
-        ts.ScriptKind.TS
-    );
+    return ts.createSourceFile(filePath, contents, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TS);
 }
 
 function findInterface(sourceFile, name) {
@@ -174,12 +164,7 @@ function extractComponentPropsTargets(typeName) {
 }
 
 function extractBaseTypeTargets(typeName) {
-    const baseTypes = [
-        'BaseMarkProps',
-        'LinkableMarkProps',
-        'BaseRectMarkProps',
-        'MarkerOptions'
-    ];
+    const baseTypes = ['BaseMarkProps', 'LinkableMarkProps', 'BaseRectMarkProps', 'MarkerOptions'];
     return baseTypes.filter((baseType) => typeName.includes(baseType));
 }
 
@@ -232,22 +217,15 @@ function formatTypeCell(rawType, typeLinks) {
     if (typeLinks?.size) {
         for (const linkName of typeLinks) {
             const link = `[${linkName}](/api/marks#${slugify(linkName)})`;
-            typeCell = typeCell.replace(
-                new RegExp(`\\b${linkName}\\b`, 'g'),
-                link
-            );
+            typeCell = typeCell.replace(new RegExp(`\\b${linkName}\\b`, 'g'), link);
         }
     }
     return typeCell;
 }
 
 async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) {
-    const baseSource = await parseSource(
-        path.resolve('src/lib/types/mark.ts')
-    );
-    const typesSource = await parseSource(
-        path.resolve('src/lib/types/index.ts')
-    );
+    const baseSource = await parseSource(path.resolve('src/lib/types/mark.ts'));
+    const typesSource = await parseSource(path.resolve('src/lib/types/index.ts'));
 
     const baseAlias = findTypeAlias(baseSource, 'BaseMarkProps');
     const markerAlias = findTypeAlias(typesSource, 'MarkerOptions');
@@ -259,9 +237,7 @@ async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) 
     }
 
     const collectRows = (members, sourceFile) =>
-        members
-            .map((member) => formatMemberRow(member, sourceFile))
-            .filter(Boolean);
+        members.map((member) => formatMemberRow(member, sourceFile)).filter(Boolean);
 
     const noteTypeLinks = (rows) => {
         for (const row of rows) {
@@ -274,10 +250,7 @@ async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) 
     };
 
     const baseRows = collectRows(getObjectTypeMembers(baseAlias.type), baseSource);
-    const markerRows = collectRows(
-        getObjectTypeMembers(markerAlias.type),
-        typesSource
-    );
+    const markerRows = collectRows(getObjectTypeMembers(markerAlias.type), typesSource);
     noteTypeLinks(baseRows);
     noteTypeLinks(markerRows);
 
@@ -296,9 +269,7 @@ async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) 
     const linkableRows = linkableAlias
         ? collectRows(getObjectTypeMembers(linkableAlias.type), baseSource)
         : [];
-    const rectRows = rectAlias
-        ? collectRows(getObjectTypeMembers(rectAlias.type), baseSource)
-        : [];
+    const rectRows = rectAlias ? collectRows(getObjectTypeMembers(rectAlias.type), baseSource) : [];
     noteTypeLinks(linkableRows);
     noteTypeLinks(rectRows);
 
@@ -393,13 +364,7 @@ async function getMarkDefinition(markFile) {
 
 async function generateIndexPage(content) {
     const title = 'Marks API reference';
-    const body = [
-        '---',
-        `title: ${title}`,
-        '---',
-        '',
-        content
-    ].join('\n');
+    const body = ['---', `title: ${title}`, '---', '', content].join('\n');
 
     await mkdir(INDEX_OUT_DIR, { recursive: true });
     await writeFile(path.join(INDEX_OUT_DIR, '+page.md'), body, 'utf8');
@@ -407,9 +372,7 @@ async function generateIndexPage(content) {
 
 async function generateAllMarks() {
     const entries = await readdir(MARKS_DIR);
-    const markFiles = entries
-        .filter((entry) => entry.endsWith('.svelte'))
-        .sort();
+    const markFiles = entries.filter((entry) => entry.endsWith('.svelte')).sort();
 
     const marks = [];
     for (const entry of markFiles) {
@@ -420,15 +383,9 @@ async function generateAllMarks() {
 
     const markSections = [];
     const typeLinks = new Set();
-    const typeSource = await parseSource(
-        path.resolve('src/lib/types/index.ts')
-    );
-    const stackSource = await parseSource(
-        path.resolve('src/lib/transforms/stack.ts')
-    );
-    const dodgeSource = await parseSource(
-        path.resolve('src/lib/transforms/dodge.ts')
-    );
+    const typeSource = await parseSource(path.resolve('src/lib/types/index.ts'));
+    const stackSource = await parseSource(path.resolve('src/lib/transforms/stack.ts'));
+    const dodgeSource = await parseSource(path.resolve('src/lib/transforms/dodge.ts'));
     const markerSourceText = await readFile(
         path.resolve('src/lib/marks/helpers/Marker.svelte'),
         'utf8'
@@ -453,10 +410,7 @@ async function generateAllMarks() {
         ...getTypeAliasMap(stackSource),
         ...getTypeAliasMap(dodgeSource)
     ]);
-    const allTypeNames = new Set([
-        ...stringUnionMap.keys(),
-        ...expandedTypeDefs.keys()
-    ]);
+    const allTypeNames = new Set([...stringUnionMap.keys(), ...expandedTypeDefs.keys()]);
     const markRows = [];
     const markByInterface = new Map();
     const markByName = new Map();
@@ -466,18 +420,14 @@ async function generateAllMarks() {
     }
 
     for (const mark of marks) {
-        const sourceFile = mark.isSvelte
-            ? mark.scriptSource
-            : await parseSource(mark.propsPath);
+        const sourceFile = mark.isSvelte ? mark.scriptSource : await parseSource(mark.propsPath);
         const iface =
             findInterface(sourceFile, mark.interfaceName) ||
             findInterface(sourceFile, `${mark.name}MarkProps`) ||
             findInterface(sourceFile, 'MarkProps');
 
         const rows = iface
-            ? iface.members
-                  .map((member) => formatMemberRow(member, sourceFile))
-                  .filter(Boolean)
+            ? iface.members.map((member) => formatMemberRow(member, sourceFile)).filter(Boolean)
             : [];
 
         const extendsList = iface ? getInterfaceExtends(iface, sourceFile) : [];
@@ -526,9 +476,7 @@ async function generateAllMarks() {
             ? `Inherited props from ${inheritedAll.join(', ')}.`
             : 'Inherited props: see the [shared section](/api/marks#Inherited-props) below.';
 
-        const description = mark.componentComment
-            ? mark.componentComment
-            : '';
+        const description = mark.componentComment ? mark.componentComment : '';
         const section = [
             `## ${mark.name}`,
             '',
@@ -543,11 +491,7 @@ async function generateAllMarks() {
         markSections.push(section);
     }
 
-    const inherited = await getInheritedPropsTables(
-        typeLinks,
-        stringUnionMap,
-        allTypeNames
-    );
+    const inherited = await getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames);
     const inheritedSection = [
         '## Inherited props',
         '',
@@ -575,9 +519,7 @@ async function generateAllMarks() {
     const resolvedTypeSections = [];
     for (const typeName of typeLinks) {
         const values = stringUnionMap.get(typeName);
-        const expanded = EXPANDED_TYPE_NAMES.has(typeName)
-            ? expandedTypeDefs.get(typeName)
-            : null;
+        const expanded = EXPANDED_TYPE_NAMES.has(typeName) ? expandedTypeDefs.get(typeName) : null;
         const details = [];
         if (values?.length) {
             const bullets = values.map((value) => `- \`${escapeForSvelte(value)}\``);
@@ -598,9 +540,7 @@ async function generateAllMarks() {
         : '';
 
     await generateIndexPage(
-        [markSections.join('\n\n'), inheritedSection, typeSection]
-            .filter(Boolean)
-            .join('\n\n')
+        [markSections.join('\n\n'), inheritedSection, typeSection].filter(Boolean).join('\n\n')
     );
 }
 
