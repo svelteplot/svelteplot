@@ -132,8 +132,16 @@ export default {
             collapsible: true,
             items: [
                 {
+                    title: 'Plot',
+                    to: '/api/plot'
+                },
+                {
                     title: 'Marks',
                     to: '/api/marks'
+                },
+                {
+                    title: 'Transforms',
+                    to: '/api/transforms'
                 }
             ]
         }

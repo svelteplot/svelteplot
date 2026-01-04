@@ -20,7 +20,7 @@ a.link.highlight {
     }
 }
 
-a.link.highlight[href^='/api/marks#'] {
+a.link.highlight[href^='/api/'] {
     text-decoration: none;
     border-bottom: none;
     &::before {
