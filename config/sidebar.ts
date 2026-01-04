@@ -126,6 +126,32 @@ export default {
                     to: '/features/gradients'
                 }
             ]
+        },
+        {
+            title: 'Examples',
+            collapsible: true,
+            items: [
+                {
+                    title: 'Bar/Cell/Rect',
+                    to: '/examples/bar-cell-rect'
+                },
+                {
+                    title: 'Dot',
+                    to: '/examples/dot'
+                },
+                {
+                    title: 'Line',
+                    to: '/examples/line'
+                },
+                {
+                    title: 'Rule/Tick',
+                    to: '/examples/rule-tick'
+                },
+                 {
+                    title: 'Axes',
+                    to: '/examples/axes'
+                },
+            ]
         }
     ]
 };
