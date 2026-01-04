@@ -24,7 +24,10 @@
         "docs": "npm run build && cd build && rsync --recursive . vis4.net:svelteplot/alpha0/",
         "screenshots": "node screenshot-examples.js",
         "check-js-extensions": "node scripts/check-js-extensions.js src",
-        "docs:api:marks": "node scripts/generate-mark-api.js --all true --index src/routes/api/marks && prettier --write ."
+        "docs:api:marks": "node scripts/generate-api.js --marks --mark-links && prettier --write .",
+        "docs:api:plot": "node scripts/generate-api.js --plot",
+        "docs:api:transforms": "node scripts/generate-api.js --transforms",
+        "docs:api": "node scripts/generate-api.js --marks --mark-links --plot --transforms && prettier --write ."
     },
     "exports": {
         ".": {

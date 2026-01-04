@@ -9,7 +9,51 @@ for binning in x and y dimension simultaneously
 ```ts
 bin<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinOptions): TransformArg<T, DataRecord>
 ```
-Options: [BinOptions](/api/transforms#BinOptions)
+### BinOptions
+
+```ts
+type BinOptions = BinBaseOptions & AdditionalOutputChannels;
+```
+
+### BinBaseOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `domain?` | [ number, number ] |  |
+| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
+| `interval?` | number \| string |  |
+| `cumulative?` | false \| 1 \| -1 |  |
+| `reverse?` | boolean |  |
+
+### NamedThresholdsGenerator
+
+- `auto`
+- `scott`
+- `sturges`
+- `freedman-diaconis`
+
+### AdditionalOutputChannels
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `fill` | ReducerOption |  |
+| `stroke` | ReducerOption |  |
+| `r` | ReducerOption |  |
+| `opacity` | ReducerOption |  |
+| `fillOpacity` | ReducerOption |  |
+| `strokeOpacity` | ReducerOption |  |
+
+### ReducerOption
+
+```ts
+type ReducerOption = ReducerName | ((group: DataRecord[]) => RawValue);
+```
+
+### ReducerName
+
+```ts
+export type ReducerName = 'count' | 'deviation' | 'difference' | 'first' | 'last' | 'max' | 'mean' | 'median' | 'min' | 'mode' | 'ratio' | 'sum' | 'variance' | ReducerPercentile;
+```
 
 ## binX
 
@@ -18,7 +62,17 @@ Bins on x. Also groups on y and the first channel of z, fill, or stroke, if any.
 ```ts
 binX<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinXOptions): TransformArg<T, DataRecord>
 ```
-Options: [BinXOptions](/api/transforms#BinXOptions)
+### BinXOptions
+
+```ts
+export type BinXOptions = BinBaseOptions & AdditionalOutputChannels & Partial<{
+    y: ReducerOption;
+    y1: ReducerOption;
+    y2: ReducerOption;
+}>;
+```
+
+Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
 
 ## binY
 
@@ -27,7 +81,17 @@ Bins on y. Also groups on y and the first channel of z, fill, or stroke, if any.
 ```ts
 binY<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinYOptions): TransformArg<T, DataRecord>
 ```
-Options: [BinYOptions](/api/transforms#BinYOptions)
+### BinYOptions
+
+```ts
+export type BinYOptions = BinBaseOptions & AdditionalOutputChannels & Partial<{
+    x: ReducerOption;
+    x1: ReducerOption;
+    x2: ReducerOption;
+}>;
+```
+
+Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
 
 ## bollingerX
 
@@ -35,7 +99,12 @@ Options: [BinYOptions](/api/transforms#BinYOptions)
 ```ts
 bollingerX<T>(args: TransformArg<T>, options: BollingerOptions): TransformArg<T>
 ```
-Options: [BollingerOptions](/api/transforms#BollingerOptions)
+### BollingerOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `n?` | number | the window size (the window transform’s k option), an integer; defaults to 20 |
+| `k?` | number | the band radius, a number representing a multiple of standard deviations; defaults to 2 |
 
 ## bollingerY
 
@@ -90,7 +159,6 @@ filter<T>({ data, ...channels }: TransformArg<T>): TransformArg<T>
 ```ts
 map<T>(args: TransformArg<T>, options: MapOptions): void
 ```
-Options: [MapOptions](/api/transforms#MapOptions)
 
 ## mapX
 
@@ -154,7 +222,31 @@ to output channels fill, stroke, r, opacity, fillOpacity, or strokeOpacity
 ```ts
 group({ data, ...channels }: TransformArg<T, DataRecord>, options: GroupXOptions): void
 ```
-Options: [GroupXOptions](/api/transforms#GroupXOptions)
+### GroupXOptions
+
+```ts
+type GroupXOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
+    y: ReducerOption;
+    y1: ReducerOption;
+    y2: ReducerOption;
+    xPropName: string;
+}>;
+```
+
+Uses: [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
+
+### GroupBaseOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `domain?` | [ number, number ] |  |
+| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
+| `interval?` | number \| string |  |
+| `cumulative?` | false \| 1 \| -1 |  |
+| `reverse?` | boolean |  |
+| `copy?` | string[] | copy properties from the first element of each group |
+
+Uses: [NamedThresholdsGenerator](/api/transforms#NamedThresholdsGenerator)
 
 ## groupX
 
@@ -174,7 +266,18 @@ to output channels x, x1, x2, fill, stroke, r, opacity, fillOpacity, or strokeOp
 ```ts
 groupY(input: TransformArg<T, DataRecord>, options: GroupYOptions): void
 ```
-Options: [GroupYOptions](/api/transforms#GroupYOptions)
+### GroupYOptions
+
+```ts
+type GroupYOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
+    x: ReducerOption;
+    x1: ReducerOption;
+    x2: ReducerOption;
+    yPropName: string;
+}>;
+```
+
+Uses: [GroupBaseOptions](/api/transforms#GroupBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
 
 ## groupZ
 
@@ -185,7 +288,13 @@ or strokeOpacity
 ```ts
 groupZ(input: TransformArg<T, DataRecord>, options: GroupZOptions): void
 ```
-Options: [GroupZOptions](/api/transforms#GroupZOptions)
+### GroupZOptions
+
+```ts
+type GroupZOptions = GroupXOptions | GroupYOptions;
+```
+
+Uses: [GroupXOptions](/api/transforms#GroupXOptions), [GroupYOptions](/api/transforms#GroupYOptions)
 
 ## intervalX
 
@@ -218,7 +327,19 @@ jitter<T, C extends TransformArg<T>>({ data, ...channels }: C, options: Partial<
 ```ts
 jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'>
 ```
-Options: [JitterOptions](/api/transforms#JitterOptions)
+### JitterOptions
+
+```ts
+type JitterOptions = {
+    source?: () => number;
+} & ({
+    type: 'uniform';
+    width?: number | string;
+} | {
+    type: 'normal';
+    std?: number | string;
+});
+```
 
 ## jitterY
 
@@ -249,7 +370,11 @@ renames a channel without modifying the data
 ```ts
 renameChannels<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: RenameChannelsOptions): TransformArg<T, DataRecord>
 ```
-Options: [RenameChannelsOptions](/api/transforms#RenameChannelsOptions)
+### RenameChannelsOptions
+
+```ts
+type RenameChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName>>;
+```
 
 ## replaceChannels
 
@@ -257,7 +382,11 @@ Options: [RenameChannelsOptions](/api/transforms#RenameChannelsOptions)
 ```ts
 replaceChannels<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: ReplaceChannelsOptions): TransformArg<T, DataRecord>
 ```
-Options: [ReplaceChannelsOptions](/api/transforms#ReplaceChannelsOptions)
+### ReplaceChannelsOptions
+
+```ts
+type ReplaceChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName[]>>;
+```
 
 ## select
 
@@ -265,7 +394,21 @@ Options: [ReplaceChannelsOptions](/api/transforms#ReplaceChannelsOptions)
 ```ts
 select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions): void
 ```
-Options: [SelectOptions](/api/transforms#SelectOptions)
+### SelectOptions
+
+```ts
+type SelectOptions = 'first' | 'last' | AtLeastOne<{
+    [k in ChannelName]: 'min' | 'max';
+}>;
+```
+
+### AtLeastOne
+
+```ts
+type AtLeastOne<T, U = {
+    [K in keyof T]: Pick<T, K>;
+}> = Partial<T> & U[keyof U];
+```
 
 ## selectFirst
 
@@ -386,7 +529,17 @@ stackMosaicY<T>(args: unknown, opts: unknown): void
 ```ts
 windowX(args: TransformArg<DataRecord>, options: WindowOptions): void
 ```
-Options: [WindowOptions](/api/transforms#WindowOptions)
+### WindowOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `k` | number |  |
+| `interval` | string |  |
+| `anchor` | 'start' \| 'middle' \| 'end' |  |
+| `reduce` | ReducerName |  |
+| `strict` | boolean |  |
+
+Uses: [ReducerName](/api/transforms#ReducerName)
 
 ## windowY
 
@@ -419,12 +572,10 @@ export type BinYOptions = BinBaseOptions & AdditionalOutputChannels & Partial<{
 ```
 ### BollingerOptions
 
-```ts
-export type BollingerOptions = {
-    n?: number;
-    k?: number;
-};
-```
+| Prop | Type | Description |
+| --- | --- | --- |
+| `n?` | number | the window size (the window transform’s k option), an integer; defaults to 20 |
+| `k?` | number | the band radius, a number representing a multiple of standard deviations; defaults to 2 |
 ### StackOrder
 
 - `none`
@@ -447,3 +598,129 @@ export type StackOptions = {
     reverse: boolean;
 } | false;
 ```
+### ReducerPercentile
+
+```ts
+export type ReducerPercentile = (`p${Digit}${Digit}` & Record<never, never>) | 'p25' | 'p50' | 'p75';
+```
+### ReducerName
+
+```ts
+export type ReducerName = 'count' | 'deviation' | 'difference' | 'first' | 'last' | 'max' | 'mean' | 'median' | 'min' | 'mode' | 'ratio' | 'sum' | 'variance' | ReducerPercentile;
+```
+### BinOptions
+
+```ts
+type BinOptions = BinBaseOptions & AdditionalOutputChannels;
+```
+### BinBaseOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `domain?` | [ number, number ] |  |
+| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
+| `interval?` | number \| string |  |
+| `cumulative?` | false \| 1 \| -1 |  |
+| `reverse?` | boolean |  |
+### NamedThresholdsGenerator
+
+- `auto`
+- `scott`
+- `sturges`
+- `freedman-diaconis`
+### AdditionalOutputChannels
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `fill` | ReducerOption |  |
+| `stroke` | ReducerOption |  |
+| `r` | ReducerOption |  |
+| `opacity` | ReducerOption |  |
+| `fillOpacity` | ReducerOption |  |
+| `strokeOpacity` | ReducerOption |  |
+### ReducerOption
+
+```ts
+type ReducerOption = ReducerName | ((group: DataRecord[]) => RawValue);
+```
+### GroupXOptions
+
+```ts
+type GroupXOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
+    y: ReducerOption;
+    y1: ReducerOption;
+    y2: ReducerOption;
+    xPropName: string;
+}>;
+```
+### GroupBaseOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `domain?` | [ number, number ] |  |
+| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
+| `interval?` | number \| string |  |
+| `cumulative?` | false \| 1 \| -1 |  |
+| `reverse?` | boolean |  |
+| `copy?` | string[] | copy properties from the first element of each group |
+### GroupYOptions
+
+```ts
+type GroupYOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
+    x: ReducerOption;
+    x1: ReducerOption;
+    x2: ReducerOption;
+    yPropName: string;
+}>;
+```
+### GroupZOptions
+
+```ts
+type GroupZOptions = GroupXOptions | GroupYOptions;
+```
+### JitterOptions
+
+```ts
+type JitterOptions = {
+    source?: () => number;
+} & ({
+    type: 'uniform';
+    width?: number | string;
+} | {
+    type: 'normal';
+    std?: number | string;
+});
+```
+### RenameChannelsOptions
+
+```ts
+type RenameChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName>>;
+```
+### ReplaceChannelsOptions
+
+```ts
+type ReplaceChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName[]>>;
+```
+### SelectOptions
+
+```ts
+type SelectOptions = 'first' | 'last' | AtLeastOne<{
+    [k in ChannelName]: 'min' | 'max';
+}>;
+```
+### AtLeastOne
+
+```ts
+type AtLeastOne<T, U = {
+    [K in keyof T]: Pick<T, K>;
+}> = Partial<T> & U[keyof U];
+```
+### WindowOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `k` | number |  |
+| `interval` | string |  |
+| `anchor` | 'start' \| 'middle' \| 'end' |  |
+| `reduce` | ReducerName |  |
+| `strict` | boolean |  |
