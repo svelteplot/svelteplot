@@ -23,7 +23,8 @@
         "release-next": "npm version prerelease --preid next && npm publish && git push && git push --tags && sleep 1 && npm dist-tag add svelteplot@$(npm view . version) next",
         "docs": "npm run build && cd build && rsync --recursive . vis4.net:svelteplot/alpha0/",
         "screenshots": "node screenshot-examples.js",
-        "check-js-extensions": "node scripts/check-js-extensions.js src"
+        "check-js-extensions": "node scripts/check-js-extensions.js src",
+        "docs:api:marks": "node scripts/generate-mark-api.js --all true --index src/routes/api/marks"
     },
     "exports": {
         ".": {

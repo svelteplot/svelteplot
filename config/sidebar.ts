@@ -126,6 +126,16 @@ export default {
                     to: '/features/gradients'
                 }
             ]
+        },
+        {
+            title: 'API Reference',
+            collapsible: true,
+            items: [
+                {
+                    title: 'Marks',
+                    to: '/api/marks'
+                }
+            ]
         }
     ]
 };
