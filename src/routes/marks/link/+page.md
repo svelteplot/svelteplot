@@ -2,6 +2,8 @@
 title: Link mark
 ---
 
+[API Reference](/api/marks#Link)
+
 For connecting two points with a line.
 
 ```svelte live

@@ -148,8 +148,12 @@ If you explicitly add a grid mark to your plot, you can set the following option
 
 ## GridX
 
+[API Reference](/api/marks#GridX)
+
 For showing vertical grid lines spread along the x axis.
 
 ## GridY
+
+[API Reference](/api/marks#GridY)
 
 For showing horizontal grid lines spread along the x axis.

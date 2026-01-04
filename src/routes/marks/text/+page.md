@@ -2,6 +2,8 @@
 title: Text mark
 ---
 
+[API Reference](/api/marks#Text)
+
 Useful for showing text labels. The text mark is using SVG `<text>` elements, so formatting is limited.
 
 ```svelte live

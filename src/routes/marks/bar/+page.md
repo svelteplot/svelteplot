@@ -110,6 +110,8 @@ You can create stacked bar charts by defining a fill channel which will be used 
 
 ## BarX
 
+[API Reference](/api/marks#BarX)
+
 The `BarX` component renders horizontal bars, typically used with a band scale on the y-axis. This is ideal for categorical data where the categories run along the y-axis, and the values extend horizontally.
 
 **Properties**
@@ -130,6 +132,8 @@ The `BarX` component renders horizontal bars, typically used with a band scale o
 Additionally, `BarX` supports all common styling properties like `fill`, `stroke`, `opacity`, etc.
 
 ## BarY
+
+[API Reference](/api/marks#BarY)
 
 The `BarY` component renders vertical bars (columns), typically used with a band scale on the x-axis. This is ideal for categorical data where the categories run along the x-axis, and the values extend vertically.
 

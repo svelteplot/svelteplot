@@ -137,6 +137,8 @@ Seattle temperatures
 
 ## CellX
 
+[API Reference](/api/marks#CellX)
+
 Equivalent to [cell](/marks/cell#Cell), except that if the **x** option is not specified, it defaults to \[0, 1, 2, …\], and if the **fill** option is not specified and **stroke** is not a channel, the fill defaults to the identity function and assumes that _data_ = \[_x₀_, _x₁_, _x₂_, …\].
 
 ```svelte live
@@ -187,6 +189,8 @@ Equivalent to [cell](/marks/cell#Cell), except that if the **x** option is not s
 ```
 
 ## CellY
+
+[API Reference](/api/marks#CellY)
 
 Equivalent to [cell](/marks/cell#Cell), except that if the **y** option is not specified, it defaults to \[0, 1, 2, …\], and if the **fill** option is not specified and **stroke** is not a channel, the fill defaults to the identity function and assumes that _data_ = \[_x₀_, _x₁_, _x₂_, …\].
 

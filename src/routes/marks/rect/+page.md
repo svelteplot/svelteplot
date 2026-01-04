@@ -135,6 +135,8 @@ The interval transform may be used to convert a single value in x or y (or both)
 
 ## Rect
 
+[API Reference](/api/marks#Rect)
+
 The rect mark supports the following channels:
 
 - **data** - Array of data objects to be rendered as rectangles
@@ -156,6 +158,8 @@ Aside from the default mark styling properties you can adjust the appearance of 
 - **borderRadius** - Border radius for rounded corners, either a number or an object with `{ topLeft, topRight, bottomLeft, bottomRight }`.
 
 ## RectX
+
+[API Reference](/api/marks#RectX)
 
 RectX can be used for range annotations:
 
@@ -199,6 +203,8 @@ RectX can be used for range annotations:
 ```
 
 ## RectY
+
+[API Reference](/api/marks#RectY)
 
 RectY can be used for range annotations:
 

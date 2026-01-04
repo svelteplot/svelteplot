@@ -20,6 +20,14 @@ a.link.highlight {
     }
 }
 
+a.link.highlight[href^='/api/marks#'] {
+    text-decoration: none;
+    border-bottom: none;
+    &::before {
+        content: '🔖 ';
+    }
+}
+
 /*
  * CSS hack to style the Fork buttons below code examples
  */

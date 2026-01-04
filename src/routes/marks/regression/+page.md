@@ -158,6 +158,8 @@ You can combine the regression mark with grouping _and_ faceting:
 
 ## RegressionY
 
+[API Reference](/api/marks#RegressionY)
+
 Returns a linear regression mark where y is the dependent variable and x is the independent variable. (This is the common orientation.)
 
 ```svelte live
@@ -218,6 +220,8 @@ Returns a linear regression mark where y is the dependent variable and x is the 
 ```
 
 ## RegressionX
+
+[API Reference](/api/marks#RegressionX)
 
 Returns a linear regression mark where x is the dependent variable and y is the independent variable. (This is the uncommon orientation.)
 

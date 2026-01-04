@@ -300,6 +300,8 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 
 ## Vector
 
+[API Reference](/api/marks#Vector)
+
 ```svelte
 <Vector
     {data}
@@ -318,6 +320,8 @@ You can use the Vector mark with **custom shapes** by passing an object with a `
 ```
 
 ## Spike
+
+[API Reference](/api/marks#Spike)
 
 The **Spike** mark is a [convenience wrapper](https://github.com/svelteplot/svelteplot/blob/main/src/lib/marks/Spike.svelte) around the Vector mark that sets common defaults for spike maps.
 

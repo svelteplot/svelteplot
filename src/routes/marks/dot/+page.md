@@ -157,6 +157,8 @@ You can also use a point scale for dot dimensions to create dot plots, such as t
 
 ## DotX
 
+[API Reference](/api/marks#DotX)
+
 Using the **DotX** mark, you can quickly plot a list of numbers as dots:
 
 ```svelte live
@@ -172,6 +174,8 @@ Using the **DotX** mark, you can quickly plot a list of numbers as dots:
 ```
 
 ## DotY
+
+[API Reference](/api/marks#DotY)
 
 Using the <b>DotY</b> mark, you can quickly plot a list of numbers as dots:
 

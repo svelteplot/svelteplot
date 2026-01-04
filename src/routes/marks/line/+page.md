@@ -282,6 +282,8 @@ BLS Demo:
 
 ## Line
 
+[API Reference](/api/marks#Line)
+
 The following channels are supported:
 
 - **data** - The data to be visualized (required)
@@ -330,6 +332,8 @@ Styling:
 
 ## LineY
 
+[API Reference](/api/marks#LineY)
+
 The [LineY constructor](/marks/line#LineY) provides default channel definitions of **x** = index and **y** = [identity](/features/transforms#identity), letting you pass an array of numbers as data. The [LineX constructor](/marks/line#LineX) similarly provides **x** = identity and **y** = index defaults for lines that go up↑ instead of to the right→. Below, a random walk is made using [d3.cumsum](https://d3js.org/d3-array/summarize#cumsum) and [d3.randomNormal](https://d3js.org/d3-random#randomNormal).
 
 ```svelte live
@@ -354,6 +358,8 @@ The [LineY constructor](/marks/line#LineY) provides default channel definitions 
 [fork](https://svelte.dev/playground/ede4503f8072438e934b7c09b1bea441?version=5)
 
 ## LineX
+
+[API Reference](/api/marks#LineX)
 
 Convenience wrapper for rendering an array of numbers over their indices.
 

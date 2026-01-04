@@ -291,6 +291,8 @@ The waffle mark accepts the following options in addition to the standard mark o
 
 ## WaffleX
 
+[API Reference](/api/marks#WaffleX)
+
 Renders a horizontal waffle chart → that shows quantities along the x axis over categorical values on a band scale along the x axis, similar to [BarX](/marks/bar/#BarX).
 
 Channels:
@@ -343,6 +345,8 @@ Channels:
 ```
 
 ## WaffleY
+
+[API Reference](/api/marks#WaffleY)
 
 Renders a vertical waffle chart ↑ that shows quantities along the y axis over categorical values on a band scale along the x axis, similar to [BarY](/marks/bar/#BarY).
 

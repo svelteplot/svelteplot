@@ -6,6 +6,8 @@ Ticks are useful for showing one-dimensional distributions, as in the "barcode" 
 
 ## TickX
 
+[API Reference](/api/marks#TickX)
+
 The tickX mark shows a vertical bar for each x position. Based on an example from [Observable Plot](https://observablehq.com/@observablehq/plot-barcode), this chart shows the age distribution of the population in each US state as horizontal ticks. The x position of each tick represents the share of the state's population in that age group.
 
 ```svelte live
@@ -29,6 +31,8 @@ The tickX mark shows a vertical bar for each x position. Based on an example fro
 ```
 
 ## TickY
+
+[API Reference](/api/marks#TickY)
 
 Shows a horizontal bar for each x position.
 

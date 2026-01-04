@@ -2,6 +2,8 @@
 title: Trail mark
 ---
 
+[API Reference](/api/marks#Trail)
+
 :::info
 added in 0.9.0
 :::

@@ -150,6 +150,8 @@ Or we can use a custom mark to draw the topline of a histogram:
 
 ## CustomMark
 
+[API Reference](/api/marks#CustomMark)
+
 ```svelte
 <CustomMark {data} {...channels}>
     {#snippet mark({ record })}
@@ -159,6 +161,8 @@ Or we can use a custom mark to draw the topline of a histogram:
 ```
 
 ## CustomMarkHTML
+
+[API Reference](/api/marks#CustomMarkHTML)
 
 You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark (name subject to change)
 

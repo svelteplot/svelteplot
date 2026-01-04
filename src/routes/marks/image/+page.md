@@ -2,6 +2,8 @@
 title: Image mark
 ---
 
+[API Reference](/api/marks#Image)
+
 :::info
 added in 0.6.0
 :::

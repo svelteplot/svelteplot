@@ -258,6 +258,8 @@ You can change the defaults for SveltePlot grids using the `setPlotDefaults` hoo
 
 ## AxisX
 
+[API Reference](/api/marks#AxisX)
+
 You can explicitly add an x axis using the `AxisX` mark component. The `AxisX` component provides more customization options than the implicit axes.
 
 **Options**
@@ -283,6 +285,8 @@ For compatibility reasons AxisX also supports the "magic" **ticks** option which
 The `AxisX` component also inherits all styling properties from the base mark component (fill, stroke, strokeWidth, opacity, etc.).
 
 ## AxisY
+
+[API Reference](/api/marks#AxisY)
 
 The `AxisY` component provides extensive customization options for y-axis presentation.
 

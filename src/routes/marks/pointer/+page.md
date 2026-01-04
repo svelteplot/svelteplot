@@ -415,6 +415,8 @@ Another common use case is to show one point per group. This is useful when you 
 
 ## Pointer
 
+[API Reference](/api/marks#Pointer)
+
 Options:
 
 - **data** - The data array to use for the pointer (required).
