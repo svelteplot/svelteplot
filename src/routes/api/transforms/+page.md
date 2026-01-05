@@ -222,6 +222,7 @@ mapY<T>(args: TransformArg<T>, mapper: MapMethod): void
 
 ## normalizeX
 
+Normalizes the x values based on the specified basis. Uses mapX.
 
 ```ts
 normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis): void
@@ -229,6 +230,7 @@ normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis): void
 
 ## normalizeY
 
+Normalizes the y values based on the specified basis. Uses mapY.
 
 ```ts
 normalizeY<T>(args: TransformArg<T>, basis: NormalizeBasis): void
@@ -344,20 +346,18 @@ Uses: [GroupXOptions](/api/transforms#GroupXOptions), [GroupYOptions](/api/trans
 
 ## intervalX
 
+Derives interval channels x1 and x2 from the x channel and interval channel.
 
 ```ts
-intervalX<T>(args: TransformArg<T>, { plot }: {
-    plot: PlotState;
-}): void
+intervalX<T>(args: TransformArg<T>): void
 ```
 
 ## intervalY
 
+Derives interval channels y1 and y2 from the y channel and interval channel.
 
 ```ts
-intervalY<T>(args: TransformArg<T>, { plot }: {
-    plot: PlotState;
-}): void
+intervalY<T>(args: TransformArg<T>): void
 ```
 
 ## jitter
