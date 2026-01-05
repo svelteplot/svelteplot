@@ -15,10 +15,16 @@ type NormalizeBasis =
     | 'extent'
     | MapIndexObject;
 
+/**
+ * Normalizes the x values based on the specified basis. Uses mapX.
+ */
 export function normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis) {
     return mapX(args, normalize(basis));
 }
 
+/**
+ * Normalizes the y values based on the specified basis. Uses mapY.
+ */
 export function normalizeY<T>(args: TransformArg<T>, basis: NormalizeBasis) {
     return mapY(args, normalize(basis));
 }

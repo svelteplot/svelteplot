@@ -223,3 +223,5 @@ The standard fill option is ignored; instead, there are separate channels based 
 - **strokeOpacity** - the metric line’s opacity, defaults to 1
 
 ## DifferenceY
+
+[API Reference](/api/marks#DifferenceY)

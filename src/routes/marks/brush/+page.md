@@ -373,6 +373,8 @@ But you can still brush along a sequential dimension:
 
 ## Brush
 
+[API Reference](/api/marks#Brush)
+
 Helper mark for brushing 2-dimensional selections along the x and y axes.
 
 ### Options
@@ -414,6 +416,8 @@ The Brush mark provides three event handlers:
 
 ## BrushX
 
+[API Reference](/api/marks#BrushX)
+
 Helper mark for brushing 1-dimensional selections along the x axis. Shorthand for
 
 ```svelte
@@ -421,6 +425,8 @@ Helper mark for brushing 1-dimensional selections along the x axis. Shorthand fo
 ```
 
 ## BrushY
+
+[API Reference](/api/marks#BrushY)
 
 Helper mark for brushing 1-dimensional selections along the y axis. Shorthand for
 

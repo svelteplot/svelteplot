@@ -10,6 +10,10 @@ Given one position dimension (either x or y), the dodge transform computes the o
 
 The dodge transform is commonly used to produce beeswarm beeswarm plots, a way of showing a one-dimensional distribution that preserves the visual identity of individual data points. For example, the dots below represent the weights of cars.
 
+:::note
+Unlike other transforms, the dodge transform is applied _after_ the positions have been computed using the scales. That's why you pass the dodge options via mark properties.
+:::
+
 ```svelte live
 <script>
     import { Plot, DotX, RuleY } from '$lib';

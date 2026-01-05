@@ -187,6 +187,8 @@ You can combine the rule marks with the group transform to show the mean, median
 
 ## RuleX
 
+[API Reference](/api/marks#RuleX)
+
 For vertical lines
 
 - **x** - required
@@ -194,6 +196,8 @@ For vertical lines
 - **y2** - optional end of the line
 
 ## RuleY
+
+[API Reference](/api/marks#RuleY)
 
 For horizontal lines
 

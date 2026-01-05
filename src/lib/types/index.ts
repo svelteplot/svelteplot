@@ -80,6 +80,10 @@ export type MapMethod =
     | ((I: number[], S: number[]) => number[])
     | MapIndexObject;
 
+/**
+ * An object specifying mapping methods for one or more scaled channels
+ * e.g. ```{ x: 'rank' }```
+ */
 export type MapOptions = Partial<Record<ScaledChannelName, MapMethod>>;
 
 export type UsedScales = Record<ScaledChannelName, boolean>;

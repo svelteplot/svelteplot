@@ -122,9 +122,13 @@ In addition to the named basis options you can define your own, e.g. to specify 
 
 ## normalizeY
 
+[API Reference](/api/transforms#normalizeY)
+
 Normalizes the y-values of a data series based on a specified basis.
 
 ## normalizeX
+
+[API Reference](/api/transforms#normalizeX)
 
 Normalizes the x-values of a data series based on a specified basis.
 
@@ -133,6 +137,8 @@ Normalizes the x-values of a data series based on a specified basis.
 :::info
 added in 0.7.1
 :::
+
+[API Reference](/api/transforms#normalizeParallelY)
 
 A specialized normalizeY that normalizes multiple y-value series indepenently for each x-value. Under the hood this is just the `normalizeY` and `sort` transforms [combined](https://github.com/svelteplot/svelteplot/blob/main/src/lib/transforms/normalize.ts#L116-L132).
 
@@ -192,6 +198,8 @@ A specialized normalizeY that normalizes multiple y-value series indepenently fo
 :::info
 added in 0.7.1
 :::
+
+[API Reference](/api/transforms#normalizeParallelX)
 
 A specialized normalizeX that normalizes multiple x-value series for each y-value.
 

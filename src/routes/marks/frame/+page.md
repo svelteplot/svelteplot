@@ -2,6 +2,8 @@
 title: Frame mark
 ---
 
+[API Reference](/api/marks#Frame)
+
 The <b>frame</b> mark can be used to add a rectangle outside your plot boundaries. The
 easiest way to add a frame is to set the <b>frame</b> option of the Plot element
 

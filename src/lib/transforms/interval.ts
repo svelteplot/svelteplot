@@ -2,15 +2,21 @@ import { maybeInterval } from '$lib/helpers/autoTicks.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';
 import type { PlotState, TransformArg } from '$lib/types/index.js';
 
-export function intervalX<T>(args: TransformArg<T>, { plot }: { plot: PlotState }) {
-    return interval('x', plot, args);
+/**
+ * Derives interval channels x1 and x2 from the x channel and interval channel.
+ */
+export function intervalX<T>(args: TransformArg<T>) {
+    return interval('x', args);
 }
 
-export function intervalY<T>(args: TransformArg<T>, { plot }: { plot: PlotState }) {
-    return interval('y', plot, args);
+/**
+ * Derives interval channels y1 and y2 from the y channel and interval channel.
+ */
+export function intervalY<T>(args: TransformArg<T>) {
+    return interval('y', args);
 }
 
-function interval<T>(dim: 'x' | 'y', plot: PlotState, { data, ...options }: TransformArg<T>) {
+function interval<T>(dim: 'x' | 'y', { data, ...options }: TransformArg<T>) {
     if (
         options.interval &&
         options[dim] &&

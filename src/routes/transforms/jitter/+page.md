@@ -82,6 +82,8 @@ The jitter transform accepts the following options:
 
 ## jitterX
 
+[API Reference](/api/transforms#jitterX)
+
 Jitters along the x dimension:
 
 ```svelte
@@ -93,6 +95,8 @@ Jitters along the x dimension:
 ```
 
 ## jitterY
+
+[API Reference](/api/transforms#jitterY)
 
 Jitters along the y dimension:
 
@@ -109,6 +113,8 @@ Jitters along the y dimension:
 :::info
 added in 0.9.1
 :::
+
+[API Reference](/api/transforms#jitter)
 
 You can use the generic `jitter` transform to jitter along multiple dimensions simultaneously. This also works for `x1`, `x2`, `y1`, and `y2` channels.
 

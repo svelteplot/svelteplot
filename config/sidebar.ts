@@ -20,7 +20,7 @@ export default {
         },
         {
             title: 'Features',
-            collapsible: true,
+            collapsible: false,
             items: [
                 {
                     title: 'Plot',
@@ -124,6 +124,24 @@ export default {
                 {
                     title: 'Gradients',
                     to: '/features/gradients'
+                }
+            ]
+        },
+        {
+            title: 'API Reference',
+            collapsible: false,
+            items: [
+                {
+                    title: 'Plot',
+                    to: '/api/plot'
+                },
+                {
+                    title: 'Marks',
+                    to: '/api/marks'
+                },
+                {
+                    title: 'Transforms',
+                    to: '/api/transforms'
                 }
             ]
         }

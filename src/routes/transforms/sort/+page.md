@@ -95,6 +95,8 @@ To invert the channel sorting, you can either add `order: 'descending` to the so
 
 ## sort
 
+[API Reference](/api/transforms#sort)
+
 Sorts the data.
 
 ```svelte live
@@ -137,6 +139,8 @@ Sorts the data.
 
 ## shuffle
 
+[API Reference](/api/transforms#shuffle)
+
 Shuffles the data randomly. If a **seed** option is specified, a [linear congruential generator](https://d3js.org/d3-random#randomLcg) with the given seed is used to generate random numbers; otherwise, `Math.random` is used.
 
 ```svelte live
@@ -176,6 +180,8 @@ Shuffles the data randomly. If a **seed** option is specified, a [linear congrue
 ```
 
 ## reverse
+
+[API Reference](/api/transforms#reverse)
 
 The reverse transform reverses the data order:
 

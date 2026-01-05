@@ -175,16 +175,24 @@ The select transform groups data into series using the **z**, **fill**, or **str
 
 ## selectMaxY
 
+[API Reference](/api/transforms#selectMaxY)
+
 Selects the data point in each group with the largest y value.
 
 ## selectMinY
+
+[API Reference](/api/transforms#selectMinY)
 
 Selects the data point in each group with the smallest y value.
 
 ## selectFirst
 
+[API Reference](/api/transforms#selectFirst)
+
 Selects the data point in each group with the smallest x value.
 
 ## selectLast
+
+[API Reference](/api/transforms#selectLast)
 
 Selects the data point in each group with the largest x value.

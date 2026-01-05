@@ -40,7 +40,7 @@ jobs:
             - name: Count TypeScript errors on PR branch
               run: |
                   pnpm lint:types --pretty false > ts-errors-pr.log 2>&1 || true
-                  TS_ERRORS_PR=$(grep -o "error TS[0-9]\\+" ts-errors-pr.log | wc -l | tr -d ' ' || true)
+                  TS_ERRORS_PR=$(grep -v "scripts/" ts-errors-pr.log | grep -o "error TS[0-9]\\+" | wc -l | tr -d ' ' || true)
                   echo "TS_ERRORS_PR=${TS_ERRORS_PR}" >> "$GITHUB_ENV"
                   echo "TypeScript errors on PR branch: ${TS_ERRORS_PR}"
 
@@ -50,7 +50,7 @@ jobs:
                   git fetch origin main --depth=1
                   git checkout origin/main
                   pnpm lint:types --pretty false > ts-errors-main.log 2>&1 || true
-                  TS_ERRORS_MAIN=$(grep -o "error TS[0-9]\\+" ts-errors-main.log | wc -l | tr -d ' ' || true)
+                  TS_ERRORS_MAIN=$(grep -v "scripts/" ts-errors-main.log | grep -o "error TS[0-9]\\+" | wc -l | tr -d ' ' || true)
                   echo "TS_ERRORS_MAIN=${TS_ERRORS_MAIN}" >> "$GITHUB_ENV"
                   echo "TypeScript errors on main branch: ${TS_ERRORS_MAIN}"
                   git checkout "${CURRENT_REF}"

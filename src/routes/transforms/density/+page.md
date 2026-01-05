@@ -293,6 +293,8 @@ You can pass a **weight** function with the channels to compute weighted densiti
 
 ## densityX
 
+[API Reference](/api/transforms#densityX)
+
 `densityX` keeps **x** as the independent axis and writes densities to the y side. It pairs naturally with [AreaY](/marks/area), [LineY](/marks/line), and other y-based marks.
 
 ```svelte
@@ -308,6 +310,8 @@ You can pass a **weight** function with the channels to compute weighted densiti
 ```
 
 ## densityY
+
+[API Reference](/api/transforms#densityY)
 
 `densityY` mirrors the orientation: it smooths values in **y** and writes the density to the x side. Tipp: you can use the center stacking offset to create violin-style plots.
 

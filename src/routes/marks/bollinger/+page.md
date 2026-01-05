@@ -120,6 +120,8 @@ For more flexibility you can also use the bollingerX and bollingerY as transform
 
 ## BollingerX
 
+[API Reference](/api/marks#BollingerX)
+
 ```svelte live
 <script>
     import {

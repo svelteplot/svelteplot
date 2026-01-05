@@ -164,6 +164,8 @@ You can also group by temporal intervals
 
 ## groupX
 
+[API Reference](/api/transforms#groupX)
+
 Groups on the _x_ channel as well as an additional _z_, _fill_, or _stroke_ channel to create new groups and compute output channels (mostly _y_, but can also be used for other channels).
 
 ```js
@@ -172,6 +174,8 @@ groupX({ data, x: 'sex' }, { y: 'count' });
 
 ## groupY
 
+[API Reference](/api/transforms#groupY)
+
 Groups on the _y_ channel as well as an additional _z_, _fill_, or _stroke_ channel to create new groups and compute output channels (mostly _x_, but can also be used for other channels).
 
 ```js
@@ -179,6 +183,8 @@ groupY({ data, y: 'sex' }, { x: 'count' });
 ```
 
 ## groupZ
+
+[API Reference](/api/transforms#groupZ)
 
 Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ channel to create new groups and compute output channels.
 
@@ -231,6 +237,8 @@ Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ chann
 ```
 
 ## group
+
+[API Reference](/api/transforms#group)
 
 Groups on _x_ and _y_ channels as an additional _z_, _fill_, or _stroke_ channel to create new groups and compute output channels.
 

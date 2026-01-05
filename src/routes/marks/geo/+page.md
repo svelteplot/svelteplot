@@ -218,9 +218,15 @@ The geo mark’s **geometry** channel can be used to generate geometry from a no
 
 ## Geo
 
+[API Reference](/api/marks#Geo)
+
 ## Sphere
 
+[API Reference](/api/marks#Sphere)
+
 ## Graticule
+
+[API Reference](/api/marks#Graticule)
 
 The [graticule](https://d3js.org/d3-geo/shape#geoGraticule) helper draws a uniform grid of meridians (lines of constant longitude) and parallels (lines of constant latitude) every 10° between ±80° latitude; for the polar regions, meridians are drawn every 90°. The [sphere](/marks/geo#Sphere) helper draws the outline of the projected sphere.
 

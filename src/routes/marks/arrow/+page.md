@@ -2,6 +2,8 @@
 title: Arrow mark
 ---
 
+[API Reference](/api/marks#Arrow)
+
 The Arrow mark draws arrows connecting two points in data space. This versatile mark is useful for:
 
 - Showing transitions or changes between two states (like in before/after comparisons)

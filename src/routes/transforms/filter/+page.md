@@ -37,3 +37,22 @@ Since the filter transform only affects the mark’s index and not the channel v
 ```
 
 [fork](https://svelte.dev/playground/2500feb83e8f42819dc1b4cfe9c8b1f7?version=latest)
+
+## filter
+
+[API Reference](/api/transforms#filter)
+
+You can also use the filter transform directly instead of the **filter** option. Note that you can achieve the same effect by using `Array.filter()` on the data array before passing it.
+
+```svelte
+<Plot>
+    <BarY
+        {...filter({
+            data: alphabet,
+            filter: (d) => /[aeiouy]/i.test(d.letter)
+        })}
+        data={alphabet}
+        x="letter"
+        y="frequency" />
+</Plot>
+```

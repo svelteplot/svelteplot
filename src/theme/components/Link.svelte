@@ -51,8 +51,7 @@
         <span>
             {label}
         </span>
-    {/if}
-    {@render children?.()}
+    {/if}{@render children?.()}
 </a>
 
 <style>

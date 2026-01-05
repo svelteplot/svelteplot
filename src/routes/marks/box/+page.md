@@ -57,6 +57,8 @@ You can style box plots by passing separate options for the marks
 
 ## BoxX
 
+[API Reference](/api/marks#BoxX)
+
 ```svelte live
 <script>
     import { Plot, BoxX } from 'svelteplot';
@@ -92,6 +94,8 @@ You can style box plots by passing separate options for the marks
 ```
 
 ## BoxY
+
+[API Reference](/api/marks#BoxY)
 
 ```svelte live
 <script>

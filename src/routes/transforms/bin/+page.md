@@ -574,6 +574,8 @@ You can also map to _r_ as output channel:
 
 ## bin
 
+[API Reference](/api/transforms#bin)
+
 For two-dimensional binning.
 
 ```js
@@ -615,7 +617,7 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
 
 ## binX
 
-    binX({ data, ...input }, { ...options, ...output })
+[API Reference](/api/transforms#binX)
 
 Requires input channel _x_. Valid output channels for `binX()` are _y_, _y1_, _y2_, _r_, _fill_, _stroke_, _opacity_, _fillOpacity_, and _strokeOpacity_. See [options](#Bin-options) for more details.
 
@@ -670,7 +672,7 @@ Demo with area
 
 ## binY
 
-    binY({ data, ...input }, { ...options, ...output })
+[API Reference](/api/transforms#binY)
 
 Requires input channel _y_. Valid output channels for `binY()` are _x_, _x1_, _x2_, _r_, _fill_, _stroke_, _opacity_, _fillOpacity_, and _strokeOpacity_. See [options](#Bin-options) for more details.
 

@@ -134,6 +134,8 @@ The Area mark supports **canvas rendering** by passing setting the `canvas` prop
 
 ## AreaY
 
+[API Reference](/api/marks#AreaY)
+
 If you need a different baseline you can pass <b>y1</b> and <b>y2</b> channels instead of
 <b>y</b> to disable the implicit stacking:
 
@@ -336,11 +338,13 @@ You can use the **offset** option to create a streamgraph:
 </Plot>
 ```
 
-[fork](https://svelte.dev/playground/1e9f757c7e7d41bd8183f0d898662450?version=5)
+[📖 fork](https://svelte.dev/playground/1e9f757c7e7d41bd8183f0d898662450?version=5)
 
 ## AreaX
 
-For "vertical" area charts you can use the <b>AreaX</b> mark as shorthand
+[📖 API Reference](/api/marks#AreaX)
+
+For "vertical" area charts you can use the **AreaX** mark as shorthand
 
 ```svelte live
 <script>
@@ -361,6 +365,8 @@ For "vertical" area charts you can use the <b>AreaX</b> mark as shorthand
 ```
 
 ## Area
+
+[API Reference](/api/marks#Area)
 
 The **Area** mark is useful for area charts. It pairs nicely with a <b>Line</b> mark for
 the topline and a <b>RuleY</b> for the baseline:
