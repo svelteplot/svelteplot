@@ -495,4 +495,8 @@ We can fix this problem by setting the _interval_ option of the window transform
 
 ## windowX
 
+[API Reference](/api/transforms#windowX)
+
 ## windowY
+
+[API Reference](/api/transforms#windowY)

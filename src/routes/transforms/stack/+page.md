@@ -188,9 +188,13 @@ You can pass options to the implicit stack transforms using the mark **stack** o
 
 ## stackX
 
+[API Reference](/api/transforms#stackX)
+
 Replaces **x** with **x1** and **x2** for horizontal→ stacks grouped on **y**
 
 ## stackY
+
+[API Reference](/api/transforms#stackY)
 
 Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x**.
 
@@ -199,6 +203,8 @@ Replaces **y** with **y1** and **y2** to form vertical↑ stacks grouped on **x*
 :::info
 added in 0.4.0
 :::
+
+[API Reference](/api/transforms#stackMosaicX)
 
 A mosaic or Marimekko chart is a stacked bar chart where the width of each bar is proportional to its total value. The `stackMosaic` transform computes both the horizontal stacking (x1, x2) and vertical stacking (y1, y2).
 
@@ -299,6 +305,8 @@ Channels:
 :::info
 added in 0.4.0
 :::
+
+[API Reference](/api/transforms#stackMosaicY)
 
 Like `stackMosaicX`, but for vertical stacks where the height of each bar is proportional to its total value.
 

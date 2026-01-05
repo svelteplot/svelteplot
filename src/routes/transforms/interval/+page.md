@@ -2,6 +2,8 @@
 title: Interval transform
 ---
 
+[API Reference](/api/transforms)
+
 The **interval transform** turns a quantitative or temporal value into a continuous extent [start, stop]. For example, if value is an instant in time, the interval transform could return a start of UTC midnight and a stop of the UTC midnight the following day.
 
 The interval transform is often used for time-series bar charts. For example, consider the chart below of the daily trade volume of Apple stock. Because of the [barY](/marks/bar) mark, the x scale is ordinal _(band)_. And because the regularity of the data is not specified (i.e., because Plot has no way of knowing that this is daily data), every distinct value must have its own label, leading to crowding. If a day were missing data, it would be difficult to spot! 👓

@@ -125,8 +125,12 @@ Under the hood, the shift transform is using the interval helpers from [d3-time]
 
 ## shiftX
 
+[API Reference](/api/transforms#shiftX)
+
 Shift the data points in x direction.
 
 ## shiftY
+
+[API Reference](/api/transforms#shiftY)
 
 Shift the data points in y direction.

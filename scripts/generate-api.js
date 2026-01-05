@@ -531,92 +531,6 @@ async function generateMarksApi() {
     await writeFile(path.join(MARKS_OUT_DIR, '+page.md'), body, 'utf8');
 }
 
-function isApiLinkLine(line, heading) {
-    const trimmed = line.trim();
-    if (!trimmed.startsWith('[')) return false;
-    return trimmed.includes(`/api/marks#${heading}`);
-}
-
-function findNextNonEmpty(lines, startIndex) {
-    for (let i = startIndex; i < lines.length; i += 1) {
-        const trimmed = lines[i].trim();
-        if (trimmed.length > 0) return i;
-    }
-    return -1;
-}
-
-async function addMarkApiLinks() {
-    const entries = await readdir(MARKS_DIR);
-    const markNames = new Set(
-        entries
-            .filter((entry) => entry.endsWith('.svelte'))
-            .map((entry) => path.basename(entry, '.svelte'))
-    );
-    const docs = await readdir(MARKS_DOCS_DIR);
-    for (const entry of docs) {
-        const pagePath = path.join(MARKS_DOCS_DIR, entry, '+page.md');
-        try {
-            await stat(pagePath);
-        } catch {
-            continue;
-        }
-        const content = await readFile(pagePath, 'utf8');
-        const lines = content.split('\n');
-        let changed = false;
-
-        for (let i = 0; i < lines.length; i += 1) {
-            const line = lines[i];
-            if (!line.startsWith('## ')) continue;
-            const heading = line.slice(3).trim();
-            if (!markNames.has(heading)) continue;
-
-            const nextIndex = findNextNonEmpty(lines, i + 1);
-            if (nextIndex === -1) {
-                lines.splice(i + 1, 0, '', `[API Reference](/api/marks#${heading})`);
-                changed = true;
-                continue;
-            }
-
-            if (isApiLinkLine(lines[nextIndex], heading)) continue;
-
-            lines.splice(i + 1, 0, '', `[API Reference](/api/marks#${heading})`);
-            changed = true;
-            i += 2;
-        }
-
-        if (!changed) {
-            const targetName = Array.from(markNames).find((name) => name.toLowerCase() === entry);
-            if (!targetName) continue;
-            if (lines.some((line) => line.includes('/api/marks#'))) continue;
-
-            let insertIndex = 0;
-            if (lines[0]?.trim() === '---') {
-                for (let i = 1; i < lines.length; i += 1) {
-                    if (lines[i].trim() === '---') {
-                        insertIndex = i + 1;
-                        break;
-                    }
-                }
-            }
-            if (lines[insertIndex]?.trim().startsWith('<script')) {
-                for (let i = insertIndex + 1; i < lines.length; i += 1) {
-                    if (lines[i].includes('</script>')) {
-                        insertIndex = i + 1;
-                        break;
-                    }
-                }
-            }
-            while (lines[insertIndex] === '') insertIndex += 1;
-            lines.splice(insertIndex, 0, `[API Reference](/api/marks#${targetName})`, '');
-            changed = true;
-        }
-
-        if (changed) {
-            await writeFile(pagePath, lines.join('\n'), 'utf8');
-        }
-    }
-}
-
 async function generatePlotApi() {
     const plotSource = await parseSource(path.resolve('src/lib/types/plot.ts'));
     const scaleSource = await parseSource(path.resolve('src/lib/types/scale.ts'));
@@ -954,13 +868,9 @@ const runAll = args.size === 0;
 const runMarks = runAll || args.has('--marks');
 const runPlot = runAll || args.has('--plot');
 const runTransforms = runAll || args.has('--transforms');
-const runMarkLinks = runAll || args.has('--mark-links');
 
 if (runMarks) {
     await generateMarksApi();
-}
-if (runMarkLinks) {
-    await addMarkApiLinks();
 }
 if (runPlot) {
     await generatePlotApi();

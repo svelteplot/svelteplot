@@ -2,6 +2,8 @@
 title: Map transform
 ---
 
+[API Reference](/api/transforms)
+
 ```svelte live
 <script>
     import { Plot, BarX, mapX } from 'svelteplot';
@@ -25,3 +27,15 @@ title: Map transform
         )} />
 </Plot>
 ```
+
+## map
+
+[API Reference](/api/transforms#map)
+
+## mapX
+
+[API Reference](/api/transforms#mapX)
+
+## mapY
+
+[API Reference](/api/transforms#mapY)
