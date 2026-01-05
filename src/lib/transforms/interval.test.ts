@@ -5,9 +5,8 @@ describe('intervalX', () => {
     it('should calculate x1 and x2 based on interval', () => {
         const data = [{ x: 5 }, { x: 15 }];
         const options = { interval: 10, x: 'x' };
-        const plot = { scales: { x: { type: 'linear' } } };
 
-        const result = intervalX({ data, ...options }, { plot });
+        const result = intervalX({ data, ...options });
 
         expect(result.data).toEqual([
             { x: 5, __x1: 0, __x2: 10 },
@@ -28,9 +27,8 @@ describe('intervalX', () => {
             { x: new Date('2025-04-17T12:00:00Z') }
         ];
         const options = { interval: '1 day', x: 'x', type: 'time' }; // 1 day in milliseconds
-        const plot = { scales: { x: { type: 'time' } } };
 
-        const result = intervalX({ data, ...options }, { plot });
+        const result = intervalX({ data, ...options });
 
         // Test channel setup
         expect(result.x1).toBe('__x1');
@@ -99,9 +97,8 @@ describe('intervalY', () => {
     it('should calculate y1 and y2 based on interval', () => {
         const data = [{ y: 7 }, { y: 17 }];
         const options = { interval: 10, y: 'y' };
-        const plot = { scales: { y: { type: 'linear' } } };
 
-        const result = intervalY({ data, ...options }, { plot });
+        const result = intervalY({ data, ...options });
 
         expect(result.data).toEqual([
             { y: 7, __y1: 0, __y2: 10 },
@@ -117,9 +114,8 @@ describe('intervalY', () => {
             { y: new Date('2025-04-17T12:00:00Z') }
         ];
         const options = { interval: '2 days', y: 'y' }; // 2 days interval
-        const plot = { scales: { y: { type: 'time' } } };
 
-        const result = intervalY({ data, ...options }, { plot });
+        const result = intervalY({ data, ...options });
 
         // Test channel setup
         expect(result.y1).toBe('__y1');

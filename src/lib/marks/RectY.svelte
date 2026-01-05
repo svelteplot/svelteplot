@@ -31,7 +31,7 @@
 
     const plot = usePlot();
 
-    const args = $derived(stackY(intervalX(recordizeY({ data, ...options }), { plot }), stack));
+    const args = $derived(stackY(intervalX(recordizeY({ data, ...options })), stack));
 </script>
 
 <Rect {...args}></Rect>

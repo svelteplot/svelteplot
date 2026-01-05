@@ -47,9 +47,7 @@
 
     const plot = usePlot();
 
-    const args = $derived(
-        intervalY(intervalX({ data, ...options }, { plot }), { plot }) as RectMarkProps
-    );
+    const args = $derived(intervalY(intervalX({ data, ...options })) as RectMarkProps);
 </script>
 
 <Mark

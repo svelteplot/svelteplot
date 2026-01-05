@@ -64,8 +64,7 @@
         stackX(
             intervalX(
                 // by default, sort by y channel (the ordinal labels)
-                sort(recordizeX({ data, ...options })),
-                { plot }
+                sort(recordizeX({ data, ...options }))
             ),
             stack
         )
