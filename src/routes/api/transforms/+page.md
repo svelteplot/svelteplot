@@ -55,6 +55,12 @@ type ReducerOption = ReducerName | ((group: DataRecord[]) => RawValue);
 export type ReducerName = 'count' | 'deviation' | 'difference' | 'first' | 'last' | 'max' | 'mean' | 'median' | 'min' | 'mode' | 'ratio' | 'sum' | 'variance' | ReducerPercentile;
 ```
 
+### ReducerPercentile
+
+```ts
+export type ReducerPercentile = (`p${Digit}${Digit}` & Record<never, never>) | 'p25' | 'p50' | 'p75';
+```
+
 ## binX
 
 Bins on x. Also groups on y and the first channel of z, fill, or stroke, if any.
@@ -135,6 +141,21 @@ densityX<T>(args: TransformArg<T>, options: DensityOptions<T> & {
     channel?: 'y' | 'y1' | 'y2';
 }): TransformArg<T>
 ```
+### DensityOptions
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `kernel?` | Kernel | The kernel function to use for smoothing. |
+| `bandwidth?` | number \| ((data: number[]) =&gt; number) | The bandwidth to use for smoothing. Can be a fixed number or a function that computes the bandwidth based on the data. |
+| `interval?` | number \| string | If an interval is provided, the smoothing will be computed over that interval instead of the raw data points. |
+| `trim?` | boolean | If true, the density values will be trimmed to the range of the data. |
+| `cumulative?` | false \| 1 \| -1 | If true, the density values will be cumulative. |
+
+### Kernel
+
+```ts
+type Kernel = 'uniform' | 'triangular' | 'epanechnikov' | 'quartic' | 'triweight' | 'gaussian' | 'cosine' | ((u: number) => number);
+```
 
 ## densityY
 
@@ -145,9 +166,11 @@ densityY<T>(args: TransformArg<T>, options: DensityOptions<T> & {
     channel?: 'x' | 'x1' | 'x2';
 }): TransformArg<T>
 ```
+Options: [DensityOptions](/api/transforms#DensityOptions)
 
 ## filter
 
+Filters data based on a function provided via `filter` channels.
 
 ```ts
 filter<T>({ data, ...channels }: TransformArg<T>): TransformArg<T>
@@ -155,13 +178,35 @@ filter<T>({ data, ...channels }: TransformArg<T>): TransformArg<T>
 
 ## map
 
+Maps one or more positional channels using specified mapping methods.
 
 ```ts
 map<T>(args: TransformArg<T>, options: MapOptions): void
 ```
+### MapOptions
+
+An object specifying mapping methods for one or more scaled channels
+e.g. ```{ x: 'rank' }```
+
+```ts
+export type MapOptions = Partial<Record<ScaledChannelName, MapMethod>>;
+```
+
+### MapMethod
+
+```ts
+export type MapMethod = 'cumsum' | 'rank' | 'quantile' | ((I: number[], S: number[]) => number[]) | MapIndexObject;
+```
+
+### MapIndexObject
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `mapIndex` | (I: number[], S: RawValue[], T: RawValue[]) =&gt; void |  |
 
 ## mapX
 
+Maps the x channel values using the specified mapping method.
 
 ```ts
 mapX<T>(args: TransformArg<T>, mapper: MapMethod): void
@@ -169,6 +214,7 @@ mapX<T>(args: TransformArg<T>, mapper: MapMethod): void
 
 ## mapY
 
+Maps the y channel values using the specified mapping method.
 
 ```ts
 mapY<T>(args: TransformArg<T>, mapper: MapMethod): void
@@ -320,13 +366,6 @@ intervalY<T>(args: TransformArg<T>, { plot }: {
 ```ts
 jitter<T, C extends TransformArg<T>>({ data, ...channels }: C, options: Partial<Record<PositionalScale, JitterOptions>>): TransformReturn<C, T>
 ```
-
-## jitterX
-
-
-```ts
-jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'>
-```
 ### JitterOptions
 
 ```ts
@@ -340,6 +379,14 @@ type JitterOptions = {
     std?: number | string;
 });
 ```
+
+## jitterX
+
+
+```ts
+jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'>
+```
+Options: [JitterOptions](/api/transforms#JitterOptions)
 
 ## jitterY
 
@@ -460,12 +507,26 @@ selectMinY(args: TransformArg<DataRecord>): void
 ```ts
 shiftX({ data, ...channels }: TransformArg<DataRecord>, shiftBy: string | number | RequireAtLeastOne<ShiftXOptions>): TransformArg<DataRecord>
 ```
+### ShiftXOptions
+
+```ts
+type ShiftXOptions = {
+    [key in 'x' | 'x1' | 'x2']: string | number;
+};
+```
 
 ## shiftY
 
 
 ```ts
 shiftY({ data, ...channels }: TransformArg<DataRecord>, shiftBy: string | number | RequireAtLeastOne<ShiftYOptions>): TransformArg<DataRecord>
+```
+### ShiftYOptions
+
+```ts
+type ShiftYOptions = {
+    [key in 'y' | 'y1' | 'y2']: string | number;
+};
 ```
 
 ## sort
@@ -501,6 +562,30 @@ reverse({ data, ...channels }: TransformArg<DataRow[]>): void
 ```ts
 stackX<T>({ data, ...channels }: TransformArg<T>, opts: Partial<StackOptions>): TransformArg<T>
 ```
+### StackOptions
+
+```ts
+export type StackOptions = {
+    offset: null | StackOffset;
+    order: null | StackOrder;
+    reverse: boolean;
+} | false;
+```
+
+### StackOffset
+
+- `none`
+- `wiggle`
+- `center`
+- `normalize`
+- `diverging`
+
+### StackOrder
+
+- `none`
+- `appearance`
+- `inside-out`
+- `sum`
 
 ## stackY
 
@@ -508,6 +593,7 @@ stackX<T>({ data, ...channels }: TransformArg<T>, opts: Partial<StackOptions>): 
 ```ts
 stackY<T>({ data, ...channels }: TransformArg<T>, opts: Partial<StackOptions>): TransformArg<T>
 ```
+Options: [StackOptions](/api/transforms#StackOptions)
 
 ## stackMosaicX
 
@@ -552,175 +638,89 @@ Options: [WindowOptions](/api/transforms#WindowOptions)
 
 ## Type details
 
-### BinXOptions
+### GenericMarkOptions
 
 ```ts
-export type BinXOptions = BinBaseOptions & AdditionalOutputChannels & Partial<{
-    y: ReducerOption;
-    y1: ReducerOption;
-    y2: ReducerOption;
-}>;
+export type GenericMarkOptions = Record<string | symbol, any>;
 ```
-### BinYOptions
+### CurveName
 
-```ts
-export type BinYOptions = BinBaseOptions & AdditionalOutputChannels & Partial<{
-    x: ReducerOption;
-    x1: ReducerOption;
-    x2: ReducerOption;
-}>;
-```
-### BollingerOptions
+- `basis`
+- `basis-closed`
+- `basis-open`
+- `bundle`
+- `bump-x`
+- `bump-y`
+- `cardinal`
+- `cardinal-closed`
+- `cardinal-open`
+- `catmull-rom`
+- `catmull-rom-closed`
+- `catmull-rom-open`
+- `linear`
+- `linear-closed`
+- `monotone-x`
+- `monotone-y`
+- `natural`
+- `step`
+- `step-after`
+- `step-before`
+### MarkerOptions
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `n?` | number | the window size (the window transform’s k option), an integer; defaults to 20 |
-| `k?` | number | the band radius, a number representing a multiple of standard deviations; defaults to 2 |
-### StackOrder
-
-- `none`
-- `appearance`
-- `inside-out`
-- `sum`
-### StackOffset
-
-- `none`
-- `wiggle`
-- `center`
-- `normalize`
-- `diverging`
-### StackOptions
+| `markerStart?` | boolean \| MarkerShape \| Snippet | the marker for the starting point of a line segment |
+| `markerMid?` | boolean \| MarkerShape \| Snippet | the marker for any intermediate point of a line segment |
+| `markerEnd?` | boolean \| MarkerShape \| Snippet | the marker for the end point of a line segment |
+| `marker?` | boolean \| MarkerShape \| Snippet | shorthand for setting the marker on all points |
+### ConstantAccessor
 
 ```ts
-export type StackOptions = {
-    offset: null | StackOffset;
-    order: null | StackOrder;
-    reverse: boolean;
-} | false;
+export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> = K | ((d: T, index: number) => K) | null | undefined;
 ```
-### ReducerPercentile
+### TransformArg
 
 ```ts
-export type ReducerPercentile = (`p${Digit}${Digit}` & Record<never, never>) | 'p25' | 'p50' | 'p75';
+export type TransformArg<T> = Channels<T> & BaseMarkProps<T> & {
+    data: T[];
+};
 ```
-### ReducerName
+### MapArg
 
 ```ts
-export type ReducerName = 'count' | 'deviation' | 'difference' | 'first' | 'last' | 'max' | 'mean' | 'median' | 'min' | 'mode' | 'ratio' | 'sum' | 'variance' | ReducerPercentile;
+export type MapArg<T> = Channels<T> & {
+    data: T[];
+};
 ```
-### BinOptions
+### TransformArgsRow
 
 ```ts
-type BinOptions = BinBaseOptions & AdditionalOutputChannels;
+export type TransformArgsRow<T extends RawValue | object> = Partial<Channels<T>> & {
+    data: T[];
+};
 ```
-### BinBaseOptions
+### TransformArgsRecord
+
+```ts
+export type TransformArgsRecord<T extends object> = Partial<Channels<T>> & {
+    data: T[];
+};
+```
+### TransformReturn
+
+```ts
+export type TransformReturn<C extends TransformArg<T>, T> = C & Required<Pick<Channels<T>, 'data'>>;
+```
+### AutoMarginStores
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `domain?` | [ number, number ] |  |
-| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
-| `interval?` | number \| string |  |
-| `cumulative?` | false \| 1 \| -1 |  |
-| `reverse?` | boolean |  |
-### NamedThresholdsGenerator
-
-- `auto`
-- `scott`
-- `sturges`
-- `freedman-diaconis`
-### AdditionalOutputChannels
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `fill` | ReducerOption |  |
-| `stroke` | ReducerOption |  |
-| `r` | ReducerOption |  |
-| `opacity` | ReducerOption |  |
-| `fillOpacity` | ReducerOption |  |
-| `strokeOpacity` | ReducerOption |  |
-### ReducerOption
+| `autoMarginTop` | Writable&lt;Map&lt;string, number&gt;&gt; |  |
+| `autoMarginLeft` | Writable&lt;Map&lt;string, number&gt;&gt; |  |
+| `autoMarginRight` | Writable&lt;Map&lt;string, number&gt;&gt; |  |
+| `autoMarginBottom` | Writable&lt;Map&lt;string, number&gt;&gt; |  |
+### UsedScales
 
 ```ts
-type ReducerOption = ReducerName | ((group: DataRecord[]) => RawValue);
+export type UsedScales = Record<ScaledChannelName, boolean>;
 ```
-### GroupXOptions
-
-```ts
-type GroupXOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
-    y: ReducerOption;
-    y1: ReducerOption;
-    y2: ReducerOption;
-    xPropName: string;
-}>;
-```
-### GroupBaseOptions
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `domain?` | [ number, number ] |  |
-| `thresholds?` | NamedThresholdsGenerator \| number \| number[] \| ThresholdCountGenerator |  |
-| `interval?` | number \| string |  |
-| `cumulative?` | false \| 1 \| -1 |  |
-| `reverse?` | boolean |  |
-| `copy?` | string[] | copy properties from the first element of each group |
-### GroupYOptions
-
-```ts
-type GroupYOptions = GroupBaseOptions & AdditionalOutputChannels & Partial<{
-    x: ReducerOption;
-    x1: ReducerOption;
-    x2: ReducerOption;
-    yPropName: string;
-}>;
-```
-### GroupZOptions
-
-```ts
-type GroupZOptions = GroupXOptions | GroupYOptions;
-```
-### JitterOptions
-
-```ts
-type JitterOptions = {
-    source?: () => number;
-} & ({
-    type: 'uniform';
-    width?: number | string;
-} | {
-    type: 'normal';
-    std?: number | string;
-});
-```
-### RenameChannelsOptions
-
-```ts
-type RenameChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName>>;
-```
-### ReplaceChannelsOptions
-
-```ts
-type ReplaceChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName[]>>;
-```
-### SelectOptions
-
-```ts
-type SelectOptions = 'first' | 'last' | AtLeastOne<{
-    [k in ChannelName]: 'min' | 'max';
-}>;
-```
-### AtLeastOne
-
-```ts
-type AtLeastOne<T, U = {
-    [K in keyof T]: Pick<T, K>;
-}> = Partial<T> & U[keyof U];
-```
-### WindowOptions
-
-| Prop | Type | Description |
-| --- | --- | --- |
-| `k` | number |  |
-| `interval` | string |  |
-| `anchor` | 'start' \| 'middle' \| 'end' |  |
-| `reduce` | ReducerName |  |
-| `strict` | boolean |  |

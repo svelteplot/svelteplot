@@ -9,11 +9,7 @@ const PLOT_OUT_DIR = path.resolve('src/routes/api/plot');
 const TRANSFORMS_OUT_DIR = path.resolve('src/routes/api/transforms');
 const TRANSFORMS_DIR = path.resolve('src/lib/transforms');
 
-const EXPANDED_TYPE_NAMES = new Set([
-    'StackOptions',
-    'DodgeXOptions',
-    'DodgeYOptions'
-]);
+const EXPANDED_TYPE_NAMES = new Set(['StackOptions', 'DodgeXOptions', 'DodgeYOptions']);
 
 const printer = ts.createPrinter({ removeComments: true });
 
@@ -96,18 +92,19 @@ function formatMemberRow(member, sourceFile) {
     };
 }
 
-function formatTypeCell(rawType, typeLinks) {
+function formatTypeCellWithBase(rawType, typeLinks, basePath) {
     let typeCell = escapeTableCell(rawType);
     if (typeLinks?.size) {
         for (const linkName of typeLinks) {
-            const link = `[${linkName}](/api/marks#${slugify(linkName)})`;
-            typeCell = typeCell.replace(
-                new RegExp(`\\b${linkName}\\b`, 'g'),
-                link
-            );
+            const link = `[${linkName}](${basePath}#${slugify(linkName)})`;
+            typeCell = typeCell.replace(new RegExp(`\\b${linkName}\\b`, 'g'), link);
         }
     }
     return typeCell;
+}
+
+function formatTypeCell(rawType, typeLinks) {
+    return formatTypeCellWithBase(rawType, typeLinks, '/api/marks');
 }
 
 async function extractComponentComment(content) {
@@ -203,24 +200,13 @@ function extractComponentPropsTargets(typeName) {
 }
 
 function extractBaseTypeTargets(typeName) {
-    const baseTypes = [
-        'BaseMarkProps',
-        'LinkableMarkProps',
-        'BaseRectMarkProps',
-        'MarkerOptions'
-    ];
+    const baseTypes = ['BaseMarkProps', 'LinkableMarkProps', 'BaseRectMarkProps', 'MarkerOptions'];
     return baseTypes.filter((baseType) => typeName.includes(baseType));
 }
 
 async function parseSource(filePath) {
     const contents = await readFile(filePath, 'utf8');
-    return ts.createSourceFile(
-        filePath,
-        contents,
-        ts.ScriptTarget.ES2022,
-        true,
-        ts.ScriptKind.TS
-    );
+    return ts.createSourceFile(filePath, contents, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TS);
 }
 
 async function getMarkDefinition(markFile) {
@@ -306,9 +292,7 @@ async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) 
     }
 
     const collectRows = (members, sourceFile) =>
-        members
-            .map((member) => formatMemberRow(member, sourceFile))
-            .filter(Boolean);
+        members.map((member) => formatMemberRow(member, sourceFile)).filter(Boolean);
 
     const noteTypeLinks = (rows) => {
         for (const row of rows) {
@@ -366,9 +350,7 @@ async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) 
 
 async function generateMarksApi() {
     const entries = await readdir(MARKS_DIR);
-    const markFiles = entries
-        .filter((entry) => entry.endsWith('.svelte'))
-        .sort();
+    const markFiles = entries.filter((entry) => entry.endsWith('.svelte')).sort();
 
     const marks = [];
     for (const entry of markFiles) {
@@ -411,19 +393,14 @@ async function generateMarksApi() {
         ...getTypeAliasMap(stackSource),
         ...getTypeAliasMap(dodgeSource)
     ]);
-    const allTypeNames = new Set([
-        ...stringUnionMap.keys(),
-        ...expandedTypeDefs.keys()
-    ]);
+    const allTypeNames = new Set([...stringUnionMap.keys(), ...expandedTypeDefs.keys()]);
 
     const markSections = [];
     const typeLinks = new Set();
     const markRows = [];
 
     for (const mark of marks) {
-        const sourceFile = mark.isSvelte
-            ? mark.scriptSource
-            : await parseSource(mark.propsPath);
+        const sourceFile = mark.isSvelte ? mark.scriptSource : await parseSource(mark.propsPath);
         const iface =
             findInterface(sourceFile, mark.interfaceName) ||
             findInterface(sourceFile, `${mark.name}MarkProps`) ||
@@ -522,9 +499,7 @@ async function generateMarksApi() {
     const resolvedTypeSections = [];
     for (const typeName of typeLinks) {
         const values = stringUnionMap.get(typeName);
-        const expanded = EXPANDED_TYPE_NAMES.has(typeName)
-            ? expandedTypeDefs.get(typeName)
-            : null;
+        const expanded = EXPANDED_TYPE_NAMES.has(typeName) ? expandedTypeDefs.get(typeName) : null;
         const details = [];
         if (values?.length) {
             const bullets = values.map((value) => `- \`${escapeForSvelte(value)}\``);
@@ -549,9 +524,7 @@ async function generateMarksApi() {
         'title: Marks API reference',
         '---',
         '',
-        [markSections.join('\n\n'), inheritedSection, typeSection]
-            .filter(Boolean)
-            .join('\n\n')
+        [markSections.join('\n\n'), inheritedSection, typeSection].filter(Boolean).join('\n\n')
     ].join('\n');
 
     await mkdir(MARKS_OUT_DIR, { recursive: true });
@@ -612,9 +585,7 @@ async function addMarkApiLinks() {
         }
 
         if (!changed) {
-            const targetName = Array.from(markNames).find(
-                (name) => name.toLowerCase() === entry
-            );
+            const targetName = Array.from(markNames).find((name) => name.toLowerCase() === entry);
             if (!targetName) continue;
             if (lines.some((line) => line.includes('/api/marks#'))) continue;
 
@@ -648,6 +619,8 @@ async function addMarkApiLinks() {
 
 async function generatePlotApi() {
     const plotSource = await parseSource(path.resolve('src/lib/types/plot.ts'));
+    const scaleSource = await parseSource(path.resolve('src/lib/types/scale.ts'));
+    const typeSources = [plotSource, scaleSource];
     const plotComponent = await readFile(path.resolve('src/lib/Plot.svelte'), 'utf8');
     const plotComment = await extractComponentComment(plotComponent);
 
@@ -661,14 +634,60 @@ async function generatePlotApi() {
         throw new Error('PlotOptions type alias not found.');
     }
 
-    const rows = getObjectTypeMembers(plotAlias.type)
+    const typeAliasMap = new Map();
+    const stringUnionMap = new Map();
+    for (const source of typeSources) {
+        for (const [name, node] of getTypeAliasMap(source)) {
+            typeAliasMap.set(name, node);
+        }
+        for (const [name, values] of getStringUnionMap(source)) {
+            stringUnionMap.set(name, values);
+        }
+    }
+
+    const typeLinks = new Set();
+    const seen = new Set();
+    const queue = [];
+    const optionMembers = getObjectTypeMembers(plotAlias.type);
+    for (const member of optionMembers) {
+        const refs = getReferencedTypeNames(member.type, plotSource);
+        for (const ref of refs) {
+            if (typeAliasMap.has(ref) && !seen.has(ref)) {
+                queue.push(ref);
+                seen.add(ref);
+            }
+        }
+    }
+    while (queue.length) {
+        const current = queue.shift();
+        typeLinks.add(current);
+        const node = typeAliasMap.get(current);
+        if (!node) continue;
+        const refs = getReferencedTypeNames(node.type, node.getSourceFile());
+        for (const ref of refs) {
+            if (typeAliasMap.has(ref) && !seen.has(ref)) {
+                queue.push(ref);
+                seen.add(ref);
+            }
+        }
+    }
+
+    const rows = optionMembers
         .map((member) => formatMemberRow(member, plotSource))
         .filter(Boolean)
         .map((row) => ({
             prop: row.prop,
-            type: escapeTableCell(row.rawType),
+            type: formatTypeCellWithBase(row.rawType, typeLinks, '/api/plot'),
             description: row.description
         }));
+
+    const typeSections = [];
+    for (const typeName of typeLinks) {
+        const node = typeAliasMap.get(typeName);
+        const values = stringUnionMap.get(typeName);
+        const section = formatTypeDetails(typeName, values, node);
+        if (section) typeSections.push(section);
+    }
 
     const body = [
         '---',
@@ -677,7 +696,11 @@ async function generatePlotApi() {
         '',
         plotComment,
         plotComment ? '' : null,
-        createTable(rows)
+        createTable(rows),
+        typeSections.length ? '' : null,
+        typeSections.length ? '## Type details' : null,
+        typeSections.length ? '' : null,
+        ...typeSections
     ]
         .filter((line) => line != null)
         .join('\n');
@@ -702,6 +725,11 @@ function formatFunctionSignature(fn, sourceFile) {
 }
 
 function formatTypeDetails(typeName, values, typeNode) {
+    const description = typeNode ? getJsDocSummary(typeNode) : '';
+    const header = [`### ${typeName}`];
+    if (description) {
+        header.push('', description);
+    }
     if (typeNode && ts.isTypeAliasDeclaration(typeNode)) {
         const members = getObjectTypeMembers(typeNode.type);
         if (members.length) {
@@ -713,18 +741,18 @@ function formatTypeDetails(typeName, values, typeNode) {
                     type: escapeTableCell(row.rawType),
                     description: row.description
                 }));
-            return [`### ${typeName}`, '', createTable(rows)].join('\n');
+            return [...header, '', createTable(rows)].join('\n');
         }
     }
     if (values?.length) {
         const bullets = values.map((value) => `- \`${escapeForSvelte(value)}\``);
-        return [`### ${typeName}`, '', ...bullets].join('\n');
+        return [...header, '', ...bullets].join('\n');
     }
     if (typeNode) {
         const typeDef = printer
             .printNode(ts.EmitHint.Unspecified, typeNode, typeNode.getSourceFile())
             .trim();
-        return [`### ${typeName}`, '', '```ts', typeDef, '```'].join('\n');
+        return [...header, '', '```ts', typeDef, '```'].join('\n');
     }
     return '';
 }
@@ -747,6 +775,19 @@ function getReferencedTypeNames(node, sourceFile) {
     }
     if (node) visit(node);
     return names;
+}
+
+function getOptionTypeNames(node, sourceFile) {
+    const names = new Set();
+    function visit(child) {
+        if (ts.isTypeReferenceNode(child)) {
+            const name = child.typeName.getText(sourceFile);
+            if (name.endsWith('Options')) names.add(name);
+        }
+        ts.forEachChild(child, visit);
+    }
+    if (node) visit(node);
+    return [...names];
 }
 
 async function generateTransformsApi() {
@@ -789,6 +830,14 @@ async function generateTransformsApi() {
         typeDetails.set(name, { values, node });
     }
 
+    const typesSource = await parseSource(path.resolve('src/lib/types/index.ts'));
+    const typesStringUnionMap = getStringUnionMap(typesSource);
+    const typesAliasMap = getExportedTypeAliases(typesSource);
+    for (const [name, node] of typesAliasMap) {
+        const values = typesStringUnionMap.get(name);
+        typeDetails.set(name, { values, node });
+    }
+
     function resolveTypeDetail(typeName, sourceFile, localStringUnionMap) {
         let detail = typeDetails.get(typeName);
         if (!detail) {
@@ -813,7 +862,7 @@ async function generateTransformsApi() {
 
         explainedTypes.add(typeName);
         const mainBlock = renderTypeDetailsBlock(typeName, detail);
-        const referenced = getReferencedTypeNames(detail.node.type, sourceFile);
+        const referenced = getReferencedTypeNames(detail.node.type, detail.node.getSourceFile());
         const extraBlocks = [];
         const usedLinks = [];
 
@@ -829,9 +878,7 @@ async function generateTransformsApi() {
         }
 
         const usesLine = usedLinks.length ? `Uses: ${usedLinks.join(', ')}` : '';
-        return [mainBlock, usesLine, ...extraBlocks]
-            .filter(Boolean)
-            .join('\n\n');
+        return [mainBlock, usesLine, ...extraBlocks].filter(Boolean).join('\n\n');
     }
 
     for (const entry of exportEntries) {
@@ -847,13 +894,14 @@ async function generateTransformsApi() {
 
         const description = getJsDocSummary(fn);
         const signature = formatFunctionSignature(fn, sourceFile);
-        const optionTypes = fn.parameters
-            .map((param) => {
-                if (!param.type || !ts.isTypeReferenceNode(param.type)) return null;
-                const typeName = param.type.typeName.getText(sourceFile);
-                return typeName.endsWith('Options') ? typeName : null;
-            })
-            .filter(Boolean);
+        const optionTypes = [
+            ...new Set(
+                fn.parameters.flatMap((param) => {
+                    if (!param.type) return [];
+                    return getOptionTypeNames(param.type, sourceFile);
+                })
+            )
+        ];
 
         const inlineOptionDetails = optionTypes
             .map((typeName) => expandTypeRecursive(typeName, sourceFile, localStringUnionMap))
@@ -878,6 +926,7 @@ async function generateTransformsApi() {
     }
 
     for (const [typeName, detail] of typeDetails) {
+        if (explainedTypes.has(typeName)) continue;
         const section = formatTypeDetails(typeName, detail.values, detail.node);
         if (section) typeSections.push(section);
     }
