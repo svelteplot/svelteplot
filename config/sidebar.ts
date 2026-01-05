@@ -20,7 +20,7 @@ export default {
         },
         {
             title: 'Features',
-            collapsible: true,
+            collapsible: false,
             items: [
                 {
                     title: 'Plot',
