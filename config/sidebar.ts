@@ -129,7 +129,7 @@ export default {
         },
         {
             title: 'API Reference',
-            collapsible: true,
+            collapsible: false,
             items: [
                 {
                     title: 'Plot',
