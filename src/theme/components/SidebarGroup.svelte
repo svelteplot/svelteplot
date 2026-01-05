@@ -19,7 +19,7 @@
     /** @type {Props} */
     const { items = [], title = '', collapsible = false, nested = false } = $props();
 
-    let collapsed = $state(false);
+    let collapsed = $state(collapsible);
 
     function handleToggle() {
         collapsed = !collapsed;
@@ -28,7 +28,10 @@
 
 <div class="sidebar-group" class:nested>
     <div class="group-title" class:with-mb={!nested}>
-        <div>
+        <div
+            {...collapsible
+                ? { 'aria-expanded': !collapsed, onclick: handleToggle, onkeypress: handleToggle }
+                : {}}>
             {title}
         </div>
         {#if collapsible}
@@ -72,13 +75,16 @@
         --at-apply: 'pl-4';
     }
     .with-mb {
-        --at-apply: 'mb-2 sm:mb-4';
+        --at-apply: '';
     }
     .sidebar-group:not(:last-of-type) {
         --at-apply: 'border-b-solid border-b border-light-8 dark:border-b-gray-7 mb-4 pb-4';
     }
     .group-title {
         --at-apply: 'font-bold text-slate-8 dark:text-slate-2 flex items-center justify-between';
+    }
+    .group-title.with-mb + .links {
+        --at-apply: 'mb-2 sm:mb-4';
     }
     .links {
         --at-apply: 'leading-8 overflow-hidden';
