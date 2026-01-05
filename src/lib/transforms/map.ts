@@ -13,6 +13,9 @@ import { groupFacetsAndZ } from '$lib/helpers/group.js';
 import { resolveChannel } from '$lib/helpers/resolve.js';
 import { sort } from './sort';
 
+/**
+ * Maps one or more positional channels using specified mapping methods.
+ */
 export function map<T>(args: TransformArg<T>, options: MapOptions) {
     const { data, ...channels } = sort(args);
     const newChannels: Channels = {};
@@ -38,6 +41,9 @@ export function map<T>(args: TransformArg<T>, options: MapOptions) {
     return { data: newData, ...channels, ...newChannels };
 }
 
+/**
+ * Maps the x channel values using the specified mapping method.
+ */
 export function mapX<T>(args: TransformArg<T>, mapper: MapMethod) {
     let { x, x1, x2 } = args;
     if (x === undefined && x1 === undefined && x2 === undefined) args = { ...args, x: identity };
@@ -48,6 +54,9 @@ export function mapX<T>(args: TransformArg<T>, mapper: MapMethod) {
     return map(args, outputs);
 }
 
+/**
+ * Maps the y channel values using the specified mapping method.
+ */
 export function mapY<T>(args: TransformArg<T>, mapper: MapMethod) {
     let { y, y1, y2 } = args;
     if (y === undefined && y1 === undefined && y2 === undefined) args = { ...args, y: identity };
