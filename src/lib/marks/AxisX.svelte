@@ -51,7 +51,10 @@
         tickSpacing?: number;
         /** text anchor for axis labels */
         textAnchor?: ConstantAccessor<CSS.Property.TextAnchor | 'auto', Datum>;
-        removeDuplicateTicks: boolean;
+        /**
+         * you can set this to true to remove duplicate tick labels
+         */
+        removeDuplicateTicks?: boolean;
     }
 
     let markProps: AxisXMarkProps = $props();

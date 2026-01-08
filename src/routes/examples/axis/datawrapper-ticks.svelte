@@ -15,12 +15,14 @@
         RuleY
     } from 'svelteplot';
     import type { AaplRow } from '../types';
+    import AxisY from 'svelteplot/marks/AxisY.svelte';
     let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot>
     <RuleY data={[0]} />
     <AxisX interval="3 months" />
+
     <GridX />
     <Line data={aapl} x="Date" y="Close" />
 </Plot>
