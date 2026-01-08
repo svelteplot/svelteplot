@@ -15,7 +15,6 @@
         RuleY
     } from 'svelteplot';
     import type { AaplRow } from '../types';
-    import AxisY from 'svelteplot/marks/AxisY.svelte';
     let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
