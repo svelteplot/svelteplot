@@ -21,6 +21,7 @@
 <Plot>
     <RuleY data={[0]} />
     <AxisX interval="3 months" />
+
     <GridX />
     <Line data={aapl} x="Date" y="Close" />
 </Plot>

@@ -71,27 +71,27 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders a horizontal axis with labels and tick marks
 
-| Prop                   | Type                                                                                                        | Description                                                   |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `data?`                | Datum[]                                                                                                     |                                                               |
-| `automatic?`           | boolean                                                                                                     |                                                               |
-| `title?`               | string \| false \| null                                                                                     |                                                               |
-| `anchor?`              | 'top' \| 'bottom'                                                                                           |                                                               |
-| `interval?`            | string \| number                                                                                            |                                                               |
-| `facetAnchor?`         | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                                                |                                                               |
-| `labelAnchor?`         | 'auto' \| 'left' \| 'center' \| 'right'                                                                     |                                                               |
-| `tickSize?`            | number                                                                                                      |                                                               |
-| `tickFontSize?`        | ConstantAccessor&lt;number, Datum&gt;                                                                       |                                                               |
-| `titleFontSize?`       | number                                                                                                      |                                                               |
-| `tickPadding?`         | number                                                                                                      |                                                               |
-| `tickFormat?`          | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue, i: number) =&gt; string) |                                                               |
-| `tickClass?`           | ConstantAccessor&lt;string, Datum&gt;                                                                       |                                                               |
-| `ticks?`               | number \| string \| Datum[]                                                                                 | ticks is a shorthand for defining data, tickCount or interval |
-| `text?`                | boolean \| null                                                                                             | set to false or null to disable tick labels                   |
-| `tickCount?`           | number                                                                                                      | approximate number of ticks to be generated                   |
-| `tickSpacing?`         | number                                                                                                      | approximate number of pixels between generated ticks          |
-| `textAnchor?`          | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                                            | text anchor for axis labels                                   |
-| `removeDuplicateTicks` | boolean                                                                                                     |                                                               |
+| Prop                    | Type                                                                                                        | Description                                                   |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `data?`                 | Datum[]                                                                                                     |                                                               |
+| `automatic?`            | boolean                                                                                                     |                                                               |
+| `title?`                | string \| false \| null                                                                                     |                                                               |
+| `anchor?`               | 'top' \| 'bottom'                                                                                           |                                                               |
+| `interval?`             | string \| number                                                                                            |                                                               |
+| `facetAnchor?`          | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                                                |                                                               |
+| `labelAnchor?`          | 'auto' \| 'left' \| 'center' \| 'right'                                                                     |                                                               |
+| `tickSize?`             | number                                                                                                      |                                                               |
+| `tickFontSize?`         | ConstantAccessor&lt;number, Datum&gt;                                                                       |                                                               |
+| `titleFontSize?`        | number                                                                                                      |                                                               |
+| `tickPadding?`          | number                                                                                                      |                                                               |
+| `tickFormat?`           | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue, i: number) =&gt; string) |                                                               |
+| `tickClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                                       |                                                               |
+| `ticks?`                | number \| string \| Datum[]                                                                                 | ticks is a shorthand for defining data, tickCount or interval |
+| `text?`                 | boolean \| null                                                                                             | set to false or null to disable tick labels                   |
+| `tickCount?`            | number                                                                                                      | approximate number of ticks to be generated                   |
+| `tickSpacing?`          | number                                                                                                      | approximate number of pixels between generated ticks          |
+| `textAnchor?`           | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                                            | text anchor for axis labels                                   |
+| `removeDuplicateTicks?` | boolean                                                                                                     | you can set this to true to remove duplicate tick labels      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
