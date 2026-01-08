@@ -51,6 +51,7 @@ jobs:
                   SVELTE_ERRORS_PR=$(tail -n 1 svelte-errors-pr.log | awk '{for (i=1;i<=NF;i++) if ($i=="ERRORS") {print $(i-1); exit}}' || true)
                   echo "SVELTE_ERRORS_PR=${SVELTE_ERRORS_PR}" >> "$GITHUB_ENV"
                   echo "Svelte TypeScript errors on PR branch: ${SVELTE_ERRORS_PR}"
+                  rm svelte-errors-pr.log
 
             - name: Count TypeScript errors on main branch
               run: |
@@ -62,6 +63,7 @@ jobs:
                   echo "TS_ERRORS_MAIN=${TS_ERRORS_MAIN}" >> "$GITHUB_ENV"
                   echo "TypeScript errors on main branch: ${TS_ERRORS_MAIN}"
                   git checkout "${CURRENT_REF}"
+                  rm ts-errors-main.log
 
             - name: Count Svelte TypeScript errors on main branch
               run: |
