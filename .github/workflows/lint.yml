@@ -44,6 +44,15 @@ jobs:
                   echo "TS_ERRORS_PR=${TS_ERRORS_PR}" >> "$GITHUB_ENV"
                   echo "TypeScript errors on PR branch: ${TS_ERRORS_PR}"
 
+            - name: Count Svelte TypeScript errors on PR branch
+              run: |
+                  pnpm exec svelte-kit sync
+                  pnpm exec svelte-check --tsconfig ./tsconfig.json --output machine > svelte-errors-pr.log 2>&1 || true
+                  SVELTE_ERRORS_PR=$(tail -n 1 svelte-errors-pr.log | awk '{for (i=1;i<=NF;i++) if ($i=="ERRORS") {print $(i-1); exit}}' || true)
+                  echo "SVELTE_ERRORS_PR=${SVELTE_ERRORS_PR}" >> "$GITHUB_ENV"
+                  echo "Svelte TypeScript errors on PR branch: ${SVELTE_ERRORS_PR}"
+                  rm svelte-errors-pr.log
+
             - name: Count TypeScript errors on main branch
               run: |
                   CURRENT_REF=$(git rev-parse HEAD)
@@ -54,14 +63,31 @@ jobs:
                   echo "TS_ERRORS_MAIN=${TS_ERRORS_MAIN}" >> "$GITHUB_ENV"
                   echo "TypeScript errors on main branch: ${TS_ERRORS_MAIN}"
                   git checkout "${CURRENT_REF}"
+                  rm ts-errors-main.log
+
+            - name: Count Svelte TypeScript errors on main branch
+              run: |
+                  CURRENT_REF=$(git rev-parse HEAD)
+                  git fetch origin main --depth=1
+                  git checkout origin/main
+                  pnpm exec svelte-kit sync
+                  pnpm exec svelte-check --tsconfig ./tsconfig.json --output machine > svelte-errors-main.log 2>&1 || true
+                  SVELTE_ERRORS_MAIN=$(tail -n 1 svelte-errors-main.log | awk '{for (i=1;i<=NF;i++) if ($i=="ERRORS") {print $(i-1); exit}}' || true)
+                  echo "SVELTE_ERRORS_MAIN=${SVELTE_ERRORS_MAIN}" >> "$GITHUB_ENV"
+                  echo "Svelte TypeScript errors on main branch: ${SVELTE_ERRORS_MAIN}"
+                  git checkout "${CURRENT_REF}"
 
             - name: Log TypeScript error diff
               env:
                   TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
                   TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
+                  SVELTE_ERRORS_PR: ${{ env.SVELTE_ERRORS_PR }}
+                  SVELTE_ERRORS_MAIN: ${{ env.SVELTE_ERRORS_MAIN }}
               run: |
                   ERROR_DIFF=$((TS_ERRORS_PR - TS_ERRORS_MAIN))
                   echo "TypeScript error difference (PR - main): ${ERROR_DIFF}"
+                  SVELTE_ERROR_DIFF=$((SVELTE_ERRORS_PR - SVELTE_ERRORS_MAIN))
+                  echo "Svelte TypeScript error difference (PR - main): ${SVELTE_ERROR_DIFF}"
 
             - name: Comment TypeScript error diff on PR
               if: ${{ github.event_name == 'pull_request' }}
@@ -69,6 +95,8 @@ jobs:
               env:
                   TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
                   TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
+                  SVELTE_ERRORS_PR: ${{ env.SVELTE_ERRORS_PR }}
+                  SVELTE_ERRORS_MAIN: ${{ env.SVELTE_ERRORS_MAIN }}
               with:
                   script: |
                       const prErrors = Number(process.env.TS_ERRORS_PR || 0);
@@ -76,11 +104,21 @@ jobs:
                       const diff = prErrors - mainErrors;
                       const sign = diff > 0 ? `+${diff}` : `${diff}`;
                       const emoji = diff > 0 ? '⚠️' : diff < 0 ? '🎉' : 'ℹ️';
+                      const prSvelteErrors = Number(process.env.SVELTE_ERRORS_PR || 0);
+                      const mainSvelteErrors = Number(process.env.SVELTE_ERRORS_MAIN || 0);
+                      const svelteDiff = prSvelteErrors - mainSvelteErrors;
+                      const svelteSign = svelteDiff > 0 ? `+${svelteDiff}` : `${svelteDiff}`;
+                      const svelteEmoji = svelteDiff > 0 ? '⚠️' : svelteDiff < 0 ? '🎉' : 'ℹ️';
                       const body = [
                         '**TypeScript error report:**',
                         `- This branch: ${prErrors}`,
                         `- main branch: ${mainErrors}`,
-                        `- Difference (PR - main): ${sign} ${emoji}`
+                        `- Difference (PR - main): ${sign} ${emoji}`,
+                        '',
+                        '**Svelte TypeScript error report:**',
+                        `- This branch: ${prSvelteErrors}`,
+                        `- main branch: ${mainSvelteErrors}`,
+                        `- Difference (PR - main): ${svelteSign} ${svelteEmoji}`
                       ].join('\n');
 
                       await github.rest.issues.createComment({
