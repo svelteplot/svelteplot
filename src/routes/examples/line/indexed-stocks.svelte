@@ -7,6 +7,8 @@
     };
     export const sortKey = 10;
     export const transforms = ['normalize'];
+    export const repl =
+        'https://svelte.dev/playground/2cef2e079ab34d429be7fad6ac289635?version=latest';
 </script>
 
 <script>

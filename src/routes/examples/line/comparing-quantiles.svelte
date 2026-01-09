@@ -7,6 +7,8 @@
         'You can use the <a href="/transforms/map">map transform</a> to compare different distributions against their quantiles. This is sometimes referred to as <a href="https://www.sciencedirect.com/topics/mathematics/quantile-plot">quantile plot</a>.';
     export const transforms = ['map'];
     export const sortKey = 80;
+    export const repl =
+        'https://svelte.dev/playground/8221090246714f59a7752e8ac8285978?version=latest';
 </script>
 
 <script lang="ts">
