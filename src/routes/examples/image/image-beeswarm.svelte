@@ -5,6 +5,8 @@
     export const data = {
         presidents2: '/data/presidents2.csv'
     };
+    export const repl =
+        'https://svelte.dev/playground/9fb9afe5e2fb4a6da5fa01f546db9a7a?version=latest';
 </script>
 
 <script lang="ts">
