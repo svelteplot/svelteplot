@@ -40,6 +40,7 @@ function isMapIndex(obj: any): obj is MapIndexObject {
 
 function normalize(options: NormalizeOptions): MapIndexObject {
     if (isMapIndex(options)) return options;
+    if (typeof options === 'object' && isMapIndex(options?.basis)) return options?.basis;
     const basis = typeof options === 'object' ? options.basis : options;
     if (basis === undefined) return normalizeFirst;
     if (typeof basis === 'function') return normalizeBasis(basis);
