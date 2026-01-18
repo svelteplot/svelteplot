@@ -12,6 +12,11 @@
         y?: ChannelAccessor<Datum>;
         stack?: StackOptions;
         /**
+         * Renders using Canvas instead of SVG.
+         */
+
+        canvas?: boolean;
+        /**
          * Converts x into x1/x2 ranges based on the provided interval. Disables the
          * implicit stacking
          */
@@ -25,6 +30,7 @@
     import type { DataRow } from 'svelteplot/types/index.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
+    import RectCanvas from './helpers/RectCanvas.svelte';
     import type {
         BaseMarkProps,
         BaseRectMarkProps,
@@ -46,6 +52,7 @@
         data = [{} as Datum],
         class: className = null,
         stack,
+        canvas = false,
         ...options
     }: BarXMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
@@ -67,25 +74,50 @@
     requiredScales={{ y: ['band'] }}
     channels={['x1', 'x2', 'y', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}>
-    {#snippet children({ mark, usedScales, scaledData })}
-        <GroupMultiple class="bar-x" length={scaledData.length}>
-            {#each scaledData as d, i (i)}
-                {@const bw = plot.scales.y.fn.bandwidth()}
-                {@const minx = Math.min(d.x1, d.x2)}
-                {@const maxx = Math.max(d.x1, d.x2)}
-                {#if d.valid}
-                    <RectPath
-                        {usedScales}
-                        class={className}
-                        {options}
-                        datum={d}
-                        x={minx}
-                        useInsetAsFallbackHorizontally={false}
-                        y={d.y - bw * 0.5}
-                        width={maxx - minx}
-                        height={bw} />
-                {/if}
-            {/each}
-        </GroupMultiple>
+    {#snippet children({ usedScales, scaledData })}
+        {@const bw = plot.scales.y.fn.bandwidth()}
+        {@const barGroupClass = className ? `bar-x ${className}` : 'bar-x'}
+        {#if canvas}
+            {@const rectCanvasData = scaledData
+                .filter((d) => d.valid)
+                .map((d) => {
+                    const minx = Math.min(d.x1, d.x2);
+                    const maxx = Math.max(d.x1, d.x2);
+
+                    return {
+                        ...d,
+                        x1: minx,
+                        x2: maxx,
+                        y1: d.y - bw * 0.5,
+                        y2: d.y + bw * 0.5
+                    };
+                })}
+            <GroupMultiple class={barGroupClass} length={scaledData.length}>
+                <RectCanvas
+                    {options}
+                    data={rectCanvasData}
+                    {usedScales}
+                    useInsetAsFallbackHorizontally={false} />
+            </GroupMultiple>
+        {:else}
+            <GroupMultiple class="bar-x" length={scaledData.length}>
+                {#each scaledData as d, i (i)}
+                    {@const minx = Math.min(d.x1, d.x2)}
+                    {@const maxx = Math.max(d.x1, d.x2)}
+                    {#if d.valid}
+                        <RectPath
+                            {usedScales}
+                            class={className}
+                            {options}
+                            datum={d}
+                            x={minx}
+                            useInsetAsFallbackHorizontally={false}
+                            y={d.y - bw * 0.5}
+                            width={maxx - minx}
+                            height={bw} />
+                    {/if}
+                {/each}
+            </GroupMultiple>
+        {/if}
     {/snippet}
 </Mark>

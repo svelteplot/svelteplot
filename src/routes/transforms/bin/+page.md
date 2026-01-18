@@ -608,9 +608,8 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
 
 {#if olympians}
     <Plot
-        testid="olympians-binned"
         color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
-        <Rect {...args} inset={0} />
+        <Rect {...args} inset={0} canvas />
     </Plot>
 {/if}
 ```

@@ -13,6 +13,10 @@
         y2?: ChannelAccessor<Datum>;
         stack?: StackOptions;
         /**
+         * Renders using Canvas instead of SVG.
+         */
+        canvas?: boolean;
+        /**
          * Converts y into y1/y2 ranges based on the provided interval. Disables the
          * implicit stacking
          */
@@ -25,6 +29,7 @@
     import type { StackOptions } from '$lib/transforms/stack.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
+    import RectCanvas from './helpers/RectCanvas.svelte';
     import type {
         BaseMarkProps,
         BaseRectMarkProps,
@@ -48,6 +53,7 @@
         data = [{}],
         class: className = null,
         stack,
+        canvas = false,
         ...options
     }: BarYMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
@@ -68,24 +74,49 @@
     channels={['x', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}>
     {#snippet children({ scaledData, usedScales })}
-        <GroupMultiple class="bar-y" length={scaledData.length}>
-            {#each scaledData as d, i (i)}
-                {@const bw = plot.scales.x.fn.bandwidth()}
-                {@const miny = Math.min(d.y1, d.y2)}
-                {@const maxy = Math.max(d.y1, d.y2)}
-                {#if d.valid}
-                    <RectPath
-                        x={d.x - bw * 0.5}
-                        y={miny}
-                        options={args}
-                        class={className}
-                        width={bw}
-                        height={maxy - miny}
-                        datum={d}
-                        {usedScales}
-                        useInsetAsFallbackVertically={false} />
-                {/if}
-            {/each}
-        </GroupMultiple>
+        {@const bw = plot.scales.x.fn.bandwidth()}
+        {@const barGroupClass = className ? `bar-y ${className}` : 'bar-y'}
+        {#if canvas}
+            {@const rectCanvasData = scaledData
+                .filter((d) => d.valid)
+                .map((d) => {
+                    const miny = Math.min(d.y1, d.y2);
+                    const maxy = Math.max(d.y1, d.y2);
+
+                    return {
+                        ...d,
+                        x1: d.x - bw * 0.5,
+                        x2: d.x + bw * 0.5,
+                        y1: miny,
+                        y2: maxy
+                    };
+                })}
+            <GroupMultiple class={barGroupClass} length={scaledData.length}>
+                <RectCanvas
+                    {options}
+                    data={rectCanvasData}
+                    {usedScales}
+                    useInsetAsFallbackVertically={false} />
+            </GroupMultiple>
+        {:else}
+            <GroupMultiple class="bar-y" length={scaledData.length}>
+                {#each scaledData as d, i (i)}
+                    {@const miny = Math.min(d.y1, d.y2)}
+                    {@const maxy = Math.max(d.y1, d.y2)}
+                    {#if d.valid}
+                        <RectPath
+                            x={d.x - bw * 0.5}
+                            y={miny}
+                            options={args}
+                            class={className}
+                            width={bw}
+                            height={maxy - miny}
+                            datum={d}
+                            {usedScales}
+                            useInsetAsFallbackVertically={false} />
+                    {/if}
+                {/each}
+            </GroupMultiple>
+        {/if}
     {/snippet}
 </Mark>

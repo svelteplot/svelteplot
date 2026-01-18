@@ -8,6 +8,10 @@
         data: Datum[];
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
+        /**
+         * Renders using Canvas instead of SVG.
+         */
+        canvas?: boolean;
     }
     import type {
         DataRecord,
@@ -22,6 +26,7 @@
 
     import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
+    import RectCanvas from './helpers/RectCanvas.svelte';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
@@ -34,6 +39,7 @@
     const {
         data = [{} as Datum],
         class: className = '',
+        canvas = false,
         ...options
     }: CellMarkProps = $derived({
         ...DEFAULTS,
@@ -67,19 +73,36 @@
         {@const bwx = plot.scales.x.fn.bandwidth()}
         {@const bwy = plot.scales.y.fn.bandwidth()}
         <g class="cell {className || ''}" data-fill={usedScales.fillOpacity}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid && (args.fill == null || isValid(resolveChannel('fill', d.datum, args)))}
-                    <RectPath
-                        datum={d}
-                        class={className}
-                        {usedScales}
-                        options={args}
-                        x={d.x - bwx * 0.5}
-                        y={d.y - bwy * 0.5}
-                        width={bwx}
-                        height={bwy} />
-                {/if}
-            {/each}
+            {#if canvas}
+                {@const rectCanvasData = scaledData
+                    .filter(
+                        (d) =>
+                            d.valid &&
+                            (args.fill == null || isValid(resolveChannel('fill', d.datum, args)))
+                    )
+                    .map((d) => ({
+                        ...d,
+                        x1: d.x - bwx * 0.5,
+                        x2: d.x + bwx * 0.5,
+                        y1: d.y - bwy * 0.5,
+                        y2: d.y + bwy * 0.5
+                    }))}
+                <RectCanvas options={args} data={rectCanvasData} {usedScales} />
+            {:else}
+                {#each scaledData as d, i (i)}
+                    {#if d.valid && (args.fill == null || isValid(resolveChannel('fill', d.datum, args)))}
+                        <RectPath
+                            datum={d}
+                            class={className}
+                            {usedScales}
+                            options={args}
+                            x={d.x - bwx * 0.5}
+                            y={d.y - bwy * 0.5}
+                            width={bwx}
+                            height={bwy} />
+                    {/if}
+                {/each}
+            {/if}
         </g>
     {/snippet}
 </Mark>
