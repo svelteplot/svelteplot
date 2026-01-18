@@ -221,7 +221,7 @@
     {#if showAxis}
         <BaseAxisY
             {anchor}
-            {className}
+            class={className}
             {lineAnchor}
             options={{
                 ...options,

@@ -240,4 +240,18 @@ describe('AxisY mark', () => {
         const tickValues = ticks.map((t) => t.querySelector('text')?.textContent);
         expect(tickValues).toStrictEqual(['-10K', '0', '10K']);
     });
+
+    it('sets custom classname', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { domain: [0, 100] } },
+                axisArgs: { class: 'foo' }
+            }
+        });
+
+        const ticks = Array.from(
+            container.querySelectorAll('g.foo > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBeGreaterThan(2);
+    });
 });
