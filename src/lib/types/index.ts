@@ -69,8 +69,10 @@ export type AutoMarginStores = {
     autoMarginBottom: Writable<Map<string, number>>;
 };
 
+export type MapIndexFunction = (I: number[], S: RawValue[], T: RawValue[]) => void;
+
 export type MapIndexObject = {
-    mapIndex: (I: number[], S: RawValue[], T: RawValue[]) => void;
+    mapIndex: MapIndexFunction;
 };
 
 export type MapMethod =

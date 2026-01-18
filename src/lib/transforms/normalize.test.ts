@@ -38,6 +38,35 @@ describe('normalizeY', () => {
         ]);
     });
 
+    it('excepts options as object', () => {
+        const { data: normalized, ...channels } = normalizeY(
+            {
+                data,
+                y: 'y',
+                z: 'group'
+            },
+            { basis: 'sum' }
+        );
+
+        expect(channels.y).toBe('__y');
+        expect(normalized).toHaveLength(data.length);
+
+        const result = normalized.map((d) => ({
+            id: d.id,
+            group: d.group,
+            y: d[channels.y]
+        }));
+
+        // For group A: y values are 2 and 4, sum = 6
+        // For group B: y values are 6 and 8, sum = 14
+        expect(result).toEqual([
+            { id: 'a1', group: 'A', y: 2 / 6 },
+            { id: 'a2', group: 'A', y: 4 / 6 },
+            { id: 'b1', group: 'B', y: 6 / 14 },
+            { id: 'b2', group: 'B', y: 8 / 14 }
+        ]);
+    });
+
     it('normalizes to [0, 1] range using extent as basis', () => {
         const { data: normalized, ...channels } = normalizeY(
             {
