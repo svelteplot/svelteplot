@@ -1,7 +1,9 @@
 import { mapX, mapY } from './map.js';
-import type { TransformArg, RawValue, MapIndexObject } from '$lib/types/index.js';
+import type { TransformArg, RawValue, MapIndexObject, MapIndexFunction } from '$lib/types/index.js';
 import { min, max, mean, median, sum, deviation, extent } from 'd3-array';
 import { sort } from './sort.js';
+
+type BasisFunction = (I: number[], S: RawValue[]) => number;
 
 type NormalizeBasis =
     | 'deviation'
@@ -13,23 +15,33 @@ type NormalizeBasis =
     | 'median'
     | 'sum'
     | 'extent'
+    | BasisFunction
     | MapIndexObject;
+
+type NormalizeOptions = NormalizeBasis | { basis: NormalizeBasis };
 
 /**
  * Normalizes the x values based on the specified basis. Uses mapX.
  */
-export function normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis) {
-    return mapX(args, normalize(basis));
+export function normalizeX<T>(args: TransformArg<T>, options: NormalizeOptions) {
+    return mapX(args, normalize(options));
 }
 
 /**
  * Normalizes the y values based on the specified basis. Uses mapY.
  */
-export function normalizeY<T>(args: TransformArg<T>, basis: NormalizeBasis) {
-    return mapY(args, normalize(basis));
+export function normalizeY<T>(args: TransformArg<T>, options: NormalizeOptions) {
+    return mapY(args, normalize(options));
 }
 
-function normalize(basis: NormalizeBasis): MapIndexObject {
+function isMapIndex(obj: any): obj is MapIndexObject {
+    return obj && typeof obj.mapIndex === 'function';
+}
+
+function normalize(options: NormalizeOptions): MapIndexObject {
+    if (isMapIndex(options)) return options;
+    if (typeof options === 'object' && isMapIndex(options?.basis)) return options?.basis;
+    const basis = typeof options === 'object' ? options.basis : options;
     if (basis === undefined) return normalizeFirst;
     if (typeof basis === 'function') return normalizeBasis(basis);
     //   if (/^p\d{2}$/i.test(basis)) return normalizeAccessor(percentile(basis));
@@ -56,7 +68,7 @@ function normalize(basis: NormalizeBasis): MapIndexObject {
     throw new Error(`invalid basis: ${basis}`);
 }
 
-function normalizeBasis(basis: (I: number[], S: RawValue[]) => number): MapIndexObject {
+function normalizeBasis(basis: BasisFunction): MapIndexObject {
     return {
         mapIndex(I, S, T) {
             const b = +basis(I, S);
@@ -96,7 +108,7 @@ const normalizeLast = normalizeBasis((I, S) => {
 });
 
 const normalizeDeviation = {
-    mapIndex(I, S, T) {
+    mapIndex(I: number[], S: RawValue[], T: number[]) {
         const m = mean(I, (i) => S[i]);
         const d = deviation(I, (i) => S[i]);
         for (const i of I) {
