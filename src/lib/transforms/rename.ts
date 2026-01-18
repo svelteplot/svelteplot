@@ -5,7 +5,7 @@ type RenameChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName
 type ReplaceChannelsOptions = Partial<Record<ScaledChannelName, ScaledChannelName[]>>;
 
 // using a symbol doesn't work because channels are spread into components
-export const RENAME = '__renamed__';
+export const RENAME = Symbol('renamed');
 
 /**
  * renames a channel without modifying the data
