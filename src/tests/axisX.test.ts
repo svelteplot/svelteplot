@@ -377,4 +377,18 @@ describe('AxisX mark', () => {
             ['Bar', '4']
         ]);
     });
+
+    it('sets custom classname', () => {
+        const { container } = render(AxisXTest, {
+            props: {
+                plotArgs: { height: 300, x: { domain: [0, 100] } },
+                axisArgs: { class: 'foo' }
+            }
+        });
+
+        const ticks = Array.from(
+            container.querySelectorAll('g.foo > g.tick') as NodeListOf<SVGGElement>
+        );
+        expect(ticks.length).toBeGreaterThan(2);
+    });
 });

@@ -36,7 +36,7 @@
         };
         plot: PlotState;
         text: boolean | null;
-        class: string;
+        class: string | undefined;
     };
 
     let {

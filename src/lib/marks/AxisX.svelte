@@ -244,7 +244,7 @@
     {#if showAxis}
         <BaseAxisX
             {anchor}
-            {className}
+            class={className}
             {labelAnchor}
             options={{ ...options, ...plot.options.x }}
             {plot}

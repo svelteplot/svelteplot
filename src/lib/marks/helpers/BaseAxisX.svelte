@@ -42,7 +42,7 @@
         };
         text: boolean;
         plot: PlotState;
-        class: string;
+        class: string | undefined;
     };
 
     let {
