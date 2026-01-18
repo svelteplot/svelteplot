@@ -5,6 +5,8 @@
     export const data = { iris: '/data/iris2.csv' };
     export const sortKey = 102;
     export const transforms = ['normalize'];
+    export const repl =
+        'https://svelte.dev/playground/560d60d41f794ee58222d75e3fd132af?version=latest';
 </script>
 
 <script lang="ts">
