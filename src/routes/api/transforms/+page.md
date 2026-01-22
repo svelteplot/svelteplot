@@ -244,9 +244,19 @@ export type MapMethod =
 
 ### MapIndexObject
 
-| Prop       | Type                                                   | Description |
-| ---------- | ------------------------------------------------------ | ----------- |
-| `mapIndex` | (I: number[], S: RawValue[], T: RawValue[]) =&gt; void |             |
+| Prop       | Type             | Description |
+| ---------- | ---------------- | ----------- |
+| `mapIndex` | MapIndexFunction |             |
+
+### MapIndexFunction
+
+```ts
+export type MapIndexFunction = (
+    I: number[],
+    S: RawValue[],
+    T: RawValue[]
+) => void;
+```
 
 ## mapX
 
@@ -269,7 +279,42 @@ mapY<T>(args: TransformArg<T>, mapper: MapMethod): void
 Normalizes the x values based on the specified basis. Uses mapX.
 
 ```ts
-normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis): void
+normalizeX<T>(args: TransformArg<T>, options: NormalizeOptions): void
+```
+
+### NormalizeOptions
+
+```ts
+type NormalizeOptions =
+    | NormalizeBasis
+    | {
+          basis: NormalizeBasis;
+      };
+```
+
+### NormalizeBasis
+
+```ts
+type NormalizeBasis =
+    | 'deviation'
+    | 'first'
+    | 'last'
+    | 'min'
+    | 'max'
+    | 'mean'
+    | 'median'
+    | 'sum'
+    | 'extent'
+    | BasisFunction
+    | MapIndexObject;
+```
+
+Uses: [MapIndexObject](/api/transforms#MapIndexObject)
+
+### BasisFunction
+
+```ts
+type BasisFunction = (I: number[], S: RawValue[]) => number;
 ```
 
 ## normalizeY
@@ -277,8 +322,10 @@ normalizeX<T>(args: TransformArg<T>, basis: NormalizeBasis): void
 Normalizes the y values based on the specified basis. Uses mapY.
 
 ```ts
-normalizeY<T>(args: TransformArg<T>, basis: NormalizeBasis): void
+normalizeY<T>(args: TransformArg<T>, options: NormalizeOptions): void
 ```
+
+Options: [NormalizeOptions](/api/transforms#NormalizeOptions)
 
 ## normalizeParallelX
 
