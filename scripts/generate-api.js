@@ -18,8 +18,7 @@ function escapeForSvelte(text) {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/\{/g, '&amp;#123;')
-        .replace(/\}/g, '&amp;#125;');
+        .replace(/([{}])/g, "{'$1'}"); // HTML escape doesn't work well for { and }
 }
 
 function escapeTableCell(text) {
