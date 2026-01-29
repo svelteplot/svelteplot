@@ -186,7 +186,7 @@
                             usedScales
                         )}
                         <path
-                            d={shapePath(shape, d.length, d.r ?? r)}
+                            d={shapePath(shape, d.length, d.r)}
                             transform="translate({d.x}, {d.y}) rotate({resolveProp(
                                 args.rotate,
                                 d.datum,
