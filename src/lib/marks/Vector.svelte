@@ -48,7 +48,7 @@
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const defaultRadius = 3.5;
+    const defaultRadius = 3;
 
     // The size of the arrowhead is proportional to its length, but we still allow
     // the relative size of the head to be controlled via the mark's width option;
@@ -58,14 +58,14 @@
 
     let markProps: VectorMarkProps = $props();
     const DEFAULTS = {
-        ...getPlotDefaults().vector
+        ...getPlotDefaults().vector,
+        r: defaultRadius
     };
     const {
         data = [{}],
         canvas,
         shape = 'arrow',
         anchor = 'middle',
-        r = defaultRadius,
         ...options
     }: VectorMarkProps = $derived({
         ...DEFAULTS,
@@ -73,9 +73,6 @@
     });
 
     const plot = usePlot();
-
-    const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
-    const testFacet = $derived(getTestFacet());
 
     const shapeArrow: ShapeRenderer = {
         draw(context: D3Path, l: number, r: number) {
@@ -168,15 +165,14 @@
         'strokeOpacity'
     ]}
     {...args}>
-    {#snippet children({ mark, scaledData, usedScales })}
+    {#snippet children({ scaledData, usedScales })}
         <g class="vector" data-l={usedScales.length}>
             {#if canvas}
                 <text x="30" y="30" style="color:red"
                     >implement canvas rendering for vector mark</text>
             {:else}
                 {#each scaledData as d, i (i)}
-                    {@const r = resolveChannel('r', d.datum, { r: 3, ...args })}
-                    {#if d.valid && isValid(r)}
+                    {#if d.valid && isValid(d.r)}
                         {@const [style, styleClass] = resolveStyles(
                             plot,
                             d,
@@ -190,7 +186,7 @@
                             usedScales
                         )}
                         <path
-                            d={shapePath(shape, d.length, r)}
+                            d={shapePath(shape, d.length, d.r ?? r)}
                             transform="translate({d.x}, {d.y}) rotate({resolveProp(
                                 args.rotate,
                                 d.datum,
