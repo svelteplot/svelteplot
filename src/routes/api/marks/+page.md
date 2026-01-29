@@ -6,20 +6,20 @@ title: Marks API reference
 
 Creates an area chart with filled regions between two x-y value pairs
 
-| Prop         | Type                                                                                   | Description |
-| ------------ | -------------------------------------------------------------------------------------- | ----------- |
-| `data`       | Datum[]                                                                                |             |
-| `x1?`        | ChannelAccessor&lt;Datum&gt;                                                           |             |
-| `x2?`        | ChannelAccessor&lt;Datum&gt;                                                           |             |
-| `y1?`        | ChannelAccessor&lt;Datum&gt;                                                           |             |
-| `y2?`        | ChannelAccessor&lt;Datum&gt;                                                           |             |
-| `z?`         | ChannelAccessor&lt;Datum&gt;                                                           |             |
-| `curve?`     | [CurveName](/api/marks#CurveName) \| CurveFactory                                      |             |
-| `tension?`   | number                                                                                 |             |
-| `sort?`      | ConstantAccessor&lt;RawValue&gt; \| &amp;#123; channel: 'stroke' \| 'fill'; &amp;#125; |             |
-| `stack?`     | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt;                                 |             |
-| `canvas?`    | boolean                                                                                |             |
-| `areaClass?` | ConstantAccessor&lt;string, Datum&gt;                                                  |             |
+| Prop         | Type                                                                         | Description |
+| ------------ | ---------------------------------------------------------------------------- | ----------- |
+| `data`       | Datum[]                                                                      |             |
+| `x1?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
+| `x2?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
+| `y1?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
+| `y2?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
+| `z?`         | ChannelAccessor&lt;Datum&gt;                                                 |             |
+| `curve?`     | [CurveName](/api/marks#CurveName) \| CurveFactory                            |             |
+| `tension?`   | number                                                                       |             |
+| `sort?`      | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |             |
+| `stack?`     | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt;                       |             |
+| `canvas?`    | boolean                                                                      |             |
+| `areaClass?` | ConstantAccessor&lt;string, Datum&gt;                                        |             |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -49,21 +49,21 @@ Inherited props from [Area](/api/marks#Area).
 
 Creates arrows with customizable heads, angles, and bending
 
-| Prop          | Type                                                                                                                   | Description                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `data`        | Datum[]                                                                                                                |                                                                     |
-| `sort?`       | ConstantAccessor&lt;RawValue&gt; \| &amp;#123; channel: 'stroke' \| 'fill' \| 'x1' \| 'y1' \| 'x2' \| 'y2'; &amp;#125; |                                                                     |
-| `x1`          | ChannelAccessor&lt;Datum&gt;                                                                                           |                                                                     |
-| `y1`          | ChannelAccessor&lt;Datum&gt;                                                                                           |                                                                     |
-| `x2`          | ChannelAccessor&lt;Datum&gt;                                                                                           |                                                                     |
-| `y2`          | ChannelAccessor&lt;Datum&gt;                                                                                           |                                                                     |
-| `bend?`       | ConstantAccessor&lt;number, Datum&gt; \| true                                                                          | the bend angle, in degrees; defaults to 0°; true for 22.5°          |
-| `headAngle?`  | ConstantAccessor&lt;number, Datum&gt;                                                                                  | the arrowhead angle, in degrees; defaults to 60°                    |
-| `headLength?` | ConstantAccessor&lt;number, Datum&gt;                                                                                  | the arrowhead scale; defaults to 8                                  |
-| `insetEnd?`   | ConstantAccessor&lt;number, Datum&gt;                                                                                  | inset at the end of the arrow (useful if the arrow points to a dot) |
-| `insetStart?` | ConstantAccessor&lt;number, Datum&gt;                                                                                  | inset at the start of the arrow                                     |
-| `inset?`      | ConstantAccessor&lt;number, Datum&gt;                                                                                  | shorthand for the two insets                                        |
-| `sweep?`      | SweepOption                                                                                                            |                                                                     |
+| Prop          | Type                                                                                                         | Description                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `data`        | Datum[]                                                                                                      |                                                                     |
+| `sort?`       | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill' \| 'x1' \| 'y1' \| 'x2' \| 'y2'; {'}'} |                                                                     |
+| `x1`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
+| `y1`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
+| `x2`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
+| `y2`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
+| `bend?`       | ConstantAccessor&lt;number, Datum&gt; \| true                                                                | the bend angle, in degrees; defaults to 0°; true for 22.5°          |
+| `headAngle?`  | ConstantAccessor&lt;number, Datum&gt;                                                                        | the arrowhead angle, in degrees; defaults to 60°                    |
+| `headLength?` | ConstantAccessor&lt;number, Datum&gt;                                                                        | the arrowhead scale; defaults to 8                                  |
+| `insetEnd?`   | ConstantAccessor&lt;number, Datum&gt;                                                                        | inset at the end of the arrow (useful if the arrow points to a dot) |
+| `insetStart?` | ConstantAccessor&lt;number, Datum&gt;                                                                        | inset at the start of the arrow                                     |
+| `inset?`      | ConstantAccessor&lt;number, Datum&gt;                                                                        | shorthand for the two insets                                        |
+| `sweep?`      | SweepOption                                                                                                  |                                                                     |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -135,6 +135,7 @@ For horizontal bar charts using a band scale as y axis
 | `x2?`       | ChannelAccessor&lt;Datum&gt;            |                                                                                                |
 | `y?`        | ChannelAccessor&lt;Datum&gt;            |                                                                                                |
 | `stack?`    | [StackOptions](/api/marks#StackOptions) |                                                                                                |
+| `canvas?`   | boolean                                 | Renders using Canvas instead of SVG.                                                           |
 | `interval?` | number \| string                        | Converts x into x1/x2 ranges based on the provided interval. Disables the<br>implicit stacking |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
@@ -151,6 +152,7 @@ For vertical column charts using a band scale as x axis
 | `y1?`       | ChannelAccessor&lt;Datum&gt;            |                                                                                                |
 | `y2?`       | ChannelAccessor&lt;Datum&gt;            |                                                                                                |
 | `stack?`    | [StackOptions](/api/marks#StackOptions) |                                                                                                |
+| `canvas?`   | boolean                                 | Renders using Canvas instead of SVG.                                                           |
 | `interval?` | number \| string                        | Converts y into y1/y2 ranges based on the provided interval. Disables the<br>implicit stacking |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
@@ -245,11 +247,12 @@ Inherited props from [Brush](/api/marks#Brush).
 
 For arbitrary rectangles, requires band x and y scales
 
-| Prop   | Type                         | Description |
-| ------ | ---------------------------- | ----------- |
-| `data` | Datum[]                      |             |
-| `x?`   | ChannelAccessor&lt;Datum&gt; |             |
-| `y?`   | ChannelAccessor&lt;Datum&gt; |             |
+| Prop      | Type                         | Description                          |
+| --------- | ---------------------------- | ------------------------------------ |
+| `data`    | Datum[]                      |                                      |
+| `x?`      | ChannelAccessor&lt;Datum&gt; |                                      |
+| `y?`      | ChannelAccessor&lt;Datum&gt; |                                      |
+| `canvas?` | boolean                      | Renders using Canvas instead of SVG. |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
 
@@ -367,7 +370,7 @@ Renders geographical data using projections and GeoJSON geometries
 
 | Prop          | Type                                               | Description                                         |
 | ------------- | -------------------------------------------------- | --------------------------------------------------- |
-| `data?`       | Datum[] \| &amp;#123; type: 'Sphere'; &amp;#125;[] |                                                     |
+| `data?`       | Datum[] \| {'{'} type: 'Sphere'; {'}'}[]           |                                                     |
 | `geoType?`    | 'sphere' \| 'graticule'                            |                                                     |
 | `dragRotate?` | boolean                                            | todo: implement?                                    |
 | `canvas?`     | boolean                                            | toggle canvas rendering mode                        |
@@ -419,15 +422,15 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 For showing custom HTML tooltips positioned at x/y coordinates
 
-| Prop       | Type                                                   | Description |
-| ---------- | ------------------------------------------------------ | ----------- |
-| `data`     | Datum[]                                                |             |
-| `x?`       | ChannelAccessor&lt;Datum&gt;                           |             |
-| `y?`       | ChannelAccessor&lt;Datum&gt;                           |             |
-| `r?`       | ChannelAccessor&lt;Datum&gt;                           |             |
-| `fx?`      | ChannelAccessor&lt;Datum&gt;                           |             |
-| `fy?`      | ChannelAccessor&lt;Datum&gt;                           |             |
-| `children` | Snippet&lt;[ &amp;#123; datum: Datum; &amp;#125; ]&gt; |             |
+| Prop       | Type                                         | Description |
+| ---------- | -------------------------------------------- | ----------- |
+| `data`     | Datum[]                                      |             |
+| `x?`       | ChannelAccessor&lt;Datum&gt;                 |             |
+| `y?`       | ChannelAccessor&lt;Datum&gt;                 |             |
+| `r?`       | ChannelAccessor&lt;Datum&gt;                 |             |
+| `fx?`      | ChannelAccessor&lt;Datum&gt;                 |             |
+| `fy?`      | ChannelAccessor&lt;Datum&gt;                 |             |
+| `children` | Snippet&lt;[ {'{'} datum: Datum; {'}'} ]&gt; |             |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -454,25 +457,25 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Creates line charts with connecting points in a dataset with customizable curves and markers
 
-| Prop                    | Type                                                                                          | Description |
-| ----------------------- | --------------------------------------------------------------------------------------------- | ----------- |
-| `data?`                 | Datum[]                                                                                       |             |
-| `x?`                    | ChannelAccessor&lt;Datum&gt;                                                                  |             |
-| `y?`                    | ChannelAccessor&lt;Datum&gt;                                                                  |             |
-| `z?`                    | ChannelAccessor&lt;Datum&gt;                                                                  |             |
-| `outlineStroke?`        | string                                                                                        |             |
-| `outlineStrokeWidth?`   | number                                                                                        |             |
-| `outlineStrokeOpacity?` | number                                                                                        |             |
-| `curve?`                | [CurveName](/api/marks#CurveName) \| CurveFactory \| 'auto'                                   |             |
-| `tension?`              | number                                                                                        |             |
-| `sort?`                 | ConstantAccessor&lt;RawValue, Datum&gt; \| &amp;#123; channel: 'stroke' \| 'fill'; &amp;#125; |             |
-| `text?`                 | ConstantAccessor&lt;string, Datum&gt;                                                         |             |
-| `textFill?`             | ConstantAccessor&lt;string, Datum&gt;                                                         |             |
-| `textStroke?`           | ConstantAccessor&lt;string, Datum&gt;                                                         |             |
-| `textStartOffset?`      | ConstantAccessor&lt;string, Datum&gt;                                                         |             |
-| `textStrokeWidth?`      | ConstantAccessor&lt;number, Datum&gt;                                                         |             |
-| `lineClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                         |             |
-| `canvas?`               | boolean                                                                                       |             |
+| Prop                    | Type                                                                                | Description |
+| ----------------------- | ----------------------------------------------------------------------------------- | ----------- |
+| `data?`                 | Datum[]                                                                             |             |
+| `x?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
+| `y?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
+| `z?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
+| `outlineStroke?`        | string                                                                              |             |
+| `outlineStrokeWidth?`   | number                                                                              |             |
+| `outlineStrokeOpacity?` | number                                                                              |             |
+| `curve?`                | [CurveName](/api/marks#CurveName) \| CurveFactory \| 'auto'                         |             |
+| `tension?`              | number                                                                              |             |
+| `sort?`                 | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |             |
+| `text?`                 | ConstantAccessor&lt;string, Datum&gt;                                               |             |
+| `textFill?`             | ConstantAccessor&lt;string, Datum&gt;                                               |             |
+| `textStroke?`           | ConstantAccessor&lt;string, Datum&gt;                                               |             |
+| `textStartOffset?`      | ConstantAccessor&lt;string, Datum&gt;                                               |             |
+| `textStrokeWidth?`      | ConstantAccessor&lt;number, Datum&gt;                                               |             |
+| `lineClass?`            | ConstantAccessor&lt;string, Datum&gt;                                               |             |
+| `canvas?`               | boolean                                                                             |             |
 
 Inherited props from [MarkerOptions](/api/marks#MarkerOptions), [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -500,34 +503,34 @@ Inherited props from [Line](/api/marks#Line).
 
 Creates connections between pairs of points with optional curve styling and markers
 
-| Prop       | Type                                                                                   | Description                                                                                                                            |
-| ---------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `data`     | Datum[]                                                                                |                                                                                                                                        |
-| `sort?`    | ConstantAccessor&lt;RawValue&gt; \| &amp;#123; channel: 'stroke' \| 'fill'; &amp;#125; |                                                                                                                                        |
-| `x1`       | ChannelAccessor&lt;Datum&gt;                                                           | the x1 channel accessor for the start of the link                                                                                      |
-| `y1`       | ChannelAccessor&lt;Datum&gt;                                                           | the y1 channel accessor for the start of the link                                                                                      |
-| `x2`       | ChannelAccessor&lt;Datum&gt;                                                           | the x2 channel accessor for the end of the link                                                                                        |
-| `y2`       | ChannelAccessor&lt;Datum&gt;                                                           |                                                                                                                                        |
-| `curve?`   | 'auto' \| [CurveName](/api/marks#CurveName) \| CurveFactory                            | the curve type, defaults to 'auto' which uses a linear curve for planar projections<br>and a spherical line for geographic projections |
-| `tension?` | number                                                                                 | the tension of the curve, defaults to 0                                                                                                |
-| `text?`    | ConstantAccessor&lt;string, Datum&gt;                                                  | the text label for the link, can be a constant or a function                                                                           |
+| Prop       | Type                                                                         | Description                                                                                                                            |
+| ---------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`     | Datum[]                                                                      |                                                                                                                                        |
+| `sort?`    | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |                                                                                                                                        |
+| `x1`       | ChannelAccessor&lt;Datum&gt;                                                 | the x1 channel accessor for the start of the link                                                                                      |
+| `y1`       | ChannelAccessor&lt;Datum&gt;                                                 | the y1 channel accessor for the start of the link                                                                                      |
+| `x2`       | ChannelAccessor&lt;Datum&gt;                                                 | the x2 channel accessor for the end of the link                                                                                        |
+| `y2`       | ChannelAccessor&lt;Datum&gt;                                                 |                                                                                                                                        |
+| `curve?`   | 'auto' \| [CurveName](/api/marks#CurveName) \| CurveFactory                  | the curve type, defaults to 'auto' which uses a linear curve for planar projections<br>and a spherical line for geographic projections |
+| `tension?` | number                                                                       | the tension of the curve, defaults to 0                                                                                                |
+| `text?`    | ConstantAccessor&lt;string, Datum&gt;                                        | the text label for the link, can be a constant or a function                                                                           |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [MarkerOptions](/api/marks#MarkerOptions).
 
 ## Pointer
 
-| Prop           | Type                                                    | Description                                                                                      |
-| -------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `data`         | Datum[]                                                 |                                                                                                  |
-| `children?`    | Snippet&lt;[ &amp;#123; data: Datum[]; &amp;#125; ]&gt; |                                                                                                  |
-| `x?`           | ChannelAccessor&lt;Datum&gt;                            |                                                                                                  |
-| `y?`           | ChannelAccessor&lt;Datum&gt;                            |                                                                                                  |
-| `z?`           | ChannelAccessor&lt;Datum&gt;                            |                                                                                                  |
-| `fx?`          | ChannelAccessor&lt;Datum&gt;                            |                                                                                                  |
-| `fy?`          | ChannelAccessor&lt;Datum&gt;                            |                                                                                                  |
-| `maxDistance?` | number                                                  | maximum cursor distance to select data points                                                    |
-| `tolerance?`   | number                                                  | tolerance for considering points as "the same" when sharing x or y values<br>defaults to 0 pixel |
-| `onupdate?`    | (data: Datum[]) =&gt; void                              | called whenever the selection changes                                                            |
+| Prop           | Type                                          | Description                                                                                      |
+| -------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `data`         | Datum[]                                       |                                                                                                  |
+| `children?`    | Snippet&lt;[ {'{'} data: Datum[]; {'}'} ]&gt; |                                                                                                  |
+| `x?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `y?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `z?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `fx?`          | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `fy?`          | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `maxDistance?` | number                                        | maximum cursor distance to select data points                                                    |
+| `tolerance?`   | number                                        | tolerance for considering points as "the same" when sharing x or y values<br>defaults to 0 pixel |
+| `onupdate?`    | (data: Datum[]) =&gt; void                    | called whenever the selection changes                                                            |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -535,17 +538,18 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 For arbitrary rectangles, requires quantitative x and y scales
 
-| Prop         | Type                         | Description |
-| ------------ | ---------------------------- | ----------- |
-| `data`       | Datum[]                      |             |
-| `x?`         | ChannelAccessor&lt;Datum&gt; |             |
-| `x1?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `x2?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `y?`         | ChannelAccessor&lt;Datum&gt; |             |
-| `y1?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `y2?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `interval?`  | number \| string             |             |
-| `className?` | string                       |             |
+| Prop        | Type                         | Description                          |
+| ----------- | ---------------------------- | ------------------------------------ |
+| `data`      | Datum[]                      |                                      |
+| `x?`        | ChannelAccessor&lt;Datum&gt; |                                      |
+| `x1?`       | ChannelAccessor&lt;Datum&gt; |                                      |
+| `x2?`       | ChannelAccessor&lt;Datum&gt; |                                      |
+| `y?`        | ChannelAccessor&lt;Datum&gt; |                                      |
+| `y1?`       | ChannelAccessor&lt;Datum&gt; |                                      |
+| `y2?`       | ChannelAccessor&lt;Datum&gt; |                                      |
+| `interval?` | number \| string             |                                      |
+| `class?`    | string                       |                                      |
+| `canvas?`   | boolean                      | Renders using Canvas instead of SVG. |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
 
@@ -682,20 +686,20 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 ## Trail
 
-| Prop          | Type                                                                                          | Description                                 |
-| ------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `data?`       | Datum[]                                                                                       |                                             |
-| `x?`          | ChannelAccessor&lt;Datum&gt;                                                                  |                                             |
-| `y?`          | ChannelAccessor&lt;Datum&gt;                                                                  |                                             |
-| `z?`          | ChannelAccessor&lt;Datum&gt;                                                                  |                                             |
-| `r?`          | ChannelAccessor&lt;Datum&gt;                                                                  |                                             |
-| `curve?`      | [CurveName](/api/marks#CurveName) \| CurveFactory                                             |                                             |
-| `tension?`    | number                                                                                        |                                             |
-| `sort?`       | ConstantAccessor&lt;RawValue, Datum&gt; \| &amp;#123; channel: 'stroke' \| 'fill'; &amp;#125; |                                             |
-| `defined?`    | ConstantAccessor&lt;boolean, Datum&gt;                                                        |                                             |
-| `canvas?`     | boolean                                                                                       |                                             |
-| `cap?`        | 'butt' \| 'round'                                                                             |                                             |
-| `resolution?` | number \| 'auto'                                                                              | Samples per segment for curve interpolation |
+| Prop          | Type                                                                                | Description                                 |
+| ------------- | ----------------------------------------------------------------------------------- | ------------------------------------------- |
+| `data?`       | Datum[]                                                                             |                                             |
+| `x?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
+| `y?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
+| `z?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
+| `r?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
+| `curve?`      | [CurveName](/api/marks#CurveName) \| CurveFactory                                   |                                             |
+| `tension?`    | number                                                                              |                                             |
+| `sort?`       | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |                                             |
+| `defined?`    | ConstantAccessor&lt;boolean, Datum&gt;                                              |                                             |
+| `canvas?`     | boolean                                                                             |                                             |
+| `cap?`        | 'butt' \| 'round'                                                                   |                                             |
+| `resolution?` | number \| 'auto'                                                                    | Samples per segment for curve interpolation |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -734,67 +738,67 @@ These props are shared by marks via the base type aliases.
 
 ### BaseMarkProps
 
-| Prop               | Type                                                                                                                                                                      | Description                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `filter`           | ConstantAccessor&lt;boolean, T&gt;                                                                                                                                        | Filter the data without modifying the inferred scales       |
-| `facet`            | 'auto' \| 'include' \| 'exclude'                                                                                                                                          |                                                             |
-| `fx`               | ChannelAccessor&lt;T&gt;                                                                                                                                                  |                                                             |
-| `fy`               | ChannelAccessor&lt;T&gt;                                                                                                                                                  |                                                             |
-| `dx`               | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `dy`               | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `dodgeX`           | [DodgeXOptions](/api/marks#DodgeXOptions)                                                                                                                                 |                                                             |
-| `dodgeY`           | [DodgeYOptions](/api/marks#DodgeYOptions)                                                                                                                                 |                                                             |
-| `fill`             | ChannelAccessor&lt;T&gt;                                                                                                                                                  |                                                             |
-| `fillOpacity`      | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `sort`             | string \| ConstantAccessor&lt;RawValue, T&gt; \| ((a: RawValue, b: RawValue) =&gt; number) \| &amp;#123; channel: string; order?: 'ascending' \| 'descending'; &amp;#125; |                                                             |
-| `stroke`           | ChannelAccessor&lt;T&gt;                                                                                                                                                  |                                                             |
-| `strokeWidth`      | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `strokeOpacity`    | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `strokeLinejoin`   | ConstantAccessor&lt;CSS.Property.StrokeLinejoin, T&gt;                                                                                                                    |                                                             |
-| `strokeLinecap`    | ConstantAccessor&lt;CSS.Property.StrokeLinecap, T&gt;                                                                                                                     |                                                             |
-| `strokeMiterlimit` | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `opacity`          | ChannelAccessor&lt;T&gt;                                                                                                                                                  |                                                             |
-| `strokeDasharray`  | ConstantAccessor&lt;string, T&gt;                                                                                                                                         |                                                             |
-| `strokeDashoffset` | ConstantAccessor&lt;number, T&gt;                                                                                                                                         |                                                             |
-| `mixBlendMode`     | ConstantAccessor&lt;CSS.Property.MixBlendMode, T&gt;                                                                                                                      |                                                             |
-| `clipPath`         | string                                                                                                                                                                    |                                                             |
-| `mask`             | string                                                                                                                                                                    |                                                             |
-| `imageFilter`      | ConstantAccessor&lt;string, T&gt;                                                                                                                                         |                                                             |
-| `shapeRendering`   | ConstantAccessor&lt;CSS.Property.ShapeRendering, T&gt;                                                                                                                    |                                                             |
-| `paintOrder`       | ConstantAccessor&lt;string, T&gt;                                                                                                                                         |                                                             |
-| `onclick`          | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondblclick`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmouseup`        | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmousedown`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmouseenter`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmousemove`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmouseleave`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmouseout`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onmouseover`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointercancel`  | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerdown`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerup`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerenter`   | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerleave`   | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointermove`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerover`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onpointerout`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondrag`           | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondrop`           | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondragstart`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondragenter`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondragleave`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondragover`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ondragend`        | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ontouchstart`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ontouchmove`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ontouchend`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `ontouchcancel`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `oncontextmenu`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `onwheel`          | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                                   |                                                             |
-| `class`            | string                                                                                                                                                                    | if you want to give your mark element an extra CSS class    |
-| `style`            | string                                                                                                                                                                    | if you want to give your mark element an extra inline style |
-| `cursor`           | ConstantAccessor&lt;CSS.Property.Cursor, T&gt;                                                                                                                            |                                                             |
+| Prop               | Type                                                                                                                                                            | Description                                                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `filter`           | ConstantAccessor&lt;boolean, T&gt;                                                                                                                              | Filter the data without modifying the inferred scales       |
+| `facet`            | 'auto' \| 'include' \| 'exclude'                                                                                                                                |                                                             |
+| `fx`               | ChannelAccessor&lt;T&gt;                                                                                                                                        |                                                             |
+| `fy`               | ChannelAccessor&lt;T&gt;                                                                                                                                        |                                                             |
+| `dx`               | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `dy`               | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `dodgeX`           | [DodgeXOptions](/api/marks#DodgeXOptions)                                                                                                                       |                                                             |
+| `dodgeY`           | [DodgeYOptions](/api/marks#DodgeYOptions)                                                                                                                       |                                                             |
+| `fill`             | ChannelAccessor&lt;T&gt;                                                                                                                                        |                                                             |
+| `fillOpacity`      | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `sort`             | string \| ConstantAccessor&lt;RawValue, T&gt; \| ((a: RawValue, b: RawValue) =&gt; number) \| {'{'} channel: string; order?: 'ascending' \| 'descending'; {'}'} |                                                             |
+| `stroke`           | ChannelAccessor&lt;T&gt;                                                                                                                                        |                                                             |
+| `strokeWidth`      | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `strokeOpacity`    | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `strokeLinejoin`   | ConstantAccessor&lt;CSS.Property.StrokeLinejoin, T&gt;                                                                                                          |                                                             |
+| `strokeLinecap`    | ConstantAccessor&lt;CSS.Property.StrokeLinecap, T&gt;                                                                                                           |                                                             |
+| `strokeMiterlimit` | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `opacity`          | ChannelAccessor&lt;T&gt;                                                                                                                                        |                                                             |
+| `strokeDasharray`  | ConstantAccessor&lt;string, T&gt;                                                                                                                               |                                                             |
+| `strokeDashoffset` | ConstantAccessor&lt;number, T&gt;                                                                                                                               |                                                             |
+| `mixBlendMode`     | ConstantAccessor&lt;CSS.Property.MixBlendMode, T&gt;                                                                                                            |                                                             |
+| `clipPath`         | string                                                                                                                                                          |                                                             |
+| `mask`             | string                                                                                                                                                          |                                                             |
+| `imageFilter`      | ConstantAccessor&lt;string, T&gt;                                                                                                                               |                                                             |
+| `shapeRendering`   | ConstantAccessor&lt;CSS.Property.ShapeRendering, T&gt;                                                                                                          |                                                             |
+| `paintOrder`       | ConstantAccessor&lt;string, T&gt;                                                                                                                               |                                                             |
+| `onclick`          | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondblclick`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmouseup`        | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmousedown`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmouseenter`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmousemove`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmouseleave`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmouseout`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onmouseover`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointercancel`  | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerdown`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerup`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerenter`   | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerleave`   | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointermove`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerover`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onpointerout`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondrag`           | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondrop`           | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondragstart`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondragenter`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondragleave`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondragover`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ondragend`        | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ontouchstart`     | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ontouchmove`      | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ontouchend`       | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `ontouchcancel`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `oncontextmenu`    | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `onwheel`          | MouseEventHandler&lt;SVGPathElement&gt;                                                                                                                         |                                                             |
+| `class`            | string                                                                                                                                                          | if you want to give your mark element an extra CSS class    |
+| `style`            | string                                                                                                                                                          | if you want to give your mark element an extra inline style |
+| `cursor`           | ConstantAccessor&lt;CSS.Property.Cursor, T&gt;                                                                                                                  |                                                             |
 
 ### MarkerOptions
 
