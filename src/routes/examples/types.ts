@@ -101,6 +101,15 @@ export type WindRow = {
     v: number;
 };
 
+export type WalmartRow = {
+    storenum: number;
+    opendate: Date;
+    city: string;
+    state: string;
+    lat: number;
+    lon: number;
+};
+
 export type ElectionRow = {
     // state,fips,margin2020,margin2016,votes,votes2016
     state: string;
@@ -134,6 +143,19 @@ export interface USAtlas extends TopoJSON.Topology {
             geometries: Array<TopoJSON.Polygon | TopoJSON.MultiPolygon>;
         };
         nation: TopoJSON.GeometryCollection;
+    };
+    bbox: [number, number, number, number];
+    transform: TopoJSON.Transform;
+}
+
+export interface USStatesAtlas extends TopoJSON.Topology {
+    objects: {
+        states: {
+            type: 'GeometryCollection';
+            geometries: Array<TopoJSON.Polygon | TopoJSON.MultiPolygon>;
+        };
+        land: TopoJSON.GeometryCollection;
+        innerborders: TopoJSON.GeometryCollection;
     };
     bbox: [number, number, number, number];
     transform: TopoJSON.Transform;
@@ -240,6 +262,7 @@ export type ExamplesData = {
     };
     world: WorldAtlas;
     us: USAtlas;
+    statesTopo: USStatesAtlas;
     beagle: BeagleRow[];
     riaa: RiaaRow[];
     metros: MetrosRow[];
@@ -258,4 +281,5 @@ export type ExamplesData = {
     stocks: StocksRow[];
     olympians: OlympiansRow[];
     presidents2: Presidents2Row[];
+    walmart: WalmartRow[];
 };

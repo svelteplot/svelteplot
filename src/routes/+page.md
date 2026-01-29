@@ -36,6 +36,7 @@ examples:
     - dot/beeswarm-bubbles
     - dot/dot-faceted
     - dot/dodge-faceted
+    - dot/walmart-stores
     - geo/earthquakes
     - geo/us-choropleth
     - image/image-scatter
