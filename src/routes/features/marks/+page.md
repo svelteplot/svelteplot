@@ -199,7 +199,7 @@ Marks support interactive events that can be hooked into:
 
 ## Faceting
 
-All marks support [faceting](/features/faceting) for creating small multiples:
+All marks support [faceting](/features/facets) for creating small multiples:
 
 ```svelte
 <Plot>
