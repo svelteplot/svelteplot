@@ -74,12 +74,15 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
 
-                    const strokeWidth = resolveProp(options.strokeWidth, datum.datum, 1) as number;
-
                     stroke = resolveColor(stroke || 'currentColor', canvas);
 
                     if (stroke && stroke !== 'none') {
-                        context.lineWidth = strokeWidth ?? 1;
+                        const strokeWidth = resolveProp(
+                            options.strokeWidth,
+                            datum.datum,
+                            1
+                        ) as number;
+                        context.lineWidth = strokeWidth;
                         context.strokeStyle = stroke;
                         context.globalAlpha = opacity * strokeOpacity;
 
