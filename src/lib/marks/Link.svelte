@@ -60,6 +60,7 @@
 
     let markProps: LinkMarkProps = $props();
     const DEFAULTS = {
+        markerScale: 1,
         ...getPlotDefaults().link
     };
     const {
@@ -179,6 +180,7 @@
                         markerStart={args.markerStart}
                         markerEnd={args.markerEnd}
                         marker={args.marker}
+                        markerScale={args.markerScale}
                         class={styleClass}
                         strokeWidth={args.strokeWidth}
                         datum={d.datum}
