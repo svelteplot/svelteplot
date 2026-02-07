@@ -85,7 +85,7 @@
     markerWidth={MARKERS[shape].width * markerScale}
     orient={MARKERS[shape].orient}
     markerHeight={MARKERS[shape].height * markerScale}
-    stroke-width={1.5/markerScale}
+    stroke-width={Math.max(0, Math.min(100, 1.5/markerScale))}
     {...markerColors}>
     {#if shape === 'dot' || shape === 'circle' || shape === 'circle-stroke'}
         <circle r={defaultDotRadius} />
