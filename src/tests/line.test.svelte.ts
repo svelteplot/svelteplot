@@ -140,6 +140,30 @@ describe('Line mark', () => {
         expect(path?.getAttribute('marker-mid')).toMatch(/url\(#marker-/);
     });
 
+    it.each([
+        { markerScale: 1, expected: 6.67 },
+        { markerScale: 0.5, expected: 3.335 }
+    ])('scales markers with markerScale=$markerScale', ({ markerScale, expected }) => {
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 1 },
+                    { x: 2, y: 2 }
+                ],
+                x: 'x',
+                y: 'y',
+                marker: 'circle',
+                markerScale
+            }
+        });
+
+        const marker = container.querySelector('marker');
+        expect(marker).not.toBeNull();
+        const width = Number.parseFloat(marker?.getAttribute('markerWidth') ?? '');
+        expect(width).toBeCloseTo(expected, 3);
+    });
+
     it('line with text label', () => {
         const { container } = render(LineTest, {
             props: {

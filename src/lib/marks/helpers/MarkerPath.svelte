@@ -40,6 +40,10 @@
          */
         marker?: boolean | MarkerShape;
         /**
+         * scale factor for marker size, relative to the line stroke width
+         */
+        markerScale?: ConstantAccessor<number>;
+        /**
          * path string
          */
         d: string;
@@ -61,6 +65,7 @@
         markerMid,
         markerEnd,
         marker,
+        markerScale,
         d,
         dInv,
         style,
@@ -88,6 +93,7 @@
     // use reversed path if the path is not left to right
     const textPath = $derived(!text || leftToRight ? d : dInv);
     const strokeWidth_ = $derived(resolveProp(strokeWidth, datum, 1.4));
+    const markerScale_ = $derived(resolveProp(markerScale, datum, 1));
 </script>
 
 <g
@@ -107,7 +113,8 @@
             <Marker
                 id={markerId}
                 shape={marker === true ? 'circle' : resolveProp(marker, datum)}
-                {color} />
+                {color}
+                markerScale={markerScale_} />
         {/if}
     {/each}
     {#if mark.options.onmouseenter || mark.options.onclick}
