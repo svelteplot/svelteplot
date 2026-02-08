@@ -30,3 +30,4 @@ Use the Svelte MCP server for Svelte 5 and SvelteKit documentation and automatio
 2. Maintain existing code structure and organization
 3. Use dependency injection patterns where appropriate
 4. Write unit tests for new functionality. Use table-driven unit tests when possible.
+5. Run `pnpm format` after adding new code to make sure it's formatted correctly.

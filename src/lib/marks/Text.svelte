@@ -11,6 +11,7 @@
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
         children?: Snippet;
+        canvas?: boolean;
         text: ConstantAccessor<string | null | false | undefined, Datum>;
         title?: ConstantAccessor<string, Datum>;
         /**
@@ -74,6 +75,7 @@
     import { sort } from '$lib/index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
+    import TextCanvas from './helpers/TextCanvas.svelte';
     import { indexData } from 'svelteplot/transforms/recordize';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
@@ -91,6 +93,7 @@
 
     const {
         data = [{} as Datum],
+        canvas = false,
         class: className = '',
         ...options
     }: TextMarkProps = $derived({
@@ -107,7 +110,7 @@
 </script>
 
 <Mark
-    type="text"
+    type={'text' as const}
     channels={[
         'x',
         'y',
@@ -122,14 +125,20 @@
     required={[]}
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
-        <GroupMultiple class="text {className}" length={className ? 2 : args.data.length}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid}
-                    {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
+        {#if canvas}
+            <g class="text {className || ''}">
+                <TextCanvas data={scaledData} options={args} {usedScales} />
+            </g>
+        {:else}
+            <GroupMultiple class="text {className}" length={className ? 2 : (args.data?.length ?? 0)}>
+                {#each scaledData as d, i (i)}
+                    {#if d.valid}
+                        {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
 
-                    <MultilineText {textLines} {d} {args} {usedScales} />
-                {/if}
-            {/each}
-        </GroupMultiple>
+                        <MultilineText {textLines} {d} args={args as any} {usedScales} />
+                    {/if}
+                {/each}
+            </GroupMultiple>
+        {/if}
     {/snippet}
 </Mark>
