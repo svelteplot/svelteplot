@@ -15,7 +15,7 @@ The **geo mark** draws geographic features — polygons, lines, points, and oth
 <script>
     import { getContext } from 'svelte';
     import { Plot, Geo } from 'svelteplot';
-    import { Slider, Select } from '$lib/ui';
+    import { Slider, Select } from '$shared/ui';
     import { page } from '$app/state';
     import * as topojson from 'topojson-client';
 
@@ -162,7 +162,7 @@ The geo mark’s **geometry** channel can be used to generate geometry from a no
     import { page } from '$app/state';
     import * as topojson from 'topojson-client';
     import { geoCircle } from 'd3-geo';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
     import { range } from 'd3-array';
 
     let { world, earthquakes } = $derived(page.data.data);
@@ -233,7 +233,7 @@ The [graticule](https://d3js.org/d3-geo/shape#geoGraticule) helper draws a unifo
 ```svelte live
 <script>
     import { Plot, Graticule, Sphere } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
     const useCanvas = getContext('useCanvas');
 

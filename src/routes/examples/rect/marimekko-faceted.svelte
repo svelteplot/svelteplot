@@ -14,7 +14,7 @@
         Rect,
         stackMosaicX
     } from 'svelteplot';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
 
     const { sales2 } = $props();
 

@@ -461,7 +461,7 @@ Here's an example where we use the bin transform to compute weekly aggregates fr
         RuleX,
         binX
     } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);

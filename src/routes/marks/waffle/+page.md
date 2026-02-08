@@ -61,7 +61,7 @@ The **unit** option determines the quantity each waffle cell represents; it defa
 ```svelte live
 <script>
     import { Plot, WaffleY, groupX } from 'svelteplot';
-    import { RadioInput } from '$lib/ui';
+    import { RadioInput } from '$shared/ui';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
     let unit = $state(10);
@@ -112,7 +112,7 @@ Like bars, waffles can be stacked, and implicitly apply the stack transform when
 ```svelte live
 <script>
     import { Plot, WaffleY, groupX } from 'svelteplot';
-    import { RadioInput } from '$lib/ui';
+    import { RadioInput } from '$shared/ui';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 </script>
@@ -142,7 +142,7 @@ Waffles can also be used to highlight a proportion of the whole. The chart below
 ```svelte live
 <script>
     import { Plot, WaffleY, Text } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { autoType, csvParse } from 'd3-dsv';
     const survey = csvParse(
         `response,count\ndo no activities other than school,89\ndon’t go out afterdark,96\n"engage in political discussion and social movements, including online",10\nwould like to doactivities but areprevented by safetyconcerns,73`,
@@ -194,7 +194,7 @@ The waffle mark comes in two orientations: waffleY extends vertically↑, while 
 ```svelte live
 <script>
     import { Plot, WaffleX } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     let apples = $state(435);
 </script>
 

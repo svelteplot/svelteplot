@@ -262,7 +262,7 @@ Please be aware that by setting a border radius, you are slightly distorting the
 ```svelte live
 <script>
     import { Plot, BarX, RuleX } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let radius = $state(10);
 </script>

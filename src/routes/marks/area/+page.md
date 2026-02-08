@@ -124,7 +124,7 @@ The Area mark supports **canvas rendering** by passing setting the `canvas` prop
 
 ```svelte live
 <script>
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
     import { getContext } from 'svelte';
     const useCanvas = getContext('useCanvas');
 </script>
@@ -248,7 +248,7 @@ You can control the stacking for the implicit [stackY](/transforms/stack) transf
 <script>
     import { Plot, AreaY } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     let { riaa } = $derived(page.data.data);
     import { getContext } from 'svelte';
     const useCanvas = getContext('useCanvas');
@@ -288,7 +288,7 @@ You can use the **offset** option to create a streamgraph:
 ```svelte live
 <script>
     import { Plot, AreaY } from '$lib/index.js';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     import { page } from '$app/stores';
     import { getContext } from 'svelte';
     const useCanvas = getContext('useCanvas');

@@ -7,7 +7,7 @@ By default, ordinal scales are sorted alphabetically.
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, sort } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -32,7 +32,7 @@ But you can change the sorting using the **sort** transform option, which will c
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, sort } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -65,7 +65,7 @@ To invert the channel sorting, you can either add `order: 'descending` to the so
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, sort } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -102,7 +102,7 @@ Sorts the data.
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, sort } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -118,7 +118,7 @@ Sorts the data.
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, sort } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -146,7 +146,7 @@ Shuffles the data randomly. If a **seed** option is specified, a [linear congrue
 ```svelte live
 <script>
     import { Plot, BarY, RuleY, shuffle } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';

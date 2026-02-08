@@ -12,7 +12,7 @@ The **density transform** turns a set of samples into a smooth probability densi
 <script lang="ts">
     import { Plot, AreaY, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Select, Slider, Checkbox } from '$lib/ui';
+    import { Select, Slider, Checkbox } from '$shared/ui';
     import { page } from '$app/state';
 
     let { olympians } = $derived(page.data.data);
@@ -129,7 +129,7 @@ You can also display densities as lines, as in this example showing density curv
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
 
     const measures = [
@@ -191,7 +191,7 @@ Densities are computed at regular intervals along the x-axis (for densityX), def
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
 
     const measures = [
@@ -247,7 +247,7 @@ You can pass a **weight** function with the channels to compute weighted densiti
 <script lang="ts">
     import { Plot, Line, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
 
     let { penguins } = $derived(page.data.data);

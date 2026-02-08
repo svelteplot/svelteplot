@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { Plot, Geo } from 'svelteplot';
     import * as topojson from 'topojson-client';
     import { geoCentroid } from 'd3-geo';

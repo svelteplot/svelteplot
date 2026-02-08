@@ -7,7 +7,7 @@ Box marks are a compound mark consisting of a bar, rule, dots and tick marks (se
 ```svelte live
 <script>
     import { Plot, BoxX, BoxY } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { countries } = $derived(page.data.data);

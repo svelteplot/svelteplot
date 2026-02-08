@@ -595,7 +595,7 @@ Lines can show a text label along the path:
 ```svelte live
 <script lang="ts">
     import { Plot, Line, Dot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -697,7 +697,7 @@ Like all marks, Line marks support [faceting](/features/faceting). In this examp
     } from 'svelteplot';
     import { innerWidth } from 'svelte/reactivity/window';
     import { page } from '$app/state';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
     import { writable } from 'svelte/store';
 
     // Use stocks dataset
