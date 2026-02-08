@@ -1,0 +1,80 @@
+<script module>
+    export const title = 'Data rules (canvas)';
+    export const description =
+        "Rule marks support canvas rendering. Here's the output side by side:";
+    export const data = { aapl: '/data/aapl.csv' };
+    export const sortKey = 21;
+</script>
+
+<script lang="ts">
+    import { Plot, RuleY } from 'svelteplot';
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
+
+    const monthNames = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+    ];
+</script>
+
+<div class="container">
+    <div class="two-cols">
+        <Plot
+            inset={10}
+            title="Canvas rules"
+            y={{ grid: true }}
+            fx={{ axis: 'bottom', padding: 0 }}>
+            <RuleY
+                data={aapl.slice(0, 150)}
+                y="Close"
+                inset={5}
+                canvas
+                fx={(d) => monthNames[d.Date.getMonth()]} />
+        </Plot>
+        <Plot
+            inset={10}
+            title="SVG rules"
+            y={{ grid: true }}
+            fx={{ axis: 'bottom', padding: 0 }}>
+            <RuleY
+                data={aapl.slice(0, 150)}
+                y="Close"
+                inset={5}
+                fx={(d) => monthNames[d.Date.getMonth()]} />
+        </Plot>
+    </div>
+</div>
+
+<style>
+    .container {
+        container-type: inline-size;
+        @container (width < 500px) {
+            .two-cols {
+                flex-direction: column;
+            }
+        }
+    }
+    .two-cols {
+        display: flex;
+        gap: 1em;
+
+        :global {
+            figure {
+                flex: 50%;
+            }
+            svg {
+                max-width: 100%;
+            }
+        }
+    }
+</style>

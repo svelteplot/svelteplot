@@ -3,6 +3,7 @@
     export const description =
         'Note that you probably want to use TickY instead of a faceted RuleY.';
     export const data = { aapl: '/data/aapl.csv' };
+    export const sortKey = 20;
 </script>
 
 <script lang="ts">
