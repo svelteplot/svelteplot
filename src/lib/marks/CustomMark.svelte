@@ -29,7 +29,7 @@
         ScaledChannelName
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
 
     import Mark from 'svelteplot/Mark.svelte';
 

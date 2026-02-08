@@ -1,12 +1,12 @@
-import isDataRecord from '$lib/helpers/isDataRecord.js';
-import { resolveChannel, resolveProp } from '$lib/helpers/resolve.js';
+import isDataRecord from '../helpers/isDataRecord.js';
+import { resolveChannel, resolveProp } from '../helpers/resolve.js';
 import type {
     ChannelAccessor,
     DataRecord,
     TransformArg,
     ChannelName,
     Channels
-} from '$lib/types/index.js';
+} from '../types/index.js';
 import {
     stack,
     stackOffsetExpand,

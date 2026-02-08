@@ -12,7 +12,7 @@ Bollinger Bands are a [useful analysis tool](https://www.investopedia.com/terms/
         Area,
         BollingerY
     } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -65,7 +65,7 @@ For more flexibility you can also use the bollingerX and bollingerY as transform
         Area,
         bollingerY
     } from '$lib/index';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -130,7 +130,7 @@ For more flexibility you can also use the bollingerX and bollingerY as transform
         Area,
         BollingerX
     } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);

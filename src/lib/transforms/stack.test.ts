@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
-import type { DataRecord } from '$lib/types/index.js';
+import type { DataRecord } from '../types/index.js';
 import { recordizeX, recordizeY } from './recordize.js';
 
 describe('stackY transform', () => {

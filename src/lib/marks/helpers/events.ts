@@ -1,8 +1,14 @@
-import type { BaseMarkProps, DataRecord, DataRow, PlotScale, PlotState } from '$lib/types/index.js';
+import type {
+    BaseMarkProps,
+    DataRecord,
+    DataRow,
+    PlotScale,
+    PlotState
+} from '../../types/index.js';
 import type { MouseEventHandler } from 'svelte/elements';
 import { pick } from 'es-toolkit';
-import { RAW_VALUE } from '$lib/transforms/recordize.js';
-import { INDEX } from '$lib/constants.js';
+import { RAW_VALUE } from '../../transforms/recordize.js';
+import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
 
 // Extend the MouseEvent type to include the properties we're using

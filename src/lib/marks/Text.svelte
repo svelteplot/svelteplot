@@ -88,12 +88,12 @@
     } from '../types/index.js';
     import { resolveProp } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
     import TextCanvas from './helpers/TextCanvas.svelte';
     import { indexData } from 'svelteplot/transforms/recordize';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     const DEFAULTS = {
         fontSize: 12,

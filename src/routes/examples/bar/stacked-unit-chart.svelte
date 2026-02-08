@@ -10,7 +10,7 @@
 
 <script>
     import { BarX, Plot } from 'svelteplot';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
 
     const ds = useDark();
     let { penguins } = $props();

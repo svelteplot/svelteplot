@@ -28,7 +28,7 @@
 
 <script lang="ts">
     import { getContext } from 'svelte';
-    import { Line, Area } from '$lib/index.js';
+    import { Line, Area } from '../../index.js';
 
     import {
         regressionLinear,
@@ -38,11 +38,11 @@
         regressionLog,
         regressionPow,
         regressionLoess
-    } from '$lib/regression/index.js';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { confidenceInterval } from '$lib/helpers/math.js';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { isDate } from '$lib/helpers/typeChecks.js';
+    } from '../../regression/index.js';
+    import { resolveChannel } from '../../helpers/resolve.js';
+    import { confidenceInterval } from '../../helpers/math.js';
+    import callWithProps from '../../helpers/callWithProps.js';
+    import { isDate } from '../../helpers/typeChecks.js';
 
     const regressions = new Map<RegressionType, typeof regressionLinear>([
         ['linear', regressionLinear],

@@ -7,7 +7,7 @@
     import { type ComponentProps } from 'svelte';
     import Box from './helpers/Box.svelte';
     import type BoxY from './BoxY.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     let markProps: BoxXMarkProps = $props();
 

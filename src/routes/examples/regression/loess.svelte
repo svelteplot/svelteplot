@@ -5,7 +5,7 @@
 
 <script lang="ts">
     import { Plot, Dot, RegressionY } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let { cars } = $props();
 

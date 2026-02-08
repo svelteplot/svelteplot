@@ -27,9 +27,9 @@
     import type { ChannelAccessor, ConstantAccessor, DataRecord } from '../types/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { projectX, projectY, projectXY } from '$lib/helpers/scales.js';
-    import { isValid } from '$lib/helpers/index.js';
+    import { resolveChannel } from '../helpers/resolve.js';
+    import { projectX, projectY, projectXY } from '../helpers/scales.js';
+    import { isValid } from '../helpers/index.js';
 
     const plot = usePlot();
 

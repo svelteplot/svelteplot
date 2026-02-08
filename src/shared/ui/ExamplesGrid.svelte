@@ -1,6 +1,6 @@
 <script>
     import { resolve } from '$app/paths';
-    import { useDark } from './isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
     let { examples } = $props();
 
     const exampleImages = import.meta.glob('../../snapshots/*/*.png', {

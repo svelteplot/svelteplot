@@ -17,7 +17,7 @@
     import Vector from './Vector.svelte';
     import type { ChannelAccessor, DataRecord } from '../types/index.js';
     import { type ComponentProps } from 'svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     let markProps: SpikeMarkProps = $props();
 

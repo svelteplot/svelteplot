@@ -53,7 +53,7 @@ Link to [empty page](empty).
         AreaY,
         RectX
     } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl, penguins } = $derived(page.data.data);

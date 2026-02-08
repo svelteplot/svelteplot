@@ -39,7 +39,7 @@ Shows a horizontal bar for each x position.
 ```svelte live
 <script lang="ts">
     import { Plot, RuleY, TickY } from '$lib/index.js';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { stateage } = $derived(page.data.data);
 

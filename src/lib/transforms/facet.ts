@@ -1,1 +1,1 @@
-import type { DataRecord, TransformArg } from '$lib/types/index.js';
+import type { DataRecord, TransformArg } from '../types/index.js';

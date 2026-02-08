@@ -220,7 +220,7 @@ Take the following example, where you can filter the data using the [filter](/tr
 ```svelte live
 <script>
     import { Plot, Dot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     const { cars } = $derived(page.data.data);
     let min = $state(0);

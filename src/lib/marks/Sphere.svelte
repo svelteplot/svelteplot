@@ -7,7 +7,7 @@
 
     import Geo from './Geo.svelte';
     import type { BaseMarkProps, LinkableMarkProps, PlotDefaults } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     let markProps: SphereMarkProps = $props();
 

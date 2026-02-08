@@ -49,12 +49,12 @@
     import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
     import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
-    import { replaceChannels } from '$lib/transforms/rename.js';
+    import { replaceChannels } from '../transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import { sort } from '$lib/transforms/sort.js';
+    import { sort } from '../transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: ArrowMarkProps = $props();

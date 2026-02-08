@@ -1,5 +1,5 @@
-import type { PlotScale } from '$lib/types/index.js';
-import { isDate } from '$lib/helpers/typeChecks.js';
+import type { PlotScale } from '../types/index.js';
+import { isDate } from './typeChecks.js';
 
 const DATE_TIME: Intl.DateTimeFormatOptions = {
     hour: 'numeric',

@@ -11,10 +11,10 @@
     import Mark from '../Mark.svelte';
     import type { BaseMarkProps, RawValue, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
-    import { RAW_VALUE } from '$lib/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { testFilter } from '../helpers/index.js';
+    import { RAW_VALUE } from '../transforms/recordize.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: GridYMarkProps = $props();

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { reduceOutputs, type ReducerName } from './reduce.js';
-import type { ChannelAccessor, ChannelName } from '$lib/types/index.js';
+import type { ChannelAccessor, ChannelName } from '../types/index.js';
 import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 
 describe('reduceOutputs', () => {

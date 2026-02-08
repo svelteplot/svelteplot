@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { sort, shuffle } from './sort.js';
-import type { DataRecord } from '$lib/types/index.js';
+import type { DataRecord } from '../types/index.js';
 
 const data: { i: number; A: number; B: number; C: string; D: Date }[] = [
     { i: 0, A: 1, B: 7, C: 'gamma', D: new Date(2000, 0, 1) },

@@ -7,8 +7,8 @@ Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. 
 ```svelte live
 <script>
     import { Plot, Line } from 'svelteplot';
-    import Select from '$lib/ui/Select.svelte';
-    import Slider from '$lib/ui/Slider.svelte';
+    import Select from '$shared/ui/Select.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
 
     let marker = $state('circle-stroke');
     let strokeWidth = $state(1.5);
@@ -96,8 +96,8 @@ Note that for the interpolation methods `basis`, `bundle`, and `step`, the marke
 ```svelte live
 <script lang="ts">
     import { Plot, LineY, Dot } from 'svelteplot';
-    import Slider from '$lib/ui/Slider.svelte';
-    import Select from '$lib/ui/Select.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
+    import Select from '$shared/ui/Select.svelte';
     import type { CurveName } from '$lib/types/index.js';
 
     // curve demo

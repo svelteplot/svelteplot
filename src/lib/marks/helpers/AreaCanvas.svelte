@@ -5,7 +5,7 @@
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
-    import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
+    import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
     import { type Area } from 'd3-shape';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';

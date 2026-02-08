@@ -10,7 +10,7 @@
     import { groupBy } from 'es-toolkit';
     import { getContext } from 'svelte';
     import { resolve } from '$app/paths';
-    import ExamplesPagePreview from 'svelteplot/ui/ExamplesPagePreview.svelte';
+    import ExamplesPagePreview from '$shared/ui/ExamplesPagePreview.svelte';
 
     const pages = import.meta.glob('./**/*.svelte', {
         eager: true

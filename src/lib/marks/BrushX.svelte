@@ -7,7 +7,7 @@
 
     import Brush from './Brush.svelte';
     import { type ComponentProps } from 'svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     let { brush = $bindable({ enabled: false }), ...options }: BrushXMarkProps = $props();
     const DEFAULTS = {

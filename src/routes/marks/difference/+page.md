@@ -115,7 +115,7 @@ You can compare the metric to a different "baseline" by providing a constant _y1
     } from 'svelteplot';
     import { page } from '$app/state';
     let { gistemp } = $derived(page.data.data);
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     let y1 = $state(0.2);
 </script>
 
@@ -164,7 +164,7 @@ In combination with the [shift transform](/transforms/shift) you can compare a s
         RuleX
     } from 'svelteplot';
     import { page } from '$app/state';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let { aapl } = $derived(page.data.data);
     let days = $state(100);

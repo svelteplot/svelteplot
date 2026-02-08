@@ -22,9 +22,9 @@
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { groups as d3Groups } from 'd3-array';
     import { area, type CurveFactory } from 'd3-shape';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { maybeCurve } from '$lib/helpers/curves.js';
-    import { isValid } from '$lib/helpers/index.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { maybeCurve } from '../helpers/curves.js';
+    import { isValid } from '../helpers/index.js';
     import AreaCanvas from './helpers/AreaCanvas.svelte';
     import Anchor from './helpers/Anchor.svelte';
 
@@ -38,9 +38,9 @@
         LinkableMarkProps,
         RawValue
     } from '../types/index.js';
-    import type { StackOptions } from '$lib/transforms/stack.js';
+    import type { StackOptions } from '../transforms/stack.js';
     import { addEventHandlers } from './helpers/events';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: AreaMarkProps = $props();

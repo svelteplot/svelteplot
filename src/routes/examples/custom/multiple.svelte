@@ -5,7 +5,7 @@
 
 <script lang="ts">
     import { Plot, CustomMark } from 'svelteplot';
-    import Spiral from '$lib/ui/Spiral.svelte';
+    import Spiral from '$shared/ui/Spiral.svelte';
     import type { PenguinsRow } from '../types';
     let { penguins }: { penguins: PenguinsRow[] } =
         $props();

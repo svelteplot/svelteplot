@@ -14,7 +14,7 @@
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { intervalX, recordizeX, sort, stackX } from 'svelteplot/transforms';
     import type { StackOptions } from 'svelteplot/transforms/stack';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from '../Mark.svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';

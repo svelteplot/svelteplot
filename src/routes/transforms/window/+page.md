@@ -5,7 +5,7 @@ title: Window transform
 ```svelte live
 <script>
     import { Plot, AreaY, Line, windowY } from 'svelteplot';
-    import { Slider, Select } from '$lib/ui';
+    import { Slider, Select } from '$shared/ui';
     import { page } from '$app/state';
 
     let { sftemp } = $derived(page.data.data);
@@ -160,7 +160,7 @@ Note that the window transform is series-aware (it groups by z/fill/stroke befor
         selectLast
     } from 'svelteplot';
     import { page } from '$app/state';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { groups } from 'd3-array';
 
     let { stocks } = $derived(page.data.data);
@@ -415,7 +415,7 @@ We can fix this problem by setting the _interval_ option of the window transform
         windowY,
         binX
     } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { cherryblossom } = $derived(page.data.data);
 

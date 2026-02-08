@@ -4,8 +4,8 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     import Marker, { type MarkerShape } from './Marker.svelte';
-    import { isSnippet, randomId } from '$lib/helpers/index.js';
-    import { resolveProp } from '$lib/helpers/resolve.js';
+    import { isSnippet, randomId } from '../../helpers/index.js';
+    import { resolveProp } from '../../helpers/resolve.js';
     import type {
         BaseMarkProps,
         ConstantAccessor,

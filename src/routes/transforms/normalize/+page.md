@@ -7,7 +7,7 @@ Useful for normalizing data series of different measurement units or varying mag
 ```svelte live
 <script>
     import { Plot, Line, normalizeY } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     import { page } from '$app/state';
     let { tech7 } = $derived(page.data.data);
 
@@ -81,7 +81,7 @@ In addition to the named basis options you can define your own, e.g. to specify 
 ```svelte live
 <script>
     import { Plot, Line, normalizeY } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { tech7 } = $derived(page.data.data);
 

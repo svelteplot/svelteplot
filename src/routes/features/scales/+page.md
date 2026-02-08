@@ -199,7 +199,7 @@ For input domains ranging multiple magnitudes above and below zero, the bi-symme
 ```svelte live
 <script>
     import { Plot, RectX } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let constant = $state(1);
 </script>
@@ -402,7 +402,7 @@ Band scales are similar to point scales but allocate space for each category. Th
 ```svelte live
 <script>
     import { Plot, BarY, groupX, Frame } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
     let paddingInner = $state(0.1);
@@ -603,7 +603,7 @@ There are 11 categorical schemes included in SveltePlot, the default is `observa
 ```svelte live
 <script>
     import { Plot, Dot } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     import { page } from '$app/state';
     let { countries_2020 } = $derived(page.data.data);
 
@@ -848,7 +848,7 @@ The default color scheme shown above is called `turbo`, but we can change it to 
 <script>
     import { Plot, GridX, GridY, Dot } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     let { penguins } = $derived(page.data.data);
 
     const schemes = [
@@ -1044,7 +1044,7 @@ Alternatively you can change the center point of the diverging scale using the `
 <script>
     import { Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     let { penguins } = $derived(page.data.data);
 
     let pivot = $state(4000);
@@ -1088,7 +1088,7 @@ You can set `type: 'quantile-cont'` for a continuous quantile interpolation. Not
     import { Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
     let { countries_2020 } = $derived(page.data.data);
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
 
     let log = $state(true);
 </script>
@@ -1119,7 +1119,7 @@ For mapping [power-law distributions](https://en.wikipedia.org/wiki/Power_law) (
     import { Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
     let { countries_2020 } = $derived(page.data.data);
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
 
     let log = $state(true);
 </script>
@@ -1162,7 +1162,7 @@ Like log scales but allows for negative values.
 ```svelte live
 <script>
     import { Plot, Dot } from 'svelteplot';
-    import { RadioInput } from '$lib/ui';
+    import { RadioInput } from '$shared/ui';
     import { csvFormat } from 'd3-dsv';
     import { page } from '$app/state';
     let { symlog } = $derived(page.data.data);
@@ -1199,7 +1199,7 @@ Quantize is like a "stepped" linear scale, where a continuous input domain is ma
 ```svelte live
 <script>
     import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let n = $state(5);
     let { seattle } = $derived(page.data.data);
@@ -1277,7 +1277,7 @@ If you also pass the `n` option to set a different number of output values, Svel
 ```svelte live
 <script>
     import { Plot, Dot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
     let n = $state(5);
@@ -1326,7 +1326,7 @@ Similar to the `quantile` scale. Not to be confused with the continuous [quantil
 ```svelte live
 <script>
     import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let n = $state(5);
     let { seattle } = $derived(page.data.data);
@@ -1365,7 +1365,7 @@ Threshold scales give you absolute freedom for the breaks:
 ```svelte live
 <script>
     import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import { page } from '$app/state';
 
     let domain_raw = $state('5,10,15,20,25');

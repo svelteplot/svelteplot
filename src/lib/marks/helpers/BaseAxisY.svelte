@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext, untrack } from 'svelte';
-    import { randomId, testFilter } from '$lib/helpers/index.js';
-    import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
+    import { randomId, testFilter } from '../../helpers/index.js';
+    import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
     import type {
         AutoMarginStores,
@@ -11,9 +11,9 @@
         RawValue,
         ScaledDataRecord,
         ScaleType
-    } from '$lib/types/index.js';
-    import { RAW_VALUE } from '$lib/transforms/recordize';
-    import { INDEX } from '$lib/constants';
+    } from '../../types/index.js';
+    import { RAW_VALUE } from '../../transforms/recordize';
+    import { INDEX } from '../../constants';
 
     type BaseAxisYProps = {
         scaleFn: (d: RawValue) => number;

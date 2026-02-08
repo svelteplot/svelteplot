@@ -18,7 +18,7 @@ The jitter transform spreads out overlapping points by adding random noise. This
 <script>
     import { Plot, Dot, jitterY } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select, Slider } from '$lib/ui';
+    import { Select, Slider } from '$shared/ui';
     let { cars } = $derived(page.data.data);
 
     let type = $state('uniform');
@@ -141,7 +141,7 @@ Jittering also works for temporal data. When jittering Date objects, random time
 <script>
     import { Plot, Dot, jitterX } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select, Slider } from '$lib/ui';
+    import { Select, Slider } from '$shared/ui';
     let { bmi } = $derived(page.data.data);
 
     // Use a subset of the data for this example

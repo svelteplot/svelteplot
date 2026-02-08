@@ -8,7 +8,7 @@ import {
     isNumberOrNullOrNaN,
     isStringOrNull
 } from './typeChecks.js';
-import { CHANNEL_SCALE, ORIGINAL_NAME_KEYS, VALID_SCALE_TYPES } from '$lib/constants.js';
+import { CHANNEL_SCALE, ORIGINAL_NAME_KEYS, VALID_SCALE_TYPES } from '../constants.js';
 import { isSymbolOrNull } from './typeChecks.js';
 import { resolveProp, toChannelOption } from './resolve.js';
 import type {

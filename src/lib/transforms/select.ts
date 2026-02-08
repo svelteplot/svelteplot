@@ -1,6 +1,6 @@
-import { groupFacetsAndZ } from '$lib/helpers/group.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { ChannelName, DataRecord, TransformArg } from '$lib/types/index.js';
+import { groupFacetsAndZ } from '../helpers/group.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { ChannelName, DataRecord, TransformArg } from '../types/index.js';
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 

@@ -21,16 +21,16 @@
         LinkableMarkProps
     } from '../types/index.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { maybeSymbol } from '$lib/helpers/symbols.js';
+    import { maybeSymbol } from '../helpers/symbols.js';
     import { symbol as d3Symbol } from 'd3-shape';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
     import Mark from '../Mark.svelte';
     import DotCanvas from './helpers/DotCanvas.svelte';
-    import { isValid } from '$lib/helpers/index.js';
-    import { recordizeXY } from '$lib/transforms/recordize.js';
+    import { isValid } from '../helpers/index.js';
+    import { recordizeXY } from '../transforms/recordize.js';
     import { addEventHandlers } from './helpers/events.js';
     import Anchor from './helpers/Anchor.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { isOrdinalScale } from 'svelteplot/helpers/scales.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

@@ -21,7 +21,7 @@
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
-    import { intervalX, intervalY } from '$lib/index.js';
+    import { intervalX, intervalY } from '../index.js';
     import type {
         DataRecord,
         BaseMarkProps,
@@ -32,7 +32,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
     import RectCanvas from './helpers/RectCanvas.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

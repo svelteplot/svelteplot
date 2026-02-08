@@ -1,6 +1,6 @@
 <script lang="ts">
     import { symbol as d3Symbol } from 'd3-shape';
-    import { maybeSymbol } from '$lib/helpers/symbols.js';
+    import { maybeSymbol } from '../helpers/symbols.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

@@ -13,10 +13,10 @@
         ChannelName
     } from '../types/index.js';
     import type * as CSS from 'csstype';
-    import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { resolveScaledStyles } from '$lib/helpers/resolve.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import autoTimeFormat from '../helpers/autoTimeFormat.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { resolveScaledStyles } from '../helpers/resolve.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { extent } from 'd3-array';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

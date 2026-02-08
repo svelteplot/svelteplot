@@ -30,7 +30,7 @@ Helper class for rendering Cell, Bar and Rect marks in canvas
         UsedScales
     } from 'svelteplot/types/index.js';
     import type { BorderRadius } from 'svelteplot/types/mark.js';
-    import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
+    import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';

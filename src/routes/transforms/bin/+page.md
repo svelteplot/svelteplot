@@ -58,7 +58,7 @@ The [binX](#binX) transform takes **x** as input and outputs **x1** and **x2** r
         binX,
         stackY
     } from 'svelteplot';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
     import { getContext } from 'svelte';
 
     const ds = useDark();
@@ -203,7 +203,7 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
         binX,
         stackY
     } from 'svelteplot';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -318,7 +318,7 @@ You can define _thresholds_ as a number
 ```svelte live
 <script>
     import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import Slider from '$lib/ui/Slider.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
 
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
@@ -347,7 +347,7 @@ You can also define an _interval_. For numeric scales intervals are defined as n
 ```svelte live
 <script>
     import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import Slider from '$lib/ui/Slider.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
 
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
@@ -461,7 +461,7 @@ Here's an example where we use the bin transform to compute weekly aggregates fr
         RuleX,
         binX
     } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -594,7 +594,7 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
     import { getContext } from 'svelte';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
 
     const ds = useDark();
 
