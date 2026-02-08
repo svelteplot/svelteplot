@@ -1003,6 +1003,7 @@ async function generateTransformsApi() {
     });
 
     const sections = [];
+    const sectionNames = [];
     const typeSections = [];
     const typeDetails = new Map();
     const explainedTypes = new Set();
@@ -1119,6 +1120,7 @@ async function generateTransformsApi() {
                 .filter((line) => line != null)
                 .join('\n')
         );
+        sectionNames.push(entry.name);
     }
 
     for (const [typeName, detail] of typeDetails) {
@@ -1127,11 +1129,19 @@ async function generateTransformsApi() {
         if (section) typeSections.push(section);
     }
 
+    const transformsInlineToc = sectionNames.length
+        ? sectionNames.map((name) => `[${name}](/api/transforms#${slugify(name)})`).join(', ')
+        : '';
+
     const body = [
         '---',
         'title: Transforms API reference',
         '---',
         '',
+        transformsInlineToc
+            ? `<div class="inline-toc">\n\nJump to transforms: ${transformsInlineToc}\n\n</div>`
+            : null,
+        transformsInlineToc ? '' : null,
         ...sections,
         typeSections.length ? '' : null,
         typeSections.length ? '## Type details' : null,
