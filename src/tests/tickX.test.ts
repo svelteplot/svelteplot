@@ -127,4 +127,23 @@ describe('TickX mark', () => {
         const ticks = container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(0);
     });
+
+    it('renders on canvas when canvas is true', () => {
+        const { container } = render(TickXTest, {
+            props: {
+                plotArgs: {},
+                tickArgs: {
+                    data: testData,
+                    x: 'x',
+                    canvas: true
+                }
+            }
+        });
+
+        const canvas = container.querySelector('foreignObject canvas');
+        const ticks = container.querySelectorAll('g.tick-x > line') as NodeListOf<SVGLineElement>;
+
+        expect(canvas).toBeTruthy();
+        expect(ticks.length).toBe(0);
+    });
 });

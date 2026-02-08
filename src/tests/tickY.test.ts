@@ -123,4 +123,23 @@ describe('TickY mark', () => {
         const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
         expect(ticks.length).toBe(0);
     });
+
+    it('renders on canvas when canvas is true', () => {
+        const { container } = render(TickYTest, {
+            props: {
+                plotArgs: {},
+                tickArgs: {
+                    data: testData,
+                    y: 'y',
+                    canvas: true
+                }
+            }
+        });
+
+        const canvas = container.querySelector('foreignObject canvas');
+        const ticks = container.querySelectorAll('g.tick-y > line') as NodeListOf<SVGLineElement>;
+
+        expect(canvas).toBeTruthy();
+        expect(ticks.length).toBe(0);
+    });
 });
