@@ -46,6 +46,10 @@ export type MarkerOptions = {
      * shorthand for setting the marker on all points
      */
     marker?: boolean | MarkerShape | Snippet;
+    /**
+     * scale factor for marker size, relative to the line stroke width
+     */
+    markerScale?: ConstantAccessor<number>;
 };
 
 export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
