@@ -15,7 +15,7 @@
     import { extent } from 'd3-array';
     import Graticule from 'svelteplot/marks/Graticule.svelte';
     import Frame from 'svelteplot/marks/Frame.svelte';
-    import RadioInput from 'svelteplot/shared/ui/RadioInput.svelte';
+    import RadioInput from '$shared/ui/RadioInput.svelte';
 
     const { countries10m, minard } =
         $props() as ExamplesData;

@@ -16,7 +16,7 @@
         normalizeParallelY
     } from 'svelteplot';
     import type { Iris2Row } from '../types';
-    import Select from 'svelteplot/shared/ui/Select.svelte';
+    import Select from '$shared/ui/Select.svelte';
 
     let { iris }: { iris: Iris2Row[] } = $props();
 

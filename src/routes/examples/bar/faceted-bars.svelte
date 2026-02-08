@@ -6,7 +6,7 @@
 </script>
 
 <script lang="ts">
-    import { Checkbox } from '$lib/shared/ui/index';
+    import { Checkbox } from '$shared/ui/index';
     import { SvelteSet } from 'svelte/reactivity';
     import { Plot, BarY } from 'svelteplot';
 
