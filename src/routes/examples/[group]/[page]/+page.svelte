@@ -6,7 +6,7 @@
     import { resolve } from '$app/paths';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from 'svelteplot/shared/ui/isDark.svelte';
     import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
     const pages = import.meta.glob('../../**/*.svelte', {

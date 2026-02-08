@@ -3,7 +3,7 @@
     import { shuffle } from 'd3-array';
     import { untrack } from 'svelte';
     import { slide } from 'svelte/transition';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from 'svelteplot/shared/ui/isDark.svelte';
 
     const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,

@@ -312,8 +312,8 @@ Event handlers can be attached to arrows for interactive visualizations:
 <script lang="ts">
     import { Plot, Arrow, Dot } from '$lib/index.js';
 
-    import Slider from '$lib/ui/Slider.svelte';
-    import Select from '$lib/ui/Select.svelte';
+    import Slider from '$lib/shared/ui/Slider.svelte';
+    import Select from '$lib/shared/ui/Select.svelte';
 
     const data = [
         { x1: 1, y1: 1, x2: 6, y2: 3 },

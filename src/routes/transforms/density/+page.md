@@ -80,7 +80,7 @@ If you don't want to stack the densities but overlay them you can set the output
     import { Plot, AreaY, densityX } from 'svelteplot';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
     import { page } from '$app/state';
-    import { useDark } from '$lib/ui/isDark.svelte';
+    import { useDark } from '$lib/shared/ui/isDark.svelte';
 
     const ds = useDark();
 

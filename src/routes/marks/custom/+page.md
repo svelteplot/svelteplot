@@ -7,7 +7,7 @@ You can use the custom mark to render your own marks. You can pass data to the c
 ```svelte live
 <script>
     import { Plot, Dot, CustomMark } from 'svelteplot';
-    import Spiral from '$lib/ui/Spiral.svelte';
+    import Spiral from '$lib/shared/ui/Spiral.svelte';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
 </script>
@@ -68,7 +68,7 @@ We can also pass the `marks` (plural) snippet to draw all symbols at once:
 ```svelte live
 <script>
     import { Plot, Dot, CustomMark } from 'svelteplot';
-    import Spiral from '$lib/ui/Spiral.svelte';
+    import Spiral from '$lib/shared/ui/Spiral.svelte';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
 </script>

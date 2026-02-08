@@ -1,6 +1,6 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
-    import { useDark } from './isDark.svelte';
+    import { useDark } from '$lib/shared/ui/isDark.svelte';
 
     const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,

@@ -535,8 +535,8 @@ You can set the line interpolation using the **interpolation** option.
 ```svelte live
 <script>
     import { Plot, LineY, Dot } from '$lib/index.js';
-    import Slider from '$lib/ui/Slider.svelte';
-    import Select from '$lib/ui/Select.svelte';
+    import Slider from '$lib/shared/ui/Slider.svelte';
+    import Select from '$lib/shared/ui/Select.svelte';
 
     // curve demo
     const numbers = [

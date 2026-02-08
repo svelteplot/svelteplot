@@ -3,7 +3,7 @@
     import { page } from '$app/state';
 
     import { getContext } from 'svelte';
-    import ExamplesGrid from 'svelteplot/ui/ExamplesGrid.svelte';
+    import ExamplesGrid from '$shared/ui/ExamplesGrid.svelte';
 
     const pages = import.meta.glob('../**/*.svelte', {
         eager: true
