@@ -68,8 +68,10 @@
                     alpha: number;
                 } | null = null;
                 let hasCurrentSegments = false;
-                const resolvedStrokeCache: Record<string, ReturnType<typeof resolveColor>> =
-                    Object.create(null);
+                const resolvedStrokeCache: Record<
+                    string,
+                    ReturnType<typeof resolveColor>
+                > = Object.create(null);
                 let currentTickLength = 10;
                 let currentInsetValue: number | string = 0;
 
@@ -105,8 +107,16 @@
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
                     const lineCap = normalizeLineCap(restStyles['stroke-linecap']);
-                    const strokeWidth = +(resolveProp(options.strokeWidth, datum.datum, 1) as number);
-                    const tickLength = +(resolveProp(options.tickLength, datum.datum, 10) as number);
+                    const strokeWidth = +(resolveProp(
+                        options.strokeWidth,
+                        datum.datum,
+                        1
+                    ) as number);
+                    const tickLength = +(resolveProp(
+                        options.tickLength,
+                        datum.datum,
+                        10
+                    ) as number);
                     const insetValue = resolveProp(options.inset, datum.datum, 0) as
                         | number
                         | string;
@@ -153,14 +163,8 @@
 
                         const inset = parseInset(currentInsetValue, Math.abs(y2 - y1));
                         const singlePoint = y1 === y2;
-                        context.moveTo(
-                            x,
-                            y1 + inset + (singlePoint ? currentTickLength * 0.5 : 0)
-                        );
-                        context.lineTo(
-                            x,
-                            y2 - inset - (singlePoint ? currentTickLength * 0.5 : 0)
-                        );
+                        context.moveTo(x, y1 + inset + (singlePoint ? currentTickLength * 0.5 : 0));
+                        context.lineTo(x, y2 - inset - (singlePoint ? currentTickLength * 0.5 : 0));
                         hasCurrentSegments = true;
                     }
                 } else {
@@ -187,14 +191,8 @@
 
                         const inset = parseInset(currentInsetValue, Math.abs(x2 - x1));
                         const singlePoint = x1 === x2;
-                        context.moveTo(
-                            x1 + inset + (singlePoint ? currentTickLength * 0.5 : 0),
-                            y
-                        );
-                        context.lineTo(
-                            x2 - inset - (singlePoint ? currentTickLength * 0.5 : 0),
-                            y
-                        );
+                        context.moveTo(x1 + inset + (singlePoint ? currentTickLength * 0.5 : 0), y);
+                        context.lineTo(x2 - inset - (singlePoint ? currentTickLength * 0.5 : 0), y);
                         hasCurrentSegments = true;
                     }
                 }
