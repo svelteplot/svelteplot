@@ -54,6 +54,7 @@
         curve: 'auto',
         tension: 0,
         canvas: false,
+        markerScale: 1,
         class: null,
         lineClass: null,
         ...getPlotDefaults().line
@@ -216,6 +217,7 @@
                                     markerMid={args.markerMid}
                                     markerEnd={args.markerEnd}
                                     marker={args.marker}
+                                    markerScale={args.markerScale}
                                     strokeWidth={args.strokeWidth}
                                     datum={lineData[0].datum}
                                     d={pathString}

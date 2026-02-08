@@ -22,9 +22,10 @@
         id: string;
         shape: MarkerShape;
         color: string;
+        markerScale?: number;
     };
 
-    let { id, shape, color }: MarkerProps = $props();
+    let { id, shape, color, markerScale = 1 }: MarkerProps = $props();
 
     const tickMarker = (orient: number | 'auto') => ({
         viewBox: '-3 -3 6 6',
@@ -81,10 +82,10 @@
 <marker
     {id}
     viewBox={MARKERS[shape].viewBox || '-5 -5 10 10'}
-    markerWidth={MARKERS[shape].width}
+    markerWidth={MARKERS[shape].width * markerScale}
     orient={MARKERS[shape].orient}
-    markerHeight={MARKERS[shape].height}
-    stroke-width="1.5"
+    markerHeight={MARKERS[shape].height * markerScale}
+    stroke-width={Math.max(0, Math.min(100, 1.5 / markerScale))}
     {...markerColors}>
     {#if shape === 'dot' || shape === 'circle' || shape === 'circle-stroke'}
         <circle r={defaultDotRadius} />

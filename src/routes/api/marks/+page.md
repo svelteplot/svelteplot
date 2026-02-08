@@ -804,12 +804,13 @@ These props are shared by marks via the base type aliases.
 
 ### MarkerOptions
 
-| Prop           | Type                                                        | Description                                             |
-| -------------- | ----------------------------------------------------------- | ------------------------------------------------------- |
-| `markerStart?` | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for the starting point of a line segment     |
-| `markerMid?`   | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for any intermediate point of a line segment |
-| `markerEnd?`   | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for the end point of a line segment          |
-| `marker?`      | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | shorthand for setting the marker on all points          |
+| Prop           | Type                                                        | Description                                                     |
+| -------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
+| `markerStart?` | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for the starting point of a line segment             |
+| `markerMid?`   | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for any intermediate point of a line segment         |
+| `markerEnd?`   | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | the marker for the end point of a line segment                  |
+| `marker?`      | boolean \| [MarkerShape](/api/marks#MarkerShape) \| Snippet | shorthand for setting the marker on all points                  |
+| `markerScale?` | ConstantAccessor&lt;number&gt;                              | scale factor for marker size, relative to the line stroke width |
 
 ### LinkableMarkProps
 
