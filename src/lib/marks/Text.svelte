@@ -130,7 +130,9 @@
                 <TextCanvas data={scaledData} options={args} {usedScales} />
             </g>
         {:else}
-            <GroupMultiple class="text {className}" length={className ? 2 : (args.data?.length ?? 0)}>
+            <GroupMultiple
+                class="text {className}"
+                length={className ? 2 : (args.data?.length ?? 0)}>
                 {#each scaledData as d, i (i)}
                     {#if d.valid}
                         {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}

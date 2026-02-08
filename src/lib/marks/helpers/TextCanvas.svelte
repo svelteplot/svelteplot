@@ -250,11 +250,7 @@
                     const lineHeightAccessor = options.lineHeight;
                     const rotateAccessor = options.rotate;
                     const lineHeight = Number(
-                        resolveProp<number, Datum>(
-                            lineHeightAccessor,
-                            datum.datum,
-                            1.2
-                        )
+                        resolveProp<number, Datum>(lineHeightAccessor, datum.datum, 1.2)
                     );
                     const rotate =
                         (Number(resolveProp<number, Datum>(rotateAccessor, datum.datum, 0)) *
