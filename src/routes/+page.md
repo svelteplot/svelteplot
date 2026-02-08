@@ -56,6 +56,7 @@ examples:
     - regression/grouped
     - regression/log
     - rule/data-rules
+    - text/beeswarm-country-codes
     - tick/tick-x
     - trail/countries
     - trail/napoleon
