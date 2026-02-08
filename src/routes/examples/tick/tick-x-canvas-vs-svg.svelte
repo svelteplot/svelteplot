@@ -11,7 +11,9 @@
 
     let { stateage } = $props();
 
-    let ageDomain = $derived([...new Set(stateage.map((d) => d.age))]);
+    let ageDomain = $derived([
+        ...new Set(stateage.map((d) => d.age))
+    ]);
 </script>
 
 <div class="container">
@@ -21,7 +23,11 @@
             x={{ grid: true, percent: true }}
             y={{ domain: ageDomain }}>
             <RuleX data={[0]} />
-            <TickX canvas data={stateage} y="age" x="pop_share" />
+            <TickX
+                canvas
+                data={stateage}
+                y="age"
+                x="pop_share" />
         </Plot>
 
         <Plot
