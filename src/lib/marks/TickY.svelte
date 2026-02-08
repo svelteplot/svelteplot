@@ -19,8 +19,10 @@
          * length of the tick. Defaults to 10 pixel
          */
         tickLength?: ConstantAccessor<number, Datum>;
+        canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
+    import TickCanvas from './helpers/TickCanvas.svelte';
     import { getContext } from 'svelte';
     import { resolveChannel, resolveProp, resolveScaledStyles } from '../helpers/resolve.js';
     import type {
@@ -47,6 +49,7 @@
     const {
         data = [{}],
         class: className = '',
+        canvas = false,
         ...options
     }: TickYMarkProps = $derived({
         ...DEFAULTS,
@@ -64,40 +67,44 @@
     channels={['x', 'y', 'stroke', 'opacity', 'strokeOpacity']}
     {...markProps}
     {...args}>
-    {#snippet children({ mark, usedScales })}
-        <g class="tick-y">
-            {#each args.data as datum, i (i)}
-                {#if testFacet(datum, mark.options) && testFilter(datum, args)}
-                    {@const y_ = resolveChannel('y', datum, args)}
-                    {@const x_ = resolveChannel('x', datum, args)}
-                    {@const inset_ = resolveProp(args.inset, datum, 0)}
-                    {@const tickLength_ = resolveProp(args.tickLength, datum, 10)}
-                    {@const dx_ = resolveProp(args.dx, datum, 0)}
-                    {@const dy_ = resolveProp(args.dy, datum, 0)}
-                    {#if isValid(y_) && (isValid(x_) || args.x == null)}
-                        {@const y = usedScales.y ? projectY('y', plot.scales, y_) : y_}
-                        {@const x1 =
-                            args.x != null
-                                ? usedScales.x
-                                    ? projectX('x1', plot.scales, x_)
-                                    : x_
-                                : plot.options.marginLeft}
-                        {@const x2 =
-                            args.x != null
-                                ? usedScales.x
-                                    ? projectX('x2', plot.scales, x_)
-                                    : x_
-                                : plot.options.marginLeft + plot.facetWidth}
-                        {@const inset = parseInset(inset_, Math.abs(x2 - x1))}
-                        <line
-                            transform="translate({dx_}, {y + dy_})"
-                            style={resolveScaledStyles(datum, args, usedScales, plot, 'stroke')}
-                            x1={x1 + inset + (x1 === x2 ? tickLength_ * 0.5 : 0)}
-                            x2={x2 - inset - (x1 === x2 ? tickLength_ * 0.5 : 0)} />
+    {#snippet children({ mark, usedScales, scaledData })}
+        {#if canvas}
+            <TickCanvas data={scaledData} options={args} {usedScales} orientation="horizontal" />
+        {:else}
+            <g class="tick-y">
+                {#each args.data as datum, i (i)}
+                    {#if testFacet(datum, mark.options) && testFilter(datum, args)}
+                        {@const y_ = resolveChannel('y', datum, args)}
+                        {@const x_ = resolveChannel('x', datum, args)}
+                        {@const inset_ = resolveProp(args.inset, datum, 0)}
+                        {@const tickLength_ = resolveProp(args.tickLength, datum, 10)}
+                        {@const dx_ = resolveProp(args.dx, datum, 0)}
+                        {@const dy_ = resolveProp(args.dy, datum, 0)}
+                        {#if isValid(y_) && (isValid(x_) || args.x == null)}
+                            {@const y = usedScales.y ? projectY('y', plot.scales, y_) : y_}
+                            {@const x1 =
+                                args.x != null
+                                    ? usedScales.x
+                                        ? projectX('x1', plot.scales, x_)
+                                        : x_
+                                    : plot.options.marginLeft}
+                            {@const x2 =
+                                args.x != null
+                                    ? usedScales.x
+                                        ? projectX('x2', plot.scales, x_)
+                                        : x_
+                                    : plot.options.marginLeft + plot.facetWidth}
+                            {@const inset = parseInset(inset_, Math.abs(x2 - x1))}
+                            <line
+                                transform="translate({dx_}, {y + dy_})"
+                                style={resolveScaledStyles(datum, args, usedScales, plot, 'stroke')}
+                                x1={x1 + inset + (x1 === x2 ? tickLength_ * 0.5 : 0)}
+                                x2={x2 - inset - (x1 === x2 ? tickLength_ * 0.5 : 0)} />
+                        {/if}
                     {/if}
-                {/if}
-            {/each}
-        </g>
+                {/each}
+            </g>
+        {/if}
     {/snippet}
 </Mark>
 

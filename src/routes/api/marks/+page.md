@@ -668,6 +668,7 @@ The TickX mark is useful for showing one-dimensional distributions along the x a
 | `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the x scale                                                                                                                    |
 | `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
 | `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                  |
+| `canvas?`     | boolean                               | Renders using Canvas instead of SVG.                                                                                                                             |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -681,6 +682,7 @@ The TickY mark is useful for showing one-dimensional distributions along the y a
 | `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the x scale                                                                                                                        |
 | `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
 | `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                    |
+| `canvas?`     | boolean                               | Renders using Canvas instead of SVG.                                                                                                                               |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 

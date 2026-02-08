@@ -247,8 +247,33 @@
     .trigger {
         --at-apply: ' block';
     }
-    .svp-table {
+    :global(.svp-table) {
         // style the wx-svelte-grid table
         --wx-table-border: #cccccc;
+    }
+
+    .screenshot {
+        :global(.container) {
+            container-type: inline-size;
+        }
+
+        :global(.two-cols) {
+            display: flex;
+            gap: 1em;
+        }
+
+        :global(.two-cols figure) {
+            flex: 50%;
+        }
+
+        :global(.two-cols svg) {
+            max-width: 100%;
+        }
+    }
+
+    @container (width < 500px) {
+        .screenshot :global(.two-cols) {
+            flex-direction: column;
+        }
     }
 </style>

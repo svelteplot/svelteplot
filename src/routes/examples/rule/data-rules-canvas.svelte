@@ -54,27 +54,3 @@
         </Plot>
     </div>
 </div>
-
-<style>
-    .container {
-        container-type: inline-size;
-        @container (width < 500px) {
-            .two-cols {
-                flex-direction: column;
-            }
-        }
-    }
-    .two-cols {
-        display: flex;
-        gap: 1em;
-
-        :global {
-            figure {
-                flex: 50%;
-            }
-            svg {
-                max-width: 100%;
-            }
-        }
-    }
-</style>
