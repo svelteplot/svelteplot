@@ -16,6 +16,7 @@
             textTransform?: ConstantAccessor<CSS.Property.TextTransform, Datum>;
             textDecoration?: ConstantAccessor<CSS.Property.TextDecoration, Datum>;
             textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
+            textClass?: ConstantAccessor<string, Datum>;
             lineAnchor?: ConstantAccessor<'bottom' | 'top' | 'middle'>;
             lineHeight?: ConstantAccessor<number, Datum>;
             frameAnchor?: ConstantAccessor<
@@ -132,7 +133,7 @@
             ? getComputedStyle(canvas).getPropertyValue(`--${fromVar[1]}`).trim()
             : raw;
         const numeric = toPixels(resolved, canvas, fallback);
-        const css = /^\d+(\.\d+)?$/.test(resolved) ? `${resolved}px` : resolved;
+        const css = /^\d+(?:\.\d+)?$/.test(resolved) ? `${resolved}px` : resolved;
 
         return {
             css: css || `${fallback}px`,
@@ -144,9 +145,60 @@
         if (transform === 'uppercase') return line.toUpperCase();
         if (transform === 'lowercase') return line.toLowerCase();
         if (transform === 'capitalize') {
-            return line.replace(/\b([a-z])/gi, (letter) => letter.toUpperCase());
+            return line.replace(/\b[a-z]/gi, (letter) => letter.toUpperCase());
         }
         return line;
+    }
+
+    type ClassTextStyles = {
+        fontSize: string;
+        fontStyle: string;
+        fontVariant: string;
+        fontWeight: string;
+        fontFamily: string;
+        textTransform: string;
+    };
+
+    function resolveClassTextStyles(
+        className: string,
+        styleHost: Element,
+        fallbackStyles: CSSStyleDeclaration,
+        cache: Map<string, ClassTextStyles>
+    ): ClassTextStyles {
+        const cacheKey = className.trim().replace(/\s+/g, ' ');
+        const fromCache = cache.get(cacheKey);
+        if (fromCache) return fromCache;
+
+        const probe = document.createElement('span');
+        probe.textContent = 'M';
+        probe.className = cacheKey;
+        probe.style.position = 'absolute';
+        probe.style.left = '-99999px';
+        probe.style.top = '-99999px';
+        probe.style.visibility = 'hidden';
+        probe.style.pointerEvents = 'none';
+        probe.style.whiteSpace = 'pre';
+
+        try {
+            styleHost.appendChild(probe);
+        } catch {
+            probe.remove();
+            document.body.appendChild(probe);
+        }
+
+        const computed = getComputedStyle(probe);
+        const out: ClassTextStyles = {
+            fontSize: computed.fontSize || fallbackStyles.fontSize,
+            fontStyle: computed.fontStyle || fallbackStyles.fontStyle,
+            fontVariant: computed.fontVariant || fallbackStyles.fontVariant,
+            fontWeight: computed.fontWeight || fallbackStyles.fontWeight,
+            fontFamily: computed.fontFamily || fallbackStyles.fontFamily,
+            textTransform: computed.textTransform || fallbackStyles.textTransform
+        };
+
+        probe.remove();
+        cache.set(cacheKey, out);
+        return out;
     }
 
     const render: Attachment = (canvasEl: Element) => {
@@ -158,6 +210,9 @@
                 const inheritedFontStyles = getComputedStyle(
                     (canvas.parentElement?.parentElement as Element) || plot.body || canvas
                 );
+                const styleHost: Element =
+                    canvas.parentElement || plot.body || canvas.ownerDocument.body || canvas;
+                const classStyleCache = new Map<string, ClassTextStyles>();
                 context.resetTransform();
                 context.scale(devicePixelRatio.current ?? 1, devicePixelRatio.current ?? 1);
 
@@ -229,24 +284,52 @@
                         'fill'
                     );
 
-                    const inheritedFontSize = inheritedFontStyles.fontSize || '12px';
+                    const textClassName = resolveProp(options.textClass, datum.datum, null);
+                    const classStyles =
+                        typeof textClassName === 'string' && textClassName.trim()
+                            ? resolveClassTextStyles(
+                                  textClassName,
+                                  styleHost,
+                                  inheritedFontStyles,
+                                  classStyleCache
+                              )
+                            : null;
+                    const inheritedFontSize =
+                        classStyles?.fontSize || inheritedFontStyles.fontSize || '12px';
                     const { css: fontSize, numeric: fontSizePx } = toFontSize(
                         styleProps['font-size'] ?? inheritedFontSize,
                         canvas,
                         toPixels(inheritedFontSize, canvas, 12)
                     );
                     const fontStyle = String(
-                        styleProps['font-style'] || inheritedFontStyles.fontStyle || 'normal'
+                        styleProps['font-style'] ||
+                            classStyles?.fontStyle ||
+                            inheritedFontStyles.fontStyle ||
+                            'normal'
                     );
                     const fontVariant = String(
-                        styleProps['font-variant'] || inheritedFontStyles.fontVariant || 'normal'
+                        styleProps['font-variant'] ||
+                            classStyles?.fontVariant ||
+                            inheritedFontStyles.fontVariant ||
+                            'normal'
                     );
                     const fontWeight = String(
-                        styleProps['font-weight'] || inheritedFontStyles.fontWeight || 'normal'
+                        styleProps['font-weight'] ||
+                            classStyles?.fontWeight ||
+                            inheritedFontStyles.fontWeight ||
+                            'normal'
                     );
                     const fontFamily = String(
-                        styleProps['font-family'] || inheritedFontStyles.fontFamily || 'sans-serif'
+                        styleProps['font-family'] ||
+                            classStyles?.fontFamily ||
+                            inheritedFontStyles.fontFamily ||
+                            'sans-serif'
                     );
+                    const textTransformValue =
+                        styleProps['text-transform'] ||
+                        classStyles?.textTransform ||
+                        inheritedFontStyles.textTransform ||
+                        'none';
                     const lineHeightAccessor = options.lineHeight;
                     const rotateAccessor = options.rotate;
                     const lineHeight = Number(
@@ -259,7 +342,7 @@
 
                     const textLines = String(resolveProp(options.text, datum.datum, ''))
                         .split('\n')
-                        .map((line) => textTransform(line, styleProps['text-transform']));
+                        .map((line) => textTransform(line, textTransformValue));
 
                     const multilineOffset =
                         textLines.length > 1
