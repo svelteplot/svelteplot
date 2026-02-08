@@ -35,14 +35,49 @@
         return value == null ? 1 : +value;
     }
 
+    function normalizeLineCap(value: unknown): CanvasLineCap {
+        return value === 'round' || value === 'square' || value === 'butt' ? value : 'butt';
+    }
+
     const render: Attachment = (canvasEl: Element) => {
         const canvas = canvasEl as HTMLCanvasElement;
         const context = canvas.getContext('2d');
 
         $effect(() => {
             if (context) {
+                const yUsesBand = usedScales.y && plot.scales.y.type === 'band';
+                const xUsesBand = usedScales.x && plot.scales.x.type === 'band';
+                const yBandwidth = yUsesBand ? plot.scales.y.fn.bandwidth() : 0;
+                const xBandwidth = xUsesBand ? plot.scales.x.fn.bandwidth() : 0;
+
                 context.resetTransform();
                 context.scale(devicePixelRatio.current ?? 1, devicePixelRatio.current ?? 1);
+                context.beginPath();
+
+                let currentStyle: {
+                    key: string;
+                    stroke: string;
+                    lineCap: CanvasLineCap;
+                    lineWidth: number;
+                    alpha: number;
+                } | null = null;
+                let hasCurrentSegments = false;
+
+                const flushPath = () => {
+                    if (!currentStyle || !hasCurrentSegments) return;
+
+                    const resolvedStroke = resolveColor(currentStyle.stroke, canvas);
+                    if (resolvedStroke && resolvedStroke !== 'none') {
+                        context.lineCap = currentStyle.lineCap;
+                        context.lineWidth = currentStyle.lineWidth;
+                        context.strokeStyle = resolvedStroke;
+                        context.globalAlpha = currentStyle.alpha;
+                        context.stroke();
+                    }
+
+                    context.beginPath();
+                    hasCurrentSegments = false;
+                };
 
                 for (const datum of data) {
                     if (!datum.valid) continue;
@@ -57,12 +92,8 @@
 
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
-                    const rawLinecap = restStyles['stroke-linecap'] as CanvasLineCap | undefined;
-                    const strokeWidth = +(resolveProp(
-                        options.strokeWidth,
-                        datum.datum,
-                        1
-                    ) as number);
+                    const lineCap = normalizeLineCap(restStyles['stroke-linecap']);
+                    const strokeWidth = +(resolveProp(options.strokeWidth, datum.datum, 1) as number);
                     const tickLength = +(resolveProp(
                         options.tickLength,
                         datum.datum,
@@ -72,17 +103,19 @@
                         | number
                         | string;
 
-                    stroke = resolveColor(stroke || 'currentColor', canvas);
-                    if (!stroke || stroke === 'none') continue;
-
-                    context.lineCap =
-                        rawLinecap === 'round' || rawLinecap === 'square' || rawLinecap === 'butt'
-                            ? rawLinecap
-                            : 'butt';
-                    context.lineWidth = strokeWidth;
-                    context.strokeStyle = stroke;
-                    context.globalAlpha = opacity * strokeOpacity;
-                    context.beginPath();
+                    const strokeValue = String(stroke || 'currentColor');
+                    const alpha = opacity * strokeOpacity;
+                    const styleKey = `${strokeValue}|${lineCap}|${strokeWidth}|${alpha}`;
+                    if (!currentStyle || currentStyle.key !== styleKey) {
+                        flushPath();
+                        currentStyle = {
+                            key: styleKey,
+                            stroke: strokeValue,
+                            lineCap,
+                            lineWidth: strokeWidth,
+                            alpha
+                        };
+                    }
 
                     if (orientation === 'vertical') {
                         const x = datum.x;
@@ -95,12 +128,8 @@
                             const y = datum.y;
                             if (y == null) continue;
 
-                            const bandwidth =
-                                usedScales.y && plot.scales.y.type === 'band'
-                                    ? plot.scales.y.fn.bandwidth()
-                                    : 0;
-                            y1 = y - bandwidth * 0.5;
-                            y2 = y + bandwidth * 0.5;
+                            y1 = y - yBandwidth * 0.5;
+                            y2 = y + yBandwidth * 0.5;
                         } else {
                             y1 = plot.options.marginTop + (datum.dy ?? 0);
                             y2 = plot.options.marginTop + plot.plotHeight + (datum.dy ?? 0);
@@ -121,12 +150,8 @@
                             const x = datum.x;
                             if (x == null) continue;
 
-                            const bandwidth =
-                                usedScales.x && plot.scales.x.type === 'band'
-                                    ? plot.scales.x.fn.bandwidth()
-                                    : 0;
-                            x1 = x - bandwidth * 0.5;
-                            x2 = x + bandwidth * 0.5;
+                            x1 = x - xBandwidth * 0.5;
+                            x2 = x + xBandwidth * 0.5;
                         } else {
                             x1 = plot.options.marginLeft + (datum.dx ?? 0);
                             x2 = plot.options.marginLeft + plot.facetWidth + (datum.dx ?? 0);
@@ -137,9 +162,9 @@
                         context.moveTo(x1 + inset + (singlePoint ? tickLength * 0.5 : 0), y);
                         context.lineTo(x2 - inset - (singlePoint ? tickLength * 0.5 : 0), y);
                     }
-
-                    context.stroke();
+                    hasCurrentSegments = true;
                 }
+                flushPath();
             }
 
             return () => {
