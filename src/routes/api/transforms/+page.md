@@ -2,6 +2,12 @@
 title: Transforms API reference
 ---
 
+<div class="inline-toc">
+
+Jump to transforms: [bin](/api/transforms#bin), [binX](/api/transforms#binX), [binY](/api/transforms#binY), [bollingerX](/api/transforms#bollingerX), [bollingerY](/api/transforms#bollingerY), [geoCentroid](/api/transforms#geoCentroid), [densityX](/api/transforms#densityX), [densityY](/api/transforms#densityY), [filter](/api/transforms#filter), [map](/api/transforms#map), [mapX](/api/transforms#mapX), [mapY](/api/transforms#mapY), [normalizeX](/api/transforms#normalizeX), [normalizeY](/api/transforms#normalizeY), [normalizeParallelX](/api/transforms#normalizeParallelX), [normalizeParallelY](/api/transforms#normalizeParallelY), [group](/api/transforms#group), [groupX](/api/transforms#groupX), [groupY](/api/transforms#groupY), [groupZ](/api/transforms#groupZ), [intervalX](/api/transforms#intervalX), [intervalY](/api/transforms#intervalY), [jitter](/api/transforms#jitter), [jitterX](/api/transforms#jitterX), [jitterY](/api/transforms#jitterY), [recordizeX](/api/transforms#recordizeX), [recordizeY](/api/transforms#recordizeY), [renameChannels](/api/transforms#renameChannels), [replaceChannels](/api/transforms#replaceChannels), [select](/api/transforms#select), [selectFirst](/api/transforms#selectFirst), [selectLast](/api/transforms#selectLast), [selectMaxX](/api/transforms#selectMaxX), [selectMaxY](/api/transforms#selectMaxY), [selectMinX](/api/transforms#selectMinX), [selectMinY](/api/transforms#selectMinY), [shiftX](/api/transforms#shiftX), [shiftY](/api/transforms#shiftY), [sort](/api/transforms#sort), [shuffle](/api/transforms#shuffle), [reverse](/api/transforms#reverse), [stackX](/api/transforms#stackX), [stackY](/api/transforms#stackY), [stackMosaicX](/api/transforms#stackMosaicX), [stackMosaicY](/api/transforms#stackMosaicY), [windowX](/api/transforms#windowX), [windowY](/api/transforms#windowY)
+
+</div>
+
 ## bin
 
 for binning in x and y dimension simultaneously

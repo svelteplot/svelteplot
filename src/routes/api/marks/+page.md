@@ -2,6 +2,12 @@
 title: Marks API reference
 ---
 
+<div class="inline-toc">
+
+Jump to mark: [Area](/api/marks#Area), [AreaX](/api/marks#AreaX), [AreaY](/api/marks#AreaY), [Arrow](/api/marks#Arrow), [AxisX](/api/marks#AxisX), [AxisY](/api/marks#AxisY), [BarX](/api/marks#BarX), [BarY](/api/marks#BarY), [BollingerX](/api/marks#BollingerX), [BollingerY](/api/marks#BollingerY), [BoxX](/api/marks#BoxX), [BoxY](/api/marks#BoxY), [Brush](/api/marks#Brush), [BrushX](/api/marks#BrushX), [BrushY](/api/marks#BrushY), [Cell](/api/marks#Cell), [CellX](/api/marks#CellX), [CellY](/api/marks#CellY), [ColorLegend](/api/marks#ColorLegend), [DifferenceY](/api/marks#DifferenceY), [Dot](/api/marks#Dot), [DotX](/api/marks#DotX), [DotY](/api/marks#DotY), [Frame](/api/marks#Frame), [Geo](/api/marks#Geo), [Graticule](/api/marks#Graticule), [GridX](/api/marks#GridX), [GridY](/api/marks#GridY), [HTMLTooltip](/api/marks#HTMLTooltip), [Image](/api/marks#Image), [Line](/api/marks#Line), [LineX](/api/marks#LineX), [LineY](/api/marks#LineY), [Link](/api/marks#Link), [Pointer](/api/marks#Pointer), [Rect](/api/marks#Rect), [RectX](/api/marks#RectX), [RectY](/api/marks#RectY), [RegressionX](/api/marks#RegressionX), [RegressionY](/api/marks#RegressionY), [RuleX](/api/marks#RuleX), [RuleY](/api/marks#RuleY), [Sphere](/api/marks#Sphere), [Spike](/api/marks#Spike), [Text](/api/marks#Text), [TickX](/api/marks#TickX), [TickY](/api/marks#TickY), [Trail](/api/marks#Trail), [WaffleX](/api/marks#WaffleX), [WaffleY](/api/marks#WaffleY)
+
+</div>
+
 ## Area
 
 Creates an area chart with filled regions between two x-y value pairs
@@ -573,6 +579,22 @@ Convenience wrapper for rectangles oriented along the x axis
 
 Inherited props from [Rect](/api/marks#Rect).
 
+## RegressionX
+
+Calculates and displays a regression line with x as the dependent variable
+
+_No props found._
+
+Inherited props: see the [shared section](/api/marks#Inherited-props) below.
+
+## RegressionY
+
+Calculates and displays a regression line with y as the dependent variable
+
+_No props found._
+
+Inherited props: see the [shared section](/api/marks#Inherited-props) below.
+
 ## RuleX
 
 Renders vertical rule lines at specified x positions with customizable vertical range
@@ -586,6 +608,7 @@ Renders vertical rule lines at specified x positions with customizable vertical 
 | `inset?`       | ConstantAccessor&lt;number, Datum&gt; |             |
 | `insetTop?`    | ConstantAccessor&lt;number, Datum&gt; |             |
 | `insetBottom?` | ConstantAccessor&lt;number, Datum&gt; |             |
+| `canvas?`      | boolean                               |             |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -602,6 +625,7 @@ Renders horizontal rule lines at specified y positions with customizable horizon
 | `inset?`      | ConstantAccessor&lt;number, Datum&gt; |             |
 | `insetLeft?`  | ConstantAccessor&lt;number, Datum&gt; |             |
 | `insetRight?` | ConstantAccessor&lt;number, Datum&gt; |             |
+| `canvas?`     | boolean                               |             |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -632,29 +656,30 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 Useful for adding SVG text labels to your plot.
 
-| Prop              | Type                                                                                                                                              | Description                                                   |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `data?`           | Datum[]                                                                                                                                           |                                                               |
-| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                               |
-| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                               |
-| `children?`       | Snippet                                                                                                                                           |                                                               |
-| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                               |                                                               |
-| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                             |                                                               |
-| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                            | the font size of the text                                     |
-| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                    |                                                               |
-| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                            |                                                               |
-| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                             |                                                               |
-| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                           |                                                               |
-| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                         |                                                               |
-| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                           |                                                               |
-| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                         |                                                               |
-| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                        |                                                               |
-| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                            | the horizontal text anchor; start, end, or middle             |
-| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | if you want to apply class names to individual text elements  |
-| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                             | the line anchor for vertical position; top, bottom, or middle |
-| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | line height as multiplier of font size                        |
-| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle', Datum&gt; |                                                               |
-| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | rotate text by angle in degrees                               |
+| Prop              | Type                                                                                                                                              | Description                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `data?`           | Datum[]                                                                                                                                           |                                                                                                |
+| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                                                                |
+| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                                                                |
+| `children?`       | Snippet                                                                                                                                           |                                                                                                |
+| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                               |                                                                                                |
+| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                             |                                                                                                |
+| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                            | the font size of the text                                                                      |
+| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                    |                                                                                                |
+| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                            |                                                                                                |
+| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                             |                                                                                                |
+| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                           |                                                                                                |
+| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                         |                                                                                                |
+| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                           |                                                                                                |
+| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                         |                                                                                                |
+| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                        |                                                                                                |
+| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                            | the horizontal text anchor; start, end, or middle                                              |
+| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                             | the line anchor for vertical position; top, bottom, or middle                                  |
+| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | line height as multiplier of font size                                                         |
+| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle', Datum&gt; |                                                                                                |
+| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | rotate text by angle in degrees                                                                |
+| `canvas?`         | false \| undefined \| true                                                                                                                        | renders texts as canvas instead of SVG                                                         |
+| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | if you want to apply class names to individual text elements. Only supported in SVG rendering. |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -668,7 +693,7 @@ The TickX mark is useful for showing one-dimensional distributions along the x a
 | `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the x scale                                                                                                                    |
 | `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
 | `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                  |
-| `canvas?`     | boolean                               | Renders using Canvas instead of SVG.                                                                                                                             |
+| `canvas?`     | boolean                               |                                                                                                                                                                  |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -682,7 +707,7 @@ The TickY mark is useful for showing one-dimensional distributions along the y a
 | `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the x scale                                                                                                                        |
 | `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
 | `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                    |
-| `canvas?`     | boolean                               | Renders using Canvas instead of SVG.                                                                                                                               |
+| `canvas?`     | boolean                               |                                                                                                                                                                    |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 

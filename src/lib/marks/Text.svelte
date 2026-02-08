@@ -6,7 +6,7 @@
 <script lang="ts" generics="Datum extends DataRecord">
     import type * as CSS from 'csstype';
 
-    interface TextMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+    interface TextCommonMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
         data?: Datum[];
         x?: ChannelAccessor<Datum>;
         y?: ChannelAccessor<Datum>;
@@ -29,10 +29,6 @@
          * the horizontal text anchor; start, end, or middle
          */
         textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
-        /**
-         * if you want to apply class names to individual text elements
-         */
-        textClass?: ConstantAccessor<string, Datum>;
         /**
          * the line anchor for vertical position; top, bottom, or middle
          */
@@ -60,6 +56,27 @@
         rotate?: ConstantAccessor<number, Datum>;
     }
 
+    type CanvasTextMarkProps = TextCommonMarkProps & {
+        /**
+         * renders texts as canvas instead of SVG
+         */
+        canvas: true;
+        textClass?: never;
+    };
+
+    type SvgTextMarkProps = TextCommonMarkProps & {
+        /**
+         * renders texts as canvas instead of SVG
+         */
+        canvas?: false | undefined;
+        /**
+         * if you want to apply class names to individual text elements. Only supported in SVG rendering.
+         */
+        textClass?: ConstantAccessor<string, Datum>;
+    };
+
+    type TextMarkProps = SvgTextMarkProps | CanvasTextMarkProps;
+
     import { type Snippet } from 'svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import type {
@@ -74,6 +91,7 @@
     import { sort } from '$lib/index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
+    import TextCanvas from './helpers/TextCanvas.svelte';
     import { indexData } from 'svelteplot/transforms/recordize';
     import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
 
@@ -89,14 +107,17 @@
 
     let markProps: TextMarkProps = $props();
 
-    const {
-        data = [{} as Datum],
-        class: className = '',
-        ...options
-    }: TextMarkProps = $derived({
+    const mergedProps = $derived({
         ...DEFAULTS,
         ...markProps
-    });
+    }) as TextMarkProps;
+
+    const {
+        data = [{} as Datum],
+        canvas = false,
+        class: className = '',
+        ...options
+    } = $derived(mergedProps);
 
     const args = $derived(
         sort({
@@ -107,7 +128,8 @@
 </script>
 
 <Mark
-    type="text"
+    {...args}
+    type={'text' as const}
     channels={[
         'x',
         'y',
@@ -119,17 +141,24 @@
         'strokeOpacity',
         'fillOpacity'
     ]}
-    required={[]}
-    {...args}>
+    required={[]}>
     {#snippet children({ mark, scaledData, usedScales })}
-        <GroupMultiple class="text {className}" length={className ? 2 : args.data.length}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid}
-                    {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
+        {#if canvas}
+            <g class="text {className || ''}">
+                <TextCanvas data={scaledData} options={args as CanvasTextMarkProps} {usedScales} />
+            </g>
+        {:else}
+            <GroupMultiple
+                class="text {className}"
+                length={className ? 2 : (args.data?.length ?? 0)}>
+                {#each scaledData as d, i (i)}
+                    {#if d.valid}
+                        {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
 
-                    <MultilineText {textLines} {d} {args} {usedScales} />
-                {/if}
-            {/each}
-        </GroupMultiple>
+                        <MultilineText {textLines} {d} args={args as any} {usedScales} />
+                    {/if}
+                {/each}
+            </GroupMultiple>
+        {/if}
     {/snippet}
 </Mark>

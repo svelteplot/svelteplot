@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    export const sortKey = 99;
+    export const sortKey = 29;
     export const title = 'CSS variable font size';
     export const repl =
         'https://svelte.dev/playground/a3d0f7df09ac4091a58cf95706763a04?version=5.33.19';
