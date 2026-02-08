@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Data rules (canvas)';
     export const description =
-        'Rule marks support canvas rendering. Here\'s the output side by side:';
+        "Rule marks support canvas rendering. Here's the output side by side:";
     export const data = { aapl: '/data/aapl.csv' };
     export const sortKey = 21;
 </script>
