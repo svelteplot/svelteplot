@@ -1,5 +1,5 @@
-import type { RawValue } from '$lib/types/index.js';
-import { isDate } from '$lib/helpers/typeChecks.js';
+import type { RawValue } from '../types/index.js';
+import { isDate } from './typeChecks.js';
 
 export default function (value: any): value is RawValue {
     const t = typeof value;

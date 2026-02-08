@@ -3,7 +3,7 @@
     line representing a moving average and an area representing volatility as a band
 -->
 <script lang="ts" generics="Datum extends DataRecord">
-    import { Area, Line, bollingerY, recordizeY } from '$lib/index.js';
+    import { Area, Line, bollingerY, recordizeY } from '../index.js';
     import type {
         BaseMarkProps,
         ChannelAccessor,

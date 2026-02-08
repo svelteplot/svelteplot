@@ -1,5 +1,5 @@
 import { mapX, mapY } from './map.js';
-import type { TransformArg, RawValue, MapIndexObject, MapIndexFunction } from '$lib/types/index.js';
+import type { TransformArg, RawValue, MapIndexObject, MapIndexFunction } from '../types/index.js';
 import { min, max, mean, median, sum, deviation, extent } from 'd3-array';
 import { sort } from './sort.js';
 
@@ -131,7 +131,10 @@ const normalizeSum = normalizeAccessor(sum);
  * - y: the value to normalize (e.g., 'Value')
  * - z: the grouping variable (e.g., 'Id')
  */
-export function normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis) {
+export function normalizeParallelY<T>(
+    args: TransformArg<T>,
+    basis: NormalizeBasis
+): ReturnType<typeof sort<T>> {
     return sort({
         ...normalizeY(
             {
@@ -157,7 +160,10 @@ export function normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBas
  * - y: the value to normalize (e.g., 'Value')
  * - z: the grouping variable (e.g., 'Id')
  */
-export function normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis) {
+export function normalizeParallelX<T>(
+    args: TransformArg<T>,
+    basis: NormalizeBasis
+): ReturnType<typeof sort<T>> {
     return sort({
         ...normalizeX(
             {

@@ -6,7 +6,7 @@
         data: Datum[];
     }
     import Dot from './Dot.svelte';
-    import { recordizeY } from '$lib/index.js';
+    import { recordizeY } from '../index.js';
     import type { DataRow } from '../types/index.js';
     import type { ComponentProps } from 'svelte';
 

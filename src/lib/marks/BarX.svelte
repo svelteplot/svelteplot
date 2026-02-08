@@ -24,9 +24,9 @@
     }
 
     import Mark from '../Mark.svelte';
-    import { stackX, recordizeX, intervalX, sort } from '$lib/index.js';
+    import { stackX, recordizeX, intervalX, sort } from '../index.js';
 
-    import type { StackOptions } from '$lib/transforms/stack.js';
+    import type { StackOptions } from '../transforms/stack.js';
     import type { DataRow } from 'svelteplot/types/index.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
@@ -37,7 +37,7 @@
         ChannelAccessor,
         LinkableMarkProps
     } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const DEFAULTS = {

@@ -11,12 +11,12 @@
     import Mark from '../Mark.svelte';
     import type { BaseMarkProps, RawValue, DataRecord, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
-    import { RAW_VALUE } from '$lib/transforms/recordize.js';
-    import isDataRecord from '$lib/helpers/isDataRecord';
-    import { INDEX } from '$lib/constants';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { testFilter } from '../helpers/index.js';
+    import { RAW_VALUE } from '../transforms/recordize.js';
+    import isDataRecord from '../helpers/isDataRecord';
+    import { INDEX } from '../constants';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: GridXMarkProps = $props();

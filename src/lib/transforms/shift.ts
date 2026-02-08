@@ -1,6 +1,6 @@
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import { maybeTimeInterval } from '$lib/helpers/time.js';
-import type { DataRecord, TransformArg } from '$lib/types/index.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import { maybeTimeInterval } from '../helpers/time.js';
+import type { DataRecord, TransformArg } from '../types/index.js';
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
     {

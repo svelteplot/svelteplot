@@ -9,10 +9,10 @@
         BaseMarkProps,
         LinkableMarkProps,
         BorderRadius
-    } from '$lib/types';
+    } from '../types';
     import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults';
-    import { intervalY, recordizeY, sort, stackY } from '$lib/transforms';
+    import { getPlotDefaults } from '../hooks/plotDefaults';
+    import { intervalY, recordizeY, sort, stackY } from '../transforms';
     import Mark from 'svelteplot/Mark.svelte';
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { roundedRect } from 'svelteplot/helpers/roundedRect';

@@ -51,12 +51,12 @@
         CurveName,
         DataRecord
     } from 'svelteplot/types/index.js';
-    import { Line, Area } from '$lib/marks/index.js';
-    import { randomId, coalesce } from '$lib/helpers/index.js';
+    import { Line, Area } from './index.js';
+    import { randomId, coalesce } from '../helpers/index.js';
     import { extent, max, min } from 'd3-array';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import type { CurveFactory } from 'd3-shape';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

@@ -7,7 +7,7 @@
         x?: ChannelAccessor<Datum>;
     }
     import Dot from './Dot.svelte';
-    import { recordizeX } from '$lib/index.js';
+    import { recordizeX } from '../index.js';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
     import type { ComponentProps } from 'svelte';
 

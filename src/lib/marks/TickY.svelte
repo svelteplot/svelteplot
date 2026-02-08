@@ -32,11 +32,11 @@
         FacetContext,
         ConstantAccessor
     } from '../types/index.js';
-    import { recordizeY } from '$lib/index.js';
+    import { recordizeY } from '../index.js';
     import { projectX, projectY } from '../helpers/scales.js';
     import { isValid } from '../helpers/index.js';
-    import { testFilter, parseInset } from '$lib/helpers/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { testFilter, parseInset } from '../helpers/index.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

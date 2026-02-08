@@ -13,9 +13,9 @@
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
-    import GroupMultiple from '$lib/marks/helpers/GroupMultiple.svelte';
-    import RuleCanvas from '$lib/marks/helpers/RuleCanvas.svelte';
-    import { recordizeY } from '$lib/transforms/recordize.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import RuleCanvas from './helpers/RuleCanvas.svelte';
+    import { recordizeY } from '../transforms/recordize.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
@@ -23,7 +23,7 @@
         ConstantAccessor,
         ChannelAccessor
     } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

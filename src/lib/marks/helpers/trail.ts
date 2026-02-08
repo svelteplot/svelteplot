@@ -1,7 +1,7 @@
-import { TAU } from '$lib/constants.js';
+import { TAU } from '../../constants.js';
 import type { Path } from 'd3-path';
-import { maybeCurve } from '$lib/helpers/curves.js';
-import type { CurveName } from '$lib/types/index.js';
+import { maybeCurve } from '../../helpers/curves.js';
+import type { CurveName } from '../../types/index.js';
 import type { CurveBundleFactory, CurveFactory } from 'd3-shape';
 
 export type TrailContext = CanvasRenderingContext2D | Path;

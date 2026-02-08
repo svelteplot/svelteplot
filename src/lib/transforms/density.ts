@@ -10,13 +10,13 @@
  *
  */
 import { extent, quantileSorted, variance } from 'd3-array';
-import { isValid } from '$lib/helpers';
-import { maybeInterval } from '$lib/helpers/autoTicks';
-import { groupFacetsAndZ } from '$lib/helpers/group';
-import isDataRecord from '$lib/helpers/isDataRecord';
-import { resolveChannel } from '$lib/helpers/resolve';
-import type { TransformArg } from '$lib/types';
-import { ORIGINAL_NAME_KEYS } from '$lib/constants.js';
+import { isValid } from '../helpers';
+import { maybeInterval } from '../helpers/autoTicks';
+import { groupFacetsAndZ } from '../helpers/group';
+import isDataRecord from '../helpers/isDataRecord';
+import { resolveChannel } from '../helpers/resolve';
+import type { TransformArg } from '../types';
+import { ORIGINAL_NAME_KEYS } from '../constants.js';
 
 type Kernel =
     | 'uniform'

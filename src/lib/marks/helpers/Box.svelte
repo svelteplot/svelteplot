@@ -39,8 +39,8 @@
     }
 
     import GroupMultiple from './GroupMultiple.svelte';
-    import { groupX, groupY, BarY, TickY, RuleX, BarX, TickX, RuleY, Dot } from '$lib/index.js';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { groupX, groupY, BarY, TickY, RuleX, BarX, TickX, RuleY, Dot } from '../../index.js';
+    import { resolveChannel } from '../../helpers/resolve.js';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
 

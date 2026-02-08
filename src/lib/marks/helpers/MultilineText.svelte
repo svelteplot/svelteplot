@@ -1,7 +1,7 @@
 <script lang="ts">
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { type ComponentProps } from 'svelte';
-    import type { ScaledDataRecord, UsedScales } from '$lib/index.js';
+    import type { ScaledDataRecord, UsedScales } from '../../index.js';
     import type Text from '../Text.svelte';
     import { CSS_VAR } from 'svelteplot/constants';
     import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';

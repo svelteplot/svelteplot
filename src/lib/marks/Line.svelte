@@ -35,17 +35,17 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { line, type CurveFactory, type Line as D3Line } from 'd3-shape';
     import { geoPath } from 'd3-geo';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { maybeCurve } from '$lib/helpers/curves.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { maybeCurve } from '../helpers/curves.js';
     import { pick } from 'es-toolkit';
     import LineCanvas from './helpers/LineCanvas.svelte';
 
     import type { RawValue } from 'svelteplot/types/index.js';
-    import { isValid } from '$lib/helpers/index.js';
-    import { sort } from '$lib/transforms/sort.js';
-    import { recordizeXY } from '$lib/transforms/recordize.js';
+    import { isValid } from '../helpers/index.js';
+    import { sort } from '../transforms/sort.js';
+    import { recordizeXY } from '../transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LineMarkProps = $props();

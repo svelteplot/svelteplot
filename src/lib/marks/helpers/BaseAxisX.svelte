@@ -2,7 +2,7 @@
     // this component only takes care of rendering the x axis so we can re-use it
     // for the facet labels
     import { getContext, untrack } from 'svelte';
-    import removeIdenticalLines from '$lib/helpers/removeIdenticalLines.js';
+    import removeIdenticalLines from '../../helpers/removeIdenticalLines.js';
     import type {
         AutoMarginStores,
         ChannelAccessor,
@@ -12,9 +12,9 @@
         ScaledDataRecord,
         ScaleType
     } from 'svelteplot/types/index.js';
-    import { resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
+    import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
-    import { randomId, testFilter } from '$lib/helpers/index.js';
+    import { randomId, testFilter } from '../../helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
     import wordwrap from 'svelteplot/helpers/wordwrap';

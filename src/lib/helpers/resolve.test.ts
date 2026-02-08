@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { resolveChannel, resolveProp } from './resolve.js';
-import { RAW_VALUE } from '$lib/transforms/recordize.js';
+import { RAW_VALUE } from '../transforms/recordize.js';
 
 describe('resolveProp', () => {
     it('resolves string keys', () => {

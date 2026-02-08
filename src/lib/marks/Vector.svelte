@@ -39,13 +39,13 @@
     import { pathRound as path } from 'd3-path';
 
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
     import Mark from '../Mark.svelte';
     //import DotCanvas from './helpers/DotCanvas.svelte';
-    import { isValid } from '$lib/helpers/index.js';
+    import { isValid } from '../helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const defaultRadius = 3;

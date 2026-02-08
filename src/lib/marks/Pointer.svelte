@@ -25,13 +25,13 @@
 
     import { type Snippet } from 'svelte';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
-    import { projectXY } from '$lib/helpers/scales.js';
-    import isDataRecord from '$lib/helpers/isDataRecord.js';
+    import { projectXY } from '../helpers/scales.js';
+    import isDataRecord from '../helpers/isDataRecord.js';
     import { indexData, RAW_VALUE } from 'svelteplot/transforms/recordize.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

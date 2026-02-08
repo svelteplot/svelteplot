@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { group, groupX, groupY, groupZ } from './group.js';
-import type { DataRecord } from '$lib/types/index.js';
+import type { DataRecord } from '../types/index.js';
 import { csvParse } from 'd3-dsv';
 import { readFileSync } from 'fs';
 import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';

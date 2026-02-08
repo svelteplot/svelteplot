@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { RawValue } from '$lib/index.js';
+    import type { RawValue } from '../../index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {

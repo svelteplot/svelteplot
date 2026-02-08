@@ -45,7 +45,7 @@
          */
         dot: Record<string, ChannelAccessor<Datum>>;
     }
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import Box from './helpers/Box.svelte';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
 

@@ -16,9 +16,9 @@
     import type { ChannelAccessor, DataRow } from '../types/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
-    import { projectX, projectY } from '$lib/helpers/scales.js';
+    import { projectX, projectY } from '../helpers/scales.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
 
     const plot = usePlot();

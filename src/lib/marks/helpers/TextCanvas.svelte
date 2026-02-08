@@ -46,7 +46,7 @@
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
-    import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
+    import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
     import { CSS_VAR } from 'svelteplot/constants';
     import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';

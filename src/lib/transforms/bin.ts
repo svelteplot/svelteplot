@@ -1,7 +1,7 @@
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { DataRecord, RawValue } from '$lib/types/index.js';
-import type { TransformArg } from '$lib/types/index.js';
-import { maybeInterval } from '$lib/helpers/autoTicks.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { DataRecord, RawValue } from '../types/index.js';
+import type { TransformArg } from '../types/index.js';
+import { maybeInterval } from '../helpers/autoTicks.js';
 import {
     bin as d3Bin,
     extent,
@@ -10,9 +10,9 @@ import {
     thresholdSturges,
     type ThresholdCountGenerator
 } from 'd3-array';
-import { reduceOutputs, type ReducerName } from '$lib/helpers/reduce.js';
-import { groupFacetsAndZ } from '$lib/helpers/group.js';
-import { isDate } from '$lib/helpers/typeChecks.js';
+import { reduceOutputs, type ReducerName } from '../helpers/reduce.js';
+import { groupFacetsAndZ } from '../helpers/group.js';
+import { isDate } from '../helpers/typeChecks.js';
 import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants';
 
 type NamedThresholdsGenerator = 'auto' | 'scott' | 'sturges' | 'freedman-diaconis';

@@ -1,6 +1,6 @@
-import isDataRecord from '$lib/helpers/isDataRecord.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { DataRecord, DataRow, TransformArg } from '$lib/types/index.js';
+import isDataRecord from '../helpers/isDataRecord.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { DataRecord, DataRow, TransformArg } from '../types/index.js';
 import { shuffler } from 'd3-array';
 import { randomLcg } from 'd3-random';
 

@@ -33,11 +33,11 @@
         onbrush?: (evt: BrushEvent) => void;
     }
     import { getContext, untrack } from 'svelte';
-    import Rect from '$lib/marks/Rect.svelte';
+    import Rect from './Rect.svelte';
     import type { BaseMarkProps, DataRecord } from 'svelteplot/types/index.js';
     import { clientToLayerCoordinates } from './helpers/events.js';
-    import Frame from '$lib/marks/Frame.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import Frame from './Frame.svelte';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let { brush: brushExternal = $bindable({ enabled: false }), ...markProps }: BrushMarkProps =

@@ -1,8 +1,8 @@
-import type { TransformArg, TransformReturn } from '$lib/types/index.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
+import type { TransformArg, TransformReturn } from '../types/index.js';
+import { resolveChannel } from '../helpers/resolve.js';
 import { randomUniform, randomNormal } from 'd3-random';
-import { isDate } from '$lib/helpers/typeChecks.js';
-import { durations, parseTimeInterval } from '$lib/helpers/time.js';
+import { isDate } from '../helpers/typeChecks.js';
+import { durations, parseTimeInterval } from '../helpers/time.js';
 
 const JITTER = {
     x: Symbol('jitterX'),

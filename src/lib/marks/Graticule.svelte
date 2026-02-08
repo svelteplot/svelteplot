@@ -13,7 +13,7 @@
     }
     import Geo from './Geo.svelte';
     import { geoGraticule } from 'd3-geo';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import type { BaseMarkProps } from '../types/index.js';
 
     let markProps: GraticuleMarkProps = $props();

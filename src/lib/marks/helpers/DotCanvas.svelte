@@ -5,8 +5,8 @@
         BaseMarkProps,
         ScaledDataRecord
     } from 'svelteplot/types/index.js';
-    import { resolveProp } from '$lib/helpers/resolve.js';
-    import { maybeSymbol } from '$lib/helpers/symbols.js';
+    import { resolveProp } from '../../helpers/resolve.js';
+    import { maybeSymbol } from '../../helpers/symbols.js';
     import { symbol as d3Symbol } from 'd3-shape';
     import type { Attachment } from 'svelte/attachments';
     import CanvasLayer from './CanvasLayer.svelte';

@@ -23,7 +23,7 @@
         ConstantAccessor,
         DataRecord,
         LinkableMarkProps
-    } from '$lib/types';
+    } from '../types';
     import { resolveProp } from 'svelteplot/helpers/resolve';
     import CustomMark from './CustomMark.svelte';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';

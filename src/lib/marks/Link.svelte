@@ -47,15 +47,15 @@
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
-    import { replaceChannels } from '$lib/transforms/rename.js';
+    import { replaceChannels } from '../transforms/rename.js';
     import { line, type CurveFactory } from 'd3-shape';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { maybeCurve } from '$lib/helpers/curves.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { maybeCurve } from '../helpers/curves.js';
     import { geoPath } from 'd3-geo';
     import { pick } from 'es-toolkit';
     import { sort } from 'svelteplot/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LinkMarkProps = $props();
