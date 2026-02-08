@@ -51,7 +51,8 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
         return value == null ? 1 : +value;
     }
 
-    const render: Attachment = (canvas: HTMLCanvasElement) => {
+    const render: Attachment = (canvasEl: Element) => {
+        const canvas = canvasEl as HTMLCanvasElement;
         const context = canvas.getContext('2d');
 
         $effect(() => {
@@ -99,9 +100,9 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                         if (orientation === 'vertical') {
                             // RuleX: vertical line
                             const x = datum.x;
-                            const inset = +resolveProp(options.inset, datum.datum, 0);
-                            const insetTop = +resolveProp(options.insetTop, datum.datum, 0);
-                            const insetBottom = +resolveProp(options.insetBottom, datum.datum, 0);
+                            const inset = +(resolveProp(options.inset, datum.datum, 0) as number);
+                            const insetTop = +(resolveProp(options.insetTop, datum.datum, 0) as number);
+                            const insetBottom = +(resolveProp(options.insetBottom, datum.datum, 0) as number);
 
                             const y1 =
                                 (inset || insetTop) +
@@ -119,9 +120,9 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                         } else {
                             // RuleY: horizontal line
                             const y = datum.y;
-                            const inset = +resolveProp(options.inset, datum.datum, 0);
-                            const insetLeft = +resolveProp(options.insetLeft, datum.datum, 0);
-                            const insetRight = +resolveProp(options.insetRight, datum.datum, 0);
+                            const inset = +(resolveProp(options.inset, datum.datum, 0) as number);
+                            const insetLeft = +(resolveProp(options.insetLeft, datum.datum, 0) as number);
+                            const insetRight = +(resolveProp(options.insetRight, datum.datum, 0) as number);
 
                             const x1 =
                                 (inset || insetLeft) +
