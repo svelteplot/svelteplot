@@ -49,6 +49,12 @@
                 const xUsesBand = usedScales.x && plot.scales.x.type === 'band';
                 const yBandwidth = yUsesBand ? plot.scales.y.fn.bandwidth() : 0;
                 const xBandwidth = xUsesBand ? plot.scales.x.fn.bandwidth() : 0;
+                const hasYChannel = options.y != null;
+                const hasXChannel = options.x != null;
+                const marginTop = plot.options.marginTop;
+                const marginLeft = plot.options.marginLeft;
+                const fullY2 = marginTop + plot.plotHeight;
+                const fullX2 = marginLeft + plot.facetWidth;
 
                 context.resetTransform();
                 context.scale(devicePixelRatio.current ?? 1, devicePixelRatio.current ?? 1);
@@ -64,6 +70,8 @@
                 let hasCurrentSegments = false;
                 const resolvedStrokeCache: Record<string, ReturnType<typeof resolveColor>> =
                     Object.create(null);
+                let currentTickLength = 10;
+                let currentInsetValue: number | string = 0;
 
                 const flushPath = () => {
                     if (!currentStyle || !hasCurrentSegments) return;
@@ -85,9 +93,7 @@
                     hasCurrentSegments = false;
                 };
 
-                for (const datum of data) {
-                    if (!datum.valid) continue;
-
+                const prepareStyle = (datum: ScaledDataRecord<Datum>) => {
                     let { stroke, ...restStyles } = resolveScaledStyleProps(
                         datum.datum,
                         options,
@@ -100,11 +106,7 @@
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
                     const lineCap = normalizeLineCap(restStyles['stroke-linecap']);
                     const strokeWidth = +(resolveProp(options.strokeWidth, datum.datum, 1) as number);
-                    const tickLength = +(resolveProp(
-                        options.tickLength,
-                        datum.datum,
-                        10
-                    ) as number);
+                    const tickLength = +(resolveProp(options.tickLength, datum.datum, 10) as number);
                     const insetValue = resolveProp(options.inset, datum.datum, 0) as
                         | number
                         | string;
@@ -123,52 +125,78 @@
                         };
                     }
 
-                    if (orientation === 'vertical') {
+                    currentTickLength = tickLength;
+                    currentInsetValue = insetValue;
+                };
+
+                if (orientation === 'vertical') {
+                    for (const datum of data) {
+                        if (!datum.valid) continue;
+                        prepareStyle(datum);
+
                         const x = datum.x;
                         if (x == null) continue;
 
                         let y1: number;
                         let y2: number;
 
-                        if (options.y != null) {
+                        if (hasYChannel) {
                             const y = datum.y;
                             if (y == null) continue;
 
                             y1 = y - yBandwidth * 0.5;
                             y2 = y + yBandwidth * 0.5;
                         } else {
-                            y1 = plot.options.marginTop + (datum.dy ?? 0);
-                            y2 = plot.options.marginTop + plot.plotHeight + (datum.dy ?? 0);
+                            y1 = marginTop + (datum.dy ?? 0);
+                            y2 = fullY2 + (datum.dy ?? 0);
                         }
 
-                        const inset = parseInset(insetValue, Math.abs(y2 - y1));
+                        const inset = parseInset(currentInsetValue, Math.abs(y2 - y1));
                         const singlePoint = y1 === y2;
-                        context.moveTo(x, y1 + inset + (singlePoint ? tickLength * 0.5 : 0));
-                        context.lineTo(x, y2 - inset - (singlePoint ? tickLength * 0.5 : 0));
-                    } else {
+                        context.moveTo(
+                            x,
+                            y1 + inset + (singlePoint ? currentTickLength * 0.5 : 0)
+                        );
+                        context.lineTo(
+                            x,
+                            y2 - inset - (singlePoint ? currentTickLength * 0.5 : 0)
+                        );
+                        hasCurrentSegments = true;
+                    }
+                } else {
+                    for (const datum of data) {
+                        if (!datum.valid) continue;
+                        prepareStyle(datum);
+
                         const y = datum.y;
                         if (y == null) continue;
 
                         let x1: number;
                         let x2: number;
 
-                        if (options.x != null) {
+                        if (hasXChannel) {
                             const x = datum.x;
                             if (x == null) continue;
 
                             x1 = x - xBandwidth * 0.5;
                             x2 = x + xBandwidth * 0.5;
                         } else {
-                            x1 = plot.options.marginLeft + (datum.dx ?? 0);
-                            x2 = plot.options.marginLeft + plot.facetWidth + (datum.dx ?? 0);
+                            x1 = marginLeft + (datum.dx ?? 0);
+                            x2 = fullX2 + (datum.dx ?? 0);
                         }
 
-                        const inset = parseInset(insetValue, Math.abs(x2 - x1));
+                        const inset = parseInset(currentInsetValue, Math.abs(x2 - x1));
                         const singlePoint = x1 === x2;
-                        context.moveTo(x1 + inset + (singlePoint ? tickLength * 0.5 : 0), y);
-                        context.lineTo(x2 - inset - (singlePoint ? tickLength * 0.5 : 0), y);
+                        context.moveTo(
+                            x1 + inset + (singlePoint ? currentTickLength * 0.5 : 0),
+                            y
+                        );
+                        context.lineTo(
+                            x2 - inset - (singlePoint ? currentTickLength * 0.5 : 0),
+                            y
+                        );
+                        hasCurrentSegments = true;
                     }
-                    hasCurrentSegments = true;
                 }
                 flushPath();
             }

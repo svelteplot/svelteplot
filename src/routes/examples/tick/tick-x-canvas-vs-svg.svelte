@@ -1,7 +1,7 @@
 <script module>
-    export const title = 'TickX (canvas vs SVG)';
+    export const title = 'Barcode plot (canvas vs SVG)';
     export const description =
-        'TickX supports canvas rendering. This example compares canvas and SVG output side-by-side.';
+        'TickX supports canvas rendering. This example compares canvas and SVG output side-by-side. Based on an example from <a href="https://observablehq.com/@observablehq/plot-barcode">Observable Plot</a>.';
     export const data = { stateage: '/data/stateage.csv' };
     export const sortKey = 21;
 </script>
