@@ -62,11 +62,17 @@
                     alpha: number;
                 } | null = null;
                 let hasCurrentSegments = false;
+                const resolvedStrokeCache: Record<string, ReturnType<typeof resolveColor>> =
+                    Object.create(null);
 
                 const flushPath = () => {
                     if (!currentStyle || !hasCurrentSegments) return;
 
-                    const resolvedStroke = resolveColor(currentStyle.stroke, canvas);
+                    let resolvedStroke = resolvedStrokeCache[currentStyle.stroke];
+                    if (!(currentStyle.stroke in resolvedStrokeCache)) {
+                        resolvedStroke = resolveColor(currentStyle.stroke, canvas);
+                        resolvedStrokeCache[currentStyle.stroke] = resolvedStroke;
+                    }
                     if (resolvedStroke && resolvedStroke !== 'none') {
                         context.lineCap = currentStyle.lineCap;
                         context.lineWidth = currentStyle.lineWidth;
