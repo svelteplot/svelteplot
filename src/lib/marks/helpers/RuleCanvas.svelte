@@ -58,8 +58,6 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
             if (context) {
                 context.resetTransform();
                 context.scale(devicePixelRatio.current ?? 1, devicePixelRatio.current ?? 1);
-                context.lineCap = 'square';
-
                 for (const datum of data) {
                     if (!datum.valid) continue;
 
@@ -77,11 +75,21 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                     stroke = resolveColor(stroke || 'currentColor', canvas);
 
                     if (stroke && stroke !== 'none') {
+                        const resolvedLinecap = restStyles['stroke-linecap'] as
+                            | CanvasLineCap
+                            | undefined
+                            | null;
                         const strokeWidth = resolveProp(
                             options.strokeWidth,
                             datum.datum,
                             1
                         ) as number;
+                        context.lineCap =
+                            resolvedLinecap === 'round' ||
+                            resolvedLinecap === 'square' ||
+                            resolvedLinecap === 'butt'
+                                ? resolvedLinecap
+                                : 'butt';
                         context.lineWidth = strokeWidth;
                         context.strokeStyle = stroke;
                         context.globalAlpha = opacity * strokeOpacity;
