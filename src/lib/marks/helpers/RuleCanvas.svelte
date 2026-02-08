@@ -101,8 +101,16 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                             // RuleX: vertical line
                             const x = datum.x;
                             const inset = +(resolveProp(options.inset, datum.datum, 0) as number);
-                            const insetTop = +(resolveProp(options.insetTop, datum.datum, 0) as number);
-                            const insetBottom = +(resolveProp(options.insetBottom, datum.datum, 0) as number);
+                            const insetTop = +(resolveProp(
+                                options.insetTop,
+                                datum.datum,
+                                0
+                            ) as number);
+                            const insetBottom = +(resolveProp(
+                                options.insetBottom,
+                                datum.datum,
+                                0
+                            ) as number);
 
                             const y1 =
                                 (inset || insetTop) +
@@ -121,8 +129,16 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                             // RuleY: horizontal line
                             const y = datum.y;
                             const inset = +(resolveProp(options.inset, datum.datum, 0) as number);
-                            const insetLeft = +(resolveProp(options.insetLeft, datum.datum, 0) as number);
-                            const insetRight = +(resolveProp(options.insetRight, datum.datum, 0) as number);
+                            const insetLeft = +(resolveProp(
+                                options.insetLeft,
+                                datum.datum,
+                                0
+                            ) as number);
+                            const insetRight = +(resolveProp(
+                                options.insetRight,
+                                datum.datum,
+                                0
+                            ) as number);
 
                             const x1 =
                                 (inset || insetLeft) +
