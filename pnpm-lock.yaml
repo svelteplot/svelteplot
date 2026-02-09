@@ -56,9 +56,6 @@ importers:
       merge-deep:
         specifier: ^3.0.3
         version: 3.0.3
-      svelte:
-        specifier: '5'
-        version: 5.43.3
     devDependencies:
       '@aitodotai/json-stringify-pretty-compact':
         specifier: ^1.3.0
@@ -234,6 +231,9 @@ importers:
       shiki:
         specifier: ^3.21.0
         version: 3.21.0
+      svelte:
+        specifier: '5'
+        version: 5.43.3
       svelte-check:
         specifier: ^4.3.5
         version: 4.3.5(picomatch@4.0.3)(svelte@5.43.3)(typescript@5.9.3)
