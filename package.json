@@ -25,7 +25,6 @@
         "name": "Gregor Aisch",
         "email": "gka@users.noreply.github.com"
     },
-    "packageManager": "pnpm@10.0.0",
     "type": "module",
     "exports": {
         ".": {
@@ -66,7 +65,7 @@
         "docs:api:marks": "node scripts/generate-api.js --marks && prettier --write .",
         "docs:api:plot": "node scripts/generate-api.js --plot && prettier --write .",
         "docs:api:transforms": "node scripts/generate-api.js --transforms && prettier --write .",
-        "format": "prettier --write . && eslint --fix package.json",
+        "format": "eslint --fix package.json && prettier --write .",
         "lint": "prettier --check src && eslint src package.json",
         "lint:types": "tsc --noEmit",
         "prepack": "npx svelte-package",
@@ -95,9 +94,6 @@
         "fast-equals": "^6.0.0",
         "interval-tree-1d": "^1.0.4",
         "merge-deep": "^3.0.3"
-    },
-    "peerDependencies": {
-        "svelte": "^5.43.0"
     },
     "devDependencies": {
         "@aitodotai/json-stringify-pretty-compact": "^1.3.0",
@@ -158,10 +154,10 @@
         "resize-observer-polyfill": "^1.5.1",
         "sass": "^1.97.3",
         "shiki": "^3.21.0",
+        "svelte": "5",
         "svelte-check": "^4.3.5",
         "svelte-eslint-parser": "1.4.1",
         "svelte-highlight": "^7.9.0",
-        "svelte": "5",
         "svg-path-parser": "^1.1.0",
         "temml": "^0.13.1",
         "topojson-client": "^3.1.0",
@@ -178,5 +174,9 @@
         "vitest-matchmedia-mock": "^2.0.3",
         "wx-svelte-grid": "^2.5.0",
         "yoctocolors": "^2.1.2"
-    }
+    },
+    "peerDependencies": {
+        "svelte": "^5.43.0"
+    },
+    "packageManager": "pnpm@10.0.0"
 }
