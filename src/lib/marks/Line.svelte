@@ -3,22 +3,39 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface LineMarkProps extends MarkerOptions, BaseMarkProps<Datum> {
+        /** the input data array; each element becomes one point in the line */
         data?: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** the series channel; data is grouped into separate lines by unique z values */
         z?: ChannelAccessor<Datum>;
+        /** the stroke color for the line outline */
         outlineStroke?: string;
+        /** the stroke width of the line outline in pixels */
         outlineStrokeWidth?: number;
+        /** the stroke opacity for the line outline; a number between 0 and 1 */
         outlineStrokeOpacity?: number;
+        /** the curve interpolation method for connecting data points (e.g. "basis", "catmull-rom") */
         curve?: CurveName | CurveFactory | 'auto';
+        /** the tension parameter for cardinal or Catmull-Rom curve interpolation */
         tension?: number;
+        /** controls the order of data points before rendering */
         sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
+        /** text label to render along the line path using a textPath element */
         text?: ConstantAccessor<string, Datum>;
+        /** the fill color for the text label rendered along the line */
         textFill?: ConstantAccessor<string, Datum>;
+        /** the stroke color for the text label rendered along the line */
         textStroke?: ConstantAccessor<string, Datum>;
+        /** the offset position for the text label along the line path (e.g. "50%") */
         textStartOffset?: ConstantAccessor<string, Datum>;
+        /** the stroke width for the text label rendered along the line in pixels */
         textStrokeWidth?: ConstantAccessor<number, Datum>;
+        /** CSS class name(s) to apply to individual line elements */
         lineClass?: ConstantAccessor<string, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import type {

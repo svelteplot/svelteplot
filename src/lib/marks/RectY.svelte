@@ -3,6 +3,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface RectYMarkProps extends Omit<ComponentProps<typeof Rect>, 'y'> {
+        /** options for stacking rect data values */
         stack?: Partial<StackOptions>;
     }
     import Rect from './Rect.svelte';

@@ -5,8 +5,11 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface CellMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
+        /** the input data array; each element becomes one cell */
         data: Datum[];
+        /** the horizontal position channel; typically an ordinal value */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; typically an ordinal value */
         y?: ChannelAccessor<Datum>;
         /**
          * Renders using Canvas instead of SVG.

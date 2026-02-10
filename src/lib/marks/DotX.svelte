@@ -3,7 +3,9 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface DotXMarkProps extends Omit<ComponentProps<typeof Dot>, 'y' | 'x' | 'data'> {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
     }
     import Dot from './Dot.svelte';

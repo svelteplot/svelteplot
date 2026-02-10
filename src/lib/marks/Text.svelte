@@ -7,23 +7,37 @@
     import type * as CSS from 'csstype';
 
     interface TextCommonMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input data array; each element becomes one text label */
         data?: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** a Snippet to render as the text content */
         children?: Snippet;
+        /** the text content accessor */
         text: ConstantAccessor<string | null | false | undefined, Datum>;
+        /** the title attribute for the text element (shown as a browser tooltip) */
         title?: ConstantAccessor<string, Datum>;
         /**
-         * the font size of the text
+         * the font family of the text
          */
         fontFamily?: ConstantAccessor<CSS.Property.FontFamily, Datum>;
+        /** the font size of the text; can be a CSS string or number in pixels */
         fontSize?: ConstantAccessor<CSS.Property.FontSize | number, Datum>;
+        /** the font weight of the text (e.g. "bold", 700) */
         fontWeight?: ConstantAccessor<CSS.Property.FontWeight, Datum>;
+        /** the font style of the text (e.g. "italic", "normal") */
         fontStyle?: ConstantAccessor<CSS.Property.FontStyle, Datum>;
+        /** the font variant of the text (e.g. "small-caps") */
         fontVariant?: ConstantAccessor<CSS.Property.FontVariant, Datum>;
+        /** the letter spacing of the text */
         letterSpacing?: ConstantAccessor<CSS.Property.LetterSpacing, Datum>;
+        /** the word spacing of the text */
         wordSpacing?: ConstantAccessor<CSS.Property.WordSpacing, Datum>;
+        /** the text transform (e.g. "uppercase", "lowercase") */
         textTransform?: ConstantAccessor<CSS.Property.TextTransform, Datum>;
+        /** the text decoration (e.g. "underline", "line-through") */
         textDecoration?: ConstantAccessor<CSS.Property.TextDecoration, Datum>;
         /**
          * the horizontal text anchor; start, end, or middle
@@ -38,6 +52,7 @@
          * @default 1.2
          */
         lineHeight?: ConstantAccessor<number, Datum>;
+        /** the anchor position within the plot frame when x or y are not specified (e.g. "top-left", "middle") */
         frameAnchor?: ConstantAccessor<
             | 'bottom'
             | 'top'

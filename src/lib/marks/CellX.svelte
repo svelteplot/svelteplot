@@ -9,6 +9,7 @@
     import type { DataRow, TransformArgsRow } from 'svelteplot/types/index.js';
 
     interface CellXMarkProps extends Omit<ComponentProps<typeof Cell>, 'y' | 'data'> {
+        /** the input data array */
         data: Datum[];
     }
 

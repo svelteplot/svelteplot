@@ -3,17 +3,29 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface AreaMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input data array; each element becomes one point in the area */
         data: Datum[];
+        /** the starting horizontal position channel for the area baseline */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position channel for the area topline */
         x2?: ChannelAccessor<Datum>;
+        /** the starting vertical position channel for the area baseline */
         y1?: ChannelAccessor<Datum>;
+        /** the ending vertical position channel for the area topline */
         y2?: ChannelAccessor<Datum>;
+        /** the series channel; data is grouped into separate areas by unique z values */
         z?: ChannelAccessor<Datum>;
+        /** the curve interpolation method for connecting data points */
         curve?: CurveName | CurveFactory;
+        /** the tension parameter for cardinal or Catmull-Rom curve interpolation */
         tension?: number;
+        /** controls the order of data points before rendering */
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
+        /** options for stacking area data values */
         stack?: Partial<StackOptions>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
+        /** CSS class name(s) to apply to individual area path elements */
         areaClass?: ConstantAccessor<string, Datum>;
     }
 

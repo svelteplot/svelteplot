@@ -3,13 +3,21 @@
 -->
 <script lang="ts" generics="Datum = DataRecord">
     interface RuleYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one horizontal rule */
         data?: Datum[];
+        /** the vertical position channel for the rule */
         y?: ChannelAccessor<Datum>;
+        /** the starting horizontal position of the rule */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position of the rule */
         x2?: ChannelAccessor<Datum>;
+        /** shorthand to inset the rule from both ends, in pixels */
         inset?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the left, in pixels */
         insetLeft?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the right, in pixels */
         insetRight?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
