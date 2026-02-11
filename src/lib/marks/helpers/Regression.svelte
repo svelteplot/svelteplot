@@ -4,8 +4,11 @@
     type RegressionType = 'linear' | 'quad' | 'poly' | 'exp' | 'log' | 'pow' | 'loess';
 
     export type RegressionMarkProps = BaseMarkProps & {
+        /** the horizontal position channel; bound to the x scale */
         x: ChannelAccessor;
+        /** the vertical position channel; bound to the y scale */
         y: ChannelAccessor;
+        /** the regression model type */
         type: RegressionType;
         /**
          * If order is specified, sets the regression's order to the specified number.
@@ -17,11 +20,11 @@
          * it may have little predictive power for data outside of your domain.
          */
         order: number;
-        // for log
+        /** the base for logarithmic regression */
         base: number;
-        // for loess
+        /** the bandwidth for LOESS regression, as a fraction of the data range (0 to 1) */
         span: number;
-        // for confidence bands
+        /** the confidence level for confidence bands (e.g. 0.95 for 95% confidence) */
         confidence: number;
     };
 </script>

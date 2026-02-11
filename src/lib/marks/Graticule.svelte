@@ -7,8 +7,11 @@
         BaseMarkProps<GeoJSON.GeoJsonObject>,
         'fill' | 'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'cursor'
     > {
+        /** the step size for both longitude and latitude gridlines in degrees */
         step?: number;
+        /** the step size for longitude gridlines in degrees */
         stepX?: number;
+        /** the step size for latitude gridlines in degrees */
         stepY?: number;
     }
     import Geo from './Geo.svelte';

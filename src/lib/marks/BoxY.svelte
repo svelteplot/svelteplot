@@ -6,8 +6,11 @@
         BaseMarkProps<Datum>,
         'class' | 'fill' | 'stroke' | 'fx' | 'fy'
     > {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; bound to a band scale for grouping */
         x: ChannelAccessor;
+        /** the vertical position channel; the quantitative values to summarize */
         y: ChannelAccessor;
         /**
          * Custom sort order for grouped box plot data
