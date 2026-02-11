@@ -9,6 +9,10 @@ type WithCentroid<T> = T & {
     [CENTROID]: [number, number];
 };
 
+/**
+ * computes the geographic centroid of each geometry feature, producing
+ * x (longitude) and y (latitude) channels
+ */
 export function geoCentroid<Datum extends DataRecord>({
     data,
     ...options

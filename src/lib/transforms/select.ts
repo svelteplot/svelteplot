@@ -13,6 +13,10 @@ type SelectOptions =
 
 // let o: SelectOptions = { x: 'min'};
 
+/**
+ * selects one datum per group based on the given criteria; use "first"/"last"
+ * for positional selection, or {channel: "min"/"max"} for value-based selection
+ */
 export function select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions) {
     const newData: DataRecord[] = [];
     groupFacetsAndZ(data, channels, (items) => {
@@ -53,15 +57,19 @@ export function selectLast(args: TransformArg<DataRecord>) {
     return select(args, 'last');
 }
 
+/** keeps only the datum with the smallest x value per group */
 export function selectMinX(args: TransformArg<DataRecord>) {
     return select(args, { x: 'min' });
 }
+/** keeps only the datum with the largest x value per group */
 export function selectMaxX(args: TransformArg<DataRecord>) {
     return select(args, { x: 'max' });
 }
+/** keeps only the datum with the smallest y value per group */
 export function selectMinY(args: TransformArg<DataRecord>) {
     return select(args, { y: 'min' });
 }
+/** keeps only the datum with the largest y value per group */
 export function selectMaxY(args: TransformArg<DataRecord>) {
     return select(args, { y: 'max' });
 }
