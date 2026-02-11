@@ -4,12 +4,19 @@
 -->
 <script lang="ts" generics="Datum = DataRow">
     interface HTMLTooltipMarkProps {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** the radius channel, used for positioning with dot-based data */
         r?: ChannelAccessor<Datum>;
+        /** the horizontal facet channel */
         fx?: ChannelAccessor<Datum>;
+        /** the vertical facet channel */
         fy?: ChannelAccessor<Datum>;
+        /** snippet for rendering the tooltip content; receives the nearest datum */
         children: Snippet<[{ datum: Datum }]>;
     }
     import { type Snippet } from 'svelte';
