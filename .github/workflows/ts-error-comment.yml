@@ -1,0 +1,103 @@
+name: TypeScript Error PR Comment
+
+permissions:
+    actions: read
+    contents: read
+    issues: write
+    pull-requests: write
+
+on:
+    workflow_run:
+        workflows: ['Lint Check']
+        types: [completed]
+
+jobs:
+    comment:
+        if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download TypeScript error report artifact
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  REPO: ${{ github.repository }}
+                  RUN_ID: ${{ github.event.workflow_run.id }}
+              run: |
+                  set -euo pipefail
+                  ARTIFACT_ID=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}/artifacts" --jq '.artifacts[] | select(.name=="ts-error-report") | .id' | head -n 1)
+                  if [ -z "${ARTIFACT_ID}" ]; then
+                      echo "No ts-error-report artifact found for workflow run ${RUN_ID}."
+                      exit 0
+                  fi
+
+                  gh api -H "Accept: application/vnd.github+json" "repos/${REPO}/actions/artifacts/${ARTIFACT_ID}/zip" > ts-error-report.zip
+                  mkdir -p artifact
+                  unzip -o ts-error-report.zip -d artifact
+
+            - name: Post TypeScript error report comment
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('node:fs');
+                      const path = 'artifact/ts-error-report.json';
+                      if (!fs.existsSync(path)) {
+                        core.info('No ts-error-report.json found, skipping PR comment.');
+                        return;
+                      }
+
+                      const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+                      const toNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+                      const prNumber = toNumber(report.pr_number);
+                      if (!prNumber) {
+                        core.info('No PR number in report, skipping PR comment.');
+                        return;
+                      }
+
+                      const prErrors = toNumber(report.ts_errors_pr);
+                      const mainErrors = toNumber(report.ts_errors_main);
+                      const diff = prErrors - mainErrors;
+                      const sign = diff > 0 ? `+${diff}` : `${diff}`;
+                      const emoji = diff > 0 ? '⚠️' : diff < 0 ? '🎉' : 'ℹ️';
+                      const prSvelteErrors = toNumber(report.svelte_errors_pr);
+                      const mainSvelteErrors = toNumber(report.svelte_errors_main);
+                      const svelteDiff = prSvelteErrors - mainSvelteErrors;
+                      const svelteSign = svelteDiff > 0 ? `+${svelteDiff}` : `${svelteDiff}`;
+                      const svelteEmoji = svelteDiff > 0 ? '⚠️' : svelteDiff < 0 ? '🎉' : 'ℹ️';
+                      const marker = '<!-- ts-error-report -->';
+                      const body = [
+                        marker,
+                        '**TypeScript error report:**',
+                        `- This branch: ${prErrors}`,
+                        `- main branch: ${mainErrors}`,
+                        `- Difference (PR - main): ${sign} ${emoji}`,
+                        '',
+                        '**Svelte TypeScript error report:**',
+                        `- This branch: ${prSvelteErrors}`,
+                        `- main branch: ${mainSvelteErrors}`,
+                        `- Difference (PR - main): ${svelteSign} ${svelteEmoji}`
+                      ].join('\n');
+
+                      const { owner, repo } = context.repo;
+                      const comments = await github.paginate(github.rest.issues.listComments, {
+                        owner,
+                        repo,
+                        issue_number: prNumber,
+                        per_page: 100
+                      });
+                      const existingComment = comments.find((comment) => comment.body?.includes(marker));
+
+                      if (existingComment) {
+                        await github.rest.issues.updateComment({
+                          owner,
+                          repo,
+                          comment_id: existingComment.id,
+                          body
+                        });
+                      } else {
+                        await github.rest.issues.createComment({
+                          owner,
+                          repo,
+                          issue_number: prNumber,
+                          body
+                        });
+                      }
