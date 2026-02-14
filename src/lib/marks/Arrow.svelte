@@ -3,13 +3,19 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface ArrowMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one arrow */
         data: Datum[];
+        /** controls the order of data before rendering */
         sort?:
             | ConstantAccessor<RawValue>
             | { channel: 'stroke' | 'fill' | 'x1' | 'y1' | 'x2' | 'y2' };
+        /** the starting horizontal position channel */
         x1: ChannelAccessor<Datum>;
+        /** the starting vertical position channel */
         y1: ChannelAccessor<Datum>;
+        /** the ending horizontal position channel */
         x2: ChannelAccessor<Datum>;
+        /** the ending vertical position channel */
         y2: ChannelAccessor<Datum>;
         /**
          * the bend angle, in degrees; defaults to 0°; true for 22.5°
@@ -35,6 +41,7 @@
          * shorthand for the two insets
          */
         inset?: ConstantAccessor<number, Datum>;
+        /** controls the sweep direction of the arrow arc; 1 or -1 */
         sweep?: SweepOption;
     }
     import type {

@@ -3,6 +3,7 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface LineYMarkProps extends Omit<ComponentProps<typeof Line>, 'x' | 'data'> {
+        /** the input data array */
         data: Datum[];
     }
     import Line from './Line.svelte';

@@ -12,20 +12,20 @@ Jump to mark: [Area](/api/marks#Area), [AreaX](/api/marks#AreaX), [AreaY](/api/m
 
 Creates an area chart with filled regions between two x-y value pairs
 
-| Prop         | Type                                                                         | Description |
-| ------------ | ---------------------------------------------------------------------------- | ----------- |
-| `data`       | Datum[]                                                                      |             |
-| `x1?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
-| `x2?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
-| `y1?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
-| `y2?`        | ChannelAccessor&lt;Datum&gt;                                                 |             |
-| `z?`         | ChannelAccessor&lt;Datum&gt;                                                 |             |
-| `curve?`     | [CurveName](/api/marks#CurveName) \| CurveFactory                            |             |
-| `tension?`   | number                                                                       |             |
-| `sort?`      | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |             |
-| `stack?`     | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt;                       |             |
-| `canvas?`    | boolean                                                                      |             |
-| `areaClass?` | ConstantAccessor&lt;string, Datum&gt;                                        |             |
+| Prop         | Type                                                                         | Description                                                                |
+| ------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `data`       | Datum[]                                                                      | the input data array; each element becomes one point in the area           |
+| `x1?`        | ChannelAccessor&lt;Datum&gt;                                                 | the starting horizontal position channel for the area baseline             |
+| `x2?`        | ChannelAccessor&lt;Datum&gt;                                                 | the ending horizontal position channel for the area topline                |
+| `y1?`        | ChannelAccessor&lt;Datum&gt;                                                 | the starting vertical position channel for the area baseline               |
+| `y2?`        | ChannelAccessor&lt;Datum&gt;                                                 | the ending vertical position channel for the area topline                  |
+| `z?`         | ChannelAccessor&lt;Datum&gt;                                                 | the series channel; data is grouped into separate areas by unique z values |
+| `curve?`     | [CurveName](/api/marks#CurveName) \| CurveFactory                            | the curve interpolation method for connecting data points                  |
+| `tension?`   | number                                                                       | the tension parameter for cardinal or Catmull-Rom curve interpolation      |
+| `sort?`      | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} | controls the order of data points before rendering                         |
+| `stack?`     | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt;                       | options for stacking area data values                                      |
+| `canvas?`    | boolean                                                                      | if true, renders using Canvas instead of SVG                               |
+| `areaClass?` | ConstantAccessor&lt;string, Datum&gt;                                        | CSS class name(s) to apply to individual area path elements                |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -33,10 +33,10 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Creates a horizontal area chart with x value and baseline. Areas are implicitly stacked horizontally if just the x channel is defined.
 
-| Prop | Type                         | Description |
-| ---- | ---------------------------- | ----------- |
-| `x?` | ChannelAccessor&lt;Datum&gt; |             |
-| `y?` | ChannelAccessor&lt;Datum&gt; |             |
+| Prop | Type                         | Description                     |
+| ---- | ---------------------------- | ------------------------------- |
+| `x?` | ChannelAccessor&lt;Datum&gt; | the horizontal position channel |
+| `y?` | ChannelAccessor&lt;Datum&gt; | the vertical position channel   |
 
 Inherited props from [Area](/api/marks#Area).
 
@@ -44,10 +44,10 @@ Inherited props from [Area](/api/marks#Area).
 
 Creates a vertical area chart with y value and baseline. Areas are implicitly stacked vertically if just the y channel is defined.
 
-| Prop | Type                         | Description |
-| ---- | ---------------------------- | ----------- |
-| `x?` | ChannelAccessor&lt;Datum&gt; |             |
-| `y?` | ChannelAccessor&lt;Datum&gt; |             |
+| Prop | Type                         | Description                     |
+| ---- | ---------------------------- | ------------------------------- |
+| `x?` | ChannelAccessor&lt;Datum&gt; | the horizontal position channel |
+| `y?` | ChannelAccessor&lt;Datum&gt; | the vertical position channel   |
 
 Inherited props from [Area](/api/marks#Area).
 
@@ -57,19 +57,19 @@ Creates arrows with customizable heads, angles, and bending
 
 | Prop          | Type                                                                                                         | Description                                                         |
 | ------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| `data`        | Datum[]                                                                                                      |                                                                     |
-| `sort?`       | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill' \| 'x1' \| 'y1' \| 'x2' \| 'y2'; {'}'} |                                                                     |
-| `x1`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
-| `y1`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
-| `x2`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
-| `y2`          | ChannelAccessor&lt;Datum&gt;                                                                                 |                                                                     |
+| `data`        | Datum[]                                                                                                      | the input data array; each element becomes one arrow                |
+| `sort?`       | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill' \| 'x1' \| 'y1' \| 'x2' \| 'y2'; {'}'} | controls the order of data before rendering                         |
+| `x1`          | ChannelAccessor&lt;Datum&gt;                                                                                 | the starting horizontal position channel                            |
+| `y1`          | ChannelAccessor&lt;Datum&gt;                                                                                 | the starting vertical position channel                              |
+| `x2`          | ChannelAccessor&lt;Datum&gt;                                                                                 | the ending horizontal position channel                              |
+| `y2`          | ChannelAccessor&lt;Datum&gt;                                                                                 | the ending vertical position channel                                |
 | `bend?`       | ConstantAccessor&lt;number, Datum&gt; \| true                                                                | the bend angle, in degrees; defaults to 0°; true for 22.5°          |
 | `headAngle?`  | ConstantAccessor&lt;number, Datum&gt;                                                                        | the arrowhead angle, in degrees; defaults to 60°                    |
 | `headLength?` | ConstantAccessor&lt;number, Datum&gt;                                                                        | the arrowhead scale; defaults to 8                                  |
 | `insetEnd?`   | ConstantAccessor&lt;number, Datum&gt;                                                                        | inset at the end of the arrow (useful if the arrow points to a dot) |
 | `insetStart?` | ConstantAccessor&lt;number, Datum&gt;                                                                        | inset at the start of the arrow                                     |
 | `inset?`      | ConstantAccessor&lt;number, Datum&gt;                                                                        | shorthand for the two insets                                        |
-| `sweep?`      | SweepOption                                                                                                  |                                                                     |
+| `sweep?`      | SweepOption                                                                                                  | controls the sweep direction of the arrow arc; 1 or -1              |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -253,12 +253,12 @@ Inherited props from [Brush](/api/marks#Brush).
 
 For arbitrary rectangles, requires band x and y scales
 
-| Prop      | Type                         | Description                          |
-| --------- | ---------------------------- | ------------------------------------ |
-| `data`    | Datum[]                      |                                      |
-| `x?`      | ChannelAccessor&lt;Datum&gt; |                                      |
-| `y?`      | ChannelAccessor&lt;Datum&gt; |                                      |
-| `canvas?` | boolean                      | Renders using Canvas instead of SVG. |
+| Prop      | Type                         | Description                                                 |
+| --------- | ---------------------------- | ----------------------------------------------------------- |
+| `data`    | Datum[]                      | the input data array; each element becomes one cell         |
+| `x?`      | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; typically an ordinal value |
+| `y?`      | ChannelAccessor&lt;Datum&gt; | the vertical position channel; typically an ordinal value   |
+| `canvas?` | boolean                      | Renders using Canvas instead of SVG.                        |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
 
@@ -266,9 +266,9 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 For arbitrary rectangles with fixed y position, requires band x scale
 
-| Prop   | Type    | Description |
-| ------ | ------- | ----------- |
-| `data` | Datum[] |             |
+| Prop   | Type    | Description          |
+| ------ | ------- | -------------------- |
+| `data` | Datum[] | the input data array |
 
 Inherited props from [Cell](/api/marks#Cell).
 
@@ -276,9 +276,9 @@ Inherited props from [Cell](/api/marks#Cell).
 
 For arbitrary rectangles with fixed x position, requires band y scale
 
-| Prop   | Type    | Description |
-| ------ | ------- | ----------- |
-| `data` | Datum[] |             |
+| Prop   | Type    | Description          |
+| ------ | ------- | -------------------- |
+| `data` | Datum[] | the input data array |
 
 Inherited props from [Cell](/api/marks#Cell).
 
@@ -317,15 +317,15 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Creates dots or symbols at specified positions with customizable size and appearance
 
-| Prop        | Type                                                              | Description |
-| ----------- | ----------------------------------------------------------------- | ----------- |
-| `data`      | Datum[]                                                           |             |
-| `x`         | ChannelAccessor&lt;Datum&gt;                                      |             |
-| `y`         | ChannelAccessor&lt;Datum&gt;                                      |             |
-| `r?`        | ChannelAccessor&lt;Datum&gt;                                      |             |
-| `symbol?`   | ChannelAccessor&lt;Datum&gt; \| Snippet&lt;[ number, string ]&gt; |             |
-| `canvas?`   | boolean                                                           |             |
-| `dotClass?` | ConstantAccessor&lt;string, Datum&gt;                             |             |
+| Prop        | Type                                                              | Description                                                                 |
+| ----------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `data`      | Datum[]                                                           | the input data array; each element becomes one dot                          |
+| `x`         | ChannelAccessor&lt;Datum&gt;                                      | the horizontal position channel                                             |
+| `y`         | ChannelAccessor&lt;Datum&gt;                                      | the vertical position channel                                               |
+| `r?`        | ChannelAccessor&lt;Datum&gt;                                      | the radius or symbol size channel; bound to the r scale                     |
+| `symbol?`   | ChannelAccessor&lt;Datum&gt; \| Snippet&lt;[ number, string ]&gt; | the symbol shape channel; can be a symbol name accessor or a custom Snippet |
+| `canvas?`   | boolean                                                           | if true, renders using Canvas instead of SVG                                |
+| `dotClass?` | ConstantAccessor&lt;string, Datum&gt;                             | CSS class name(s) to apply to individual dot elements                       |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -333,10 +333,10 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Creates a horizontal dot plot with x values along a single y position
 
-| Prop   | Type                         | Description |
-| ------ | ---------------------------- | ----------- |
-| `data` | Datum[]                      |             |
-| `x?`   | ChannelAccessor&lt;Datum&gt; |             |
+| Prop   | Type                         | Description                     |
+| ------ | ---------------------------- | ------------------------------- |
+| `data` | Datum[]                      | the input data array            |
+| `x?`   | ChannelAccessor&lt;Datum&gt; | the horizontal position channel |
 
 Inherited props from [Dot](/api/marks#Dot).
 
@@ -344,9 +344,9 @@ Inherited props from [Dot](/api/marks#Dot).
 
 Creates a horizontal dot plot with x values along a single y position
 
-| Prop   | Type    | Description |
-| ------ | ------- | ----------- |
-| `data` | Datum[] |             |
+| Prop   | Type    | Description          |
+| ------ | ------- | -------------------- |
+| `data` | Datum[] | the input data array |
 
 Inherited props from [Dot](/api/marks#Dot).
 
@@ -444,18 +444,18 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 For showing images positioned at x/y coordinates
 
-| Prop                   | Type                                  | Description |
-| ---------------------- | ------------------------------------- | ----------- |
-| `data`                 | Datum[]                               |             |
-| `x`                    | ChannelAccessor&lt;Datum&gt;          |             |
-| `y`                    | ChannelAccessor&lt;Datum&gt;          |             |
-| `r?`                   | ChannelAccessor&lt;Datum&gt;          |             |
-| `width?`               | ConstantAccessor&lt;number, Datum&gt; |             |
-| `height?`              | ConstantAccessor&lt;number, Datum&gt; |             |
-| `src?`                 | ConstantAccessor&lt;string, Datum&gt; |             |
-| `title?`               | ConstantAccessor&lt;string, Datum&gt; |             |
-| `preserveAspectRatio?` | string                                |             |
-| `imageClass?`          | ConstantAccessor&lt;string, Datum&gt; |             |
+| Prop                   | Type                                  | Description                                                                |
+| ---------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
+| `data`                 | Datum[]                               | the input data array; each element becomes one image                       |
+| `x`                    | ChannelAccessor&lt;Datum&gt;          | the horizontal position channel                                            |
+| `y`                    | ChannelAccessor&lt;Datum&gt;          | the vertical position channel                                              |
+| `r?`                   | ChannelAccessor&lt;Datum&gt;          | the clip radius for the image in pixels                                    |
+| `width?`               | ConstantAccessor&lt;number, Datum&gt; | the width of the image in pixels                                           |
+| `height?`              | ConstantAccessor&lt;number, Datum&gt; | the height of the image in pixels                                          |
+| `src?`                 | ConstantAccessor&lt;string, Datum&gt; | the image source URL                                                       |
+| `title?`               | ConstantAccessor&lt;string, Datum&gt; | the title attribute for the image element (shown as a browser tooltip)     |
+| `preserveAspectRatio?` | string                                | the SVG preserveAspectRatio attribute for the image (e.g. "xMidYMid meet") |
+| `imageClass?`          | ConstantAccessor&lt;string, Datum&gt; | CSS class name(s) to apply to individual image elements                    |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -463,25 +463,25 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Creates line charts with connecting points in a dataset with customizable curves and markers
 
-| Prop                    | Type                                                                                | Description |
-| ----------------------- | ----------------------------------------------------------------------------------- | ----------- |
-| `data?`                 | Datum[]                                                                             |             |
-| `x?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
-| `y?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
-| `z?`                    | ChannelAccessor&lt;Datum&gt;                                                        |             |
-| `outlineStroke?`        | string                                                                              |             |
-| `outlineStrokeWidth?`   | number                                                                              |             |
-| `outlineStrokeOpacity?` | number                                                                              |             |
-| `curve?`                | [CurveName](/api/marks#CurveName) \| CurveFactory \| 'auto'                         |             |
-| `tension?`              | number                                                                              |             |
-| `sort?`                 | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |             |
-| `text?`                 | ConstantAccessor&lt;string, Datum&gt;                                               |             |
-| `textFill?`             | ConstantAccessor&lt;string, Datum&gt;                                               |             |
-| `textStroke?`           | ConstantAccessor&lt;string, Datum&gt;                                               |             |
-| `textStartOffset?`      | ConstantAccessor&lt;string, Datum&gt;                                               |             |
-| `textStrokeWidth?`      | ConstantAccessor&lt;number, Datum&gt;                                               |             |
-| `lineClass?`            | ConstantAccessor&lt;string, Datum&gt;                                               |             |
-| `canvas?`               | boolean                                                                             |             |
+| Prop                    | Type                                                                                | Description                                                                             |
+| ----------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `data?`                 | Datum[]                                                                             | the input data array; each element becomes one point in the line                        |
+| `x?`                    | ChannelAccessor&lt;Datum&gt;                                                        | the horizontal position channel                                                         |
+| `y?`                    | ChannelAccessor&lt;Datum&gt;                                                        | the vertical position channel                                                           |
+| `z?`                    | ChannelAccessor&lt;Datum&gt;                                                        | the series channel; data is grouped into separate lines by unique z values              |
+| `outlineStroke?`        | string                                                                              | the stroke color for the line outline                                                   |
+| `outlineStrokeWidth?`   | number                                                                              | the stroke width of the line outline in pixels                                          |
+| `outlineStrokeOpacity?` | number                                                                              | the stroke opacity for the line outline; a number between 0 and 1                       |
+| `curve?`                | [CurveName](/api/marks#CurveName) \| CurveFactory \| 'auto'                         | the curve interpolation method for connecting data points (e.g. "basis", "catmull-rom") |
+| `tension?`              | number                                                                              | the tension parameter for cardinal or Catmull-Rom curve interpolation                   |
+| `sort?`                 | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} | controls the order of data points before rendering                                      |
+| `text?`                 | ConstantAccessor&lt;string, Datum&gt;                                               | text label to render along the line path using a textPath element                       |
+| `textFill?`             | ConstantAccessor&lt;string, Datum&gt;                                               | the fill color for the text label rendered along the line                               |
+| `textStroke?`           | ConstantAccessor&lt;string, Datum&gt;                                               | the stroke color for the text label rendered along the line                             |
+| `textStartOffset?`      | ConstantAccessor&lt;string, Datum&gt;                                               | the offset position for the text label along the line path (e.g. "50%")                 |
+| `textStrokeWidth?`      | ConstantAccessor&lt;number, Datum&gt;                                               | the stroke width for the text label rendered along the line in pixels                   |
+| `lineClass?`            | ConstantAccessor&lt;string, Datum&gt;                                               | CSS class name(s) to apply to individual line elements                                  |
+| `canvas?`               | boolean                                                                             | if true, renders using Canvas instead of SVG                                            |
 
 Inherited props from [MarkerOptions](/api/marks#MarkerOptions), [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -489,9 +489,9 @@ Inherited props from [MarkerOptions](/api/marks#MarkerOptions), [BaseMarkProps](
 
 Creates a horizontal line chart with x values and index positions for y
 
-| Prop   | Type    | Description |
-| ------ | ------- | ----------- |
-| `data` | Datum[] |             |
+| Prop   | Type    | Description          |
+| ------ | ------- | -------------------- |
+| `data` | Datum[] | the input data array |
 
 Inherited props from [Line](/api/marks#Line).
 
@@ -499,9 +499,9 @@ Inherited props from [Line](/api/marks#Line).
 
 Creates a horizontal line chart with x values and index positions for y
 
-| Prop   | Type    | Description |
-| ------ | ------- | ----------- |
-| `data` | Datum[] |             |
+| Prop   | Type    | Description          |
+| ------ | ------- | -------------------- |
+| `data` | Datum[] | the input data array |
 
 Inherited props from [Line](/api/marks#Line).
 
@@ -544,18 +544,18 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 For arbitrary rectangles, requires quantitative x and y scales
 
-| Prop        | Type                         | Description                          |
-| ----------- | ---------------------------- | ------------------------------------ |
-| `data`      | Datum[]                      |                                      |
-| `x?`        | ChannelAccessor&lt;Datum&gt; |                                      |
-| `x1?`       | ChannelAccessor&lt;Datum&gt; |                                      |
-| `x2?`       | ChannelAccessor&lt;Datum&gt; |                                      |
-| `y?`        | ChannelAccessor&lt;Datum&gt; |                                      |
-| `y1?`       | ChannelAccessor&lt;Datum&gt; |                                      |
-| `y2?`       | ChannelAccessor&lt;Datum&gt; |                                      |
-| `interval?` | number \| string             |                                      |
-| `class?`    | string                       |                                      |
-| `canvas?`   | boolean                      | Renders using Canvas instead of SVG. |
+| Prop        | Type                         | Description                                                                       |
+| ----------- | ---------------------------- | --------------------------------------------------------------------------------- |
+| `data`      | Datum[]                      | the input data array; each element becomes one rectangle                          |
+| `x?`        | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; used as shorthand for x1 and x2 with an interval |
+| `x1?`       | ChannelAccessor&lt;Datum&gt; | the starting horizontal position channel                                          |
+| `x2?`       | ChannelAccessor&lt;Datum&gt; | the ending horizontal position channel                                            |
+| `y?`        | ChannelAccessor&lt;Datum&gt; | the vertical position channel; used as shorthand for y1 and y2 with an interval   |
+| `y1?`       | ChannelAccessor&lt;Datum&gt; | the starting vertical position channel                                            |
+| `y2?`       | ChannelAccessor&lt;Datum&gt; | the ending vertical position channel                                              |
+| `interval?` | number \| string             | converts x/y into x1/x2 or y1/y2 ranges based on the provided interval            |
+| `class?`    | string                       | additional CSS class name(s) for the rect element                                 |
+| `canvas?`   | boolean                      | Renders using Canvas instead of SVG.                                              |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps).
 
@@ -563,9 +563,9 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Convenience wrapper for rectangles oriented along the x axis
 
-| Prop     | Type                                                   | Description |
-| -------- | ------------------------------------------------------ | ----------- |
-| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; |             |
+| Prop     | Type                                                   | Description                           |
+| -------- | ------------------------------------------------------ | ------------------------------------- |
+| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values |
 
 Inherited props from [Rect](/api/marks#Rect).
 
@@ -573,9 +573,9 @@ Inherited props from [Rect](/api/marks#Rect).
 
 Convenience wrapper for rectangles oriented along the x axis
 
-| Prop     | Type                                                   | Description |
-| -------- | ------------------------------------------------------ | ----------- |
-| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; |             |
+| Prop     | Type                                                   | Description                           |
+| -------- | ------------------------------------------------------ | ------------------------------------- |
+| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values |
 
 Inherited props from [Rect](/api/marks#Rect).
 
@@ -599,16 +599,16 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 Renders vertical rule lines at specified x positions with customizable vertical range
 
-| Prop           | Type                                  | Description |
-| -------------- | ------------------------------------- | ----------- |
-| `data?`        | Datum[]                               |             |
-| `x?`           | ChannelAccessor&lt;Datum&gt;          |             |
-| `y1?`          | ChannelAccessor&lt;Datum&gt;          |             |
-| `y2?`          | ChannelAccessor&lt;Datum&gt;          |             |
-| `inset?`       | ConstantAccessor&lt;number, Datum&gt; |             |
-| `insetTop?`    | ConstantAccessor&lt;number, Datum&gt; |             |
-| `insetBottom?` | ConstantAccessor&lt;number, Datum&gt; |             |
-| `canvas?`      | boolean                               |             |
+| Prop           | Type                                  | Description                                                  |
+| -------------- | ------------------------------------- | ------------------------------------------------------------ |
+| `data?`        | Datum[]                               | the input data array; each element becomes one vertical rule |
+| `x?`           | ChannelAccessor&lt;Datum&gt;          | the horizontal position channel for the rule                 |
+| `y1?`          | ChannelAccessor&lt;Datum&gt;          | the starting vertical position of the rule                   |
+| `y2?`          | ChannelAccessor&lt;Datum&gt;          | the ending vertical position of the rule                     |
+| `inset?`       | ConstantAccessor&lt;number, Datum&gt; | shorthand to inset the rule from both ends, in pixels        |
+| `insetTop?`    | ConstantAccessor&lt;number, Datum&gt; | inset the rule from the top, in pixels                       |
+| `insetBottom?` | ConstantAccessor&lt;number, Datum&gt; | inset the rule from the bottom, in pixels                    |
+| `canvas?`      | boolean                               | if true, renders using Canvas instead of SVG                 |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -616,16 +616,16 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders horizontal rule lines at specified y positions with customizable horizontal range
 
-| Prop          | Type                                  | Description |
-| ------------- | ------------------------------------- | ----------- |
-| `data?`       | Datum[]                               |             |
-| `y?`          | ChannelAccessor&lt;Datum&gt;          |             |
-| `x1?`         | ChannelAccessor&lt;Datum&gt;          |             |
-| `x2?`         | ChannelAccessor&lt;Datum&gt;          |             |
-| `inset?`      | ConstantAccessor&lt;number, Datum&gt; |             |
-| `insetLeft?`  | ConstantAccessor&lt;number, Datum&gt; |             |
-| `insetRight?` | ConstantAccessor&lt;number, Datum&gt; |             |
-| `canvas?`     | boolean                               |             |
+| Prop          | Type                                  | Description                                                    |
+| ------------- | ------------------------------------- | -------------------------------------------------------------- |
+| `data?`       | Datum[]                               | the input data array; each element becomes one horizontal rule |
+| `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position channel for the rule                     |
+| `x1?`         | ChannelAccessor&lt;Datum&gt;          | the starting horizontal position of the rule                   |
+| `x2?`         | ChannelAccessor&lt;Datum&gt;          | the ending horizontal position of the rule                     |
+| `inset?`      | ConstantAccessor&lt;number, Datum&gt; | shorthand to inset the rule from both ends, in pixels          |
+| `insetLeft?`  | ConstantAccessor&lt;number, Datum&gt; | inset the rule from the left, in pixels                        |
+| `insetRight?` | ConstantAccessor&lt;number, Datum&gt; | inset the rule from the right, in pixels                       |
+| `canvas?`     | boolean                               | if true, renders using Canvas instead of SVG                   |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -656,30 +656,30 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 Useful for adding SVG text labels to your plot.
 
-| Prop              | Type                                                                                                                                              | Description                                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `data?`           | Datum[]                                                                                                                                           |                                                                                                |
-| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                                                                |
-| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      |                                                                                                |
-| `children?`       | Snippet                                                                                                                                           |                                                                                                |
-| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                               |                                                                                                |
-| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                             |                                                                                                |
-| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                            | the font size of the text                                                                      |
-| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                    |                                                                                                |
-| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                            |                                                                                                |
-| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                             |                                                                                                |
-| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                           |                                                                                                |
-| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                         |                                                                                                |
-| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                           |                                                                                                |
-| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                         |                                                                                                |
-| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                        |                                                                                                |
-| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                            | the horizontal text anchor; start, end, or middle                                              |
-| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                             | the line anchor for vertical position; top, bottom, or middle                                  |
-| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | line height as multiplier of font size                                                         |
-| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle', Datum&gt; |                                                                                                |
-| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | rotate text by angle in degrees                                                                |
-| `canvas?`         | false \| undefined \| true                                                                                                                        | renders texts as canvas instead of SVG                                                         |
-| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | if you want to apply class names to individual text elements. Only supported in SVG rendering. |
+| Prop              | Type                                                                                                                                              | Description                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `data?`           | Datum[]                                                                                                                                           | the input data array; each element becomes one text label                                           |
+| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      | the horizontal position channel                                                                     |
+| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      | the vertical position channel                                                                       |
+| `children?`       | Snippet                                                                                                                                           | a Snippet to render as the text content                                                             |
+| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                               | the text content accessor                                                                           |
+| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | the title attribute for the text element (shown as a browser tooltip)                               |
+| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                            | the font family of the text                                                                         |
+| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                    | the font size of the text; can be a CSS string or number in pixels                                  |
+| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                            | the font weight of the text (e.g. "bold", 700)                                                      |
+| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                             | the font style of the text (e.g. "italic", "normal")                                                |
+| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                           | the font variant of the text (e.g. "small-caps")                                                    |
+| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                         | the letter spacing of the text                                                                      |
+| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                           | the word spacing of the text                                                                        |
+| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                         | the text transform (e.g. "uppercase", "lowercase")                                                  |
+| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                        | the text decoration (e.g. "underline", "line-through")                                              |
+| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                            | the horizontal text anchor; start, end, or middle                                                   |
+| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                             | the line anchor for vertical position; top, bottom, or middle                                       |
+| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | line height as multiplier of font size                                                              |
+| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle', Datum&gt; | the anchor position within the plot frame when x or y are not specified (e.g. "top-left", "middle") |
+| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | rotate text by angle in degrees                                                                     |
+| `canvas?`         | false \| undefined \| true                                                                                                                        | renders texts as canvas instead of SVG                                                              |
+| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | if you want to apply class names to individual text elements. Only supported in SVG rendering.      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 

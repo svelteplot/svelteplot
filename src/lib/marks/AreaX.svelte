@@ -4,7 +4,9 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface AreaXMarkProps extends Omit<ComponentProps<typeof Area>, 'y1' | 'y2'> {
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
     }
     import Area from './Area.svelte';

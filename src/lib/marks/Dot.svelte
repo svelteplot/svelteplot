@@ -3,12 +3,19 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface DotMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input data array; each element becomes one dot */
         data: Datum[];
+        /** the horizontal position channel */
         x: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y: ChannelAccessor<Datum>;
+        /** the radius or symbol size channel; bound to the r scale */
         r?: ChannelAccessor<Datum>;
+        /** the symbol shape channel; can be a symbol name accessor or a custom Snippet */
         symbol?: ChannelAccessor<Datum> | Snippet<[number, string]>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
+        /** CSS class name(s) to apply to individual dot elements */
         dotClass?: ConstantAccessor<string, Datum>;
     }
 
