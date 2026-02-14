@@ -21,23 +21,25 @@
 
     interface WaffleXMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {
+        /** the input data array */
         data?: Datum[];
         /**
-         * bound to a quantitative scale
+         * the horizontal position channel; bound to a quantitative scale
          */
         x?: ChannelAccessor<Datum>;
         /**
-         * bound to a quantitative scale
+         * the starting horizontal position; bound to a quantitative scale
          */
         x1?: ChannelAccessor<Datum>;
         /**
-         * bound to a quantitative scale
+         * the ending horizontal position; bound to a quantitative scale
          */
         x2?: ChannelAccessor<Datum>;
         /**
-         * bound to a band scale
+         * the vertical position channel; bound to a band scale
          */
         y?: ChannelAccessor<Datum>;
+        /** stacking options for combining multiple series */
         stack?: StackOptions;
     }
 

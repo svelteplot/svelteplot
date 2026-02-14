@@ -1,10 +1,15 @@
 import type { ConstantAccessor, RawValue } from './index.js';
 
+/** a record of channel names to their accessor definitions */
 export type Channels<T> = Record<
     string | symbol,
     ChannelAccessor<T> | ConstantAccessor<T, string | number | boolean | symbol>
 >;
 
+/**
+ * a channel accessor: either a simple channel value, or an object with
+ * a value and an optional scale override
+ */
 export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
     | ChannelValue<T>
     | {
@@ -14,6 +19,10 @@ export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
           scale: boolean | null;
       };
 
+/**
+ * the value for a channel: a constant, a data field name, an accessor
+ * function, or null/undefined to leave the channel unset
+ */
 export type ChannelValue<T = Record<string | symbol, RawValue>> =
     | RawValue
     | keyof T
@@ -21,6 +30,7 @@ export type ChannelValue<T = Record<string | symbol, RawValue>> =
     | null
     | undefined;
 
+/** the name of a channel that is bound to a scale */
 export type ScaledChannelName =
     | 'fill'
     | 'fillOpacity'
@@ -39,8 +49,10 @@ export type ScaledChannelName =
     | 'y1'
     | 'y2';
 
+/** maps a scaled channel name to its output type (string for color/symbol, number otherwise) */
 export type ScaledChannelType<T extends ScaledChannelName> = T extends 'fill' | 'stroke' | 'symbol'
     ? string
     : number;
 
+/** all channel names, including non-scaled channels like z, sort, filter, and interval */
 export type ChannelName = ScaledChannelName | 'z' | 'sort' | 'filter' | 'interval';

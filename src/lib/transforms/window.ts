@@ -6,16 +6,28 @@ import type { DataRecord, ScaledChannelName, TransformArg } from '../types/index
 import { groups as d3Groups } from 'd3-array';
 
 type WindowOptions = {
+    /** the window size (number of data points) */
     k: number;
+    /** a time interval string to use instead of a fixed window size */
     interval: string;
+    /** where to align the window relative to the current data point */
     anchor: 'start' | 'middle' | 'end';
+    /** the reducer function to apply within each window (e.g. "mean", "median", "sum") */
     reduce: ReducerName;
+    /** if true, return null when the window has fewer than k values */
     strict: boolean;
 };
 
+/**
+ * applies a sliding window reducer to the x channel
+ */
 export function windowX(args: TransformArg<DataRecord>, options: WindowOptions) {
     return windowDim('x', args, options);
 }
+
+/**
+ * applies a sliding window reducer to the y channel
+ */
 export function windowY(args: TransformArg<DataRecord>, options: WindowOptions) {
     return windowDim('y', args, options);
 }

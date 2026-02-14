@@ -7,10 +7,14 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyo
         [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
     }[Keys];
 
+/** per-channel shift amounts for x channels; values can be numbers or time interval strings (e.g. "1 month") */
 type ShiftXOptions = {
     [key in 'x' | 'x1' | 'x2']: string | number;
 };
 
+/**
+ * shifts the x channel values by a fixed amount or time interval
+ */
 export function shiftX(
     { data, ...channels }: TransformArg<DataRecord>,
     shiftBy: string | number | RequireAtLeastOne<ShiftXOptions>
@@ -24,10 +28,14 @@ export function shiftX(
     return { data, ...channels };
 }
 
+/** per-channel shift amounts for y channels; values can be numbers or time interval strings (e.g. "1 month") */
 type ShiftYOptions = {
     [key in 'y' | 'y1' | 'y2']: string | number;
 };
 
+/**
+ * shifts the y channel values by a fixed amount or time interval
+ */
 export function shiftY(
     { data, ...channels }: TransformArg<DataRecord>,
     shiftBy: string | number | RequireAtLeastOne<ShiftYOptions>

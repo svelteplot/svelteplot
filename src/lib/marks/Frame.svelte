@@ -8,16 +8,27 @@
             Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
             BaseRectMarkProps<Datum>,
             LinkableMarkProps<Datum> {
+        /** the fill color of the frame */
         fill?: string;
+        /** the stroke color of the frame */
         stroke?: string;
+        /** the fill opacity of the frame */
         fillOpacity?: number;
+        /** the stroke opacity of the frame */
         strokeOpacity?: number;
+        /** the overall opacity of the frame */
         opacity?: number;
+        /** whether this frame was automatically added by the Plot component */
         automatic?: boolean;
+        /** shorthand to inset the frame from all edges, in pixels */
         inset?: number;
+        /** inset the frame from the left edge, in pixels */
         insetLeft?: number;
+        /** inset the frame from the right edge, in pixels */
         insetRight?: number;
+        /** inset the frame from the top edge, in pixels */
         insetTop?: number;
+        /** inset the frame from the bottom edge, in pixels */
         insetBottom?: number;
     }
     import Mark from '../Mark.svelte';
