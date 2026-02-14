@@ -1,11 +1,18 @@
 <script lang="ts" generics="Datum extends DataRow">
     interface PointerMarkProps {
+        /** the input data array */
         data: Datum[];
+        /** snippet rendered with the currently selected data points */
         children?: Snippet<[{ data: Datum[] }]>;
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** grouping channel for splitting data into separate search trees */
         z?: ChannelAccessor<Datum>;
+        /** the horizontal facet channel */
         fx?: ChannelAccessor<Datum>;
+        /** the vertical facet channel */
         fy?: ChannelAccessor<Datum>;
         /**
          * maximum cursor distance to select data points

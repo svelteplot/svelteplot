@@ -15,6 +15,7 @@
         | 'strokeLinejoin'
         | 'strokeMiterlimit'
     > {
+        /** the brush state object (bindable); contains x1, x2, y1, y2, and enabled */
         brush: Brush;
         /**
          * limit brushing to x or y dimension
@@ -28,8 +29,11 @@
          * size of the (invisible) drag resize area around the edges of the brush selection
          */
         resizeHandleSize?: number;
+        /** called when the user starts dragging to create or move a brush */
         onbrushstart?: (evt: BrushEvent) => void;
+        /** called when the user finishes dragging the brush */
         onbrushend?: (evt: BrushEvent) => void;
+        /** called continuously while the user is dragging the brush */
         onbrush?: (evt: BrushEvent) => void;
     }
     import { getContext, untrack } from 'svelte';
