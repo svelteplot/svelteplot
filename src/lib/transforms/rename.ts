@@ -51,6 +51,10 @@ export function renameChannelsAndData<T>(
     return renameChannels({ data: newData, ...channels }, options);
 }
 
+/**
+ * copies a channel's accessor to multiple target channels, then removes
+ * the source channel
+ */
 export function replaceChannels<T>(
     { data, ...channels }: TransformArg<T, DataRecord>,
     options: ReplaceChannelsOptions
