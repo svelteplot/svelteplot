@@ -98,11 +98,11 @@ jobs:
               run: |
                   cat > ts-error-report.json <<EOF
                   {
-                    "pr_number": ${{ github.event.pull_request.number }},
                     "ts_errors_pr": ${TS_ERRORS_PR:-0},
                     "ts_errors_main": ${TS_ERRORS_MAIN:-0},
                     "svelte_errors_pr": ${SVELTE_ERRORS_PR:-0},
-                    "svelte_errors_main": ${SVELTE_ERRORS_MAIN:-0}
+                    "svelte_errors_main": ${SVELTE_ERRORS_MAIN:-0},
+                    "workflow_run_head_sha": "${{ github.sha }}"
                   }
                   EOF
 

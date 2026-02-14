@@ -45,11 +45,21 @@ jobs:
                         return;
                       }
 
+                      const pullRequests = context.payload.workflow_run?.pull_requests || [];
+                      const prNumber = pullRequests[0]?.number;
+                      if (!prNumber) {
+                        core.info('No pull request found on workflow_run payload, skipping PR comment.');
+                        return;
+                      }
+
                       const report = JSON.parse(fs.readFileSync(path, 'utf8'));
                       const toNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
-                      const prNumber = toNumber(report.pr_number);
-                      if (!prNumber) {
-                        core.info('No PR number in report, skipping PR comment.');
+                      const expectedHeadSha = context.payload.workflow_run?.head_sha || '';
+                      const reportedHeadSha = String(report.workflow_run_head_sha || '');
+                      if (!reportedHeadSha || reportedHeadSha !== expectedHeadSha) {
+                        core.warning(
+                          `Head SHA mismatch between workflow_run (${expectedHeadSha}) and artifact (${reportedHeadSha}). Skipping PR comment.`
+                        );
                         return;
                       }
 
