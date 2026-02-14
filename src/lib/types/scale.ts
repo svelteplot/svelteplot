@@ -34,9 +34,19 @@ export type ScaleOptions = {
      * Reverse the scale.
      */
     reverse: boolean;
+    /**
+     * the axis label for this scale, or false to disable the automatic label
+     */
     label: string | false;
+    /**
+     * the interval for ordinal/temporal scales, e.g. 'day', 'month', or a numeric step
+     */
     interval: string | number;
     // quantitative scales
+    /**
+     * clamp values outside the domain to the nearest domain boundary
+     * (applicable to quantitative scales only)
+     */
     clamp: boolean;
     /**
      * Extend the domain to nice round numbers (applicable to quantitative scales only)
@@ -46,8 +56,18 @@ export type ScaleOptions = {
      * Include zero in the scale domain (applicable to quantitative scales only)
      */
     zero: boolean;
+    /**
+     * round interpolated values to integers (applicable to quantitative scales only)
+     */
     round: boolean;
+    /**
+     * format values as percentages and append (%) to the axis label
+     * (applicable to quantitative scales only)
+     */
     percent: boolean;
+    /**
+     * custom transformation function applied to values before scaling
+     */
     transform?: (d: RawValue) => RawValue;
     // point & band scales
     /**
@@ -68,15 +88,39 @@ export type ScaleOptions = {
      */
     paddingOuter: number;
     // position scales
+    /**
+     * reduce the scale range by this many pixels on the left side
+     */
     insetLeft: number;
+    /**
+     * reduce the scale range by this many pixels on the right side
+     */
     insetRight: number;
+    /**
+     * reduce the scale range by this many pixels on the top side
+     */
     insetTop: number;
+    /**
+     * reduce the scale range by this many pixels on the bottom side
+     */
     insetBottom: number;
+    /**
+     * explicit tick values to use instead of automatic tick generation
+     */
     ticks: (number | Date)[];
+    /**
+     * desired pixel distance between ticks for automatic tick generation
+     */
     tickSpacing: number;
     // log scales
+    /**
+     * the logarithm base for log scales (default 10)
+     */
     base: number;
-    // sorting for band and point scales
+    /**
+     * controls domain ordering for band and point scales; can be a channel
+     * accessor, a comparator function, or an object with channel and order
+     */
     sort:
         | ChannelAccessor
         | ((a: RawValue, b: RawValue) => number)
@@ -84,12 +128,22 @@ export type ScaleOptions = {
               channel: string;
               order: 'ascending' | 'descending';
           };
-    // symlog scales
+    /**
+     * the constant parameter for symlog scales, controlling the transition
+     * between linear and logarithmic behavior near zero (default 1)
+     */
     constant: number;
 };
 
 export type ColorScaleOptions = ScaleOptions & {
+    /**
+     * if true, show a color legend for this scale
+     */
     legend: boolean;
+    /**
+     * the color scale type; extends the base scale types with color-specific
+     * types like categorical, sequential, diverging, etc.
+     */
     type:
         | ScaleType
         | 'categorical'
@@ -103,6 +157,9 @@ export type ColorScaleOptions = ScaleOptions & {
         | 'diverging-pow'
         | 'diverging-sqrt'
         | 'diverging-symlog';
+    /**
+     * the name of the color scheme to use, e.g. 'blues', 'turbo', 'rdylbu'
+     */
     scheme: string;
     /**
      * fallback color used for null/undefined
@@ -116,6 +173,9 @@ export type ColorScaleOptions = ScaleOptions & {
      * number of colors for quantize and quantile-threshold scales
      */
     n: number;
+    /**
+     * custom interpolation function for the color scale output
+     */
     interpolate: (d: any) => typeof d;
     /**
      * The tick format for the color scale legend.
@@ -164,10 +224,15 @@ export type XScaleOptions = ScaleOptions & {
      */
     tickRotate: number;
 
+    /**
+     * horizontal position of the axis label
+     */
     labelAnchor: 'auto' | 'left' | 'center' | 'right';
-
+    /**
+     * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
+     * object, or a function mapping values to strings
+     */
     tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
-
     /**
      * Enable word wrapping for axis tick labels, default true
      */
@@ -191,23 +256,44 @@ export type YScaleOptions = ScaleOptions & {
      * add an explicit AxisY mark to your plot instead of using the implicit axes.
      */
     axis: AxisYAnchor | false;
+    /**
+     * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
+     * object, or a function mapping values to strings
+     */
     tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
     /**
      * rotate the axis ticks
      */
     tickRotate: number;
-
+    /**
+     * vertical position of the axis label
+     */
     labelAnchor: 'auto' | 'bottom' | 'middle' | 'top';
 };
 
 export type LegendScaleOptions = ScaleOptions & {
+    /**
+     * if true, show a legend for this scale
+     */
     legend: boolean;
 };
 
 export type PlotScale = {
+    /**
+     * the resolved scale type
+     */
     type: ScaleType;
+    /**
+     * the resolved domain of the scale
+     */
     domain: RawValue[];
+    /**
+     * the resolved range of the scale
+     */
     range: RawValue[];
+    /**
+     * automatically computed axis label based on data channel names
+     */
     autoTitle?: string;
     /**
      * The number of marks that are using this scale.
@@ -217,7 +303,14 @@ export type PlotScale = {
      * Set of accessors used in channels that are bound to this scale.
      */
     uniqueScaleProps: Set<ChannelAccessor>;
+    /**
+     * tracks which marks should skip this scale for specific channels,
+     * e.g. when channel values are already in output space
+     */
     skip: Map<ScaledChannelName, Set<symbol>>;
+    /**
+     * the underlying d3 scale function that maps domain values to range values
+     */
     fn: ScaleLinear<RawValue, number> &
         ScaleBand<RawValue[]> &
         ScaleOrdinal<string | Date, number> &
