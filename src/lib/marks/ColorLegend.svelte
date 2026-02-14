@@ -1,5 +1,6 @@
 <script lang="ts">
     interface ColorLegendMarkProps {
+        /** CSS class applied to the legend container element */
         class: string | null;
     }
     import Plot from '../Plot.svelte';

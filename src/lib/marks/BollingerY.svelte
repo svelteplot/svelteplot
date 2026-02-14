@@ -13,8 +13,11 @@
     import { pick } from 'es-toolkit';
 
     interface BollingerYMarkProps extends BaseMarkProps<Datum> {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; used for grouping */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; the dependent variable for the moving average */
         y?: ChannelAccessor<Datum>;
         /**
          * the window size (the window transform's k option), an integer; defaults to 20
