@@ -21,16 +21,25 @@ type JitterOptions = {
     source?: () => number;
 } & ({ type: 'uniform'; width?: number | string } | { type: 'normal'; std?: number | string });
 
+/**
+ * adds random noise to the x channel values
+ */
 export function jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'> {
     return jitter(args, { x: options });
 }
 
+/**
+ * adds random noise to the y channel values
+ */
 export function jitterY<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'y'> {
     return jitter(args, { y: options });
 }
 
 type PositionalScale = 'x' | 'x1' | 'x2' | 'y' | 'y1' | 'y2';
 
+/**
+ * adds random noise to one or more positional channels
+ */
 export function jitter<T, C extends TransformArg<T>>(
     { data, ...channels }: C,
     options: Partial<Record<PositionalScale, JitterOptions>>

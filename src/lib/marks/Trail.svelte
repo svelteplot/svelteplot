@@ -3,16 +3,27 @@
         BaseMarkProps<Datum>,
         'stroke' | 'strokeWidth' | 'strokeDasharray'
     > {
+        /** the input data array */
         data?: Datum[];
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** grouping channel for splitting data into separate trails */
         z?: ChannelAccessor<Datum>;
+        /** the radius (width) of the trail at each data point */
         r?: ChannelAccessor<Datum>;
+        /** the curve interpolation type for connecting data points */
         curve?: CurveName | CurveFactory;
+        /** tension parameter for the curve interpolation */
         tension?: number;
+        /** sort order for data points before rendering */
         sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
+        /** accessor that returns false for data points that should create gaps in the trail */
         defined?: ConstantAccessor<boolean, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
+        /** the cap style for trail endpoints */
         cap?: 'butt' | 'round';
         /**
          * Samples per segment for curve interpolation

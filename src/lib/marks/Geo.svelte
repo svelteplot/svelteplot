@@ -3,7 +3,9 @@
 -->
 <script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface GeoMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input GeoJSON data array */
         data?: Datum[] | { type: 'Sphere' }[];
+        /** internal: whether this is a sphere or graticule geo mark */
         geoType?: 'sphere' | 'graticule';
         /**
          * todo: implement?
@@ -21,6 +23,7 @@
          * radius for point features
          */
         r?: ChannelAccessor<Datum>;
+        /** SVG filter attribute applied to each geo path element */
         svgFilter?: ConstantAccessor<string | undefined, Datum>;
     }
     import type {

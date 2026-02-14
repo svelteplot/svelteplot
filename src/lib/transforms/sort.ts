@@ -7,6 +7,10 @@ import { randomLcg } from 'd3-random';
 export const SORT_KEY = Symbol('sortKey');
 export const IS_SORTED = Symbol('isSorted');
 
+/**
+ * sorts the data according to the sort channel option; supports channel
+ * accessors, comparator functions, and {channel, order} objects
+ */
 export function sort<T>(
     { data, ...channels }: TransformArg<T>,
     options: { reverse?: boolean } = {}
