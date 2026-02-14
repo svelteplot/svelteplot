@@ -4,7 +4,9 @@
 
 <script lang="ts" generics="Datum extends DataRecord">
     interface LinkMarkProps extends BaseMarkProps<Datum>, MarkerOptions {
+        /** the input data array; each element becomes one link */
         data: Datum[];
+        /** sort order for data points before rendering */
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
         /**
          * the x1 channel accessor for the start of the link
@@ -18,7 +20,7 @@
          * the x2 channel accessor for the end of the link
          */
         x2: ChannelAccessor<Datum>;
-
+        /** the y2 channel accessor for the end of the link */
         y2: ChannelAccessor<Datum>;
         /**
          * the curve type, defaults to 'auto' which uses a linear curve for planar projections

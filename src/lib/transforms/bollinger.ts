@@ -12,6 +12,10 @@ export type BollingerOptions = {
     k?: number;
 };
 
+/**
+ * computes Bollinger bands for the x channel, producing x1 (lower), x (mean),
+ * and x2 (upper) channels
+ */
 export function bollingerX<T>(
     args: TransformArg<T>,
     options: BollingerOptions = {}
@@ -19,6 +23,10 @@ export function bollingerX<T>(
     return bollingerDim('x', args, options);
 }
 
+/**
+ * computes Bollinger bands for the y channel, producing y1 (lower), y (mean),
+ * and y2 (upper) channels
+ */
 export function bollingerY<T>(
     args: TransformArg<T>,
     options: BollingerOptions = {}

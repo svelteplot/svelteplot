@@ -3,9 +3,13 @@
 -->
 <script lang="ts" generics="Datum = RawValue">
     interface GridYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** custom values at which to draw horizontal gridlines */
         data?: Datum[];
+        /** whether these gridlines were automatically added by the Plot component */
         automatic?: boolean;
+        /** the starting horizontal position of the gridline */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position of the gridline */
         x2?: ChannelAccessor<Datum>;
     }
     import Mark from '../Mark.svelte';

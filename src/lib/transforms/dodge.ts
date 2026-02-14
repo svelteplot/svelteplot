@@ -3,20 +3,25 @@ import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import type { ScaledDataRecord, TransformArg, PlotState } from 'svelteplot/types';
 
 type BaseDodgeOptions = {
+    /** the anchor side for placing dodged marks */
     anchor?: string;
+    /** the padding between dodged marks, in pixels */
     padding?: number;
+    /** the radius of dodged marks, in pixels */
     r?: number;
 };
 
 type AnchorX = 'left' | 'right' | 'middle';
 type AnchorY = 'top' | 'bottom' | 'middle';
 
+/** options for horizontal dodge positioning; can be an anchor string or a full options object */
 export type DodgeXOptions =
     | AnchorX
     | (BaseDodgeOptions & {
           anchor?: 'left' | 'right' | 'middle';
       });
 
+/** options for vertical dodge positioning; can be an anchor string or a full options object */
 export type DodgeYOptions =
     | AnchorY
     | (BaseDodgeOptions & {
@@ -25,6 +30,9 @@ export type DodgeYOptions =
 
 type AnchorFunction = (d: PlotState) => [number, number];
 
+/**
+ * offsets marks horizontally to avoid overlap, using circle-packing
+ */
 export function dodgeX(
     args: TransformArg<ScaledDataRecord>,
     plotState: PlotState
@@ -52,6 +60,9 @@ export function dodgeX(
     return dodge('x', 'y', anchorFunction, Number(padding), r, args, plotState);
 }
 
+/**
+ * offsets marks vertically to avoid overlap, using circle-packing
+ */
 export function dodgeY(
     args: TransformArg<ScaledDataRecord>,
     plotState: PlotState

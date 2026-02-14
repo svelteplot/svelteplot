@@ -5,6 +5,7 @@
 
 <script lang="ts" generics="Datum extends DataRow">
     interface TickXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one vertical tick */
         data: Datum[];
         /**
          * the horizontal position; bound to the x scale
@@ -20,6 +21,7 @@
          * length of the tick. Defaults to 10 pixel
          */
         tickLength?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';

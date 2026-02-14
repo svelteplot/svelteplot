@@ -4,18 +4,29 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface CustomMarkProps extends BaseMarkProps<Datum> {
+        /** the input data array */
         data?: Datum[];
+        /** a custom mark type identifier for debugging */
         type?: string;
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the starting horizontal position; bound to the x scale */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position; bound to the x scale */
         x2?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** the starting vertical position; bound to the y scale */
         y1?: ChannelAccessor<Datum>;
+        /** the ending vertical position; bound to the y scale */
         y2?: ChannelAccessor<Datum>;
+        /** the radius channel; bound to the r scale */
         r?: ChannelAccessor<Datum>;
+        /** snippet rendered once per data point with the scaled record */
         mark?: Snippet<
             [{ record: ScaledDataRecord<Datum>; index: number; usedScales: UsedScales }]
         >;
+        /** snippet rendered once with all scaled records */
         marks?: Snippet<[{ records: ScaledDataRecord<Datum>[]; usedScales: UsedScales }]>;
     }
 
