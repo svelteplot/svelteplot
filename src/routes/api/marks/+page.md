@@ -77,27 +77,27 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders a horizontal axis with labels and tick marks
 
-| Prop                    | Type                                                                                                        | Description                                                   |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `data?`                 | Datum[]                                                                                                     |                                                               |
-| `automatic?`            | boolean                                                                                                     |                                                               |
-| `title?`                | string \| false \| null                                                                                     |                                                               |
-| `anchor?`               | 'top' \| 'bottom'                                                                                           |                                                               |
-| `interval?`             | string \| number                                                                                            |                                                               |
-| `facetAnchor?`          | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                                                |                                                               |
-| `labelAnchor?`          | 'auto' \| 'left' \| 'center' \| 'right'                                                                     |                                                               |
-| `tickSize?`             | number                                                                                                      |                                                               |
-| `tickFontSize?`         | ConstantAccessor&lt;number, Datum&gt;                                                                       |                                                               |
-| `titleFontSize?`        | number                                                                                                      |                                                               |
-| `tickPadding?`          | number                                                                                                      |                                                               |
-| `tickFormat?`           | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue, i: number) =&gt; string) |                                                               |
-| `tickClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                                       |                                                               |
-| `ticks?`                | number \| string \| Datum[]                                                                                 | ticks is a shorthand for defining data, tickCount or interval |
-| `text?`                 | boolean \| null                                                                                             | set to false or null to disable tick labels                   |
-| `tickCount?`            | number                                                                                                      | approximate number of ticks to be generated                   |
-| `tickSpacing?`          | number                                                                                                      | approximate number of pixels between generated ticks          |
-| `textAnchor?`           | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                                            | text anchor for axis labels                                   |
-| `removeDuplicateTicks?` | boolean                                                                                                     | you can set this to true to remove duplicate tick labels      |
+| Prop                    | Type                                                                                                        | Description                                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `data?`                 | Datum[]                                                                                                     | custom tick values to display on the axis                                                     |
+| `automatic?`            | boolean                                                                                                     | whether this axis was automatically added by the Plot component                               |
+| `title?`                | string \| false \| null                                                                                     | the axis title label; set to false or null to hide                                            |
+| `anchor?`               | 'top' \| 'bottom'                                                                                           | which edge of the plot the axis appears on                                                    |
+| `interval?`             | string \| number                                                                                            | the interval between ticks, e.g. "day", "month", or a number                                  |
+| `facetAnchor?`          | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                                                | controls which facet edge displays this axis                                                  |
+| `labelAnchor?`          | 'auto' \| 'left' \| 'center' \| 'right'                                                                     | horizontal alignment of the axis title                                                        |
+| `tickSize?`             | number                                                                                                      | the length of tick marks in pixels                                                            |
+| `tickFontSize?`         | ConstantAccessor&lt;number, Datum&gt;                                                                       | font size for tick labels                                                                     |
+| `titleFontSize?`        | number                                                                                                      | font size for the axis title                                                                  |
+| `tickPadding?`          | number                                                                                                      | spacing between tick marks and tick labels in pixels                                          |
+| `tickFormat?`           | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue, i: number) =&gt; string) | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
+| `tickClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                                       | CSS class applied to each tick label                                                          |
+| `ticks?`                | number \| string \| Datum[]                                                                                 | ticks is a shorthand for defining data, tickCount or interval                                 |
+| `text?`                 | boolean \| null                                                                                             | set to false or null to disable tick labels                                                   |
+| `tickCount?`            | number                                                                                                      | approximate number of ticks to be generated                                                   |
+| `tickSpacing?`          | number                                                                                                      | approximate number of pixels between generated ticks                                          |
+| `textAnchor?`           | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                                            | text anchor for axis labels                                                                   |
+| `removeDuplicateTicks?` | boolean                                                                                                     | you can set this to true to remove duplicate tick labels                                      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -105,27 +105,27 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders a vertical axis with labels and tick marks
 
-| Prop             | Type                                                                                             | Description                                                   |
-| ---------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| `data?`          | Datum[]                                                                                          |                                                               |
-| `automatic?`     | boolean                                                                                          |                                                               |
-| `title?`         | string \| false \| null                                                                          |                                                               |
-| `anchor?`        | 'left' \| 'right'                                                                                |                                                               |
-| `facetAnchor?`   | 'auto' \| 'left' \| 'right' \| 'left-empty' \| 'right-empty'                                     |                                                               |
-| `lineAnchor?`    | 'top' \| 'center' \| 'bottom'                                                                    |                                                               |
-| `interval?`      | string \| number                                                                                 |                                                               |
-| `labelAnchor?`   | 'auto' \| 'left' \| 'center' \| 'right'                                                          |                                                               |
-| `textAnchor?`    | 'auto' \| 'start' \| 'middle' \| 'end'                                                           |                                                               |
-| `tickSize?`      | number                                                                                           |                                                               |
-| `tickFontSize?`  | ConstantAccessor&lt;number, Datum&gt;                                                            |                                                               |
-| `titleFontSize?` | number                                                                                           |                                                               |
-| `tickPadding?`   | number                                                                                           |                                                               |
-| `tickFormat?`    | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue) =&gt; string) |                                                               |
-| `tickClass?`     | ConstantAccessor&lt;string, Datum&gt;                                                            |                                                               |
-| `ticks?`         | number \| string \| Datum[]                                                                      | ticks is a shorthand for defining data, tickCount or interval |
-| `text?`          | boolean \| null                                                                                  | set to false or null to disable tick labels                   |
-| `tickCount?`     | number                                                                                           | approximate number of ticks to be generated                   |
-| `tickSpacing?`   | number                                                                                           | approximate number of pixels between generated ticks          |
+| Prop             | Type                                                                                             | Description                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `data?`          | Datum[]                                                                                          | custom tick values to display on the axis                                                     |
+| `automatic?`     | boolean                                                                                          | whether this axis was automatically added by the Plot component                               |
+| `title?`         | string \| false \| null                                                                          | the axis title label; set to false or null to hide                                            |
+| `anchor?`        | 'left' \| 'right'                                                                                | which edge of the plot the axis appears on                                                    |
+| `facetAnchor?`   | 'auto' \| 'left' \| 'right' \| 'left-empty' \| 'right-empty'                                     | controls which facet edge displays this axis                                                  |
+| `lineAnchor?`    | 'top' \| 'center' \| 'bottom'                                                                    | vertical alignment of tick labels relative to the tick position                               |
+| `interval?`      | string \| number                                                                                 | the interval between ticks, e.g. "day", "month", or a number                                  |
+| `labelAnchor?`   | 'auto' \| 'left' \| 'center' \| 'right'                                                          | horizontal alignment of the axis title                                                        |
+| `textAnchor?`    | 'auto' \| 'start' \| 'middle' \| 'end'                                                           | text anchor for tick labels                                                                   |
+| `tickSize?`      | number                                                                                           | the length of tick marks in pixels                                                            |
+| `tickFontSize?`  | ConstantAccessor&lt;number, Datum&gt;                                                            | font size for tick labels                                                                     |
+| `titleFontSize?` | number                                                                                           | font size for the axis title                                                                  |
+| `tickPadding?`   | number                                                                                           | spacing between tick marks and tick labels in pixels                                          |
+| `tickFormat?`    | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue) =&gt; string) | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
+| `tickClass?`     | ConstantAccessor&lt;string, Datum&gt;                                                            | CSS class applied to each tick label                                                          |
+| `ticks?`         | number \| string \| Datum[]                                                                      | ticks is a shorthand for defining data, tickCount or interval                                 |
+| `text?`          | boolean \| null                                                                                  | set to false or null to disable tick labels                                                   |
+| `tickCount?`     | number                                                                                           | approximate number of ticks to be generated                                                   |
+| `tickSpacing?`   | number                                                                                           | approximate number of pixels between generated ticks                                          |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -169,9 +169,9 @@ line representing a moving average and an area representing volatility as a band
 
 | Prop   | Type                         | Description                                                                             |
 | ------ | ---------------------------- | --------------------------------------------------------------------------------------- |
-| `data` | Datum[]                      |                                                                                         |
-| `x?`   | ChannelAccessor&lt;Datum&gt; |                                                                                         |
-| `y?`   | ChannelAccessor&lt;Datum&gt; |                                                                                         |
+| `data` | Datum[]                      | the input data array                                                                    |
+| `x?`   | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; the dependent variable for the moving average          |
+| `y?`   | ChannelAccessor&lt;Datum&gt; | the vertical position channel; used for grouping                                        |
 | `n?`   | number                       | the window size (the window transform's k option), an integer; defaults to 20           |
 | `k?`   | number                       | the band radius, a number representing a multiple of standard deviations; defaults to 2 |
 
@@ -183,9 +183,9 @@ line representing a moving average and an area representing volatility as a band
 
 | Prop   | Type                         | Description                                                                             |
 | ------ | ---------------------------- | --------------------------------------------------------------------------------------- |
-| `data` | Datum[]                      |                                                                                         |
-| `x?`   | ChannelAccessor&lt;Datum&gt; |                                                                                         |
-| `y?`   | ChannelAccessor&lt;Datum&gt; |                                                                                         |
+| `data` | Datum[]                      | the input data array                                                                    |
+| `x?`   | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; used for grouping                                      |
+| `y?`   | ChannelAccessor&lt;Datum&gt; | the vertical position channel; the dependent variable for the moving average            |
 | `n?`   | number                       | the window size (the window transform's k option), an integer; defaults to 20           |
 | `k?`   | number                       | the band radius, a number representing a multiple of standard deviations; defaults to 2 |
 
@@ -203,17 +203,17 @@ Inherited props from [BoxY](/api/marks#BoxY).
 
 Creates a vertical box plot for visualizing data distribution with quartiles and outliers
 
-| Prop         | Type                                                                                                                             | Description                                                 |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `data`       | Datum[]                                                                                                                          |                                                             |
-| `x`          | ChannelAccessor                                                                                                                  |                                                             |
-| `y`          | ChannelAccessor                                                                                                                  |                                                             |
-| `sort?`      | 'min' \| 'max' \| 'median' \| 'p25' \| 'p75' \| '-min' \| '-max' \| '-median' \| '-p25' \| '-p75' \| ((d: Datum) =&gt; RawValue) | Custom sort order for grouped box plot data                 |
-| `rule`       | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the rule marks that represent the min/max range |
-| `bar`        | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the bar marks that represent the IQR range      |
-| `tickMedian` | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt; \| boolean                                                                    | Options for the tick marks that represent the median        |
-| `tickMinMax` | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt; \| boolean                                                                    | Options for the tick marks that represent the min/max range |
-| `dot`        | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the dot marks that represent the outliers       |
+| Prop         | Type                                                                                                                             | Description                                                         |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `data`       | Datum[]                                                                                                                          | the input data array                                                |
+| `x`          | ChannelAccessor                                                                                                                  | the horizontal position channel; bound to a band scale for grouping |
+| `y`          | ChannelAccessor                                                                                                                  | the vertical position channel; the quantitative values to summarize |
+| `sort?`      | 'min' \| 'max' \| 'median' \| 'p25' \| 'p75' \| '-min' \| '-max' \| '-median' \| '-p25' \| '-p75' \| ((d: Datum) =&gt; RawValue) | Custom sort order for grouped box plot data                         |
+| `rule`       | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the rule marks that represent the min/max range         |
+| `bar`        | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the bar marks that represent the IQR range              |
+| `tickMedian` | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt; \| boolean                                                                    | Options for the tick marks that represent the median                |
+| `tickMinMax` | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt; \| boolean                                                                    | Options for the tick marks that represent the min/max range         |
+| `dot`        | Record&lt;string, ChannelAccessor&lt;Datum&gt;&gt;                                                                               | Options for the dot marks that represent the outliers               |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -223,13 +223,13 @@ For creating a two-dimensional brush selection
 
 | Prop                 | Type                         | Description                                                                      |
 | -------------------- | ---------------------------- | -------------------------------------------------------------------------------- |
-| `brush`              | Brush                        |                                                                                  |
+| `brush`              | Brush                        | the brush state object (bindable); contains x1, x2, y1, y2, and enabled          |
 | `limitDimension?`    | false \| 'x' \| 'y'          | limit brushing to x or y dimension                                               |
 | `constrainToDomain?` | boolean                      | whether brush can move/resize outside domain                                     |
 | `resizeHandleSize?`  | number                       | size of the (invisible) drag resize area around the edges of the brush selection |
-| `onbrushstart?`      | (evt: BrushEvent) =&gt; void |                                                                                  |
-| `onbrushend?`        | (evt: BrushEvent) =&gt; void |                                                                                  |
-| `onbrush?`           | (evt: BrushEvent) =&gt; void |                                                                                  |
+| `onbrushstart?`      | (evt: BrushEvent) =&gt; void | called when the user starts dragging to create or move a brush                   |
+| `onbrushend?`        | (evt: BrushEvent) =&gt; void | called when the user finishes dragging the brush                                 |
+| `onbrush?`           | (evt: BrushEvent) =&gt; void | called continuously while the user is dragging the brush                         |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -286,30 +286,30 @@ Inherited props from [Cell](/api/marks#Cell).
 
 The ColorLegend is an HTML mark that can be placed in the header, footer and overlay snippets. You can activate an implicit ColorLegend above the chart using the global color.legend scale option.
 
-| Prop    | Type           | Description |
-| ------- | -------------- | ----------- |
-| `class` | string \| null |             |
+| Prop    | Type           | Description                                       |
+| ------- | -------------- | ------------------------------------------------- |
+| `class` | string \| null | CSS class applied to the legend container element |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 ## DifferenceY
 
-| Prop                   | Type                                              | Description                                                   |
-| ---------------------- | ------------------------------------------------- | ------------------------------------------------------------- |
-| `data`                 | Datum[]                                           |                                                               |
-| `x1`                   | ChannelAccessor&lt;Datum&gt;                      |                                                               |
-| `x2`                   | ChannelAccessor&lt;Datum&gt;                      | the horizontal position of the metric; bound to the x scale   |
-| `x`                    | ChannelAccessor&lt;Datum&gt;                      |                                                               |
-| `y1`                   | ChannelAccessor&lt;Datum&gt;                      | the vertical position of the comparison; bound to the y scale |
-| `y2`                   | ChannelAccessor&lt;Datum&gt;                      | the vertical position of the metric; bound to the y scale     |
-| `y`                    | ChannelAccessor&lt;Datum&gt;                      |                                                               |
-| `fillOpacity?`         | number                                            |                                                               |
-| `positiveFill?`        | string                                            | the stroke color of the "positive" area; defaults to 'blue'   |
-| `positiveFillOpacity?` | number                                            | the fill opacity of the "positive" area; defaults to 1        |
-| `negativeFill?`        | string                                            | the stroke color of the "negative" area; defaults to 'red'    |
-| `negativeFillOpacity?` | number                                            | the fill opacity of the "negative" area; defaults to 1        |
-| `curve?`               | [CurveName](/api/marks#CurveName) \| CurveFactory | curve type for the area; defaults to 'linear'                 |
-| `tension?`             | number                                            | the tension of the area curve; defaults to 0                  |
+| Prop                   | Type                                              | Description                                                              |
+| ---------------------- | ------------------------------------------------- | ------------------------------------------------------------------------ |
+| `data`                 | Datum[]                                           | the input data array                                                     |
+| `x1`                   | ChannelAccessor&lt;Datum&gt;                      | the horizontal position of the comparison; bound to the x scale          |
+| `x2`                   | ChannelAccessor&lt;Datum&gt;                      | the horizontal position of the metric; bound to the x scale              |
+| `x`                    | ChannelAccessor&lt;Datum&gt;                      | the shared horizontal position channel; used when x1 and x2 are the same |
+| `y1`                   | ChannelAccessor&lt;Datum&gt;                      | the vertical position of the comparison; bound to the y scale            |
+| `y2`                   | ChannelAccessor&lt;Datum&gt;                      | the vertical position of the metric; bound to the y scale                |
+| `y`                    | ChannelAccessor&lt;Datum&gt;                      | the shared vertical position channel; used when y1 and y2 are the same   |
+| `fillOpacity?`         | number                                            | the fill opacity for both positive and negative areas                    |
+| `positiveFill?`        | string                                            | the stroke color of the "positive" area; defaults to 'blue'              |
+| `positiveFillOpacity?` | number                                            | the fill opacity of the "positive" area; defaults to 1                   |
+| `negativeFill?`        | string                                            | the stroke color of the "negative" area; defaults to 'red'               |
+| `negativeFillOpacity?` | number                                            | the fill opacity of the "negative" area; defaults to 1                   |
+| `curve?`               | [CurveName](/api/marks#CurveName) \| CurveFactory | curve type for the area; defaults to 'linear'                            |
+| `tension?`             | number                                            | the tension of the area curve; defaults to 0                             |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -354,19 +354,19 @@ Inherited props from [Dot](/api/marks#Dot).
 
 Renders a simple frame around the entire plot domain
 
-| Prop             | Type    | Description |
-| ---------------- | ------- | ----------- |
-| `fill?`          | string  |             |
-| `stroke?`        | string  |             |
-| `fillOpacity?`   | number  |             |
-| `strokeOpacity?` | number  |             |
-| `opacity?`       | number  |             |
-| `automatic?`     | boolean |             |
-| `inset?`         | number  |             |
-| `insetLeft?`     | number  |             |
-| `insetRight?`    | number  |             |
-| `insetTop?`      | number  |             |
-| `insetBottom?`   | number  |             |
+| Prop             | Type    | Description                                                      |
+| ---------------- | ------- | ---------------------------------------------------------------- |
+| `fill?`          | string  | the fill color of the frame                                      |
+| `stroke?`        | string  | the stroke color of the frame                                    |
+| `fillOpacity?`   | number  | the fill opacity of the frame                                    |
+| `strokeOpacity?` | number  | the stroke opacity of the frame                                  |
+| `opacity?`       | number  | the overall opacity of the frame                                 |
+| `automatic?`     | boolean | whether this frame was automatically added by the Plot component |
+| `inset?`         | number  | shorthand to inset the frame from all edges, in pixels           |
+| `insetLeft?`     | number  | inset the frame from the left edge, in pixels                    |
+| `insetRight?`    | number  | inset the frame from the right edge, in pixels                   |
+| `insetTop?`      | number  | inset the frame from the top edge, in pixels                     |
+| `insetBottom?`   | number  | inset the frame from the bottom edge, in pixels                  |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -374,15 +374,15 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [BaseRectMarkPro
 
 Renders geographical data using projections and GeoJSON geometries
 
-| Prop          | Type                                               | Description                                         |
-| ------------- | -------------------------------------------------- | --------------------------------------------------- |
-| `data?`       | Datum[] \| {'{'} type: 'Sphere'; {'}'}[]           |                                                     |
-| `geoType?`    | 'sphere' \| 'graticule'                            |                                                     |
-| `dragRotate?` | boolean                                            | todo: implement?                                    |
-| `canvas?`     | boolean                                            | toggle canvas rendering mode                        |
-| `title?`      | ConstantAccessor&lt;string, Datum&gt;              | simple browser tooltip to be displayed on mouseover |
-| `r?`          | ChannelAccessor&lt;Datum&gt;                       | radius for point features                           |
-| `svgFilter?`  | ConstantAccessor&lt;string \| undefined, Datum&gt; |                                                     |
+| Prop          | Type                                               | Description                                              |
+| ------------- | -------------------------------------------------- | -------------------------------------------------------- |
+| `data?`       | Datum[] \| {'{'} type: 'Sphere'; {'}'}[]           | the input GeoJSON data array                             |
+| `geoType?`    | 'sphere' \| 'graticule'                            | internal: whether this is a sphere or graticule geo mark |
+| `dragRotate?` | boolean                                            | todo: implement?                                         |
+| `canvas?`     | boolean                                            | toggle canvas rendering mode                             |
+| `title?`      | ConstantAccessor&lt;string, Datum&gt;              | simple browser tooltip to be displayed on mouseover      |
+| `r?`          | ChannelAccessor&lt;Datum&gt;                       | radius for point features                                |
+| `svgFilter?`  | ConstantAccessor&lt;string \| undefined, Datum&gt; | SVG filter attribute applied to each geo path element    |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -390,11 +390,11 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Renders a geographic graticule grid with customizable step sizes
 
-| Prop     | Type   | Description |
-| -------- | ------ | ----------- |
-| `step?`  | number |             |
-| `stepX?` | number |             |
-| `stepY?` | number |             |
+| Prop     | Type   | Description                                                        |
+| -------- | ------ | ------------------------------------------------------------------ |
+| `step?`  | number | the step size for both longitude and latitude gridlines in degrees |
+| `stepX?` | number | the step size for longitude gridlines in degrees                   |
+| `stepY?` | number | the step size for latitude gridlines in degrees                    |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -402,12 +402,12 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders vertical gridlines at x-axis tick positions
 
-| Prop         | Type                         | Description |
-| ------------ | ---------------------------- | ----------- |
-| `data?`      | Datum[]                      |             |
-| `automatic?` | boolean                      |             |
-| `y1?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `y2?`        | ChannelAccessor&lt;Datum&gt; |             |
+| Prop         | Type                         | Description                                                            |
+| ------------ | ---------------------------- | ---------------------------------------------------------------------- |
+| `data?`      | Datum[]                      | custom values at which to draw vertical gridlines                      |
+| `automatic?` | boolean                      | whether these gridlines were automatically added by the Plot component |
+| `y1?`        | ChannelAccessor&lt;Datum&gt; | the starting vertical position of the gridline                         |
+| `y2?`        | ChannelAccessor&lt;Datum&gt; | the ending vertical position of the gridline                           |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -415,12 +415,12 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders horizontal gridlines at y-axis tick positions
 
-| Prop         | Type                         | Description |
-| ------------ | ---------------------------- | ----------- |
-| `data?`      | Datum[]                      |             |
-| `automatic?` | boolean                      |             |
-| `x1?`        | ChannelAccessor&lt;Datum&gt; |             |
-| `x2?`        | ChannelAccessor&lt;Datum&gt; |             |
+| Prop         | Type                         | Description                                                            |
+| ------------ | ---------------------------- | ---------------------------------------------------------------------- |
+| `data?`      | Datum[]                      | custom values at which to draw horizontal gridlines                    |
+| `automatic?` | boolean                      | whether these gridlines were automatically added by the Plot component |
+| `x1?`        | ChannelAccessor&lt;Datum&gt; | the starting horizontal position of the gridline                       |
+| `x2?`        | ChannelAccessor&lt;Datum&gt; | the ending horizontal position of the gridline                         |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -428,15 +428,15 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 For showing custom HTML tooltips positioned at x/y coordinates
 
-| Prop       | Type                                         | Description |
-| ---------- | -------------------------------------------- | ----------- |
-| `data`     | Datum[]                                      |             |
-| `x?`       | ChannelAccessor&lt;Datum&gt;                 |             |
-| `y?`       | ChannelAccessor&lt;Datum&gt;                 |             |
-| `r?`       | ChannelAccessor&lt;Datum&gt;                 |             |
-| `fx?`      | ChannelAccessor&lt;Datum&gt;                 |             |
-| `fy?`      | ChannelAccessor&lt;Datum&gt;                 |             |
-| `children` | Snippet&lt;[ {'{'} datum: Datum; {'}'} ]&gt; |             |
+| Prop       | Type                                         | Description                                                           |
+| ---------- | -------------------------------------------- | --------------------------------------------------------------------- |
+| `data`     | Datum[]                                      | the input data array                                                  |
+| `x?`       | ChannelAccessor&lt;Datum&gt;                 | the horizontal position channel; bound to the x scale                 |
+| `y?`       | ChannelAccessor&lt;Datum&gt;                 | the vertical position channel; bound to the y scale                   |
+| `r?`       | ChannelAccessor&lt;Datum&gt;                 | the radius channel, used for positioning with dot-based data          |
+| `fx?`      | ChannelAccessor&lt;Datum&gt;                 | the horizontal facet channel                                          |
+| `fy?`      | ChannelAccessor&lt;Datum&gt;                 | the vertical facet channel                                            |
+| `children` | Snippet&lt;[ {'{'} datum: Datum; {'}'} ]&gt; | snippet for rendering the tooltip content; receives the nearest datum |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -511,12 +511,12 @@ Creates connections between pairs of points with optional curve styling and mark
 
 | Prop       | Type                                                                         | Description                                                                                                                            |
 | ---------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `data`     | Datum[]                                                                      |                                                                                                                                        |
-| `sort?`    | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |                                                                                                                                        |
+| `data`     | Datum[]                                                                      | the input data array; each element becomes one link                                                                                    |
+| `sort?`    | ConstantAccessor&lt;RawValue&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} | sort order for data points before rendering                                                                                            |
 | `x1`       | ChannelAccessor&lt;Datum&gt;                                                 | the x1 channel accessor for the start of the link                                                                                      |
 | `y1`       | ChannelAccessor&lt;Datum&gt;                                                 | the y1 channel accessor for the start of the link                                                                                      |
 | `x2`       | ChannelAccessor&lt;Datum&gt;                                                 | the x2 channel accessor for the end of the link                                                                                        |
-| `y2`       | ChannelAccessor&lt;Datum&gt;                                                 |                                                                                                                                        |
+| `y2`       | ChannelAccessor&lt;Datum&gt;                                                 | the y2 channel accessor for the end of the link                                                                                        |
 | `curve?`   | 'auto' \| [CurveName](/api/marks#CurveName) \| CurveFactory                  | the curve type, defaults to 'auto' which uses a linear curve for planar projections<br>and a spherical line for geographic projections |
 | `tension?` | number                                                                       | the tension of the curve, defaults to 0                                                                                                |
 | `text?`    | ConstantAccessor&lt;string, Datum&gt;                                        | the text label for the link, can be a constant or a function                                                                           |
@@ -527,13 +527,13 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [MarkerOptions](
 
 | Prop           | Type                                          | Description                                                                                      |
 | -------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `data`         | Datum[]                                       |                                                                                                  |
-| `children?`    | Snippet&lt;[ {'{'} data: Datum[]; {'}'} ]&gt; |                                                                                                  |
-| `x?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
-| `y?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
-| `z?`           | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
-| `fx?`          | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
-| `fy?`          | ChannelAccessor&lt;Datum&gt;                  |                                                                                                  |
+| `data`         | Datum[]                                       | the input data array                                                                             |
+| `children?`    | Snippet&lt;[ {'{'} data: Datum[]; {'}'} ]&gt; | snippet rendered with the currently selected data points                                         |
+| `x?`           | ChannelAccessor&lt;Datum&gt;                  | the horizontal position channel; bound to the x scale                                            |
+| `y?`           | ChannelAccessor&lt;Datum&gt;                  | the vertical position channel; bound to the y scale                                              |
+| `z?`           | ChannelAccessor&lt;Datum&gt;                  | grouping channel for splitting data into separate search trees                                   |
+| `fx?`          | ChannelAccessor&lt;Datum&gt;                  | the horizontal facet channel                                                                     |
+| `fy?`          | ChannelAccessor&lt;Datum&gt;                  | the vertical facet channel                                                                       |
 | `maxDistance?` | number                                        | maximum cursor distance to select data points                                                    |
 | `tolerance?`   | number                                        | tolerance for considering points as "the same" when sharing x or y values<br>defaults to 0 pixel |
 | `onupdate?`    | (data: Datum[]) =&gt; void                    | called whenever the selection changes                                                            |
@@ -641,14 +641,14 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Wrapper around the vector mark with presets suitable for spike maps
 
-| Prop      | Type                         | Description |
-| --------- | ---------------------------- | ----------- |
-| `data`    | Datum[]                      |             |
-| `x`       | ChannelAccessor&lt;Datum&gt; |             |
-| `y`       | ChannelAccessor&lt;Datum&gt; |             |
-| `r?`      | number                       |             |
-| `length?` | ChannelAccessor&lt;Datum&gt; |             |
-| `rotate?` | ChannelAccessor&lt;Datum&gt; |             |
+| Prop      | Type                         | Description                                           |
+| --------- | ---------------------------- | ----------------------------------------------------- |
+| `data`    | Datum[]                      | the input data array; each element becomes one spike  |
+| `x`       | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; bound to the x scale |
+| `y`       | ChannelAccessor&lt;Datum&gt; | the vertical position channel; bound to the y scale   |
+| `r?`      | number                       | the radius (width) of the spike base in pixels        |
+| `length?` | ChannelAccessor&lt;Datum&gt; | the length of the spike in pixels                     |
+| `rotate?` | ChannelAccessor&lt;Datum&gt; | rotation angle of the spike in degrees                |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -689,11 +689,11 @@ The TickX mark is useful for showing one-dimensional distributions along the x a
 
 | Prop          | Type                                  | Description                                                                                                                                                      |
 | ------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data`        | Datum[]                               |                                                                                                                                                                  |
+| `data`        | Datum[]                               | the input data array; each element becomes one vertical tick                                                                                                     |
 | `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the x scale                                                                                                                    |
 | `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
 | `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                  |
-| `canvas?`     | boolean                               |                                                                                                                                                                  |
+| `canvas?`     | boolean                               | if true, renders using Canvas instead of SVG                                                                                                                     |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -701,32 +701,32 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 The TickY mark is useful for showing one-dimensional distributions along the y axis. The x axis must be a band scale.
 
-| Prop          | Type                                  | Description                                                                                                                                                        |
-| ------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `data`        | Datum[]                               |                                                                                                                                                                    |
-| `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the x scale                                                                                                                        |
-| `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the y scale, which must be band. If the y channel<br>is not specified, the tick will span the full vertical extent of the frame. |
-| `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                    |
-| `canvas?`     | boolean                               |                                                                                                                                                                    |
+| Prop          | Type                                  | Description                                                                                                                                                          |
+| ------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`        | Datum[]                               | the input data array; each element becomes one horizontal tick                                                                                                       |
+| `y?`          | ChannelAccessor&lt;Datum&gt;          | the vertical position; bound to the y scale                                                                                                                          |
+| `x?`          | ChannelAccessor&lt;Datum&gt;          | the horizontal position; bound to the x scale, which must be band. If the x channel<br>is not specified, the tick will span the full horizontal extent of the frame. |
+| `tickLength?` | ConstantAccessor&lt;number, Datum&gt; | if ticks are used on a non-bandwidth scale, this will determine the<br>length of the tick. Defaults to 10 pixel                                                      |
+| `canvas?`     | boolean                               | if true, renders using Canvas instead of SVG                                                                                                                         |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 ## Trail
 
-| Prop          | Type                                                                                | Description                                 |
-| ------------- | ----------------------------------------------------------------------------------- | ------------------------------------------- |
-| `data?`       | Datum[]                                                                             |                                             |
-| `x?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
-| `y?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
-| `z?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
-| `r?`          | ChannelAccessor&lt;Datum&gt;                                                        |                                             |
-| `curve?`      | [CurveName](/api/marks#CurveName) \| CurveFactory                                   |                                             |
-| `tension?`    | number                                                                              |                                             |
-| `sort?`       | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} |                                             |
-| `defined?`    | ConstantAccessor&lt;boolean, Datum&gt;                                              |                                             |
-| `canvas?`     | boolean                                                                             |                                             |
-| `cap?`        | 'butt' \| 'round'                                                                   |                                             |
-| `resolution?` | number \| 'auto'                                                                    | Samples per segment for curve interpolation |
+| Prop          | Type                                                                                | Description                                                                      |
+| ------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `data?`       | Datum[]                                                                             | the input data array                                                             |
+| `x?`          | ChannelAccessor&lt;Datum&gt;                                                        | the horizontal position channel; bound to the x scale                            |
+| `y?`          | ChannelAccessor&lt;Datum&gt;                                                        | the vertical position channel; bound to the y scale                              |
+| `z?`          | ChannelAccessor&lt;Datum&gt;                                                        | grouping channel for splitting data into separate trails                         |
+| `r?`          | ChannelAccessor&lt;Datum&gt;                                                        | the radius (width) of the trail at each data point                               |
+| `curve?`      | [CurveName](/api/marks#CurveName) \| CurveFactory                                   | the curve interpolation type for connecting data points                          |
+| `tension?`    | number                                                                              | tension parameter for the curve interpolation                                    |
+| `sort?`       | ConstantAccessor&lt;RawValue, Datum&gt; \| {'{'} channel: 'stroke' \| 'fill'; {'}'} | sort order for data points before rendering                                      |
+| `defined?`    | ConstantAccessor&lt;boolean, Datum&gt;                                              | accessor that returns false for data points that should create gaps in the trail |
+| `canvas?`     | boolean                                                                             | if true, renders using Canvas instead of SVG                                     |
+| `cap?`        | 'butt' \| 'round'                                                                   | the cap style for trail endpoints                                                |
+| `resolution?` | number \| 'auto'                                                                    | Samples per segment for curve interpolation                                      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -734,14 +734,14 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 The waffleX mark lets you create waffle charts by filling a rectangular area with small squares representing data values.
 
-| Prop     | Type                                    | Description                   |
-| -------- | --------------------------------------- | ----------------------------- |
-| `data?`  | Datum[]                                 |                               |
-| `x?`     | ChannelAccessor&lt;Datum&gt;            | bound to a quantitative scale |
-| `x1?`    | ChannelAccessor&lt;Datum&gt;            | bound to a quantitative scale |
-| `x2?`    | ChannelAccessor&lt;Datum&gt;            | bound to a quantitative scale |
-| `y?`     | ChannelAccessor&lt;Datum&gt;            | bound to a band scale         |
-| `stack?` | [StackOptions](/api/marks#StackOptions) |                               |
+| Prop     | Type                                    | Description                                                     |
+| -------- | --------------------------------------- | --------------------------------------------------------------- |
+| `data?`  | Datum[]                                 | the input data array                                            |
+| `x?`     | ChannelAccessor&lt;Datum&gt;            | the horizontal position channel; bound to a quantitative scale  |
+| `x1?`    | ChannelAccessor&lt;Datum&gt;            | the starting horizontal position; bound to a quantitative scale |
+| `x2?`    | ChannelAccessor&lt;Datum&gt;            | the ending horizontal position; bound to a quantitative scale   |
+| `y?`     | ChannelAccessor&lt;Datum&gt;            | the vertical position channel; bound to a band scale            |
+| `stack?` | [StackOptions](/api/marks#StackOptions) | stacking options for combining multiple series                  |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -749,13 +749,13 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 The waffleX mark lets you create waffle charts by filling a rectangular area with small squares representing data values.
 
-| Prop    | Type                         | Description                   |
-| ------- | ---------------------------- | ----------------------------- |
-| `data?` | Datum[]                      |                               |
-| `x?`    | ChannelAccessor&lt;Datum&gt; | bound to a babd scale         |
-| `y?`    | ChannelAccessor&lt;Datum&gt; | bound to a quantitative scale |
-| `y1?`   | ChannelAccessor&lt;Datum&gt; | bound to a quantitative scale |
-| `y2?`   | ChannelAccessor&lt;Datum&gt; | bound to a quantitative scale |
+| Prop    | Type                         | Description                                                   |
+| ------- | ---------------------------- | ------------------------------------------------------------- |
+| `data?` | Datum[]                      | the input data array                                          |
+| `x?`    | ChannelAccessor&lt;Datum&gt; | the horizontal position channel; bound to a band scale        |
+| `y?`    | ChannelAccessor&lt;Datum&gt; | the vertical position channel; bound to a quantitative scale  |
+| `y1?`   | ChannelAccessor&lt;Datum&gt; | the starting vertical position; bound to a quantitative scale |
+| `y2?`   | ChannelAccessor&lt;Datum&gt; | the ending vertical position; bound to a quantitative scale   |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
