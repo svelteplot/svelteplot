@@ -134,6 +134,9 @@ Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannel
 
 ## bollingerX
 
+computes Bollinger bands for the x channel, producing x1 (lower), x (mean),
+and x2 (upper) channels
+
 ```ts
 bollingerX<T>(args: TransformArg<T>, options: BollingerOptions): TransformArg<T>
 ```
@@ -147,6 +150,9 @@ bollingerX<T>(args: TransformArg<T>, options: BollingerOptions): TransformArg<T>
 
 ## bollingerY
 
+computes Bollinger bands for the y channel, producing y1 (lower), y (mean),
+and y2 (upper) channels
+
 ```ts
 bollingerY<T>(args: TransformArg<T>, options: BollingerOptions): TransformArg<T>
 ```
@@ -154,6 +160,9 @@ bollingerY<T>(args: TransformArg<T>, options: BollingerOptions): TransformArg<T>
 Options: [BollingerOptions](/api/transforms#BollingerOptions)
 
 ## geoCentroid
+
+computes the geographic centroid of each geometry feature, producing
+x (longitude) and y (latitude) channels
 
 ```ts
 geoCentroid<Datum extends DataRecord>({
@@ -239,6 +248,8 @@ export type MapOptions = Partial<
 
 ### MapMethod
 
+a named map method, a custom mapping function, or a MapIndexObject
+
 ```ts
 export type MapMethod =
     | 'cumsum'
@@ -250,11 +261,15 @@ export type MapMethod =
 
 ### MapIndexObject
 
-| Prop       | Type             | Description |
-| ---------- | ---------------- | ----------- |
-| `mapIndex` | MapIndexFunction |             |
+an object implementing the mapIndex interface for custom map transforms
+
+| Prop       | Type             | Description                                        |
+| ---------- | ---------------- | -------------------------------------------------- |
+| `mapIndex` | MapIndexFunction | the function that performs the index-based mapping |
 
 ### MapIndexFunction
+
+a function that maps source values (S) to target values (T) for the given indices (I)
 
 ```ts
 export type MapIndexFunction = (
@@ -344,7 +359,7 @@ Channels:
 - z: the grouping variable (e.g., 'Id')
 
 ```ts
-normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis): void
+normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis): ReturnType<typeof sort<T>>
 ```
 
 ## normalizeParallelY
@@ -358,7 +373,7 @@ Channels:
 - z: the grouping variable (e.g., 'Id')
 
 ```ts
-normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis): void
+normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis): ReturnType<typeof sort<T>>
 ```
 
 ## group
@@ -469,6 +484,8 @@ intervalY<T>(args: TransformArg<T>): void
 
 ## jitter
 
+adds random noise to one or more positional channels
+
 ```ts
 jitter<T, C extends TransformArg<T>>({ data, ...channels }: C, options: Partial<Record<PositionalScale, JitterOptions>>): TransformReturn<C, T>
 ```
@@ -492,6 +509,8 @@ type JitterOptions = {
 
 ## jitterX
 
+adds random noise to the x channel values
+
 ```ts
 jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'>
 ```
@@ -499,6 +518,8 @@ jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x
 Options: [JitterOptions](/api/transforms#JitterOptions)
 
 ## jitterY
+
+adds random noise to the y channel values
 
 ```ts
 jitterY<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'y'>
@@ -508,11 +529,17 @@ Options: [JitterOptions](/api/transforms#JitterOptions)
 
 ## recordizeX
 
+takes an array of raw values and returns data records in which the values
+are interpreted as the x channel and their index as the y channel
+
 ```ts
 recordizeX<T>({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
 ```
 
 ## recordizeY
+
+takes an array of raw values and returns data records in which the values
+are interpreted as the y channel and their index as the x channel
 
 ```ts
 recordizeY<T>({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
@@ -536,6 +563,9 @@ type RenameChannelsOptions = Partial<
 
 ## replaceChannels
 
+copies a channel's accessor to multiple target channels, then removes
+the source channel
+
 ```ts
 replaceChannels<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: ReplaceChannelsOptions): TransformArg<T, DataRecord>
 ```
@@ -549,6 +579,9 @@ type ReplaceChannelsOptions = Partial<
 ```
 
 ## select
+
+selects one datum per group based on the given criteria; use "first"/"last"
+for positional selection, or {channel: "min"/"max"} for value-based selection
 
 ```ts
 select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions): void
@@ -594,11 +627,15 @@ selectLast(args: TransformArg<DataRecord>): void
 
 ## selectMaxX
 
+keeps only the datum with the largest x value per group
+
 ```ts
 selectMaxX(args: TransformArg<DataRecord>): void
 ```
 
 ## selectMaxY
+
+keeps only the datum with the largest y value per group
 
 ```ts
 selectMaxY(args: TransformArg<DataRecord>): void
@@ -606,11 +643,15 @@ selectMaxY(args: TransformArg<DataRecord>): void
 
 ## selectMinX
 
+keeps only the datum with the smallest x value per group
+
 ```ts
 selectMinX(args: TransformArg<DataRecord>): void
 ```
 
 ## selectMinY
+
+keeps only the datum with the smallest y value per group
 
 ```ts
 selectMinY(args: TransformArg<DataRecord>): void
@@ -618,11 +659,15 @@ selectMinY(args: TransformArg<DataRecord>): void
 
 ## shiftX
 
+shifts the x channel values by a fixed amount or time interval
+
 ```ts
 shiftX({ data, ...channels }: TransformArg<DataRecord>, shiftBy: string | number | RequireAtLeastOne<ShiftXOptions>): TransformArg<DataRecord>
 ```
 
 ### ShiftXOptions
+
+per-channel shift amounts for x channels; values can be numbers or time interval strings (e.g. "1 month")
 
 ```ts
 type ShiftXOptions = {
@@ -632,11 +677,15 @@ type ShiftXOptions = {
 
 ## shiftY
 
+shifts the y channel values by a fixed amount or time interval
+
 ```ts
 shiftY({ data, ...channels }: TransformArg<DataRecord>, shiftBy: string | number | RequireAtLeastOne<ShiftYOptions>): TransformArg<DataRecord>
 ```
 
 ### ShiftYOptions
+
+per-channel shift amounts for y channels; values can be numbers or time interval strings (e.g. "1 month")
 
 ```ts
 type ShiftYOptions = {
@@ -645,6 +694,9 @@ type ShiftYOptions = {
 ```
 
 ## sort
+
+sorts the data according to the sort channel option; supports channel
+accessors, comparator functions, and {channel, order} objects
 
 ```ts
 sort<T>({ data, ...channels }: TransformArg<T>, options: {
@@ -672,11 +724,15 @@ reverse({ data, ...channels }: TransformArg<DataRow[]>): void
 
 ## stackX
 
+stacks data along the x dimension, producing x1 and x2 channels
+
 ```ts
 stackX<T>({ data, ...channels }: TransformArg<T>, opts: Partial<StackOptions>): TransformArg<T>
 ```
 
 ### StackOptions
+
+options for the stack transform, or false to disable stacking
 
 ```ts
 export type StackOptions =
@@ -690,6 +746,8 @@ export type StackOptions =
 
 ### StackOffset
 
+the offset method used to position stacked values
+
 - `none`
 - `wiggle`
 - `center`
@@ -698,12 +756,16 @@ export type StackOptions =
 
 ### StackOrder
 
+the order in which series are stacked
+
 - `none`
 - `appearance`
 - `inside-out`
 - `sum`
 
 ## stackY
+
+stacks data along the y dimension, producing y1 and y2 channels
 
 ```ts
 stackY<T>({ data, ...channels }: TransformArg<T>, opts: Partial<StackOptions>): TransformArg<T>
@@ -713,11 +775,17 @@ Options: [StackOptions](/api/transforms#StackOptions)
 
 ## stackMosaicX
 
+creates a mosaic layout with the outer (width) dimension along x and
+the inner (height) dimension along y
+
 ```ts
 stackMosaicX<T>(args: unknown, opts: unknown): void
 ```
 
 ## stackMosaicY
+
+creates a mosaic layout with the outer (height) dimension along y and
+the inner (width) dimension along x
 
 ```ts
 stackMosaicY<T>(args: unknown, opts: unknown): void
@@ -725,23 +793,27 @@ stackMosaicY<T>(args: unknown, opts: unknown): void
 
 ## windowX
 
+applies a sliding window reducer to the x channel
+
 ```ts
 windowX(args: TransformArg<DataRecord>, options: WindowOptions): void
 ```
 
 ### WindowOptions
 
-| Prop       | Type                         | Description |
-| ---------- | ---------------------------- | ----------- |
-| `k`        | number                       |             |
-| `interval` | string                       |             |
-| `anchor`   | 'start' \| 'middle' \| 'end' |             |
-| `reduce`   | ReducerName                  |             |
-| `strict`   | boolean                      |             |
+| Prop       | Type                         | Description                                                                     |
+| ---------- | ---------------------------- | ------------------------------------------------------------------------------- |
+| `k`        | number                       | the window size (number of data points)                                         |
+| `interval` | string                       | a time interval string to use instead of a fixed window size                    |
+| `anchor`   | 'start' \| 'middle' \| 'end' | where to align the window relative to the current data point                    |
+| `reduce`   | ReducerName                  | the reducer function to apply within each window (e.g. "mean", "median", "sum") |
+| `strict`   | boolean                      | if true, return null when the window has fewer than k values                    |
 
 Uses: [ReducerName](/api/transforms#ReducerName)
 
 ## windowY
+
+applies a sliding window reducer to the y channel
 
 ```ts
 windowY(args: TransformArg<DataRecord>, options: WindowOptions): void
@@ -753,6 +825,8 @@ Options: [WindowOptions](/api/transforms#WindowOptions)
 
 ### GenericMarkOptions
 
+a generic record type used when the specific mark options type is not known
+
 ```ts
 export type GenericMarkOptions = Record<
     string | symbol,
@@ -761,6 +835,8 @@ export type GenericMarkOptions = Record<
 ```
 
 ### CurveName
+
+the name of a d3 curve interpolation method
 
 - `basis`
 - `basis-closed`
@@ -785,14 +861,17 @@ export type GenericMarkOptions = Record<
 
 ### MarkerOptions
 
-| Prop           | Type                              | Description                                             |
-| -------------- | --------------------------------- | ------------------------------------------------------- |
-| `markerStart?` | boolean \| MarkerShape \| Snippet | the marker for the starting point of a line segment     |
-| `markerMid?`   | boolean \| MarkerShape \| Snippet | the marker for any intermediate point of a line segment |
-| `markerEnd?`   | boolean \| MarkerShape \| Snippet | the marker for the end point of a line segment          |
-| `marker?`      | boolean \| MarkerShape \| Snippet | shorthand for setting the marker on all points          |
+| Prop           | Type                              | Description                                                     |
+| -------------- | --------------------------------- | --------------------------------------------------------------- |
+| `markerStart?` | boolean \| MarkerShape \| Snippet | the marker for the starting point of a line segment             |
+| `markerMid?`   | boolean \| MarkerShape \| Snippet | the marker for any intermediate point of a line segment         |
+| `markerEnd?`   | boolean \| MarkerShape \| Snippet | the marker for the end point of a line segment                  |
+| `marker?`      | boolean \| MarkerShape \| Snippet | shorthand for setting the marker on all points                  |
+| `markerScale?` | ConstantAccessor&lt;number&gt;    | scale factor for marker size, relative to the line stroke width |
 
 ### ConstantAccessor
+
+a value that is either a constant or a function that computes a per-datum value
 
 ```ts
 export type ConstantAccessor<
@@ -803,6 +882,8 @@ export type ConstantAccessor<
 
 ### TransformArg
 
+the input argument to a data transform: data array plus channel mappings and mark props
+
 ```ts
 export type TransformArg<T> = Channels<T> &
     BaseMarkProps<T> & {
@@ -812,6 +893,8 @@ export type TransformArg<T> = Channels<T> &
 
 ### MapArg
 
+the input argument to a map transform: data array plus channel mappings
+
 ```ts
 export type MapArg<T> = Channels<T> & {
     data: T[];
@@ -819,6 +902,8 @@ export type MapArg<T> = Channels<T> & {
 ```
 
 ### TransformArgsRow
+
+transform input for raw data rows (before recordization)
 
 ```ts
 export type TransformArgsRow<T extends RawValue | object> =
@@ -828,6 +913,8 @@ export type TransformArgsRow<T extends RawValue | object> =
 ```
 
 ### TransformArgsRecord
+
+transform input for data records (after recordization)
 
 ```ts
 export type TransformArgsRecord<T extends object> = Partial<
@@ -839,6 +926,8 @@ export type TransformArgsRecord<T extends object> = Partial<
 
 ### TransformReturn
 
+the return type of a transform, ensuring data is always present
+
 ```ts
 export type TransformReturn<
     C extends TransformArg<T>,
@@ -848,14 +937,18 @@ export type TransformReturn<
 
 ### AutoMarginStores
 
-| Prop               | Type                                      | Description |
-| ------------------ | ----------------------------------------- | ----------- |
-| `autoMarginTop`    | Writable&lt;Map&lt;string, number&gt;&gt; |             |
-| `autoMarginLeft`   | Writable&lt;Map&lt;string, number&gt;&gt; |             |
-| `autoMarginRight`  | Writable&lt;Map&lt;string, number&gt;&gt; |             |
-| `autoMarginBottom` | Writable&lt;Map&lt;string, number&gt;&gt; |             |
+writable stores used by marks to contribute to automatic margin computation
+
+| Prop               | Type                                      | Description                                 |
+| ------------------ | ----------------------------------------- | ------------------------------------------- |
+| `autoMarginTop`    | Writable&lt;Map&lt;string, number&gt;&gt; | per-mark contributions to the top margin    |
+| `autoMarginLeft`   | Writable&lt;Map&lt;string, number&gt;&gt; | per-mark contributions to the left margin   |
+| `autoMarginRight`  | Writable&lt;Map&lt;string, number&gt;&gt; | per-mark contributions to the right margin  |
+| `autoMarginBottom` | Writable&lt;Map&lt;string, number&gt;&gt; | per-mark contributions to the bottom margin |
 
 ### UsedScales
+
+a record indicating which scaled channels are actively used by a mark
 
 ```ts
 export type UsedScales = Record<ScaledChannelName, boolean>;
