@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { setPlotDefaults, getPlotDefaults } from './plotDefaults.js';
+    import { setPlotDefaults, getPlotDefaults } from 'svelteplot';
     import type { PlotDefaults } from 'svelteplot/types';
 
     let {
