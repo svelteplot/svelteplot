@@ -67,11 +67,13 @@
     });
 
     const path = $derived(
-        callWithProps(geoPath, [plot.scales.projection], {
-            ...(options.r
+        callWithProps(
+            geoPath,
+            [plot.scales.projection],
+            options.r
                 ? { pointRadius: (d) => plot.scales.r.fn(resolveChannel('r', d, options)) }
-                : { pointRadius: 3 })
-        })
+                : { pointRadius: 3 }
+        )
     );
 
     const args = $derived(

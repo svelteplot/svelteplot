@@ -217,7 +217,8 @@ function stackXY<T>(
             ...(typeof channels[byDim] === 'string' && !channels[ORIGINAL_NAME_KEYS[byDim]]
                 ? { [ORIGINAL_NAME_KEYS[byDim]]: channels[byDim] }
                 : {}),
-            ...{ [byLow]: S[byLow], [byHigh]: S[byHigh] }
+            [byLow]: S[byLow],
+            [byHigh]: S[byHigh]
         };
     }
     return { data, ...channels };

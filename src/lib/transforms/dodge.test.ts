@@ -77,7 +77,7 @@ describe('dodge transforms', () => {
 
         // Center baseline is marginLeft + facetWidth/2 = 60
         expect(out[0].x).toBe(60);
-        expect([...out.map((d) => d.x)].sort((a, b) => a - b)).toEqual([56, 60, 64]);
+        expect(out.map((d) => d.x).sort((a, b) => a - b)).toEqual([56, 60, 64]);
         expect(out.map((d) => d.y)).toEqual([50, 50, 50]);
     });
 
@@ -111,7 +111,7 @@ describe('dodge transforms', () => {
 
         // Vertical center baseline is (marginTop + height)/2 = 42.5
         expect(out[0].y).toBe(42.5);
-        expect([...out.map((d) => d.y)].sort((a, b) => a - b)).toEqual([38.5, 42.5, 46.5]);
+        expect(out.map((d) => d.y).sort((a, b) => a - b)).toEqual([38.5, 42.5, 46.5]);
         expect(out.map((d) => d.x)).toEqual([20, 20, 20]);
     });
 
