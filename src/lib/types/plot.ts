@@ -487,12 +487,36 @@ export type PlotOptions = {
      * Options for the shared radius scale
      */
     r: Partial<ScaleOptions>;
+    /**
+     * Options for the shared color scale
+     */
     color: Partial<ColorScaleOptions>;
+    /**
+     * Options for the shared opacity scale
+     */
     opacity: Partial<ScaleOptions>;
+    /**
+     * Options for the shared symbol scale
+     */
     symbol: Partial<LegendScaleOptions>;
+    /**
+     * Options for the shared length scale (e.g. for vectors and spikes)
+     */
     length: Partial<ScaleOptions>;
+    /**
+     * Options for the horizontal facet scale, or false to disable, or an
+     * array of domain values
+     */
     fx: Partial<XScaleOptions> | false | RawValue[];
+    /**
+     * Options for the vertical facet scale, or false to disable, or an
+     * array of domain values
+     */
     fy: Partial<YScaleOptions> | false | RawValue[];
+    /**
+     * The plot content as a Svelte snippet. Receives the plot dimensions,
+     * options, and resolved scales as arguments.
+     */
     children: Snippet<
         [{ width: number; height: number; options: PlotOptions; scales: PlotScales }]
     >;
@@ -501,6 +525,10 @@ export type PlotOptions = {
      * your plot, or place a legend above the visualization.
      */
     header: Snippet;
+    /**
+     * The footer snippet is useful for rendering custom markup below the SVG body
+     * of your plot, e.g. for a caption or legend.
+     */
     footer: Snippet;
     /**
      * The underlay snippet is useful for adding a layer of custom HTML markup
@@ -512,6 +540,9 @@ export type PlotOptions = {
      * in front of the SVG body of your plot, e.g. for HTML tooltips.
      */
     overlay: Snippet<[{ width: number; height: number; options: PlotOptions; scales: PlotScales }]>;
+    /**
+     * snippet for rendering custom facet axes
+     */
     facetAxes: Snippet;
     /**
      * if you set testid, the plot container will get a data-testid attribute which

@@ -4,11 +4,12 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     import Cell from './Cell.svelte';
-    import { recordizeX } from '$lib/index.js';
+    import { recordizeX } from '../index.js';
     import type { ComponentProps } from 'svelte';
     import type { DataRow, TransformArgsRow } from 'svelteplot/types/index.js';
 
     interface CellYMarkProps extends Omit<ComponentProps<typeof Cell>, 'x' | 'data'> {
+        /** the input data array */
         data: Datum[];
     }
 

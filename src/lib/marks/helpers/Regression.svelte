@@ -4,8 +4,11 @@
     type RegressionType = 'linear' | 'quad' | 'poly' | 'exp' | 'log' | 'pow' | 'loess';
 
     export type RegressionMarkProps = BaseMarkProps & {
+        /** the horizontal position channel; bound to the x scale */
         x: ChannelAccessor;
+        /** the vertical position channel; bound to the y scale */
         y: ChannelAccessor;
+        /** the regression model type */
         type: RegressionType;
         /**
          * If order is specified, sets the regression's order to the specified number.
@@ -17,18 +20,18 @@
          * it may have little predictive power for data outside of your domain.
          */
         order: number;
-        // for log
+        /** the base for logarithmic regression */
         base: number;
-        // for loess
+        /** the bandwidth for LOESS regression, as a fraction of the data range (0 to 1) */
         span: number;
-        // for confidence bands
+        /** the confidence level for confidence bands (e.g. 0.95 for 95% confidence) */
         confidence: number;
     };
 </script>
 
 <script lang="ts">
     import { getContext } from 'svelte';
-    import { Line, Area } from '$lib/index.js';
+    import { Line, Area } from '../../index.js';
 
     import {
         regressionLinear,
@@ -38,11 +41,11 @@
         regressionLog,
         regressionPow,
         regressionLoess
-    } from '$lib/regression/index.js';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { confidenceInterval } from '$lib/helpers/math.js';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { isDate } from '$lib/helpers/typeChecks.js';
+    } from '../../regression/index.js';
+    import { resolveChannel } from '../../helpers/resolve.js';
+    import { confidenceInterval } from '../../helpers/math.js';
+    import callWithProps from '../../helpers/callWithProps.js';
+    import { isDate } from '../../helpers/typeChecks.js';
 
     const regressions = new Map<RegressionType, typeof regressionLinear>([
         ['linear', regressionLinear],

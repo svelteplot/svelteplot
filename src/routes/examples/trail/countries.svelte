@@ -12,7 +12,7 @@
     import { sineInOut } from 'svelte/easing';
     import { Tween } from 'svelte/motion';
     import { Plot, Trail, Text, Dot } from 'svelteplot';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
 
     let { gapminder } = $props();
 

@@ -11,11 +11,17 @@
 
 <script lang="ts" generics="Datum extends DataRecord">
     interface VectorMarkProps extends BaseMarkProps<Datum> {
+        /** the input data array; each element becomes one vector */
         data: Datum[];
+        /** the horizontal position channel; bound to the x scale */
         x: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y: ChannelAccessor<Datum>;
+        /** the radius (width) of the vector shape in pixels */
         r?: number;
+        /** the length of the vector in pixels */
         length?: ChannelAccessor<Datum>;
+        /** rotation angle of the vector in degrees */
         rotate?: ChannelAccessor<Datum>;
         /**
          * Controls where the vector is anchored in relation to the x, y position.
@@ -24,8 +30,11 @@
          * 'end', the arrow will end at the x, y position.
          */
         anchor?: 'start' | 'middle' | 'end';
+        /** the shape of the vector; can be a preset name or a custom ShapeRenderer */
         shape?: 'arrow' | 'spike' | 'arrow-filled' | ShapeRenderer;
+        /** snippet for custom rendering inside the vector mark group */
         children?: Snippet;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import type {
@@ -39,13 +48,13 @@
     import { pathRound as path } from 'd3-path';
 
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
     import Mark from '../Mark.svelte';
     //import DotCanvas from './helpers/DotCanvas.svelte';
-    import { isValid } from '$lib/helpers/index.js';
+    import { isValid } from '../helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const defaultRadius = 3;

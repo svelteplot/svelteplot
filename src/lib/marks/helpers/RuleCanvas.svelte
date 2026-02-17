@@ -27,7 +27,7 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
-    import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
+    import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import CanvasLayer from './CanvasLayer.svelte';

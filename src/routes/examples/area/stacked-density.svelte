@@ -20,7 +20,7 @@
     } from 'svelteplot';
     import type { Iris2Row } from '../types';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import Select from 'svelteplot/ui/Select.svelte';
+    import Select from '$shared/ui/Select.svelte';
 
     let { iris }: { olympians: Iris2Row[] } = $props();
     let kernel = $state('epanechnikov');

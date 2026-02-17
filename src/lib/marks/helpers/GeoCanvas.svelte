@@ -5,13 +5,13 @@
         ScaledDataRecord,
         UsedScales
     } from 'svelteplot/types/index.js';
-    import { CSS_VAR } from '$lib/constants.js';
-    import { resolveProp, resolveScaledStyleProps } from '$lib/helpers/resolve.js';
+    import { CSS_VAR } from '../../constants.js';
+    import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
     import { type GeoPath } from 'd3-geo';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
     import { devicePixelRatio } from 'svelte/reactivity/window';
-    import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
+    import { GEOJSON_PREFER_STROKE } from '../../helpers/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {

@@ -57,7 +57,7 @@ By default, the trail width (bound to the `r` channel) is scaled using a square-
 ```svelte live
 <script lang="ts">
     import { Plot, Trail } from '$lib/index.js';
-    import { RadioInput } from '$lib/ui';
+    import { RadioInput } from '$shared/ui';
     import { page } from '$app/state';
 
     let { minard } = $derived(page.data.data);

@@ -4,16 +4,18 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface AreaXMarkProps extends Omit<ComponentProps<typeof Area>, 'y1' | 'y2'> {
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
     }
     import Area from './Area.svelte';
-    import { renameChannels } from '$lib/transforms/rename.js';
-    import { stackX } from '$lib/transforms/stack.js';
-    import { recordizeX } from '$lib/transforms/recordize.js';
+    import { renameChannels } from '../transforms/rename.js';
+    import { stackX } from '../transforms/stack.js';
+    import { recordizeX } from '../transforms/recordize.js';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
     import { type ComponentProps } from 'svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     let markProps: AreaXMarkProps = $props();
 

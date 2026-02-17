@@ -3,22 +3,39 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface LineMarkProps extends MarkerOptions, BaseMarkProps<Datum> {
+        /** the input data array; each element becomes one point in the line */
         data?: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** the series channel; data is grouped into separate lines by unique z values */
         z?: ChannelAccessor<Datum>;
+        /** the stroke color for the line outline */
         outlineStroke?: string;
+        /** the stroke width of the line outline in pixels */
         outlineStrokeWidth?: number;
+        /** the stroke opacity for the line outline; a number between 0 and 1 */
         outlineStrokeOpacity?: number;
+        /** the curve interpolation method for connecting data points (e.g. "basis", "catmull-rom") */
         curve?: CurveName | CurveFactory | 'auto';
+        /** the tension parameter for cardinal or Catmull-Rom curve interpolation */
         tension?: number;
+        /** controls the order of data points before rendering */
         sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
+        /** text label to render along the line path using a textPath element */
         text?: ConstantAccessor<string, Datum>;
+        /** the fill color for the text label rendered along the line */
         textFill?: ConstantAccessor<string, Datum>;
+        /** the stroke color for the text label rendered along the line */
         textStroke?: ConstantAccessor<string, Datum>;
+        /** the offset position for the text label along the line path (e.g. "50%") */
         textStartOffset?: ConstantAccessor<string, Datum>;
+        /** the stroke width for the text label rendered along the line in pixels */
         textStrokeWidth?: ConstantAccessor<number, Datum>;
+        /** CSS class name(s) to apply to individual line elements */
         lineClass?: ConstantAccessor<string, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import type {
@@ -35,17 +52,17 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { line, type CurveFactory, type Line as D3Line } from 'd3-shape';
     import { geoPath } from 'd3-geo';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { maybeCurve } from '$lib/helpers/curves.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { maybeCurve } from '../helpers/curves.js';
     import { pick } from 'es-toolkit';
     import LineCanvas from './helpers/LineCanvas.svelte';
 
     import type { RawValue } from 'svelteplot/types/index.js';
-    import { isValid } from '$lib/helpers/index.js';
-    import { sort } from '$lib/transforms/sort.js';
-    import { recordizeXY } from '$lib/transforms/recordize.js';
+    import { isValid } from '../helpers/index.js';
+    import { sort } from '../transforms/sort.js';
+    import { recordizeXY } from '../transforms/recordize.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LineMarkProps = $props();
@@ -54,6 +71,7 @@
         curve: 'auto',
         tension: 0,
         canvas: false,
+        markerScale: 1,
         class: null,
         lineClass: null,
         ...getPlotDefaults().line
@@ -216,6 +234,7 @@
                                     markerMid={args.markerMid}
                                     markerEnd={args.markerEnd}
                                     marker={args.marker}
+                                    markerScale={args.markerScale}
                                     strokeWidth={args.strokeWidth}
                                     datum={lineData[0].datum}
                                     d={pathString}

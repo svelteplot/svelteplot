@@ -4,14 +4,15 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface TickYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one horizontal tick */
         data: Datum[];
         /**
-         * the vertical position; bound to the x scale
+         * the vertical position; bound to the y scale
          */
         y?: ChannelAccessor<Datum>;
         /**
-         * the horizontal position; bound to the y scale, which must be band. If the y channel
-         * is not specified, the tick will span the full vertical extent of the frame.
+         * the horizontal position; bound to the x scale, which must be band. If the x channel
+         * is not specified, the tick will span the full horizontal extent of the frame.
          */
         x?: ChannelAccessor<Datum>;
         /**
@@ -19,6 +20,7 @@
          * length of the tick. Defaults to 10 pixel
          */
         tickLength?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
@@ -32,11 +34,11 @@
         FacetContext,
         ConstantAccessor
     } from '../types/index.js';
-    import { recordizeY } from '$lib/index.js';
+    import { recordizeY } from '../index.js';
     import { projectX, projectY } from '../helpers/scales.js';
     import { isValid } from '../helpers/index.js';
-    import { testFilter, parseInset } from '$lib/helpers/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { testFilter, parseInset } from '../helpers/index.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

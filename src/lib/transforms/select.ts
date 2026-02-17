@@ -1,6 +1,6 @@
-import { groupFacetsAndZ } from '$lib/helpers/group.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { ChannelName, DataRecord, TransformArg } from '$lib/types/index.js';
+import { groupFacetsAndZ } from '../helpers/group.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { ChannelName, DataRecord, TransformArg } from '../types/index.js';
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
@@ -13,6 +13,10 @@ type SelectOptions =
 
 // let o: SelectOptions = { x: 'min'};
 
+/**
+ * selects one datum per group based on the given criteria; use "first"/"last"
+ * for positional selection, or `{channel: "min"/"max"}` for value-based selection
+ */
 export function select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions) {
     const newData: DataRecord[] = [];
     groupFacetsAndZ(data, channels, (items) => {
@@ -53,15 +57,19 @@ export function selectLast(args: TransformArg<DataRecord>) {
     return select(args, 'last');
 }
 
+/** keeps only the datum with the smallest x value per group */
 export function selectMinX(args: TransformArg<DataRecord>) {
     return select(args, { x: 'min' });
 }
+/** keeps only the datum with the largest x value per group */
 export function selectMaxX(args: TransformArg<DataRecord>) {
     return select(args, { x: 'max' });
 }
+/** keeps only the datum with the smallest y value per group */
 export function selectMinY(args: TransformArg<DataRecord>) {
     return select(args, { y: 'min' });
 }
+/** keeps only the datum with the largest y value per group */
 export function selectMaxY(args: TransformArg<DataRecord>) {
     return select(args, { y: 'max' });
 }

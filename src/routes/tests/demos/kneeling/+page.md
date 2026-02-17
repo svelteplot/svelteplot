@@ -8,7 +8,7 @@ This is useful for showing datasets ranging over a long time span. Here we're sh
 <script>
     import { Plot, Line } from 'svelteplot';
     import { page } from '$app/state';
-    import { Slider, RadioInput } from '$lib/ui';
+    import { Slider, RadioInput } from '$shared/ui';
 
     let type = $state('symlog');
     let constant = $state(2000);

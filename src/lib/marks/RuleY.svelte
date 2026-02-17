@@ -3,19 +3,27 @@
 -->
 <script lang="ts" generics="Datum = DataRecord">
     interface RuleYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one horizontal rule */
         data?: Datum[];
+        /** the vertical position channel for the rule */
         y?: ChannelAccessor<Datum>;
+        /** the starting horizontal position of the rule */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position of the rule */
         x2?: ChannelAccessor<Datum>;
+        /** shorthand to inset the rule from both ends, in pixels */
         inset?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the left, in pixels */
         insetLeft?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the right, in pixels */
         insetRight?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
-    import GroupMultiple from '$lib/marks/helpers/GroupMultiple.svelte';
-    import RuleCanvas from '$lib/marks/helpers/RuleCanvas.svelte';
-    import { recordizeY } from '$lib/transforms/recordize.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import RuleCanvas from './helpers/RuleCanvas.svelte';
+    import { recordizeY } from '../transforms/recordize.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
@@ -23,7 +31,7 @@
         ConstantAccessor,
         ChannelAccessor
     } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

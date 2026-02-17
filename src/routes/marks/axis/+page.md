@@ -320,7 +320,7 @@ You can customize the automatic axis ticks using the `interval` and `tickSpacing
 ```svelte live
 <script>
     import { Plot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let interval = $state(15);
 </script>
@@ -344,7 +344,7 @@ For time-scales you can define the interval as string:
 ```svelte live
 <script>
     import { Plot } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
 
     let interval = $state('3 months');
 </script>
@@ -385,7 +385,7 @@ Another way to customize the number of ticks shown is to set the **tickSpacing**
 ```svelte live
 <script>
     import { Plot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let tickSpacing = $state(30);
 </script>
@@ -409,7 +409,7 @@ You can also define the ticks manually:
 ```svelte live
 <script>
     import { Plot } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 </script>
 
 <Plot
@@ -613,7 +613,7 @@ Keep in mind that rotated texts are a lot harder to read, so if possible, avoid 
 ```svelte live
 <script>
     import { Plot, RuleY } from 'svelteplot';
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
 
     let tickRotate = $state(-45);
 </script>

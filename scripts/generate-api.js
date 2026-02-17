@@ -28,7 +28,7 @@ function escapeTableCell(text) {
 function slugify(text) {
     return text
         .replace(/\s+/g, '-')
-        .replace(/[^A-Za-z0-9-]+/g, '')
+        .replace(/[^a-z0-9-]+/gi, '')
         .replace(/^-+|-+$/g, '');
 }
 
@@ -74,20 +74,34 @@ function createTable(rows) {
     return lines.join('\n');
 }
 
-function formatMemberRow(member, sourceFile) {
+function getPropertyName(member, sourceFile) {
+    if (!member.name) return null;
+    return ts.isIdentifier(member.name) ? member.name.text : getNodeText(member.name, sourceFile);
+}
+
+function getPropertyMeta(member, sourceFile) {
     if (!ts.isPropertySignature(member) || !member.name) return null;
-    const name = ts.isIdentifier(member.name)
-        ? member.name.text
-        : getNodeText(member.name, sourceFile);
+    const name = getPropertyName(member, sourceFile);
+    if (!name) return null;
     let typeText = getTypeText(member.type, sourceFile);
     typeText = typeText.replace(/\s+/g, ' ').trim();
     typeText = typeText.replace(/^\|\s*/, '');
-    const optional = member.questionToken ? '?' : '';
     const jsdoc = getJsDocSummary(member);
     return {
-        prop: `\`${escapeTableCell(`${name}${optional}`)}\``,
+        name,
+        optional: Boolean(member.questionToken),
         rawType: typeText,
-        description: escapeTableCell(jsdoc || '')
+        description: jsdoc || ''
+    };
+}
+
+function formatMemberRow(member, sourceFile) {
+    const meta = getPropertyMeta(member, sourceFile);
+    if (!meta) return null;
+    return {
+        prop: `\`${escapeTableCell(`${meta.name}${meta.optional ? '?' : ''}`)}\``,
+        rawType: meta.rawType,
+        description: escapeTableCell(meta.description)
     };
 }
 
@@ -122,7 +136,7 @@ async function extractScript(content) {
 }
 
 async function extractModuleScript(content) {
-    const match = content.match(/<script[^>]*\bmodule\b[^>]*>([\s\S]*?)<\/script>/);
+    const match = content.match(/<script[^>]*module[^>]*>([\s\S]*?)<\/script>/);
     return match ? match[1] : null;
 }
 
@@ -189,7 +203,7 @@ function getInterfaceExtends(iface, sourceFile) {
 
 function extractComponentPropsTargets(typeName) {
     const matches = [];
-    const componentProps = /ComponentProps<\s*typeof\s+([A-Za-z0-9_]+)\s*>/g;
+    const componentProps = /ComponentProps<\s*typeof\s+(\w+)\s*>/g;
     let match = componentProps.exec(typeName);
     while (match) {
         matches.push(match[1]);
@@ -242,14 +256,18 @@ async function getMarkDefinition(markFile) {
     const iface =
         findInterface(sourceFile, `${markNameFromFile}MarkProps`) ||
         findInterface(sourceFile, 'MarkProps');
+    const typeAlias =
+        findTypeAlias(sourceFile, `${markNameFromFile}MarkProps`) ||
+        findTypeAlias(sourceFile, 'MarkProps');
 
-    if (!iface) return null;
+    if (!iface && !typeAlias) return null;
+    const declaration = iface || typeAlias;
 
     return {
         name: markNameFromFile,
         slug,
         propsPath: path.join(MARKS_DIR, markFile),
-        interfaceName: iface.name.text,
+        interfaceName: declaration.name.text,
         isSvelte: true,
         scriptSource: sourceFile,
         rawScript: script,
@@ -275,6 +293,251 @@ function findTypeAlias(sourceFile, name) {
         }
     });
     return found;
+}
+
+function getLocalTypeDeclarations(sourceFile) {
+    const interfaces = new Map();
+    const aliases = new Map();
+    sourceFile.forEachChild((node) => {
+        if (ts.isInterfaceDeclaration(node)) {
+            interfaces.set(node.name.text, node);
+        } else if (ts.isTypeAliasDeclaration(node)) {
+            aliases.set(node.name.text, node);
+        }
+    });
+    return { interfaces, aliases };
+}
+
+function normalizeTypeNames(typeNames) {
+    let names = Array.from(typeNames)
+        .map((name) => name.trim())
+        .filter(Boolean);
+    if (names.length > 1) {
+        names = names.filter((name) => name !== 'never');
+    }
+    if (names.includes('true') && names.includes('false')) {
+        names = names.filter((name) => name !== 'true' && name !== 'false');
+        names.push('boolean');
+    }
+    if (!names.length) return ['unknown'];
+    return names;
+}
+
+function clonePropEntry(entry) {
+    return {
+        name: entry.name,
+        optional: entry.optional,
+        rawTypes: new Set(entry.rawTypes),
+        description: entry.description || ''
+    };
+}
+
+function mergePropMapsIntersection(maps) {
+    const merged = new Map();
+    for (const map of maps) {
+        for (const [name, entry] of map) {
+            const current = merged.get(name);
+            if (!current) {
+                merged.set(name, clonePropEntry(entry));
+                continue;
+            }
+            current.optional = current.optional && entry.optional;
+            for (const rawType of entry.rawTypes) current.rawTypes.add(rawType);
+            if (!current.description && entry.description) current.description = entry.description;
+        }
+    }
+    return merged;
+}
+
+function mergePropMapsUnion(maps) {
+    if (!maps.length) return new Map();
+    const allNames = new Set(maps.flatMap((map) => Array.from(map.keys())));
+    const merged = new Map();
+    for (const name of allNames) {
+        const entries = maps.map((map) => map.get(name)).filter(Boolean);
+        if (!entries.length) continue;
+        const rawTypes = new Set(entries.flatMap((entry) => Array.from(entry.rawTypes)));
+        const optional =
+            entries.length < maps.length || entries.some((entry) => Boolean(entry.optional));
+        const description = entries.find((entry) => entry.description)?.description || '';
+        merged.set(name, {
+            name,
+            optional,
+            rawTypes,
+            description
+        });
+    }
+    return merged;
+}
+
+function applyOptionalToMap(map, optional = true) {
+    const cloned = new Map();
+    for (const [name, entry] of map) {
+        cloned.set(name, {
+            ...clonePropEntry(entry),
+            optional
+        });
+    }
+    return cloned;
+}
+
+function getPropertyMapFromMembers(members, sourceFile) {
+    const out = new Map();
+    for (const member of members) {
+        const meta = getPropertyMeta(member, sourceFile);
+        if (!meta) continue;
+        out.set(meta.name, {
+            name: meta.name,
+            optional: meta.optional,
+            rawTypes: new Set([meta.rawType || 'unknown']),
+            description: meta.description || ''
+        });
+    }
+    return out;
+}
+
+function getPropertyMapFromTypeNode(typeNode, sourceFile, declarations, seen = new Set()) {
+    if (!typeNode) return new Map();
+
+    if (ts.isParenthesizedTypeNode(typeNode)) {
+        return getPropertyMapFromTypeNode(typeNode.type, sourceFile, declarations, seen);
+    }
+
+    if (ts.isTypeLiteralNode(typeNode)) {
+        return getPropertyMapFromMembers(typeNode.members, sourceFile);
+    }
+
+    if (ts.isUnionTypeNode(typeNode)) {
+        const maps = typeNode.types.map((t) =>
+            getPropertyMapFromTypeNode(t, sourceFile, declarations, seen)
+        );
+        return mergePropMapsUnion(maps);
+    }
+
+    if (ts.isIntersectionTypeNode(typeNode)) {
+        const maps = typeNode.types.map((t) =>
+            getPropertyMapFromTypeNode(t, sourceFile, declarations, seen)
+        );
+        return mergePropMapsIntersection(maps);
+    }
+
+    if (ts.isTypeReferenceNode(typeNode)) {
+        const typeName = getNodeText(typeNode.typeName, sourceFile);
+        if (typeName === 'Partial' && typeNode.typeArguments?.[0]) {
+            const partialMap = getPropertyMapFromTypeNode(
+                typeNode.typeArguments[0],
+                sourceFile,
+                declarations,
+                seen
+            );
+            return applyOptionalToMap(partialMap, true);
+        }
+
+        const localInterface = declarations.interfaces.get(typeName);
+        if (localInterface) {
+            return getPropertyMapFromMembers(localInterface.members, sourceFile);
+        }
+
+        const localAlias = declarations.aliases.get(typeName);
+        if (localAlias && !seen.has(typeName)) {
+            const nextSeen = new Set(seen);
+            nextSeen.add(typeName);
+            return getPropertyMapFromTypeNode(localAlias.type, sourceFile, declarations, nextSeen);
+        }
+    }
+
+    return new Map();
+}
+
+function formatPropertyMapRows(propertyMap) {
+    return Array.from(propertyMap.values()).map((entry) => {
+        const typeParts = normalizeTypeNames(entry.rawTypes);
+        return {
+            prop: `\`${escapeTableCell(`${entry.name}${entry.optional ? '?' : ''}`)}\``,
+            rawType: typeParts.join(' | '),
+            description: escapeTableCell(entry.description || '')
+        };
+    });
+}
+
+function getTypeAliasRows(typeAlias, sourceFile, declarations) {
+    const propertyMap = getPropertyMapFromTypeNode(typeAlias.type, sourceFile, declarations);
+    return formatPropertyMapRows(propertyMap);
+}
+
+function collectTypeReferencesFromNode(typeNode, sourceFile, declarations, refs, seen = new Set()) {
+    if (!typeNode) return;
+
+    if (ts.isParenthesizedTypeNode(typeNode)) {
+        collectTypeReferencesFromNode(typeNode.type, sourceFile, declarations, refs, seen);
+        return;
+    }
+
+    if (ts.isUnionTypeNode(typeNode) || ts.isIntersectionTypeNode(typeNode)) {
+        for (const nested of typeNode.types) {
+            collectTypeReferencesFromNode(nested, sourceFile, declarations, refs, seen);
+        }
+        return;
+    }
+
+    if (ts.isTypeReferenceNode(typeNode)) {
+        const typeName = getNodeText(typeNode.typeName, sourceFile);
+
+        if (typeName === 'Partial' && typeNode.typeArguments?.[0]) {
+            collectTypeReferencesFromNode(
+                typeNode.typeArguments[0],
+                sourceFile,
+                declarations,
+                refs,
+                seen
+            );
+            return;
+        }
+
+        const localInterface = declarations.interfaces.get(typeName);
+        if (localInterface) {
+            for (const inherited of getInterfaceExtends(localInterface, sourceFile)) {
+                refs.add(inherited);
+            }
+            if (localInterface.heritageClauses) {
+                for (const clause of localInterface.heritageClauses) {
+                    if (clause.token !== ts.SyntaxKind.ExtendsKeyword) continue;
+                    for (const inheritedType of clause.types) {
+                        collectTypeReferencesFromNode(
+                            inheritedType,
+                            sourceFile,
+                            declarations,
+                            refs,
+                            seen
+                        );
+                    }
+                }
+            }
+            return;
+        }
+
+        const localAlias = declarations.aliases.get(typeName);
+        if (localAlias && !seen.has(typeName)) {
+            const nextSeen = new Set(seen);
+            nextSeen.add(typeName);
+            collectTypeReferencesFromNode(
+                localAlias.type,
+                sourceFile,
+                declarations,
+                refs,
+                nextSeen
+            );
+            return;
+        }
+
+        refs.add(getNodeText(typeNode, sourceFile));
+    }
+}
+
+function getTypeAliasExtends(typeAlias, sourceFile, declarations) {
+    const refs = new Set();
+    collectTypeReferencesFromNode(typeAlias.type, sourceFile, declarations, refs);
+    return Array.from(refs);
 }
 
 async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) {
@@ -400,16 +663,27 @@ async function generateMarksApi() {
 
     for (const mark of marks) {
         const sourceFile = mark.isSvelte ? mark.scriptSource : await parseSource(mark.propsPath);
+        const localDeclarations = getLocalTypeDeclarations(sourceFile);
         const iface =
             findInterface(sourceFile, mark.interfaceName) ||
             findInterface(sourceFile, `${mark.name}MarkProps`) ||
             findInterface(sourceFile, 'MarkProps');
+        const typeAlias =
+            findTypeAlias(sourceFile, mark.interfaceName) ||
+            findTypeAlias(sourceFile, `${mark.name}MarkProps`) ||
+            findTypeAlias(sourceFile, 'MarkProps');
 
         const rows = iface
             ? iface.members.map((member) => formatMemberRow(member, sourceFile)).filter(Boolean)
-            : [];
+            : typeAlias
+              ? getTypeAliasRows(typeAlias, sourceFile, localDeclarations)
+              : [];
 
-        const extendsList = iface ? getInterfaceExtends(iface, sourceFile) : [];
+        const extendsList = iface
+            ? getInterfaceExtends(iface, sourceFile)
+            : typeAlias
+              ? getTypeAliasExtends(typeAlias, sourceFile, localDeclarations)
+              : [];
         mark.extends = extendsList;
 
         for (const row of rows) {
@@ -517,14 +791,23 @@ async function generateMarksApi() {
     const typeSection = resolvedTypeSections.length
         ? ['## Type details', '', ...resolvedTypeSections].join('\n')
         : '';
+    const marksInlineToc = marks.length
+        ? marks.map((mark) => `[${mark.name}](/api/marks#${slugify(mark.name)})`).join(', ')
+        : '';
 
     const body = [
         '---',
         'title: Marks API reference',
         '---',
         '',
+        marksInlineToc
+            ? `<div class="inline-toc">\n\nJump to mark: ${marksInlineToc}\n\n</div>`
+            : null,
+        marksInlineToc ? '' : null,
         [markSections.join('\n\n'), inheritedSection, typeSection].filter(Boolean).join('\n\n')
-    ].join('\n');
+    ]
+        .filter((line) => line != null)
+        .join('\n');
 
     await mkdir(MARKS_OUT_DIR, { recursive: true });
     await writeFile(path.join(MARKS_OUT_DIR, '+page.md'), body, 'utf8');
@@ -720,6 +1003,7 @@ async function generateTransformsApi() {
     });
 
     const sections = [];
+    const sectionNames = [];
     const typeSections = [];
     const typeDetails = new Map();
     const explainedTypes = new Set();
@@ -836,6 +1120,7 @@ async function generateTransformsApi() {
                 .filter((line) => line != null)
                 .join('\n')
         );
+        sectionNames.push(entry.name);
     }
 
     for (const [typeName, detail] of typeDetails) {
@@ -844,11 +1129,19 @@ async function generateTransformsApi() {
         if (section) typeSections.push(section);
     }
 
+    const transformsInlineToc = sectionNames.length
+        ? sectionNames.map((name) => `[${name}](/api/transforms#${slugify(name)})`).join(', ')
+        : '';
+
     const body = [
         '---',
         'title: Transforms API reference',
         '---',
         '',
+        transformsInlineToc
+            ? `<div class="inline-toc">\n\nJump to transforms: ${transformsInlineToc}\n\n</div>`
+            : null,
+        transformsInlineToc ? '' : null,
         ...sections,
         typeSections.length ? '' : null,
         typeSections.length ? '## Type details' : null,

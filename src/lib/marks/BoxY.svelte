@@ -6,8 +6,11 @@
         BaseMarkProps<Datum>,
         'class' | 'fill' | 'stroke' | 'fx' | 'fy'
     > {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; bound to a band scale for grouping */
         x: ChannelAccessor;
+        /** the vertical position channel; the quantitative values to summarize */
         y: ChannelAccessor;
         /**
          * Custom sort order for grouped box plot data
@@ -45,7 +48,7 @@
          */
         dot: Record<string, ChannelAccessor<Datum>>;
     }
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import Box from './helpers/Box.svelte';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
 

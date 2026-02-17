@@ -1,11 +1,6 @@
-import isDataRecord from '$lib/helpers/isDataRecord.js';
-import type {
-    TransformArgsRow,
-    TransformArgsRecord,
-    DataRecord,
-    DataRow
-} from '$lib/types/index.js';
-import { INDEX } from '$lib/constants';
+import isDataRecord from '../helpers/isDataRecord.js';
+import type { TransformArgsRow, TransformArgsRecord, DataRecord, DataRow } from '../types/index.js';
+import { INDEX } from '../constants';
 
 export const X = Symbol('x');
 export const Y = Symbol('y');
@@ -16,9 +11,9 @@ export function indexData<T extends object>(data: T[]): (T & { [INDEX]: number }
     return data.map((d, i) => ({ ...d, [INDEX]: i }) as T & { [INDEX]: number });
 }
 
-/*
- * This transform takes an array of raw values as input and returns data records
- * in which the values are interpreted as x channel and their index as y
+/**
+ * takes an array of raw values and returns data records in which the values
+ * are interpreted as the x channel and their index as the y channel
  */
 export function recordizeX<T>(
     { data, ...channels }: TransformArgsRow<DataRow>,
@@ -43,9 +38,9 @@ export function recordizeX<T>(
     return { data: indexData(data as object[]) as T[], ...channels };
 }
 
-/*
- * This transform takes an array of raw values as input and returns data records
- * in which the values are interpreted as y channel and their index as yx
+/**
+ * takes an array of raw values and returns data records in which the values
+ * are interpreted as the y channel and their index as the x channel
  */
 export function recordizeY<T>(
     { data, ...channels }: TransformArgsRow<DataRow>,
@@ -99,6 +94,10 @@ export function recordizeXY<T>({ data, ...channels }: TransformArgsRow<T>): Tran
     return { data: data, ...channels };
 }
 
+/**
+ * wraps raw values into data records with index tracking, without
+ * assigning them to a specific positional channel
+ */
 export function recordize<T>({ data, ...channels }: TransformArgsRow<T>): TransformArgsRecord<T> {
     if (!data) return { data, ...channels };
     if (!isDataRecord(data[0])) {

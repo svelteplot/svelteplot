@@ -3,7 +3,9 @@
 -->
 <script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface GeoMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input GeoJSON data array */
         data?: Datum[] | { type: 'Sphere' }[];
+        /** internal: whether this is a sphere or graticule geo mark */
         geoType?: 'sphere' | 'graticule';
         /**
          * todo: implement?
@@ -21,6 +23,7 @@
          * radius for point features
          */
         r?: ChannelAccessor<Datum>;
+        /** SVG filter attribute applied to each geo path element */
         svgFilter?: ConstantAccessor<string | undefined, Datum>;
     }
     import type {
@@ -32,15 +35,15 @@
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import { geoPath } from 'd3-geo';
-    import { resolveChannel, resolveProp, resolveStyles } from '$lib/helpers/resolve.js';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { sort } from '$lib/transforms/index.js';
+    import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { sort } from '../transforms/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import GeoCanvas from './helpers/GeoCanvas.svelte';
-    import { recordize } from '$lib/transforms/recordize.js';
-    import { GEOJSON_PREFER_STROKE } from '$lib/helpers/index.js';
+    import { recordize } from '../transforms/recordize.js';
+    import { GEOJSON_PREFER_STROKE } from '../helpers/index.js';
     import Anchor from './helpers/Anchor.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

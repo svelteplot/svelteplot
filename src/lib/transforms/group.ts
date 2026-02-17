@@ -1,11 +1,11 @@
-import { groupFacetsAndZ } from '$lib/helpers/group.js';
-import { isValid, testFilter } from '$lib/helpers/index.js';
-import { reduceOutputs, type ReducerName } from '$lib/helpers/reduce.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { DataRecord, DataRow, RawValue, TransformArg } from '$lib/types/index.js';
+import { groupFacetsAndZ } from '../helpers/group.js';
+import { isValid, testFilter } from '../helpers/index.js';
+import { reduceOutputs, type ReducerName } from '../helpers/reduce.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { DataRecord, DataRow, RawValue, TransformArg } from '../types/index.js';
 import { groups as d3Groups } from 'd3-array';
-import { omit } from '$lib/helpers/index.js';
-import { maybeInterval } from '$lib/helpers/autoTicks.js';
+import { omit } from '../helpers/index.js';
+import { maybeInterval } from '../helpers/autoTicks.js';
 
 type ReducerFunc = (group: DataRow[]) => RawValue;
 type ReducerOption = ReducerName | ReducerFunc;

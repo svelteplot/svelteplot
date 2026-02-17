@@ -3,20 +3,24 @@
 -->
 <script lang="ts" generics="Datum = RawValue">
     interface GridXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** custom values at which to draw vertical gridlines */
         data?: Datum[];
+        /** whether these gridlines were automatically added by the Plot component */
         automatic?: boolean;
+        /** the starting vertical position of the gridline */
         y1?: ChannelAccessor<Datum>;
+        /** the ending vertical position of the gridline */
         y2?: ChannelAccessor<Datum>;
     }
     import Mark from '../Mark.svelte';
     import type { BaseMarkProps, RawValue, DataRecord, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
-    import { RAW_VALUE } from '$lib/transforms/recordize.js';
-    import isDataRecord from '$lib/helpers/isDataRecord';
-    import { INDEX } from '$lib/constants';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { testFilter } from '../helpers/index.js';
+    import { RAW_VALUE } from '../transforms/recordize.js';
+    import isDataRecord from '../helpers/isDataRecord';
+    import { INDEX } from '../constants';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: GridXMarkProps = $props();

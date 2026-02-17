@@ -3,10 +3,9 @@ import type { PlotContext, PlotOptions } from 'svelteplot/types/plot';
 import type { PlotScales, PlotState as TPlotState } from 'svelteplot/types';
 
 /**
- * Internal state representation of a Plot.
+ * internal state representation of a Plot, using Svelte 5 runes for reactivity
  */
 class PlotState implements TPlotState {
-    // Define properties and methods for PlotState as needed
     width: number = $state(50);
     height: number = $state(50);
     options: PlotOptions = $state({});
@@ -32,18 +31,18 @@ class PlotState implements TPlotState {
         Object.assign(this, state);
     }
 
+    /** merges partial state into the current plot state */
     update(newState: Partial<PlotState>) {
         Object.assign(this, newState);
     }
 
+    /** returns a read-only wrapper exposing only public properties */
     get publicState() {
         return new PublicPlotState(this);
     }
 }
 
-/**
- * A public-facing wrapper around PlotState that exposes only read-only properties.
- */
+/** read-only wrapper around PlotState that exposes only getter properties */
 class PublicPlotState {
     #plotState: PlotState;
     constructor(plotState: PlotState) {
@@ -88,12 +87,14 @@ class PublicPlotState {
     }
 }
 
+/** creates a new PlotState instance from the given initial state */
 export function setPlot(initialState: PlotState): PlotState {
     return new PlotState({
         ...initialState
     });
 }
 
+/** returns the current Plot's public state from Svelte context. Must be called within a `<Plot>` component tree. */
 export function usePlot(): Readonly<TPlotState> {
     const { getPlotState } = getContext<PlotContext>('svelteplot');
     return getPlotState().publicState;

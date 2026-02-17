@@ -4,7 +4,9 @@
 
 <script lang="ts" generics="Datum extends DataRecord">
     interface LinkMarkProps extends BaseMarkProps<Datum>, MarkerOptions {
+        /** the input data array; each element becomes one link */
         data: Datum[];
+        /** sort order for data points before rendering */
         sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
         /**
          * the x1 channel accessor for the start of the link
@@ -18,7 +20,7 @@
          * the x2 channel accessor for the end of the link
          */
         x2: ChannelAccessor<Datum>;
-
+        /** the y2 channel accessor for the end of the link */
         y2: ChannelAccessor<Datum>;
         /**
          * the curve type, defaults to 'auto' which uses a linear curve for planar projections
@@ -47,19 +49,20 @@
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
-    import { replaceChannels } from '$lib/transforms/rename.js';
+    import { replaceChannels } from '../transforms/rename.js';
     import { line, type CurveFactory } from 'd3-shape';
-    import callWithProps from '$lib/helpers/callWithProps.js';
-    import { maybeCurve } from '$lib/helpers/curves.js';
+    import callWithProps from '../helpers/callWithProps.js';
+    import { maybeCurve } from '../helpers/curves.js';
     import { geoPath } from 'd3-geo';
     import { pick } from 'es-toolkit';
     import { sort } from 'svelteplot/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: LinkMarkProps = $props();
     const DEFAULTS = {
+        markerScale: 1,
         ...getPlotDefaults().link
     };
     const {
@@ -179,6 +182,7 @@
                         markerStart={args.markerStart}
                         markerEnd={args.markerEnd}
                         marker={args.marker}
+                        markerScale={args.markerScale}
                         class={styleClass}
                         strokeWidth={args.strokeWidth}
                         datum={d.datum}

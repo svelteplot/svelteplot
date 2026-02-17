@@ -1,5 +1,5 @@
 <script lang="ts" generics="Datum extends Record<string, any>">
-    import { resolveProp } from '$lib/helpers/resolve.js';
+    import { resolveProp } from '../../helpers/resolve.js';
     import type { ConstantAccessor } from 'svelteplot/types';
 
     interface AnchorProps {

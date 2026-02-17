@@ -5,23 +5,31 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface RectMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
+        /** the input data array; each element becomes one rectangle */
         data: Datum[];
+        /** the horizontal position channel; used as shorthand for x1 and x2 with an interval */
         x?: ChannelAccessor<Datum>;
+        /** the starting horizontal position channel */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position channel */
         x2?: ChannelAccessor<Datum>;
+        /** the vertical position channel; used as shorthand for y1 and y2 with an interval */
         y?: ChannelAccessor<Datum>;
+        /** the starting vertical position channel */
         y1?: ChannelAccessor<Datum>;
+        /** the ending vertical position channel */
         y2?: ChannelAccessor<Datum>;
+        /** converts x/y into x1/x2 or y1/y2 ranges based on the provided interval */
         interval?: number | string;
+        /** additional CSS class name(s) for the rect element */
         class?: string;
         /**
          * Renders using Canvas instead of SVG.
          */
-
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
-    import { intervalX, intervalY } from '$lib/index.js';
+    import { intervalX, intervalY } from '../index.js';
     import type {
         DataRecord,
         BaseMarkProps,
@@ -32,7 +40,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
     import RectCanvas from './helpers/RectCanvas.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

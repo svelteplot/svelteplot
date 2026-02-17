@@ -4,21 +4,28 @@
 -->
 <script lang="ts" generics="Datum = DataRow">
     interface HTMLTooltipMarkProps {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** the radius channel, used for positioning with dot-based data */
         r?: ChannelAccessor<Datum>;
+        /** the horizontal facet channel */
         fx?: ChannelAccessor<Datum>;
+        /** the vertical facet channel */
         fy?: ChannelAccessor<Datum>;
+        /** snippet for rendering the tooltip content; receives the nearest datum */
         children: Snippet<[{ datum: Datum }]>;
     }
     import { type Snippet } from 'svelte';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
-    import { projectX, projectY } from '$lib/helpers/scales.js';
+    import { projectX, projectY } from '../helpers/scales.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
 
     const plot = usePlot();

@@ -5,6 +5,7 @@
 
 <script lang="ts" generics="Datum extends DataRow">
     interface TickXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one vertical tick */
         data: Datum[];
         /**
          * the horizontal position; bound to the x scale
@@ -20,6 +21,7 @@
          * length of the tick. Defaults to 10 pixel
          */
         tickLength?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
@@ -33,11 +35,11 @@
         FacetContext,
         ConstantAccessor
     } from '../types/index.js';
-    import { recordizeX } from '$lib/index.js';
+    import { recordizeX } from '../index.js';
     import { projectX, projectY } from '../helpers/scales.js';
     import { isValid } from '../helpers/index.js';
-    import { testFilter, parseInset } from '$lib/helpers/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { testFilter, parseInset } from '../helpers/index.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

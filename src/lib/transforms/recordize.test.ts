@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { recordizeXY, indexData, RAW_VALUE, X, Y } from './recordize.js';
-import type { RawValue } from '$lib/types/index.js';
-import { INDEX } from '$lib/constants.js';
+import type { RawValue } from '../types/index.js';
+import { INDEX } from '../constants.js';
 
 const coordsArray: [RawValue, RawValue][] = [
     [0, 4],

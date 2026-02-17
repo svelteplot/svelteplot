@@ -2,16 +2,17 @@
 title: Markers
 ---
 
-Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. Markers are automatically scaled with the line width:
+Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. Markers are automatically scaled with the line width, and you can override their relative size with `markerScale` (default `1`):
 
 ```svelte live
 <script>
     import { Plot, Line } from 'svelteplot';
-    import Select from '$lib/ui/Select.svelte';
-    import Slider from '$lib/ui/Slider.svelte';
+    import Select from '$shared/ui/Select.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
 
     let marker = $state('circle-stroke');
     let strokeWidth = $state(1.5);
+    let markerScale = $state(1);
 
     const options = [
         'dot',
@@ -30,12 +31,18 @@ Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. 
 
 <Select label="Marker:" bind:value={marker} {options} />
 <Slider
+    label="Marker scale"
+    bind:value={markerScale}
+    min={0.2}
+    max={2}
+    step={0.05} />
+<br />
+<Slider
     label="Stroke width"
     bind:value={strokeWidth}
     min={1}
     max={5}
     step={0.1} />
-<br />
 <Plot inset={10} grid>
     <Line
         data={crimea}
@@ -43,6 +50,7 @@ Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. 
         y="deaths"
         stroke="cause"
         {strokeWidth}
+        {markerScale}
         {marker} />
 </Plot>
 ```
@@ -55,6 +63,7 @@ Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. 
         y="deaths"
         stroke="cause"
         strokeWidth={1.5}
+        markerScale={0.75}
         marker="dot" />
 </Plot>
 ```
@@ -67,6 +76,7 @@ The supported marker options are:
 - **markerMid** - the marker for any intermediate point of a line segment
 - **markerEnd** - the marker for the end point of a line segment
 - **marker** - shorthand for setting the marker on all points
+- **markerScale** - scale factor for marker size, relative to the line stroke width (default `1`)
 
 The following named markers are supported:
 
@@ -86,8 +96,8 @@ Note that for the interpolation methods `basis`, `bundle`, and `step`, the marke
 ```svelte live
 <script lang="ts">
     import { Plot, LineY, Dot } from 'svelteplot';
-    import Slider from '$lib/ui/Slider.svelte';
-    import Select from '$lib/ui/Select.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
+    import Select from '$shared/ui/Select.svelte';
     import type { CurveName } from '$lib/types/index.js';
 
     // curve demo

@@ -5,9 +5,13 @@
 
 <script lang="ts" generics="Datum extends DataRecord">
     interface CustomMarkHTMLProps {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** anchor position within the frame when x or y is not specified */
         frameAnchor?: ConstantAccessor<
             | 'bottom'
             | 'top'
@@ -20,16 +24,18 @@
             | 'center',
             Datum
         >;
+        /** CSS class applied to the wrapper element */
         class: string | null;
+        /** snippet rendered for each data point with the datum and its projected coordinates */
         children: Snippet<{ datum: Datum; x: number; y: number }>;
     }
     import { type Snippet } from 'svelte';
     import type { ChannelAccessor, ConstantAccessor, DataRecord } from '../types/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    import { resolveChannel } from '$lib/helpers/resolve.js';
-    import { projectX, projectY, projectXY } from '$lib/helpers/scales.js';
-    import { isValid } from '$lib/helpers/index.js';
+    import { resolveChannel } from '../helpers/resolve.js';
+    import { projectX, projectY, projectXY } from '../helpers/scales.js';
+    import { isValid } from '../helpers/index.js';
 
     const plot = usePlot();
 

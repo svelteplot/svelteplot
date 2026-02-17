@@ -1,6 +1,6 @@
 <script lang="ts">
     import { afterNavigate } from '$app/navigation';
-    import { useDark } from 'svelteplot/ui/isDark.svelte';
+    import { useDark } from '$shared/ui/isDark.svelte';
 
     import '../app.scss';
 

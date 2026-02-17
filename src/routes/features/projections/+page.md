@@ -12,7 +12,7 @@ title: Projections
         Line,
         Graticule
     } from 'svelteplot';
-    import { Slider, Select } from '$lib/ui';
+    import { Slider, Select } from '$shared/ui';
     import { tick } from 'svelte';
     import { page } from '$app/state';
     import { geoEqualEarth, geoCircle } from 'd3-geo';
@@ -159,7 +159,7 @@ Plot provides a variety of built-in projections. And as above, all world project
         Sphere,
         Graticule
     } from 'svelteplot';
-    import { Select } from '$lib/ui';
+    import { Select } from '$shared/ui';
     import { page } from '$app/state';
     import { geoEqualEarth } from 'd3-geo';
     import * as topojson from 'topojson-client';
@@ -210,7 +210,7 @@ Plot provides a variety of built-in projections. And as above, all world project
 
 ```svelte live
 <script>
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import {
         Plot,
         Geo,
@@ -271,7 +271,7 @@ You can use custom projections if you need more control over the projection para
 
 ```svelte live
 <script>
-    import { Slider } from '$lib/ui';
+    import { Slider } from '$shared/ui';
     import {
         Plot,
         Geo,

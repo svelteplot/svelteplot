@@ -6,33 +6,43 @@
 <script lang="ts" generics="Datum extends DataRecord">
     import type * as CSS from 'csstype';
 
-    interface TextMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+    interface TextCommonMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input data array; each element becomes one text label */
         data?: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** a Snippet to render as the text content */
         children?: Snippet;
+        /** the text content accessor */
         text: ConstantAccessor<string | null | false | undefined, Datum>;
+        /** the title attribute for the text element (shown as a browser tooltip) */
         title?: ConstantAccessor<string, Datum>;
         /**
-         * the font size of the text
+         * the font family of the text
          */
         fontFamily?: ConstantAccessor<CSS.Property.FontFamily, Datum>;
+        /** the font size of the text; can be a CSS string or number in pixels */
         fontSize?: ConstantAccessor<CSS.Property.FontSize | number, Datum>;
+        /** the font weight of the text (e.g. "bold", 700) */
         fontWeight?: ConstantAccessor<CSS.Property.FontWeight, Datum>;
+        /** the font style of the text (e.g. "italic", "normal") */
         fontStyle?: ConstantAccessor<CSS.Property.FontStyle, Datum>;
+        /** the font variant of the text (e.g. "small-caps") */
         fontVariant?: ConstantAccessor<CSS.Property.FontVariant, Datum>;
+        /** the letter spacing of the text */
         letterSpacing?: ConstantAccessor<CSS.Property.LetterSpacing, Datum>;
+        /** the word spacing of the text */
         wordSpacing?: ConstantAccessor<CSS.Property.WordSpacing, Datum>;
+        /** the text transform (e.g. "uppercase", "lowercase") */
         textTransform?: ConstantAccessor<CSS.Property.TextTransform, Datum>;
+        /** the text decoration (e.g. "underline", "line-through") */
         textDecoration?: ConstantAccessor<CSS.Property.TextDecoration, Datum>;
         /**
          * the horizontal text anchor; start, end, or middle
          */
         textAnchor?: ConstantAccessor<CSS.Property.TextAnchor, Datum>;
-        /**
-         * if you want to apply class names to individual text elements
-         */
-        textClass?: ConstantAccessor<string, Datum>;
         /**
          * the line anchor for vertical position; top, bottom, or middle
          */
@@ -42,6 +52,7 @@
          * @default 1.2
          */
         lineHeight?: ConstantAccessor<number, Datum>;
+        /** the anchor position within the plot frame when x or y are not specified (e.g. "top-left", "middle") */
         frameAnchor?: ConstantAccessor<
             | 'bottom'
             | 'top'
@@ -60,6 +71,27 @@
         rotate?: ConstantAccessor<number, Datum>;
     }
 
+    type CanvasTextMarkProps = TextCommonMarkProps & {
+        /**
+         * renders texts as canvas instead of SVG
+         */
+        canvas: true;
+        textClass?: never;
+    };
+
+    type SvgTextMarkProps = TextCommonMarkProps & {
+        /**
+         * renders texts as canvas instead of SVG
+         */
+        canvas?: false | undefined;
+        /**
+         * if you want to apply class names to individual text elements. Only supported in SVG rendering.
+         */
+        textClass?: ConstantAccessor<string, Datum>;
+    };
+
+    type TextMarkProps = SvgTextMarkProps | CanvasTextMarkProps;
+
     import { type Snippet } from 'svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import type {
@@ -71,11 +103,12 @@
     } from '../types/index.js';
     import { resolveProp } from '../helpers/resolve.js';
     import Mark from '../Mark.svelte';
-    import { sort } from '$lib/index.js';
+    import { sort } from '../index.js';
 
     import MultilineText from './helpers/MultilineText.svelte';
+    import TextCanvas from './helpers/TextCanvas.svelte';
     import { indexData } from 'svelteplot/transforms/recordize';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     const DEFAULTS = {
         fontSize: 12,
@@ -89,14 +122,17 @@
 
     let markProps: TextMarkProps = $props();
 
-    const {
-        data = [{} as Datum],
-        class: className = '',
-        ...options
-    }: TextMarkProps = $derived({
+    const mergedProps = $derived({
         ...DEFAULTS,
         ...markProps
-    });
+    }) as TextMarkProps;
+
+    const {
+        data = [{} as Datum],
+        canvas = false,
+        class: className = '',
+        ...options
+    } = $derived(mergedProps);
 
     const args = $derived(
         sort({
@@ -107,7 +143,8 @@
 </script>
 
 <Mark
-    type="text"
+    {...args}
+    type={'text' as const}
     channels={[
         'x',
         'y',
@@ -119,17 +156,24 @@
         'strokeOpacity',
         'fillOpacity'
     ]}
-    required={[]}
-    {...args}>
+    required={[]}>
     {#snippet children({ mark, scaledData, usedScales })}
-        <GroupMultiple class="text {className}" length={className ? 2 : args.data.length}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid}
-                    {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
+        {#if canvas}
+            <g class="text {className || ''}">
+                <TextCanvas data={scaledData} options={args as CanvasTextMarkProps} {usedScales} />
+            </g>
+        {:else}
+            <GroupMultiple
+                class="text {className}"
+                length={className ? 2 : (args.data?.length ?? 0)}>
+                {#each scaledData as d, i (i)}
+                    {#if d.valid}
+                        {@const textLines = String(resolveProp(args.text, d.datum, '')).split('\n')}
 
-                    <MultilineText {textLines} {d} {args} {usedScales} />
-                {/if}
-            {/each}
-        </GroupMultiple>
+                        <MultilineText {textLines} {d} args={args as any} {usedScales} />
+                    {/if}
+                {/each}
+            </GroupMultiple>
+        {/if}
     {/snippet}
 </Mark>

@@ -9,7 +9,7 @@ y↑ and fuel efficiency in miles per gallon in x→.
 ```svelte live
 <script>
     import { Plot, Dot, Pointer, RuleX } from 'svelteplot';
-    import { Checkbox, Slider } from '$lib/ui';
+    import { Checkbox, Slider } from '$shared/ui';
     import { page } from '$app/state';
 
     const { cars } = $derived(page.data.data);
@@ -51,7 +51,7 @@ When showing plots with a lot of dots, you can switch to canvas rendering to imp
     import { Plot, Dot } from 'svelteplot';
     import { range } from 'd3-array';
     import { randomNormal } from 'd3-random';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
 
     const randX = randomNormal();
     const randY = randomNormal();

@@ -4,15 +4,16 @@
 
 <script lang="ts" generics="Datum extends DataRecord">
     interface RectXMarkProps extends Omit<ComponentProps<typeof Rect>, 'y'> {
+        /** options for stacking rect data values */
         stack?: Partial<StackOptions>;
     }
 
     import Rect from './Rect.svelte';
-    import { intervalY, stackX, recordizeX } from '$lib/index.js';
+    import { intervalY, stackX, recordizeX } from '../index.js';
     import type { DataRecord } from '../types/index.js';
     import { type ComponentProps } from 'svelte';
-    import type { StackOptions } from '$lib/transforms/stack.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import type { StackOptions } from '../transforms/stack.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RectXMarkProps = $props();

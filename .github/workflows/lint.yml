@@ -2,7 +2,6 @@ name: Lint Check
 
 permissions:
     contents: read
-    pull-requests: write
 
 on:
     push:
@@ -89,41 +88,29 @@ jobs:
                   SVELTE_ERROR_DIFF=$((SVELTE_ERRORS_PR - SVELTE_ERRORS_MAIN))
                   echo "Svelte TypeScript error difference (PR - main): ${SVELTE_ERROR_DIFF}"
 
-            - name: Comment TypeScript error diff on PR
+            - name: Write TypeScript error report artifact
               if: ${{ github.event_name == 'pull_request' }}
-              uses: actions/github-script@v7
               env:
                   TS_ERRORS_PR: ${{ env.TS_ERRORS_PR }}
                   TS_ERRORS_MAIN: ${{ env.TS_ERRORS_MAIN }}
                   SVELTE_ERRORS_PR: ${{ env.SVELTE_ERRORS_PR }}
                   SVELTE_ERRORS_MAIN: ${{ env.SVELTE_ERRORS_MAIN }}
-              with:
-                  script: |
-                      const prErrors = Number(process.env.TS_ERRORS_PR || 0);
-                      const mainErrors = Number(process.env.TS_ERRORS_MAIN || 0);
-                      const diff = prErrors - mainErrors;
-                      const sign = diff > 0 ? `+${diff}` : `${diff}`;
-                      const emoji = diff > 0 ? '⚠️' : diff < 0 ? '🎉' : 'ℹ️';
-                      const prSvelteErrors = Number(process.env.SVELTE_ERRORS_PR || 0);
-                      const mainSvelteErrors = Number(process.env.SVELTE_ERRORS_MAIN || 0);
-                      const svelteDiff = prSvelteErrors - mainSvelteErrors;
-                      const svelteSign = svelteDiff > 0 ? `+${svelteDiff}` : `${svelteDiff}`;
-                      const svelteEmoji = svelteDiff > 0 ? '⚠️' : svelteDiff < 0 ? '🎉' : 'ℹ️';
-                      const body = [
-                        '**TypeScript error report:**',
-                        `- This branch: ${prErrors}`,
-                        `- main branch: ${mainErrors}`,
-                        `- Difference (PR - main): ${sign} ${emoji}`,
-                        '',
-                        '**Svelte TypeScript error report:**',
-                        `- This branch: ${prSvelteErrors}`,
-                        `- main branch: ${mainSvelteErrors}`,
-                        `- Difference (PR - main): ${svelteSign} ${svelteEmoji}`
-                      ].join('\n');
+              run: |
+                  cat > ts-error-report.json <<EOF
+                  {
+                    "ts_errors_pr": ${TS_ERRORS_PR:-0},
+                    "ts_errors_main": ${TS_ERRORS_MAIN:-0},
+                    "svelte_errors_pr": ${SVELTE_ERRORS_PR:-0},
+                    "svelte_errors_main": ${SVELTE_ERRORS_MAIN:-0},
+                    "workflow_run_head_sha": "${{ github.sha }}"
+                  }
+                  EOF
 
-                      await github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body
-                      });
+            - name: Upload TypeScript error report artifact
+              if: ${{ github.event_name == 'pull_request' }}
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ts-error-report
+                  path: ts-error-report.json
+                  if-no-files-found: error
+                  retention-days: 7

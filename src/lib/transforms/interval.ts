@@ -1,6 +1,6 @@
-import { maybeInterval } from '$lib/helpers/autoTicks.js';
-import { resolveChannel } from '$lib/helpers/resolve.js';
-import type { PlotState, TransformArg } from '$lib/types/index.js';
+import { maybeInterval } from '../helpers/autoTicks.js';
+import { resolveChannel } from '../helpers/resolve.js';
+import type { PlotState, TransformArg } from '../types/index.js';
 
 /**
  * Derives interval channels x1 and x2 from the x channel and interval channel.

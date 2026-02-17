@@ -5,10 +5,10 @@ import type {
     ConstantAccessor,
     DataRecord,
     RawValue
-} from '$lib/types/index.js';
+} from '../types/index.js';
 import type { Snippet } from 'svelte';
 import { resolveProp } from './resolve.js';
-import { isDate } from '$lib/helpers/typeChecks.js';
+import { isDate } from './typeChecks.js';
 
 /**
  * Returns first argument that is not null or undefined

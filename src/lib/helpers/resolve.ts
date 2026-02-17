@@ -1,7 +1,7 @@
-import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
-import isDataRecord from '$lib/helpers/isDataRecord.js';
-import isRawValue from '$lib/helpers/isRawValue.js';
-import type { MarkStyleProps, PlotState, ScaledDataRecord } from '$lib/types/index.js';
+import { CHANNEL_SCALE, INDEX } from '../constants.js';
+import isDataRecord from './isDataRecord.js';
+import isRawValue from './isRawValue.js';
+import type { MarkStyleProps, PlotState, ScaledDataRecord } from '../types/index.js';
 import { isValid } from './index.js';
 
 import type {
@@ -15,7 +15,7 @@ import type {
     ConstantAccessor
 } from '../types/index.js';
 import { getBaseStylesObject } from './getBaseStyles.js';
-import { RAW_VALUE } from '$lib/transforms/recordize.js';
+import { RAW_VALUE } from '../transforms/recordize.js';
 
 type ChannelAlias = { channel: ScaledChannelName };
 

@@ -4,16 +4,26 @@
 -->
 <script lang="ts" generics="Datum extends DataRecord">
     interface ImageMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
+        /** the input data array; each element becomes one image */
         data: Datum[];
+        /** the horizontal position channel */
         x: ChannelAccessor<Datum>;
+        /** the vertical position channel */
         y: ChannelAccessor<Datum>;
+        /** the clip radius for the image in pixels */
         r?: ChannelAccessor<Datum>;
+        /** the width of the image in pixels */
         width?: ConstantAccessor<number, Datum>;
+        /** the height of the image in pixels */
         height?: ConstantAccessor<number, Datum>;
+        /** the image source URL */
         src?: ConstantAccessor<string, Datum>;
+        /** the title attribute for the image element (shown as a browser tooltip) */
         title?: ConstantAccessor<string, Datum>;
+        /** the SVG preserveAspectRatio attribute for the image (e.g. "xMidYMid meet") */
         preserveAspectRatio?: string;
         // canvas?: boolean;
+        /** CSS class name(s) to apply to individual image elements */
         imageClass?: ConstantAccessor<string, Datum>;
     }
 
@@ -23,7 +33,7 @@
         ConstantAccessor,
         DataRecord,
         LinkableMarkProps
-    } from '$lib/types';
+    } from '../types';
     import { resolveProp } from 'svelteplot/helpers/resolve';
     import CustomMark from './CustomMark.svelte';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';

@@ -1,13 +1,14 @@
 <script lang="ts">
     interface ColorLegendMarkProps {
+        /** CSS class applied to the legend container element */
         class: string | null;
     }
-    import Plot from '$lib/Plot.svelte';
-    import AxisX from '$lib/marks/AxisX.svelte';
-    import Frame from '$lib/marks/Frame.svelte';
+    import Plot from '../Plot.svelte';
+    import AxisX from './AxisX.svelte';
+    import Frame from './Frame.svelte';
     import { symbol as d3Symbol } from 'd3-shape';
     import { range as d3Range, extent } from 'd3-array';
-    import { maybeSymbol } from '$lib/helpers/symbols.js';
+    import { maybeSymbol } from '../helpers/symbols.js';
 
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';

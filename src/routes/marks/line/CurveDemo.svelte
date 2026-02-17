@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Plot, LineY, Dot } from '$lib/index.js';
-    import Slider from '$lib/ui/Slider.svelte';
-    import Select from '$lib/ui/Select.svelte';
+    import Slider from '$shared/ui/Slider.svelte';
+    import Select from '$shared/ui/Select.svelte';
     import type { CurveName } from 'svelteplot/types/index.js';
 
     // curve demo

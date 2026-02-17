@@ -24,9 +24,9 @@
     }
 
     import Mark from '../Mark.svelte';
-    import { intervalY, stackY, recordizeY, sort } from '$lib/index.js';
+    import { intervalY, stackY, recordizeY, sort } from '../index.js';
 
-    import type { StackOptions } from '$lib/transforms/stack.js';
+    import type { StackOptions } from '../transforms/stack.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import RectPath from './helpers/RectPath.svelte';
     import RectCanvas from './helpers/RectCanvas.svelte';
@@ -37,7 +37,7 @@
         DataRow,
         LinkableMarkProps
     } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

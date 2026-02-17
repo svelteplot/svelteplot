@@ -3,12 +3,13 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface LineXMarkProps extends Omit<ComponentProps<typeof Line>, 'y' | 'data'> {
+        /** the input data array */
         data: Datum[];
     }
     import Line from './Line.svelte';
-    import { recordizeX } from '$lib/index.js';
+    import { recordizeX } from '../index.js';
     import type { ComponentProps } from 'svelte';
-    import type { DataRow } from '$lib/index.js';
+    import type { DataRow } from '../index.js';
 
     let { data = [{} as Datum], ...rest }: LineXMarkProps = $props();
 

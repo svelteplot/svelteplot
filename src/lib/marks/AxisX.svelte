@@ -13,10 +13,10 @@
         ChannelName
     } from '../types/index.js';
     import type * as CSS from 'csstype';
-    import autoTimeFormat from '$lib/helpers/autoTimeFormat.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { resolveScaledStyles } from '$lib/helpers/resolve.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import autoTimeFormat from '../helpers/autoTimeFormat.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { resolveScaledStyles } from '../helpers/resolve.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { extent } from 'd3-array';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
@@ -24,22 +24,35 @@
         BaseMarkProps<Datum>,
         'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
     > {
+        /** custom tick values to display on the axis */
         data?: Datum[];
+        /** whether this axis was automatically added by the Plot component */
         automatic?: boolean;
+        /** the axis title label; set to false or null to hide */
         title?: string | false | null;
+        /** which edge of the plot the axis appears on */
         anchor?: 'top' | 'bottom';
+        /** the interval between ticks, e.g. "day", "month", or a number */
         interval?: string | number;
+        /** controls which facet edge displays this axis */
         facetAnchor?: 'auto' | 'top-empty' | 'bottom-empty' | 'top' | 'bottom';
+        /** horizontal alignment of the axis title */
         labelAnchor?: 'auto' | 'left' | 'center' | 'right';
+        /** the length of tick marks in pixels */
         tickSize?: number;
+        /** font size for tick labels */
         tickFontSize?: ConstantAccessor<number, Datum>;
+        /** font size for the axis title */
         titleFontSize?: number;
+        /** spacing between tick marks and tick labels in pixels */
         tickPadding?: number;
+        /** formatter for tick labels; can be "auto", an Intl format options object, or a custom function */
         tickFormat?:
             | 'auto'
             | Intl.DateTimeFormatOptions
             | Intl.NumberFormatOptions
             | ((d: RawValue, i: number) => string);
+        /** CSS class applied to each tick label */
         tickClass?: ConstantAccessor<string, Datum>;
         /** ticks is a shorthand for defining data, tickCount or interval */
         ticks?: number | string | Datum[];

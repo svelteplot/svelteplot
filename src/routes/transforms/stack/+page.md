@@ -231,7 +231,7 @@ stackMosaicX(
         Text,
         stackMosaicX
     } from 'svelteplot';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 
@@ -318,7 +318,7 @@ Like `stackMosaicX`, but for vertical stacks where the height of each bar is pro
         Text,
         stackMosaicY
     } from 'svelteplot';
-    import { Checkbox } from '$lib/ui';
+    import { Checkbox } from '$shared/ui';
     import { page } from '$app/state';
     import type { ExamplesData } from '../types';
 

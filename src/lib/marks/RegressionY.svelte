@@ -6,7 +6,7 @@
 </script>
 
 <script lang="ts">
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import type { ChannelName } from 'svelteplot/types/index.js';
     import Mark from '../Mark.svelte';
     import Regression, { type RegressionMarkProps } from './helpers/Regression.svelte';

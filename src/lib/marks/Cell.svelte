@@ -5,8 +5,11 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface CellMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
+        /** the input data array; each element becomes one cell */
         data: Datum[];
+        /** the horizontal position channel; typically an ordinal value */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; typically an ordinal value */
         y?: ChannelAccessor<Datum>;
         /**
          * Renders using Canvas instead of SVG.
@@ -21,13 +24,13 @@
         LinkableMarkProps
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
-    import { recordizeY, sort } from '$lib/index.js';
+    import { recordizeY, sort } from '../index.js';
     import { resolveChannel } from '../helpers/resolve.js';
 
     import { isValid } from '../helpers/index.js';
     import RectPath from './helpers/RectPath.svelte';
     import RectCanvas from './helpers/RectCanvas.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: CellMarkProps = $props();

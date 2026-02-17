@@ -5,8 +5,10 @@ import type { Channels, ScaledChannelName } from './channel.js';
 import type { DataRecord, DataRow, RawValue } from './data.js';
 import type { BaseMarkProps } from './mark.js';
 
+/** a generic record type used when the specific mark options type is not known */
 export type GenericMarkOptions = Record<string | symbol, any>;
 
+/** the name of a d3 curve interpolation method */
 export type CurveName =
     | 'basis'
     | 'basis-closed'
@@ -46,35 +48,54 @@ export type MarkerOptions = {
      * shorthand for setting the marker on all points
      */
     marker?: boolean | MarkerShape | Snippet;
+    /**
+     * scale factor for marker size, relative to the line stroke width
+     */
+    markerScale?: ConstantAccessor<number>;
 };
 
+/** a value that is either a constant or a function that computes a per-datum value */
 export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
     | K
     | ((d: T, index: number) => K)
     | null
     | undefined;
 
+/** the input argument to a data transform: data array plus channel mappings and mark props */
 export type TransformArg<T> = Channels<T> & BaseMarkProps<T> & { data: T[] };
+/** the input argument to a map transform: data array plus channel mappings */
 export type MapArg<T> = Channels<T> & { data: T[] };
 
+/** transform input for raw data rows (before recordization) */
 export type TransformArgsRow<T extends RawValue | object> = Partial<Channels<T>> & { data: T[] };
+/** transform input for data records (after recordization) */
 export type TransformArgsRecord<T extends object> = Partial<Channels<T>> & { data: T[] };
 
+/** the return type of a transform, ensuring data is always present */
 export type TransformReturn<C extends TransformArg<T>, T> = C & Required<Pick<Channels<T>, 'data'>>;
 
+/** writable stores used by marks to contribute to automatic margin computation */
 export type AutoMarginStores = {
+    /** per-mark contributions to the top margin */
     autoMarginTop: Writable<Map<string, number>>;
+    /** per-mark contributions to the left margin */
     autoMarginLeft: Writable<Map<string, number>>;
+    /** per-mark contributions to the right margin */
     autoMarginRight: Writable<Map<string, number>>;
+    /** per-mark contributions to the bottom margin */
     autoMarginBottom: Writable<Map<string, number>>;
 };
 
+/** a function that maps source values (S) to target values (T) for the given indices (I) */
 export type MapIndexFunction = (I: number[], S: RawValue[], T: RawValue[]) => void;
 
+/** an object implementing the mapIndex interface for custom map transforms */
 export type MapIndexObject = {
+    /** the function that performs the index-based mapping */
     mapIndex: MapIndexFunction;
 };
 
+/** a named map method, a custom mapping function, or a MapIndexObject */
 export type MapMethod =
     | 'cumsum'
     | 'rank'
@@ -88,6 +109,7 @@ export type MapMethod =
  */
 export type MapOptions = Partial<Record<ScaledChannelName, MapMethod>>;
 
+/** a record indicating which scaled channels are actively used by a mark */
 export type UsedScales = Record<ScaledChannelName, boolean>;
 
 export * from './channel';

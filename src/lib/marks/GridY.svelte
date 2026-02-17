@@ -3,18 +3,22 @@
 -->
 <script lang="ts" generics="Datum = RawValue">
     interface GridYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** custom values at which to draw horizontal gridlines */
         data?: Datum[];
+        /** whether these gridlines were automatically added by the Plot component */
         automatic?: boolean;
+        /** the starting horizontal position of the gridline */
         x1?: ChannelAccessor<Datum>;
+        /** the ending horizontal position of the gridline */
         x2?: ChannelAccessor<Datum>;
     }
     import Mark from '../Mark.svelte';
     import type { BaseMarkProps, RawValue, ChannelAccessor } from '../types/index.js';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { autoTicks } from '$lib/helpers/autoTicks.js';
-    import { testFilter } from '$lib/helpers/index.js';
-    import { RAW_VALUE } from '$lib/transforms/recordize.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { autoTicks } from '../helpers/autoTicks.js';
+    import { testFilter } from '../helpers/index.js';
+    import { RAW_VALUE } from '../transforms/recordize.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: GridYMarkProps = $props();

@@ -1,11 +1,18 @@
 <script lang="ts" generics="Datum extends DataRow">
     interface PointerMarkProps {
+        /** the input data array */
         data: Datum[];
+        /** snippet rendered with the currently selected data points */
         children?: Snippet<[{ data: Datum[] }]>;
+        /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
+        /** the vertical position channel; bound to the y scale */
         y?: ChannelAccessor<Datum>;
+        /** grouping channel for splitting data into separate search trees */
         z?: ChannelAccessor<Datum>;
+        /** the horizontal facet channel */
         fx?: ChannelAccessor<Datum>;
+        /** the vertical facet channel */
         fy?: ChannelAccessor<Datum>;
         /**
          * maximum cursor distance to select data points
@@ -25,13 +32,13 @@
 
     import { type Snippet } from 'svelte';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
-    import { resolveChannel } from '$lib/helpers/resolve.js';
+    import { resolveChannel } from '../helpers/resolve.js';
     import { quadtree } from 'd3-quadtree';
-    import { projectXY } from '$lib/helpers/scales.js';
-    import isDataRecord from '$lib/helpers/isDataRecord.js';
+    import { projectXY } from '../helpers/scales.js';
+    import isDataRecord from '../helpers/isDataRecord.js';
     import { indexData, RAW_VALUE } from 'svelteplot/transforms/recordize.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const plot = usePlot();

@@ -13,7 +13,7 @@ Regressions are useful if you want to show the relationship between two variable
         RegressionY
     } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select, Slider } from '$lib/ui';
+    import { Select, Slider } from '$shared/ui';
 
     let { cars } = $derived(page.data.data);
 
@@ -171,7 +171,7 @@ Returns a linear regression mark where y is the dependent variable and x is the 
         RegressionY
     } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select, Slider } from '$lib/ui';
+    import { Select, Slider } from '$shared/ui';
 
     let { cars } = $derived(page.data.data);
 </script>
@@ -234,7 +234,7 @@ Returns a linear regression mark where x is the dependent variable and y is the 
         RegressionX
     } from 'svelteplot';
     import { page } from '$app/state';
-    import { Select, Slider } from '$lib/ui';
+    import { Select, Slider } from '$shared/ui';
 
     let { cars } = $derived(page.data.data);
 </script>

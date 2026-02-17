@@ -15,6 +15,7 @@
         | 'strokeLinejoin'
         | 'strokeMiterlimit'
     > {
+        /** the brush state object (bindable); contains x1, x2, y1, y2, and enabled */
         brush: Brush;
         /**
          * limit brushing to x or y dimension
@@ -28,16 +29,19 @@
          * size of the (invisible) drag resize area around the edges of the brush selection
          */
         resizeHandleSize?: number;
+        /** called when the user starts dragging to create or move a brush */
         onbrushstart?: (evt: BrushEvent) => void;
+        /** called when the user finishes dragging the brush */
         onbrushend?: (evt: BrushEvent) => void;
+        /** called continuously while the user is dragging the brush */
         onbrush?: (evt: BrushEvent) => void;
     }
     import { getContext, untrack } from 'svelte';
-    import Rect from '$lib/marks/Rect.svelte';
+    import Rect from './Rect.svelte';
     import type { BaseMarkProps, DataRecord } from 'svelteplot/types/index.js';
     import { clientToLayerCoordinates } from './helpers/events.js';
-    import Frame from '$lib/marks/Frame.svelte';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import Frame from './Frame.svelte';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let { brush: brushExternal = $bindable({ enabled: false }), ...markProps }: BrushMarkProps =

@@ -19,7 +19,7 @@
     }
 
     import { getContext, untrack, type Snippet } from 'svelte';
-    import { CHANNEL_SCALE, INDEX } from '$lib/constants.js';
+    import { CHANNEL_SCALE, INDEX } from './constants.js';
     import type {
         ScaledChannelName,
         MarkType,
@@ -38,7 +38,7 @@
     } from './types/index.js';
     import { isEqual } from 'es-toolkit';
     import { getUsedScales, projectXY, projectX, projectY } from './helpers/scales.js';
-    import { testFilter, isValid } from '$lib/helpers/index.js';
+    import { testFilter, isValid } from './helpers/index.js';
     import { resolveChannel, resolveProp } from './helpers/resolve.js';
     import { RENAME } from './transforms/rename.js';
     import { dodgeX, dodgeY } from './transforms/dodge.js';

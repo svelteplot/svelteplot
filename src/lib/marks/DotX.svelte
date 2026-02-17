@@ -3,11 +3,13 @@
 -->
 <script lang="ts" generics="Datum extends DataRow">
     interface DotXMarkProps extends Omit<ComponentProps<typeof Dot>, 'y' | 'x' | 'data'> {
+        /** the input data array */
         data: Datum[];
+        /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
     }
     import Dot from './Dot.svelte';
-    import { recordizeX } from '$lib/index.js';
+    import { recordizeX } from '../index.js';
     import type { ChannelAccessor, DataRow } from '../types/index.js';
     import type { ComponentProps } from 'svelte';
 

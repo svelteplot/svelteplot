@@ -3,19 +3,27 @@
 -->
 <script lang="ts" generics="Datum = DataRecord | RawValue">
     interface RuleXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
+        /** the input data array; each element becomes one vertical rule */
         data?: Datum[];
+        /** the horizontal position channel for the rule */
         x?: ChannelAccessor<Datum>;
+        /** the starting vertical position of the rule */
         y1?: ChannelAccessor<Datum>;
+        /** the ending vertical position of the rule */
         y2?: ChannelAccessor<Datum>;
+        /** shorthand to inset the rule from both ends, in pixels */
         inset?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the top, in pixels */
         insetTop?: ConstantAccessor<number, Datum>;
+        /** inset the rule from the bottom, in pixels */
         insetBottom?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
         canvas?: boolean;
     }
     import Mark from '../Mark.svelte';
-    import GroupMultiple from '$lib/marks/helpers/GroupMultiple.svelte';
-    import RuleCanvas from '$lib/marks/helpers/RuleCanvas.svelte';
-    import { recordizeX } from '$lib/transforms/recordize.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import RuleCanvas from './helpers/RuleCanvas.svelte';
+    import { recordizeX } from '../transforms/recordize.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
@@ -24,7 +32,7 @@
         ChannelAccessor,
         RawValue
     } from '../types/index.js';
-    import { getPlotDefaults } from '$lib/hooks/plotDefaults.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RuleXMarkProps = $props();

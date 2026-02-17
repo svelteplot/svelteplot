@@ -1,12 +1,12 @@
-import isDataRecord from '$lib/helpers/isDataRecord.js';
-import { resolveChannel, resolveProp } from '$lib/helpers/resolve.js';
+import isDataRecord from '../helpers/isDataRecord.js';
+import { resolveChannel, resolveProp } from '../helpers/resolve.js';
 import type {
     ChannelAccessor,
     DataRecord,
     TransformArg,
     ChannelName,
     Channels
-} from '$lib/types/index.js';
+} from '../types/index.js';
 import {
     stack,
     stackOffsetExpand,
@@ -43,13 +43,19 @@ const DEFAULT_STACK_OPTIONS: StackOptions = {
     reverse: false
 };
 
+/** the order in which series are stacked */
 export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum';
+/** the offset method used to position stacked values */
 export type StackOffset = 'none' | 'wiggle' | 'center' | 'normalize' | 'diverging';
 
+/** options for the stack transform, or false to disable stacking */
 export type StackOptions =
     | {
+          /** the offset method, or null for the default (zero baseline) */
           offset: null | StackOffset;
+          /** the stack order, or null for the default (input order) */
           order: null | StackOrder;
+          /** if true, reverse the stack order */
           reverse: boolean;
       }
     | false;
@@ -217,6 +223,9 @@ function stackXY<T>(
     return { data, ...channels };
 }
 
+/**
+ * stacks data along the y dimension, producing y1 and y2 channels
+ */
 export function stackY<T>(
     { data, ...channels }: TransformArg<T>,
     opts: Partial<StackOptions> = {}
@@ -224,6 +233,9 @@ export function stackY<T>(
     return stackXY('y', data, channels, applyDefaults(opts));
 }
 
+/**
+ * stacks data along the x dimension, producing x1 and x2 channels
+ */
 export function stackX<T>(
     { data, ...channels }: TransformArg<T>,
     opts: Partial<StackOptions> = {}
@@ -340,10 +352,18 @@ function stackMosaic<T>(
     };
 }
 
+/**
+ * creates a mosaic layout with the outer (width) dimension along x and
+ * the inner (height) dimension along y
+ */
 export function stackMosaicX<T>(args, opts) {
     return stackMosaic(args, { outer: 'x', inner: 'y' }, opts);
 }
 
+/**
+ * creates a mosaic layout with the outer (height) dimension along y and
+ * the inner (width) dimension along x
+ */
 export function stackMosaicY<T>(args, opts) {
     return stackMosaic(args, { outer: 'y', inner: 'x' }, opts);
 }

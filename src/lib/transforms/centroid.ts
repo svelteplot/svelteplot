@@ -1,5 +1,5 @@
-import { resolveProp } from '$lib/helpers/resolve.js';
-import type { DataRecord, TransformArg } from '$lib/types/index.js';
+import { resolveProp } from '../helpers/resolve.js';
+import type { DataRecord, TransformArg } from '../types/index.js';
 import { geoCentroid as d3GeoCentroid } from 'd3-geo';
 import type { Channels } from 'svelteplot/types';
 
@@ -9,6 +9,10 @@ type WithCentroid<T> = T & {
     [CENTROID]: [number, number];
 };
 
+/**
+ * computes the geographic centroid of each geometry feature, producing
+ * x (longitude) and y (latitude) channels
+ */
 export function geoCentroid<Datum extends DataRecord>({
     data,
     ...options
