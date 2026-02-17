@@ -39,7 +39,7 @@
                     ...feat,
                     properties: {
                         ...feat.properties,
-                        ...(_election.get(+feat?.id) || {})
+                        ..._election.get(+feat?.id)
                     }
                 };
             })
