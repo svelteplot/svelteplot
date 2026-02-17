@@ -15,7 +15,7 @@ type SelectOptions =
 
 /**
  * selects one datum per group based on the given criteria; use "first"/"last"
- * for positional selection, or {channel: "min"/"max"} for value-based selection
+ * for positional selection, or `{channel: "min"/"max"}` for value-based selection
  */
 export function select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions) {
     const newData: DataRecord[] = [];

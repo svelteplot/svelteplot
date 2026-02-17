@@ -9,7 +9,7 @@ export const IS_SORTED = Symbol('isSorted');
 
 /**
  * sorts the data according to the sort channel option; supports channel
- * accessors, comparator functions, and {channel, order} objects
+ * accessors, comparator functions, and `{channel, order}` objects
  */
 export function sort<T>(
     { data, ...channels }: TransformArg<T>,
