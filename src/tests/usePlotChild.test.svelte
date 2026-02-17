@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { usePlot } from './usePlot.svelte.js';
+    import { usePlot } from 'svelteplot';
 
     const plot = usePlot();
 </script>
