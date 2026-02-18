@@ -72,6 +72,8 @@ declare module 'interval-tree-1d' {
     export default createIntervalTree;
 }
 
+declare module 'd3-time';
+
 declare module '*.svelte' {
     import type { ComponentType } from 'svelte';
     export type MarkerShape =

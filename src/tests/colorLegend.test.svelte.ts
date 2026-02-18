@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
-import ColorLegendTest from './colorLegend.test.svelte';
+import ColorLegendTest from './colorLegend.fixture.svelte';
 
 const catData = [
     { x: 1, y: 1, cat: 'A' },

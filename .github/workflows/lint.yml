@@ -36,6 +36,9 @@ jobs:
             - name: Run linting
               run: pnpm run lint
 
+            - name: Run linting
+              run: pnpm run lint:types
+
             - name: Count TypeScript errors on PR branch
               run: |
                   pnpm lint:types --pretty false > ts-errors-pr.log 2>&1 || true

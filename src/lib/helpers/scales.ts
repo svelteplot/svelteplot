@@ -525,23 +525,33 @@ export function projectXY(
 }
 
 export function projectX(channel: 'x' | 'x1' | 'x2', scales: PlotScales, value: RawValue) {
+    const x = (scales.x.fn as (input: RawValue) => number | undefined)(value) ?? NaN;
+    const xBandwidth =
+        scales.x.type === 'band'
+            ? (scales.x.fn as { bandwidth: () => number }).bandwidth()
+            : 0;
     return (
-        scales.x.fn(value) +
+        x +
         (channel === 'x' && scales.x.type === 'band'
-            ? scales.x.fn.bandwidth() * 0.5
+            ? xBandwidth * 0.5
             : channel === 'x2' && scales.x.type === 'band'
-              ? scales.x.fn.bandwidth()
+              ? xBandwidth
               : 0)
     );
 }
 
 export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: RawValue) {
+    const y = (scales.y.fn as (input: RawValue) => number | undefined)(value) ?? NaN;
+    const yBandwidth =
+        scales.y.type === 'band'
+            ? (scales.y.fn as { bandwidth: () => number }).bandwidth()
+            : 0;
     return (
-        scales.y.fn(value) +
+        y +
         (channel === 'y' && scales.y.type === 'band'
-            ? scales.y.fn.bandwidth() * 0.5
+            ? yBandwidth * 0.5
             : channel === 'y2' && scales.y.type === 'band'
-              ? scales.y.fn.bandwidth()
+              ? yBandwidth
               : 0)
     );
 }

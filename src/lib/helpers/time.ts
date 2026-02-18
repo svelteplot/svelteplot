@@ -7,8 +7,6 @@
  * and this permission notice appear in all copies.
  */
 import { bisector } from 'd3-array';
-
-import type { CountableTimeInterval } from 'd3-time';
 import {
     utcSecond,
     utcMinute,
@@ -40,6 +38,13 @@ import {
     timeSunday
 } from 'd3-time';
 // import {orderof} from "./options.js";
+
+type CountableTimeInterval = {
+    floor: (date: Date) => Date;
+    offset: (date: Date, step?: number) => Date;
+    range: (start: Date, stop: Date, step?: number) => Date[];
+    every: (step: number) => CountableTimeInterval | null | undefined;
+};
 
 const durationSecond = 1000;
 const durationMinute = durationSecond * 60;

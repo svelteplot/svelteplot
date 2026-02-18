@@ -10,6 +10,7 @@ import { pick } from 'es-toolkit';
 import { RAW_VALUE } from '../../transforms/recordize.js';
 import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
+import type { ScaleBand } from 'd3-scale';
 
 // Extend the MouseEvent type to include custom plot data properties
 declare global {
@@ -149,13 +150,17 @@ export function addEventHandlers<T extends DataRow>({
 
 function invertScale(scale: PlotScale, position: number) {
     if (scale.type === 'band') {
-        const range = scale.fn.range();
-        const domain = scale.fn.domain();
-        const eachBand = scale.fn.step();
-        const extent = range[1] - range[0];
-        const posInRange = (position - range[0]) * Math.sign(extent);
+        const bandScale = scale.fn as ScaleBand<string | number>;
+        const range = bandScale.range();
+        const domain = bandScale.domain();
+        const eachBand = bandScale.step();
+        const start = range[0] ?? 0;
+        const end = range[1] ?? start;
+        const extent = end - start;
+        const posInRange = (position - start) * Math.sign(extent);
         const index = Math.floor(posInRange / eachBand);
         return domain[index];
     }
-    return scale.fn.invert ? scale.fn.invert(position) : undefined;
+    const maybeInvert = scale.fn as { invert?: (value: number) => number | string | Date };
+    return maybeInvert.invert ? maybeInvert.invert(position) : undefined;
 }
