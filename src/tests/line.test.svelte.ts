@@ -194,7 +194,7 @@ describe('Line mark', () => {
                 ],
                 x: 'x',
                 y: 'y',
-                text: (d) => d.label
+                text: (d: any) => d.label
             }
         });
 
@@ -213,7 +213,7 @@ describe('Line mark', () => {
                 x: 'x',
                 y: 'y',
                 stroke: 'label',
-                text: (d) => d.label
+                text: (d: any) => d.label
             }
         });
 
@@ -345,14 +345,14 @@ describe('Line mark', () => {
     });
 });
 
-function formatHTML(html) {
+function formatHTML(html: any) {
     var tab = '\t';
     var result = '';
     var indent = '';
 
     html.replace(/<!---->/g, '')
         .split(/>\s*</)
-        .forEach(function (element) {
+        .forEach(function (element: any) {
             if (element.match(/^\/\w/)) {
                 indent = indent.substring(tab.length);
             }

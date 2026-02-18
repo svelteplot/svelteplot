@@ -20,7 +20,7 @@ describe('resolveProp', () => {
         expect(resolveProp('bar', { foo: 42 })).toBe('bar');
     });
     it('passes original value to accessor function', () => {
-        expect(resolveProp((d: number) => d * 2, { [RAW_VALUE]: 42 })).toBe(84);
+        expect(resolveProp((d: number) => d * 2, { [RAW_VALUE]: 42 } as any)).toBe(84);
     });
 });
 

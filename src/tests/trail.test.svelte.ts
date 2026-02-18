@@ -82,7 +82,7 @@ describe('Trail mark', () => {
                 x: 'x',
                 y: 'y',
                 r: 1,
-                defined: (d) => d.keep,
+                defined: (d: any) => d.keep,
                 resolution: 1,
                 cap: 'butt'
             }

@@ -16,7 +16,7 @@ describe('renameChannels', () => {
     it('renames channels', () => {
         const { data, ...channels } = renameChannels(
             { data: inputData, x: 'year' },
-            { x: 'year2' }
+            { x: 'year2' as any }
         );
         expect(data).toStrictEqual(inputData);
         expect(channels).toStrictEqual({ year2: 'year', [RENAME]: { year2: 'x' } });
@@ -25,7 +25,7 @@ describe('renameChannels', () => {
     it('does not rename channels that do not exist', () => {
         const { data, ...channels } = renameChannels(
             { data: inputData, x: 'year' },
-            { x2: 'year2' }
+            { x2: 'year2' as any }
         );
         expect(data).toStrictEqual(inputData);
         expect(channels).toStrictEqual({ x: 'year' });

@@ -55,8 +55,8 @@ describe('omit', () => {
     });
 
     it('should not include keys that are not present in the input object', () => {
-        expect(omit(obj, 'a', 'b', 'e')).toEqual({ c: 3, d: 4 });
-        expect(omit(obj, 'e', 'f')).toEqual(obj);
+        expect(omit(obj, 'a', 'b', 'e' as any)).toEqual({ c: 3, d: 4 });
+        expect(omit(obj, 'e' as any, 'f' as any)).toEqual(obj);
     });
 });
 

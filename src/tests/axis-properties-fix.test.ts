@@ -65,8 +65,8 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
 
     // This should now work without TypeScript errors (no need for {...{} as any})
     const axisYProps: AxisYMarkProps = {
-        tickSize: styles.gridLines === 'ticks' ? 6 : 0,
-        tickPadding: styles.gridLines === 'ticks' ? 4 : 0,
+        tickSize: (styles.gridLines as string) === 'ticks' ? 6 : 0,
+        tickPadding: (styles.gridLines as string) === 'ticks' ? 4 : 0,
         tickFontSize: styles.fontSize,
         stroke: styles.lineColor,
         dx: width,

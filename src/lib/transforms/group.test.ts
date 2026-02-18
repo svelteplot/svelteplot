@@ -60,7 +60,7 @@ describe('groupX', () => {
     });
 
     it('groups by x channel accessor', () => {
-        const { data, ...channels } = groupX({ data: inputData, x: (d) => d.year });
+        const { data, ...channels } = groupX({ data: inputData, x: (d: any) => d.year });
         expect(data).toHaveLength(3);
         expect(data[0].__x).toBe(2000);
         expect(data[1].__x).toBe(2001);
@@ -195,7 +195,7 @@ describe('groupZ', () => {
     });
 
     it('groups by z channel accessor', () => {
-        const { data, ...channels } = groupZ({ data: inputData, z: (d) => d.year });
+        const { data, ...channels } = groupZ({ data: inputData, z: (d: any) => d.year });
         expect(data).toHaveLength(3);
         expect(data[0].__group_z).toBe(2000);
         expect(data[1].__group_z).toBe(2001);

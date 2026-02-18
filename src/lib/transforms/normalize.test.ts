@@ -15,17 +15,17 @@ describe('normalizeY', () => {
                 data,
                 y: 'y',
                 z: 'group'
-            },
+            } as any,
             'sum'
         );
 
-        expect(channels.y).toBe('__y');
+        expect((channels as any).y).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[(channels as any).y]
         }));
 
         // For group A: y values are 2 and 4, sum = 6
@@ -44,17 +44,17 @@ describe('normalizeY', () => {
                 data,
                 y: 'y',
                 z: 'group'
-            },
+            } as any,
             { basis: 'sum' }
         );
 
-        expect(channels.y).toBe('__y');
+        expect((channels as any).y).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[(channels as any).y]
         }));
 
         // For group A: y values are 2 and 4, sum = 6
@@ -73,16 +73,16 @@ describe('normalizeY', () => {
                 data,
                 y: 'y',
                 z: 'group'
-            },
+            } as any,
             'extent'
         );
 
-        expect(channels.y).toBe('__y');
+        expect((channels as any).y).toBe('__y');
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[(channels as any).y]
         }));
 
         // For group A: y values 2, 4 -> (y - 2) / (4 - 2)
@@ -102,15 +102,15 @@ describe('normalizeX', () => {
             {
                 data,
                 x: 'x'
-            },
+            } as any,
             'max'
         );
 
-        expect(channels.x).toBe('__x');
+        expect((channels as any).x).toBe('__x');
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             id: d.id,
-            x: d[channels.x]
+            x: d[(channels as any).x]
         }));
 
         // x values: 1, 3, 2, 4 -> max = 4
@@ -138,19 +138,19 @@ describe('normalizeParallelY', () => {
                 x: 'Measurement',
                 y: 'Value',
                 z: 'Id'
-            },
+            } as any,
             'extent'
         );
 
-        expect(channels.y).toBe('__y');
+        expect((channels as any).y).toBe('__y');
         // grouping is restored by original z channel
-        expect(channels.z).toBe('Id');
+        expect((channels as any).z).toBe('Id');
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             Id: d.Id,
             Measurement: d.Measurement,
             Value: d.Value,
-            y: d[channels.y]
+            y: d[(channels as any).y]
         }));
 
         // For each Measurement (axis) independently:
@@ -182,19 +182,19 @@ describe('normalizeParallelX', () => {
                 x: 'Value',
                 y: 'Measurement',
                 z: 'Id'
-            },
+            } as any,
             'extent'
         );
 
-        expect(channels.x).toBe('__x');
+        expect((channels as any).x).toBe('__x');
         // grouping is restored by original z channel
-        expect(channels.z).toBe('Id');
+        expect((channels as any).z).toBe('Id');
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: any) => ({
             Id: d.Id,
             Measurement: d.Measurement,
             Value: d.Value,
-            x: d[channels.x]
+            x: d[(channels as any).x]
         }));
 
         // For each Measurement (axis) independently (now along x):

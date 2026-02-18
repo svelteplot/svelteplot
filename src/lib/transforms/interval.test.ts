@@ -6,14 +6,14 @@ describe('intervalX', () => {
         const data = [{ x: 5 }, { x: 15 }];
         const options = { interval: 10, x: 'x' };
 
-        const result = intervalX({ data, ...options });
+        const result = intervalX({ data, ...options } as any);
 
         expect(result.data).toEqual([
             { x: 5, __x1: 0, __x2: 10 },
             { x: 15, __x1: 10, __x2: 20 }
         ]);
-        expect(result.x1).toBe('__x1');
-        expect(result.x2).toBe('__x2');
+        expect((result as any).x1).toBe('__x1');
+        expect((result as any).x2).toBe('__x2');
     });
 
     it('should handle time-based intervals (e.g., days)', () => {
@@ -28,18 +28,18 @@ describe('intervalX', () => {
         ];
         const options = { interval: '1 day', x: 'x', type: 'time' }; // 1 day in milliseconds
 
-        const result = intervalX({ data, ...options });
+        const result = intervalX({ data, ...options } as any);
 
         // Test channel setup
-        expect(result.x1).toBe('__x1');
-        expect(result.x2).toBe('__x2');
+        expect((result as any).x1).toBe('__x1');
+        expect((result as any).x2).toBe('__x2');
 
         // Verify result length
         expect(result.data).toHaveLength(7);
 
         // Check result data in a timezone-agnostic way
         for (let i = 0; i < result.data.length; i++) {
-            const item = result.data[i];
+            const item = result.data[i] as any;
             const originalDate = data[i].x;
 
             // Verify x value is preserved
@@ -65,7 +65,7 @@ describe('intervalX', () => {
             // Items on the same day should have x values within the same interval boundaries
             // or in consecutive intervals based on the implementation
             if (i > 0) {
-                const prevItem = result.data[i - 1];
+                const prevItem = result.data[i - 1] as any;
                 const currDate = new Date(originalDate);
                 const prevDate = new Date(data[i - 1].x);
 
@@ -98,14 +98,14 @@ describe('intervalY', () => {
         const data = [{ y: 7 }, { y: 17 }];
         const options = { interval: 10, y: 'y' };
 
-        const result = intervalY({ data, ...options });
+        const result = intervalY({ data, ...options } as any);
 
         expect(result.data).toEqual([
             { y: 7, __y1: 0, __y2: 10 },
             { y: 17, __y1: 10, __y2: 20 }
         ]);
-        expect(result.y1).toBe('__y1');
-        expect(result.y2).toBe('__y2');
+        expect((result as any).y1).toBe('__y1');
+        expect((result as any).y2).toBe('__y2');
     });
 
     it('should handle time-based intervals (e.g., days)', () => {
@@ -115,18 +115,18 @@ describe('intervalY', () => {
         ];
         const options = { interval: '2 days', y: 'y' }; // 2 days interval
 
-        const result = intervalY({ data, ...options });
+        const result = intervalY({ data, ...options } as any);
 
         // Test channel setup
-        expect(result.y1).toBe('__y1');
-        expect(result.y2).toBe('__y2');
+        expect((result as any).y1).toBe('__y1');
+        expect((result as any).y2).toBe('__y2');
 
         // Verify result length
         expect(result.data).toHaveLength(2);
 
         // Check result data in a timezone-agnostic way
         for (let i = 0; i < result.data.length; i++) {
-            const item = result.data[i];
+            const item = result.data[i] as any;
             const originalDate = data[i].y;
 
             // Verify y value is preserved
@@ -150,6 +150,6 @@ describe('intervalY', () => {
         }
 
         // First bin should end where second bin starts
-        expect(result.data[0].__y2).toEqual(result.data[1].__y1);
+        expect((result.data[0] as any).__y2).toEqual((result.data[1] as any).__y1);
     });
 });

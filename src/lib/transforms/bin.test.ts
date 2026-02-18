@@ -25,9 +25,24 @@ describe('binX', () => {
         const { data, ...channels } = binX(input, options);
 
         const expectedData = [
-            { [channels.x1]: 0, [channels.x]: 1, [channels.x2]: 2, [channels.y]: 1 },
-            { [channels.x1]: 2, [channels.x]: 3, [channels.x2]: 4, [channels.y]: 2 },
-            { [channels.x1]: 4, [channels.x]: 5, [channels.x2]: 6, [channels.y]: 2 }
+            {
+                [channels.x1 as string]: 0,
+                [channels.x as string]: 1,
+                [channels.x2 as string]: 2,
+                [channels.y as string]: 1
+            },
+            {
+                [channels.x1 as string]: 2,
+                [channels.x as string]: 3,
+                [channels.x2 as string]: 4,
+                [channels.y as string]: 2
+            },
+            {
+                [channels.x1 as string]: 4,
+                [channels.x as string]: 5,
+                [channels.x2 as string]: 6,
+                [channels.y as string]: 2
+            }
         ];
         const expectedChannels = {
             [ORIGINAL_NAME_KEYS.x]: 'x',
@@ -51,9 +66,24 @@ describe('binX', () => {
         const { data, ...channels } = binX(input, options);
 
         const expectedOutputData = [
-            { [channels.x1]: 0, [channels.x]: 1, [channels.x2]: 2, [channels.y]: 1 },
-            { [channels.x1]: 2, [channels.x]: 3, [channels.x2]: 4, [channels.y]: 3 },
-            { [channels.x1]: 4, [channels.x]: 5, [channels.x2]: 6, [channels.y]: 5 }
+            {
+                [channels.x1 as string]: 0,
+                [channels.x as string]: 1,
+                [channels.x2 as string]: 2,
+                [channels.y as string]: 1
+            },
+            {
+                [channels.x1 as string]: 2,
+                [channels.x as string]: 3,
+                [channels.x2 as string]: 4,
+                [channels.y as string]: 3
+            },
+            {
+                [channels.x1 as string]: 4,
+                [channels.x as string]: 5,
+                [channels.x2 as string]: 6,
+                [channels.y as string]: 5
+            }
         ];
 
         const expectedChannels = {
@@ -100,12 +130,12 @@ describe('binX', () => {
 
         // Make the test timezone-agnostic by checking date properties rather than exact date objects
         const firstBin = data[0];
-        expect(firstBin[channels.y]).toBe(1.5);
+        expect((firstBin as any)[channels.y as any]).toBe(1.5);
 
         // Check that the dates are roughly a week apart (5-7 days)
-        const x1Time = firstBin[channels.x1].getTime();
-        const x2Time = firstBin[channels.x2].getTime();
-        const xTime = firstBin[channels.x].getTime();
+        const x1Time = (firstBin as any)[channels.x1 as any].getTime();
+        const x2Time = (firstBin as any)[channels.x2 as any].getTime();
+        const xTime = (firstBin as any)[channels.x as any].getTime();
 
         // Check that x is approximately in the middle of x1 and x2
         expect(xTime).toBeGreaterThan(x1Time);
@@ -175,13 +205,13 @@ describe('bin', () => {
         // DEBUG: inspect records during development
         // console.log(
         //     binned.map((d) => ({
-        //         x1: d[channels.x1],
-        //         x: d[channels.x],
-        //         x2: d[channels.x2],
-        //         y1: d[channels.y1],
-        //         y: d[channels.y],
-        //         y2: d[channels.y2],
-        //         c: d[channels.fill]
+        //         x1: (d as any)[channels.x1 as any],
+        //         x: (d as any)[channels.x as any],
+        //         x2: (d as any)[channels.x2 as any],
+        //         y1: (d as any)[channels.y1 as any],
+        //         y: (d as any)[channels.y as any],
+        //         y2: (d as any)[channels.y2 as any],
+        //         c: (d as any)[channels.fill as any]
         //     }))
         // );
 
@@ -190,18 +220,26 @@ describe('bin', () => {
 
         // Each input point should map to exactly one bin
         const maxXR = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.x2]) ? d[channels.x2] : -Infinity))
+            ...binned.map((d) =>
+                Number.isFinite((d as any)[channels.x2 as any])
+                    ? (d as any)[channels.x2 as any]
+                    : -Infinity
+            )
         );
         const maxYT = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.y2]) ? d[channels.y2] : -Infinity))
+            ...binned.map((d) =>
+                Number.isFinite((d as any)[channels.y2 as any])
+                    ? (d as any)[channels.y2 as any]
+                    : -Infinity
+            )
         );
 
         for (const p of data) {
             const matches = binned.filter((d) => {
-                const xl = d[channels.x1] ?? -Infinity;
-                const xr = d[channels.x2] ?? Infinity;
-                const yb = d[channels.y1] ?? -Infinity;
-                const yt = d[channels.y2] ?? Infinity;
+                const xl = (d as any)[channels.x1 as any] ?? -Infinity;
+                const xr = (d as any)[channels.x2 as any] ?? Infinity;
+                const yb = (d as any)[channels.y1 as any] ?? -Infinity;
+                const yt = (d as any)[channels.y2 as any] ?? Infinity;
                 const lastX = Number.isFinite(xr) && xr === maxXR;
                 const lastY = Number.isFinite(yt) && yt === maxYT;
                 const inX = p.x >= xl && (lastX ? p.x <= xr : p.x < xr);
@@ -212,20 +250,20 @@ describe('bin', () => {
         }
 
         // Sum of counts equals number of input points
-        const total = binned.reduce((acc, d) => acc + d[channels.fill], 0);
+        const total = binned.reduce((acc, d) => acc + (d as any)[channels.fill as any], 0);
         expect(total).toBe(data.length);
 
         // For bins with both bounds defined, center equals midpoint
         for (const d of binned) {
-            const xl = d[channels.x1];
-            const xr = d[channels.x2];
-            const yb = d[channels.y1];
-            const yt = d[channels.y2];
+            const xl = (d as any)[channels.x1 as any];
+            const xr = (d as any)[channels.x2 as any];
+            const yb = (d as any)[channels.y1 as any];
+            const yt = (d as any)[channels.y2 as any];
             if (Number.isFinite(xl) && Number.isFinite(xr)) {
-                expect(d[channels.x]).toBe((xl + xr) / 2);
+                expect((d as any)[channels.x as any]).toBe((xl + xr) / 2);
             }
             if (Number.isFinite(yb) && Number.isFinite(yt)) {
-                expect(d[channels.y]).toBe((yb + yt) / 2);
+                expect((d as any)[channels.y as any]).toBe((yb + yt) / 2);
             }
         }
     });
@@ -256,18 +294,26 @@ describe('bin', () => {
 
         // Each input point should map to exactly one bin
         const maxXR = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.x2]) ? d[channels.x2] : -Infinity))
+            ...binned.map((d) =>
+                Number.isFinite((d as any)[channels.x2 as any])
+                    ? (d as any)[channels.x2 as any]
+                    : -Infinity
+            )
         );
         const maxYT = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.y2]) ? d[channels.y2] : -Infinity))
+            ...binned.map((d) =>
+                Number.isFinite((d as any)[channels.y2 as any])
+                    ? (d as any)[channels.y2 as any]
+                    : -Infinity
+            )
         );
 
         for (const p of data) {
             const matches = binned.filter((d) => {
-                const xl = d[channels.x1] ?? -Infinity;
-                const xr = d[channels.x2] ?? Infinity;
-                const yb = d[channels.y1] ?? -Infinity;
-                const yt = d[channels.y2] ?? Infinity;
+                const xl = (d as any)[channels.x1 as any] ?? -Infinity;
+                const xr = (d as any)[channels.x2 as any] ?? Infinity;
+                const yb = (d as any)[channels.y1 as any] ?? -Infinity;
+                const yt = (d as any)[channels.y2 as any] ?? Infinity;
                 const lastX = Number.isFinite(xr) && xr === maxXR;
                 const lastY = Number.isFinite(yt) && yt === maxYT;
                 const inX = p.x >= xl && (lastX ? p.x <= xr : p.x < xr);
@@ -278,20 +324,20 @@ describe('bin', () => {
         }
 
         // Sum of counts equals number of input points
-        const total = binned.reduce((acc, d) => acc + d[channels.fill], 0);
+        const total = binned.reduce((acc, d) => acc + (d as any)[channels.fill as any], 0);
         expect(total).toBe(data.length);
 
         // For bins with both bounds defined, center equals midpoint
         for (const d of binned) {
-            const xl = d[channels.x1];
-            const xr = d[channels.x2];
-            const yb = d[channels.y1];
-            const yt = d[channels.y2];
+            const xl = (d as any)[channels.x1 as any];
+            const xr = (d as any)[channels.x2 as any];
+            const yb = (d as any)[channels.y1 as any];
+            const yt = (d as any)[channels.y2 as any];
             if (Number.isFinite(xl) && Number.isFinite(xr)) {
-                expect(d[channels.x]).toBe((xl + xr) / 2);
+                expect((d as any)[channels.x as any]).toBe((xl + xr) / 2);
             }
             if (Number.isFinite(yb) && Number.isFinite(yt)) {
-                expect(d[channels.y]).toBe((yb + yt) / 2);
+                expect((d as any)[channels.y as any]).toBe((yb + yt) / 2);
             }
         }
     });

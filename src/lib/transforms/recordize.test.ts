@@ -12,14 +12,14 @@ const coordsArray: [RawValue, RawValue][] = [
 
 describe('recordizeXY', () => {
     it('converts arrays of numbers into records', () => {
-        const { data, ...channels } = recordizeXY({ data: coordsArray });
+        const { data, ...channels } = recordizeXY({ data: coordsArray } as any);
         expect(data[0]).toStrictEqual({ [RAW_VALUE]: [0, 4], [X]: 0, [Y]: 4, [INDEX]: 0 });
         expect(data[1]).toStrictEqual({ [RAW_VALUE]: [1, 3], [X]: 1, [Y]: 3, [INDEX]: 1 });
         expect(channels).toStrictEqual({ x: X, y: Y });
     });
 
     it("doesn't converts if x channel accessor is set", () => {
-        const { data, ...channels } = recordizeXY({ data: coordsArray, x: 0 });
+        const { data, ...channels } = recordizeXY({ data: coordsArray, x: 0 } as any);
         expect(data[0]).toStrictEqual([0, 4]);
         expect(data[1]).toStrictEqual([1, 3]);
         expect(channels).toStrictEqual({ x: 0 });

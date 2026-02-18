@@ -13,17 +13,17 @@ describe('stackY transform', () => {
 
     it('basic stacking', () => {
         const { data: stackedData, ...channels } = stackY({
-            data,
+            data: data as any,
             x: 'year',
             fill: 'category',
             y: 'value'
-        });
+        }) as any;
         expect(stackedData).toHaveLength(data.length);
         expect(channels.x).toBeDefined();
         expect(channels.y1).toBeDefined();
         expect(channels.y2).toBeDefined();
 
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             x: d[channels.x],
             y1: d[channels.y1],
             y2: d[channels.y2],
@@ -40,21 +40,20 @@ describe('stackY transform', () => {
     it('centered stacking', () => {
         const { data: stackedData, ...channels } = stackY(
             {
-                data,
+                data: data as any,
                 x: 'year',
                 fill: 'category',
                 y: 'value'
             },
             { offset: 'center' }
-        );
+        ) as any;
         expect(stackedData).toHaveLength(data.length);
         expect(channels.x).toBeDefined();
         expect(channels.y1).toBeDefined();
         expect(channels.y2).toBeDefined();
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             x: d[channels.x],
             y1: d[channels.y1],
-
             y2: d[channels.y2],
             fill: d[channels.fill]
         }));
@@ -69,21 +68,20 @@ describe('stackY transform', () => {
     it('normalized stacking', () => {
         const { data: stackedData, ...channels } = stackY(
             {
-                data,
+                data: data as any,
                 x: 'year',
                 fill: 'category',
                 y: 'value'
             },
             { offset: 'normalize' }
-        );
+        ) as any;
         expect(stackedData).toHaveLength(data.length);
         expect(channels.x).toBeDefined();
         expect(channels.y1).toBeDefined();
         expect(channels.y2).toBeDefined();
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             x: d[channels.x],
             y1: d[channels.y1],
-
             y2: d[channels.y2],
             fill: d[channels.fill]
         }));
@@ -108,14 +106,14 @@ describe('stackY transform', () => {
         ];
 
         const { data: stackedData, ...channels } = stackY({
-            data: data2,
+            data: data2 as any,
             x: 'year',
             fill: 'category',
             y: 'value',
             fx: 'facet'
-        });
+        }) as any;
         expect(stackedData).toHaveLength(data2.length);
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             x: d[channels.x],
             y1: d[channels.y1],
             y2: d[channels.y2],
@@ -143,12 +141,12 @@ describe('stackY transform', () => {
             { make: 'B', model: 'B3', mpg: 450 }
         ];
         const { data: stackedData, ...channels } = stackY({
-            data: data3,
+            data: data3 as any,
             x: 'make',
             y: 'mpg'
             // fill: 'make'
-        });
-        const result = stackedData.map((d) => ({
+        }) as any;
+        const result = stackedData.map((d: any) => ({
             x: d[channels.x],
             y1: d[channels.y1],
             y2: d[channels.y2]
@@ -160,9 +158,9 @@ describe('stackY transform', () => {
         const data = [10, 20, 30, 40];
         const { data: stackedData, ...channels } = stackY(
             recordizeY({ data, x1: null, x2: null, y1: 0, y2: 0 })
-        );
+        ) as any;
         const { x, y1, y2 } = channels;
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             x: d[x],
             y1: d[y1],
             y2: d[y2]
@@ -186,18 +184,18 @@ describe('stackX transform', () => {
 
     it('basic stacking', () => {
         const { data: stackedData, ...channels } = stackX({
-            data,
+            data: data as any,
             y: 'year',
             fill: 'category',
             x: 'value',
             value: 'value'
-        });
+        }) as any;
         expect(stackedData).toHaveLength(data.length);
         expect(channels.y).toBeDefined();
         expect(channels.x1).toBeDefined();
         expect(channels.x2).toBeDefined();
 
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             y: d[channels.y],
             x1: d[channels.x1],
             x2: d[channels.x2],
@@ -213,9 +211,11 @@ describe('stackX transform', () => {
 
     it('stacks recordized array', () => {
         const data = [10, 20, 30, undefined, 40];
-        const { data: stackedData, ...channels } = stackX(recordizeX({ data, x1: 0, x2: 0 }));
+        const { data: stackedData, ...channels } = stackX(
+            recordizeX({ data: data as any, x1: 0, x2: 0 })
+        ) as any;
         const { y, x1, x2 } = channels;
-        const result = stackedData.map((d) => ({
+        const result = stackedData.map((d: any) => ({
             y: d[y],
             x1: d[x1],
             x2: d[x2]
@@ -238,7 +238,7 @@ const sales: DataRecord[] = [
 ];
 
 describe('stackMosaicX', () => {
-    const simplify = (d: DataRecord, channels) => {
+    const simplify = (d: DataRecord, channels: any) => {
         const {
             [channels.x]: xv,
             [channels.x1]: x1v,
@@ -260,19 +260,19 @@ describe('stackMosaicX', () => {
             x: 'product',
             y: 'sales',
             value: 'sales'
-        });
+        }) as any;
 
         expect(channels).toBeDefined();
         expect(data).toHaveLength(sales.length);
         expect(channels.x).toBeDefined();
         expect(channels.y).toBeDefined();
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         // phone/A (10)  |  laptop/A (40)
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 90
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 15, 30]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
         expect(res[1].x).toStrictEqual([0, 15, 30]);
@@ -292,14 +292,14 @@ describe('stackMosaicX', () => {
                 value: 'sales'
             },
             { x: { percent: true } }
-        );
+        ) as any;
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         // phone/A (10)  |  laptop/A (40)
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 25%     |  total: 75%
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 0.125, 0.25]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
         expect(res[1].x).toStrictEqual([0, 0.125, 0.25]);
@@ -319,14 +319,14 @@ describe('stackMosaicX', () => {
                 value: 'sales'
             },
             { y: { percent: true } }
-        );
+        ) as any;
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         // phone/A (10)  |  laptop/A (40)
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 90
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 15, 30]);
         expect(res[0].y).toStrictEqual([0, 1 / 6, 1 / 3]);
         expect(res[1].x).toStrictEqual([0, 15, 30]);
@@ -344,10 +344,10 @@ describe('stackMosaicX', () => {
             y: 'company',
             fx: 'company',
             value: 'sales'
-        });
+        }) as any;
 
         // phone/A (10)  |  laptop/A (40)  ||  phone/B (20)  |  laptop/B (50)
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         expect(res[0].x).toStrictEqual([0, 5, 10]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
         expect(res[1].x).toStrictEqual([10, 30, 50]);
@@ -365,13 +365,13 @@ describe('stackMosaicX', () => {
             y: 'company',
             fy: 'company',
             value: 'sales'
-        });
+        }) as any;
 
         // phone/A (10)  |  laptop/A (40)
         // ------------------------------
         // phone/B (20)  |  laptop/B (50)
-        const res = data.map((d) => simplify(d, channels));
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'l/A', 'p/B', 'l/B']);
+        const res = data.map((d: any) => simplify(d, channels));
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'l/A', 'p/B', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 5, 10]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
         expect(res[1].x).toStrictEqual([10, 30, 50]);
@@ -388,20 +388,20 @@ describe('stackMosaicX', () => {
             x: 'product',
             y: 'sales',
             value: 'sales',
-            filter: (d) => d.id !== 'l/A'
-        });
+            filter: (d: any) => d.id !== 'l/A'
+        }) as any;
 
         expect(channels).toBeDefined();
         expect(data).toHaveLength(sales.length - 1);
         expect(channels.x).toBeDefined();
         expect(channels.y).toBeDefined();
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         // phone/A (10)  |
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 50
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/B']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 15, 30]);
         expect(res[0].y).toStrictEqual([0, 5, 10]);
         expect(res[1].x).toStrictEqual([0, 15, 30]);
@@ -417,14 +417,14 @@ describe('stackMosaicX', () => {
             y: 'sales',
             value: 'sales',
             sort: { channel: '-value' }
-        });
+        }) as any;
 
         expect(channels).toBeDefined();
         expect(data).toHaveLength(sales.length);
         expect(channels.x).toBeDefined();
         expect(channels.y).toBeDefined();
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
 
         // total: 30     |  total: 90
 
@@ -432,7 +432,7 @@ describe('stackMosaicX', () => {
         // laptop/A (40) | phone/B (10)
         // ------------------------------
         // total: 90     | total: 30
-        expect(res.map((d) => d.id)).toStrictEqual(['l/B', 'l/A', 'p/B', 'p/A']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['l/B', 'l/A', 'p/B', 'p/A']);
         expect(res[0].x).toStrictEqual([0, 45, 90]);
         expect(res[0].y).toStrictEqual([0, 25, 50]);
         expect(res[1].x).toStrictEqual([0, 45, 90]);
@@ -456,7 +456,7 @@ describe('stackMosaicX', () => {
 });
 
 describe('stackMosaicY', () => {
-    const simplify = (d: DataRecord, channels) => {
+    const simplify = (d: DataRecord, channels: any) => {
         const {
             [channels.x]: xv,
             [channels.x1]: x1v,
@@ -477,19 +477,19 @@ describe('stackMosaicY', () => {
             x: 'sales',
             y: 'product',
             value: 'sales'
-        });
+        }) as any;
 
         expect(channels).toBeDefined();
         expect(data).toHaveLength(sales.length);
         expect(channels.x).toBeDefined();
         expect(channels.y).toBeDefined();
 
-        const res = data.map((d) => simplify(d, channels));
+        const res = data.map((d: any) => simplify(d, channels));
         // phone/A (10)  |  laptop/A (40)
         // phone/B (20)  |  laptop/B (50)
         // ------------------------------
         // total: 30     |  total: 90
-        expect(res.map((d) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
+        expect(res.map((d: any) => d.id)).toStrictEqual(['p/A', 'p/B', 'l/A', 'l/B']);
         expect(res[0].x).toStrictEqual([0, 5, 10]);
         expect(res[0].y).toStrictEqual([0, 15, 30]);
         expect(res[1].x).toStrictEqual([10, 20, 30]);

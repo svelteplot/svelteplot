@@ -73,7 +73,7 @@ describe('GridX mark', () => {
 
         const dy = vi.fn(() => 20);
 
-        props.gridArgs.dy = dy;
+        (props.gridArgs as any).dy = dy;
         await tick();
 
         const gridLines3 = container.querySelectorAll('g.grid-x > line');

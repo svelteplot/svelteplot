@@ -33,9 +33,9 @@ describe('TickX mark', () => {
             [48.5, 0],
             [86, 0]
         ]);
-        const y1 = ticks.map((tick) => parseFloat(tick.getAttribute('y1')));
+        const y1 = ticks.map((tick) => parseFloat(tick.getAttribute('y1') ?? '0'));
         expect(y1).toEqual([0, 0, 0]);
-        const y2 = ticks.map((tick) => parseFloat(tick.getAttribute('y2')));
+        const y2 = ticks.map((tick) => parseFloat(tick.getAttribute('y2') ?? '0'));
         expect(y2).toEqual([95, 95, 95]);
     });
 

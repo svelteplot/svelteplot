@@ -143,7 +143,7 @@ describe('AxisY mark', () => {
             props: {
                 plotArgs: { height: 250, y: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFontSize: (d, i) => checkIndex(i) + 5
+                    tickFontSize: (d: any, i: any) => checkIndex(i) + 5
                 }
             }
         });
@@ -163,7 +163,7 @@ describe('AxisY mark', () => {
             props: {
                 plotArgs: { height: 250, y: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFormat: (d, i) => checkIndex(i)
+                    tickFormat: (d: any, i: any) => checkIndex(i)
                 }
             }
         });
@@ -178,13 +178,13 @@ describe('AxisY mark', () => {
     });
 
     it('passes ticks array to tickFormat functions', () => {
-        const checkTicks = vi.fn((d, i, ticks) => String(d));
+        const checkTicks = vi.fn((d: any, i: any, ticks: any) => String(d));
         const { container } = render(AxisYTest, {
             props: {
                 plotArgs: { width: 500, y: { domain: [0, 100] } },
                 axisArgs: {
                     interval: 20,
-                    tickFormat: (d, i, ticks) => checkTicks(d, i, ticks)
+                    tickFormat: (d: any, i: any, ticks: any) => checkTicks(d, i, ticks)
                 }
             }
         });

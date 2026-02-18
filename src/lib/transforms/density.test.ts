@@ -22,24 +22,26 @@ describe('density transform', () => {
         };
         const baseOptions = { bandwidth: 1, interval: 1, trim: true };
 
-        const uniform = densityX(input, { ...baseOptions, kernel: 'uniform' });
-        const gaussian = densityX(input, { ...baseOptions, kernel: 'gaussian' });
+        const uniform = densityX(input as any, { ...baseOptions, kernel: 'uniform' });
+        const gaussian = densityX(input as any, { ...baseOptions, kernel: 'gaussian' });
 
-        const uniformX = uniform.x;
-        const uniformY = uniform.y;
-        expect(uniform.data.map((d) => d[uniformX])).toEqual([-1, 0, 1]);
+        const uniformX = uniform.x as any;
+        const uniformY = uniform.y as any;
+        expect(uniform.data.map((d: any) => d[uniformX])).toEqual([-1, 0, 1]);
         [1 / 3, 0.5, 1 / 3].forEach((expected, i) =>
-            expect(uniform.data[i][uniformY]).toBeCloseTo(expected, 6)
+            expect((uniform.data[i] as any)[uniformY]).toBeCloseTo(expected, 6)
         );
 
-        const gaussianX = gaussian.x;
-        const gaussianY = gaussian.y;
-        expect(gaussian.data.map((d) => d[gaussianX])).toEqual([-1, 0, 1]);
+        const gaussianX = gaussian.x as any;
+        const gaussianY = gaussian.y as any;
+        expect(gaussian.data.map((d: any) => d[gaussianX])).toEqual([-1, 0, 1]);
         [0.231634657144588, 0.2942945764799065, 0.23163465714458806].forEach((expected, i) =>
-            expect(gaussian.data[i][gaussianY]).toBeCloseTo(expected, 6)
+            expect((gaussian.data[i] as any)[gaussianY]).toBeCloseTo(expected, 6)
         );
 
-        expect(gaussian.data[1][gaussianY]).toBeLessThan(uniform.data[1][uniformY]);
+        expect((gaussian.data[1] as any)[gaussianY]).toBeLessThan(
+            (uniform.data[1] as any)[uniformY]
+        );
     });
 
     it('integrates to ~1 for basic density', () => {
@@ -47,13 +49,13 @@ describe('density transform', () => {
             {
                 data: [{ value: 0 }, { value: 5 }],
                 x: 'value'
-            },
+            } as any,
             { bandwidth: 1, interval: 0.1, trim: false, kernel: 'uniform' }
         );
 
         const series = data
-            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
-            .sort((a, b) => a.x - b.x);
+            .map((d: any) => ({ x: d[channels.x as any], y: d[channels.y as any] }))
+            .sort((a: any, b: any) => a.x - b.x);
         expect(integrate(series)).toBeCloseTo(1, 1);
     });
 
@@ -64,18 +66,18 @@ describe('density transform', () => {
                 { value: 1, weight: 3 }
             ],
             x: 'value',
-            weight: (d) => d.weight
+            weight: (d: any) => d.weight
         };
 
-        const { data, ...channels } = densityX(input, {
+        const { data, ...channels } = densityX(input as any, {
             bandwidth: 1,
             interval: 1,
             trim: true,
             kernel: 'triangular'
         });
 
-        expect(data.map((d) => d[channels.x])).toEqual([0, 1]);
-        expect(data.map((d) => d[channels.y])).toEqual([0.25, 0.75]);
+        expect(data.map((d: any) => d[channels.x as any])).toEqual([0, 1]);
+        expect(data.map((d: any) => d[channels.y as any])).toEqual([0.25, 0.75]);
     });
 
     it('integrates to ~1 with weights', () => {
@@ -86,13 +88,19 @@ describe('density transform', () => {
                     { value: 5, w: 3 }
                 ],
                 x: 'value'
-            },
-            { bandwidth: 1, interval: 0.1, trim: false, kernel: 'uniform', weight: (d) => d.w }
+            } as any,
+            {
+                bandwidth: 1,
+                interval: 0.1,
+                trim: false,
+                kernel: 'uniform',
+                weight: (d: any) => d.w
+            } as any
         );
 
         const series = data
-            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
-            .sort((a, b) => a.x - b.x);
+            .map((d: any) => ({ x: d[channels.x as any], y: d[channels.y as any] }))
+            .sort((a: any, b: any) => a.x - b.x);
         expect(integrate(series)).toBeCloseTo(1, 1);
     });
 
@@ -101,13 +109,13 @@ describe('density transform', () => {
             {
                 data: [{ value: 0 }, { value: 5 }],
                 x: 'value'
-            },
-            { bandwidth: 1, interval: 0.5, trim: false, kernel: 'uniform', cumulative: true }
+            } as any,
+            { bandwidth: 1, interval: 0.5, trim: false, kernel: 'uniform', cumulative: 1 }
         );
 
         const series = data
-            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
-            .sort((a, b) => a.x - b.x);
+            .map((d: any) => ({ x: d[channels.x as any], y: d[channels.y as any] }))
+            .sort((a: any, b: any) => a.x - b.x);
 
         expect(series[0].y).toBeCloseTo(0, 2);
         expect(series.at(-1)?.y ?? 0).toBeCloseTo(1, 1);
@@ -121,13 +129,13 @@ describe('density transform', () => {
             {
                 data: [{ value: 0 }, { value: 5 }],
                 x: 'value'
-            },
+            } as any,
             { bandwidth: 1, interval: 0.5, trim: false, kernel: 'uniform', cumulative: -1 }
         );
 
         const series = data
-            .map((d) => ({ x: d[channels.x], y: d[channels.y] }))
-            .sort((a, b) => a.x - b.x);
+            .map((d: any) => ({ x: d[channels.x as any], y: d[channels.y as any] }))
+            .sort((a: any, b: any) => a.x - b.x);
 
         expect(series[0].y).toBeCloseTo(1, 1);
         expect(series.at(-1)?.y ?? 0).toBeLessThanOrEqual(0.2);
@@ -145,14 +153,14 @@ describe('density transform', () => {
             x: 'value'
         };
 
-        const defaultTrim = densityX(input, { bandwidth: 1, interval: 1 });
-        const trimmed = densityX(input, { bandwidth: 1, interval: 1, trim: true });
+        const defaultTrim = densityX(input as any, { bandwidth: 1, interval: 1 });
+        const trimmed = densityX(input as any, { bandwidth: 1, interval: 1, trim: true });
 
-        const xDefault = defaultTrim.x;
-        const xTrimmed = trimmed.x;
+        const xDefault = defaultTrim.x as any;
+        const xTrimmed = trimmed.x as any;
 
-        expect(defaultTrim.data.map((d) => d[xDefault])).toEqual([-1, 0, 1, 2, 3, 4, 5]);
-        expect(trimmed.data.map((d) => d[xTrimmed])).toEqual([0, 1, 2, 3, 4, 5]);
+        expect(defaultTrim.data.map((d: any) => d[xDefault])).toEqual([-1, 0, 1, 2, 3, 4, 5]);
+        expect(trimmed.data.map((d: any) => d[xTrimmed])).toEqual([0, 1, 2, 3, 4, 5]);
     });
 
     it('applies Silverman bandwidth with kernel-specific scaling', () => {
@@ -162,12 +170,12 @@ describe('density transform', () => {
             {
                 data: [{ value: 0 }],
                 x: 'value'
-            },
+            } as any,
             { bandwidth: bandwidthSpy, kernel: 'epanechnikov', interval: 1, trim: true }
         );
 
         expect(bandwidthSpy).toHaveBeenCalledWith([0]);
-        expect(data[0][channels.y]).toBeCloseTo(0.75 / 2.34, 6);
+        expect((data[0] as any)[channels.y as any]).toBeCloseTo(0.75 / 2.34, 6);
     });
 
     it('drops items with invalid weights', () => {
@@ -177,15 +185,15 @@ describe('density transform', () => {
                     { value: 0, w: 1 },
                     { value: 2, w: -1 }
                 ],
-                weight: (d) => d.w,
+                weight: (d: any) => d.w,
                 x: 'value'
-            },
+            } as any,
             { bandwidth: 1, interval: 1, trim: true }
         );
 
         expect(data).toHaveLength(1);
-        expect(data[0][channels.x]).toBe(0);
-        expect(data[0][channels.y]).toBeCloseTo(0.75, 6);
+        expect((data[0] as any)[channels.x as any]).toBe(0);
+        expect((data[0] as any)[channels.y as any]).toBeCloseTo(0.75, 6);
     });
 
     it('groups densities by fill and facet channels', () => {
@@ -205,7 +213,7 @@ describe('density transform', () => {
             fx: 'fx'
         };
 
-        const { data, ...channels } = densityX(input, {
+        const { data, ...channels } = densityX(input as any, {
             bandwidth: 1,
             interval: 0.1,
             trim: false,
@@ -217,9 +225,9 @@ describe('density transform', () => {
 
         const grouped = new Map<string, { x: number; y: number }[]>();
         for (const row of data) {
-            const key = `${row[channels.fx]}-${row[channels.fill]}`;
+            const key = `${(row as any)[channels.fx as any]}-${(row as any)[channels.fill as any]}`;
             const arr = grouped.get(key) ?? [];
-            arr.push({ x: row[channels.x], y: row[channels.y] });
+            arr.push({ x: (row as any)[channels.x as any], y: (row as any)[channels.y as any] });
             grouped.set(key, arr);
         }
 

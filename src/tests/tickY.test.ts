@@ -30,9 +30,9 @@ describe('TickY mark', () => {
             [0, 50],
             [0, 15]
         ]);
-        const x1 = ticks.map((tick) => parseFloat(tick.getAttribute('x1')));
+        const x1 = ticks.map((tick) => parseFloat(tick.getAttribute('x1') ?? '0'));
         expect(x1).toEqual([1, 1, 1]);
-        const x2 = ticks.map((tick) => parseFloat(tick.getAttribute('x2')));
+        const x2 = ticks.map((tick) => parseFloat(tick.getAttribute('x2') ?? '0'));
         expect(x2).toEqual([100, 100, 100]);
     });
 

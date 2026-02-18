@@ -15,52 +15,54 @@ const sortedByD = data.toSorted((a, b) => a.D.getTime() - b.D.getTime());
 
 describe('sort transform', () => {
     it('does not sort if no sort channel is defined', () => {
-        expect(sort({ data }).data).toStrictEqual(data);
+        expect(sort({ data } as any).data).toStrictEqual(data);
     });
 
     it('sort data by string accessor', () => {
-        expect(sort({ data, sort: 'A' }).data).toStrictEqual(sortedByA);
+        expect(sort({ data, sort: 'A' } as any).data).toStrictEqual(sortedByA);
     });
 
     it('sort data by accessor function', () => {
-        expect(sort({ data, sort: (d) => d.A }).data).toStrictEqual(sortedByA);
+        expect(sort({ data, sort: (d: any) => d.A } as any).data).toStrictEqual(sortedByA);
     });
 
     it('sort data by comperator function', () => {
-        expect(sort({ data, sort: (a, b) => a.A - b.A }).data).toStrictEqual(sortedByA);
+        expect(sort({ data, sort: (a: any, b: any) => a.A - b.A } as any).data).toStrictEqual(
+            sortedByA
+        );
     });
 
     it('sort data by channel', () => {
-        expect(sort({ data, x: 'B', sort: { channel: 'x' } }).data).toStrictEqual(sortedByB);
+        expect(sort({ data, x: 'B', sort: { channel: 'x' } } as any).data).toStrictEqual(sortedByB);
     });
 
     it('sort data by channel descending', () => {
         expect(
-            sort({ data, x: 'A', sort: { channel: 'x', order: 'descending' } }).data
+            sort({ data, x: 'A', sort: { channel: 'x', order: 'descending' } } as any).data
         ).toStrictEqual(sortedByA.toReversed());
     });
 
     it('sort data by channel descending alternative syntax', () => {
-        expect(sort({ data, y: 'A', sort: { channel: '-y' } }).data).toStrictEqual(
+        expect(sort({ data, y: 'A', sort: { channel: '-y' } } as any).data).toStrictEqual(
             sortedByA.toReversed()
         );
     });
 
     it('sort data by strings', () => {
-        expect(sort({ data, y: 'C', sort: { channel: 'y' } }).data).toStrictEqual(sortedByC);
+        expect(sort({ data, y: 'C', sort: { channel: 'y' } } as any).data).toStrictEqual(sortedByC);
     });
 
     it('sort data by dates', () => {
-        expect(sort({ data, sort: 'D' }).data).toStrictEqual(sortedByD);
+        expect(sort({ data, sort: 'D' } as any).data).toStrictEqual(sortedByD);
     });
 });
 
 describe('shuffle transform', () => {
     it('shuffles the data', () => {
-        const shuffled = shuffle({ data }, { seed: 1 });
+        const shuffled = shuffle({ data } as any, { seed: 1 });
         expect(shuffled.sort).toBe(null);
         expect(shuffled.data).toHaveLength(data.length);
         expect(shuffled.data).not.toStrictEqual(data);
-        expect(shuffled.data.sort((a, b) => a.A - b.A)).toStrictEqual(sortedByA);
+        expect(shuffled.data.sort((a: any, b: any) => a.A - b.A)).toStrictEqual(sortedByA);
     });
 });

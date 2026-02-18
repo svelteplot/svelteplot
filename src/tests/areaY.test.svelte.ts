@@ -99,7 +99,7 @@ describe('AreaY mark', () => {
                     y: 'y',
                     fill: 'g',
                     class: 'my-area-group',
-                    areaClass: (d) => `my-area-${d.g}`
+                    areaClass: (d: any) => `my-area-${d.g}`
                 }
             }
         });

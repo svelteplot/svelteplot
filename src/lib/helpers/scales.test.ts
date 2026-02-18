@@ -66,12 +66,12 @@ describe('looksLikeANumber', () => {
         expect(looksLikeANumber('abc')).toBe(false);
         expect(looksLikeANumber('')).toBe(false);
         expect(looksLikeANumber('   ')).toBe(false);
-        expect(looksLikeANumber(null)).toBe(false);
-        expect(looksLikeANumber(undefined)).toBe(false);
+        expect(looksLikeANumber(null as any)).toBe(false);
+        expect(looksLikeANumber(undefined as any)).toBe(false);
         expect(looksLikeANumber(NaN)).toBe(false);
-        expect(looksLikeANumber(true)).toBe(false);
-        expect(looksLikeANumber(false)).toBe(false);
-        expect(looksLikeANumber([])).toBe(false);
-        expect(looksLikeANumber({})).toBe(false);
+        expect(looksLikeANumber(true as any)).toBe(false);
+        expect(looksLikeANumber(false as any)).toBe(false);
+        expect(looksLikeANumber([] as any)).toBe(false);
+        expect(looksLikeANumber({} as any)).toBe(false);
     });
 });

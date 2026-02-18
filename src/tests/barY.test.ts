@@ -310,7 +310,7 @@ describe('BarY mark', () => {
                     x: 'label',
                     y: 'value',
                     stack: false,
-                    fill: (d) => (d?.label === 'alpha' ? 'red' : 'blue')
+                    fill: (d: any) => (d?.label === 'alpha' ? 'red' : 'blue')
                 }
             }
         });
@@ -326,10 +326,10 @@ function getRectDims(rect: SVGRectElement) {
         ?.getAttribute('transform')
         ?.match(/translate\((\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\)/);
     return {
-        x: Math.round(+t[1]),
-        y: Math.round(+t[2]),
-        w: Math.round(+rect.getAttribute('width')),
-        h: Math.round(+rect.getAttribute('height')),
+        x: Math.round(+t![1]),
+        y: Math.round(+t![2]),
+        w: Math.round(+rect.getAttribute('width')!),
+        h: Math.round(+rect.getAttribute('height')!),
         fill: rect.style.fill,
         stroke: rect.style.stroke,
         strokeWidth: rect.style.strokeWidth
@@ -337,9 +337,9 @@ function getRectDims(rect: SVGRectElement) {
 }
 
 function getPathDims(path: SVGPathElement) {
-    const r = makeAbsolute(parseSVG(path.getAttribute('d')));
-    const x = r.flatMap((d) => [d.x, d.x0, d.x1]).filter((x) => x != null);
-    const y = r.flatMap((d) => [d.y, d.y0, d.y1]).filter((y) => y != null);
+    const r = makeAbsolute(parseSVG(path.getAttribute('d')!));
+    const x = r.flatMap((d: any) => [d.x, d.x0, d.x1]).filter((x: any) => x != null);
+    const y = r.flatMap((d: any) => [d.y, d.y0, d.y1]).filter((y: any) => y != null);
     const t = path
         ?.getAttribute('transform')
         ?.match(/translate\((\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\)/);

@@ -31,7 +31,7 @@ describe('filter transform', () => {
 
         const channels = {};
 
-        const result = filter({ data, ...channels });
+        const result = filter({ data, ...channels } as any);
 
         expect(result.data).toEqual(data);
     });

@@ -174,11 +174,11 @@ describe('Arrow mark', () => {
 
         const arrows = container.querySelectorAll('g.arrow > g > path');
         expect(arrows.length).toBe(data.length);
-        const strokes = Array.from(arrows).map((a) => a.style.stroke);
+        const strokes = Array.from(arrows).map((a) => (a as SVGElement).style.stroke);
 
         expect(strokes).toEqual(['red', 'blue', 'green']);
 
-        const x = Array.from(arrows).map((a) => +a.getAttribute('d')?.substring(1).split(',')[0]);
+        const x = Array.from(arrows).map((a) => +a.getAttribute('d')?.substring(1).split(',')[0]!);
         expect(x[0]).toBeLessThan(x[1]);
         expect(x[1]).toBeLessThan(x[2]);
     });
