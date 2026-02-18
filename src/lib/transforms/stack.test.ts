@@ -238,7 +238,6 @@ const sales: DataRecord[] = [
 ];
 
 describe('stackMosaicX', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const simplify = (d: DataRecord, channels: Record<string, any>): DataRecord => {
         const {
             [channels.x]: xv,
@@ -457,7 +456,6 @@ describe('stackMosaicX', () => {
 });
 
 describe('stackMosaicY', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const simplify = (d: DataRecord, channels: Record<string, any>): DataRecord => {
         const {
             [channels.x]: xv,
