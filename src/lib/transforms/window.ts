@@ -38,9 +38,9 @@ function windowDim(
     options: WindowOptions
 ) {
     const { anchor = 'middle', reduce = 'mean', strict = false } = options;
-    let { k, interval } = options;
+    let { k } = options;
 
-    interval = maybeInterval(interval, 'time');
+    const interval = options.interval ? maybeInterval(options.interval) : undefined;
     // we only change the data, but not the
     if (!((k = Math.floor(k)) > 0)) throw new Error(`invalid k: ${k}`);
 
@@ -84,12 +84,12 @@ function windowDim(
             const newDatum = { ...values[i] };
             let yWindow: Set<number> = new Set();
             if (interval) {
-                const minDate = interval.offset(Y[i].value, -shift);
-                const maxDate = interval.offset(Y[i].value, -shift + k);
+                const minDate = (interval as any).offset(Y[i].value, -shift);
+                const maxDate = (interval as any).offset(Y[i].value, -shift + k);
                 yWindow = new Set(
-                    Y.filter(({ value }) => value >= minDate && value <= maxDate).map(
-                        ({ index }) => index
-                    )
+                    Y.filter(
+                        ({ value }) => (value as any) >= minDate && (value as any) <= maxDate
+                    ).map(({ index }) => index)
                 );
             }
             for (const channel of reduceChannels) {

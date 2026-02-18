@@ -19,7 +19,7 @@ function titleCase(s: string): string {
 
 export const load: PageLoad = async ({ params, fetch }) => {
     const { group, page } = params;
-    const pageMeta = { ...(pages[`../../${group}/${page}.svelte`] ?? {}) };
+    const pageMeta = { ...pages[`../../${group}/${page}.svelte`] };
     const { title, description } = pageMeta;
     if (pageMeta.data) {
         const data = Object.fromEntries(

@@ -52,7 +52,10 @@ export function autoTicks(
         const [lo, hi] = extent(domain as number[]);
         if (lo == null || hi == null) return [];
         const I = maybeInterval(interval);
-        return I.range(lo, I.offset(hi)).filter((d: number) => d >= lo && d <= hi);
+        if (!I) return [];
+        return (I as any)
+            .range(lo, (I as any).offset(hi))
+            .filter((d: number) => d >= lo && d <= hi);
     }
     return typeof scaleFn.ticks === 'function' ? scaleFn.ticks(count) : [];
 }

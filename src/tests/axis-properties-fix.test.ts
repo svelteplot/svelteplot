@@ -56,7 +56,7 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
 
     // Test scenario from the issue description
     const styles = {
-        gridLines: 'grid' as const,
+        gridLines: 'grid' as 'grid' | 'ticks',
         fontSize: 12,
         fontColor: '#333',
         lineColor: '#666'

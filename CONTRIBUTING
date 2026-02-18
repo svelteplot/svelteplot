@@ -4,3 +4,19 @@ Here are a few things you can help with:
 - If you spot a mistake in the documentation, you can fix it directly in Github (a PR will be created)
 - Feel free to suggest new features by opening a [feature request issue](https://github.com/svelteplot/svelteplot/issues/new?template=feature_request.md) on Github.
 - Still unsure how you can help? Please join our [Discord server](https://discord.gg/pp2wRJqtHV) and say Hi!
+
+## Development Setup
+
+### Pre-commit hooks (recommended)
+
+This project uses [pre-commit](https://pre-commit.com/) to run linting
+checks before each commit. To set it up:
+
+1. Install pre-commit: `pip install pre-commit` (or `brew install pre-commit` on macOS)
+2. Install the hooks: `pre-commit install`
+
+That's it — linting will run automatically on each commit. To run manually:
+
+```
+pre-commit run --all-files
+```

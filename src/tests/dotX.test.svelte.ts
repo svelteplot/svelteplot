@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import DotXTest from './dotX.test.svelte';
 import { getTranslate } from './utils';
 import { symbol, symbolCircle } from 'd3-shape';

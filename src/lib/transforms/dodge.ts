@@ -41,8 +41,8 @@ export function dodgeX(
     let {
         anchor = 'left',
         padding = 1,
-        r = args.dodgeX.r
-    } = maybeAnchor(args.dodgeX) as DodgeXOptions;
+        r = (args.dodgeX as any)?.r
+    } = maybeAnchor(args.dodgeX as any) as BaseDodgeOptions;
     let anchorFunction: AnchorFunction;
     switch (`${anchor}`.toLowerCase()) {
         case 'left':
@@ -71,8 +71,8 @@ export function dodgeY(
     let {
         anchor = 'bottom',
         padding = 1,
-        r = args.dodgeY.r
-    } = maybeAnchor(args.dodgeY) as DodgeYOptions;
+        r = (args.dodgeY as any)?.r
+    } = maybeAnchor(args.dodgeY as any) as BaseDodgeOptions;
     let anchorFunction: AnchorFunction;
     switch (`${anchor}`.toLowerCase()) {
         case 'top':
@@ -117,10 +117,13 @@ function dodge(
         // apply dodge within each facet
         const tree = IntervalTree();
         const data = items.filter(
-            (d) => (typeof d.r !== 'number' || d.r >= 0) && isFinite(d[x]) && isFinite(d[y])
+            (d) =>
+                (typeof d.r !== 'number' || d.r >= 0) &&
+                isFinite(d[x] as number) &&
+                isFinite(d[y] as number)
         ) as { r: number; x: number; y: number }[];
         const intervals = new Float64Array(2 * data.length + 2);
-        data.forEach((d, i) => {
+        data.forEach((d: any, i: number) => {
             const ri = d.r ?? r ?? 3;
             const y0 = ky ? ri + padding : 0; // offset baseline for varying radius
             const l = d[x] - ri;
@@ -132,7 +135,8 @@ function dodge(
             // For any previously placed circles that may overlap this circle, compute
             // the y-positions that place this circle tangent to these other circles.
             // https://observablehq.com/@mbostock/circle-offset-along-line
-            tree.queryInterval(l - padding, h + padding, ([, , j]: [any, any, number]) => {
+            tree.queryInterval(l - padding, h + padding, (interval: [number, number, ...any[]]) => {
+                const j = interval[2] as number;
                 const yj = data[j][y] - y0;
                 const dx = d[x] - data[j][x];
                 const dr = padding + (channels.r ? d.r + data[j].r : 2 * cr);

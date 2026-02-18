@@ -29,7 +29,7 @@ export type ScaledDataRecord<T = Record<string | symbol, RawValue>> = Partial<{
     /** the resolved (pre-scaling) channel values */
     resolved: ResolvedDataRecord<T>;
     /** whether this record has valid values for all required channels */
-    valid: Boolean;
+    valid: boolean;
     /** the index of this record in the original data array */
     index: number;
 };

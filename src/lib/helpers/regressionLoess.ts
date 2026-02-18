@@ -1,10 +1,11 @@
 import type { DataRow } from '../types/index.js';
+// @ts-expect-error loess has no type declarations
 import Loess from 'loess';
 
 type AccessorFn = (d: any) => number;
 
 function toNumber(d: number | Date): number {
-    if (typeof d.getTime === 'function') return (d as Date).getTime();
+    if (d instanceof Date) return d.getTime();
     return d;
 }
 
