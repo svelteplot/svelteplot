@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import GridYTest from './gridY.test.svelte';
 import { tick } from 'svelte';
 
@@ -19,7 +20,9 @@ describe('GridY mark', () => {
                 }
             }
         });
-        const gridLines = container.querySelectorAll('g.grid-y > line');
+        const gridLines = container.querySelectorAll(
+            'g.grid-y > line'
+        ) as NodeListOf<SVGLineElement>;
         expect(gridLines.length).toBe(3);
         expect(gridLines[0].style.strokeDasharray).toBe('5, 5');
         expect(gridLines[0].style.stroke).toBe('#008000');
@@ -34,7 +37,7 @@ describe('GridY mark', () => {
             },
             gridArgs: {
                 dx: 0,
-                dy: 0,
+                dy: 0 as number | (() => number),
                 data: [0, 5, 10]
             }
         });
@@ -62,8 +65,8 @@ describe('GridY mark', () => {
     });
 
     it('passes index to accessor functions', () => {
-        const x1 = vi.fn((d, i) => d + i);
-        const stroke = vi.fn((d, i) => 'gray');
+        const x1 = vi.fn((d: any, i: number) => d + i);
+        const stroke = vi.fn((d: any, i: number) => 'gray');
         render(GridYTest, {
             props: {
                 plotArgs: {
