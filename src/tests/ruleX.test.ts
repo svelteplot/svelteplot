@@ -53,8 +53,8 @@ describe('RuleX mark', () => {
         expect(rules.length).toBe(3);
 
         rules.forEach((rule) => {
-            const y1 = parseFloat(rule.getAttribute('y1'));
-            const y2 = parseFloat(rule.getAttribute('y2'));
+            const y1 = parseFloat(rule.getAttribute('y1')!);
+            const y2 = parseFloat(rule.getAttribute('y2')!);
             // Rules should span from margin to bottom
             expect(y1).toBeLessThan(y2);
             expect(y2 - y1).toBeGreaterThan(50); // Should span most of plot height
@@ -83,8 +83,8 @@ describe('RuleX mark', () => {
 
         expect(rules.length).toBe(1);
         // dy affects the y1/y2 positions of the vertical line
-        const y1 = parseFloat(rules[0].getAttribute('y1'));
-        const y2 = parseFloat(rules[0].getAttribute('y2'));
+        const y1 = parseFloat(rules[0].getAttribute('y1')!);
+        const y2 = parseFloat(rules[0].getAttribute('y2')!);
 
         // Both y1 and y2 should have the dy offset applied
         // With dy=10 and marginTop=5 (default), y1 should be at least 10+5=15
@@ -130,8 +130,8 @@ describe('RuleX mark', () => {
         });
 
         const rule = container.querySelector('g.rule-x > line') as SVGLineElement;
-        const y1 = parseFloat(rule.getAttribute('y1'));
-        const y2 = parseFloat(rule.getAttribute('y2'));
+        const y1 = parseFloat(rule.getAttribute('y1')!);
+        const y2 = parseFloat(rule.getAttribute('y2')!);
 
         // Both ends should be inset by 10
         expect(y1).toBeGreaterThanOrEqual(10);
@@ -155,8 +155,8 @@ describe('RuleX mark', () => {
         });
 
         const rule = container.querySelector('g.rule-x > line') as SVGLineElement;
-        const y1 = parseFloat(rule.getAttribute('y1'));
-        const y2 = parseFloat(rule.getAttribute('y2'));
+        const y1 = parseFloat(rule.getAttribute('y1')!);
+        const y2 = parseFloat(rule.getAttribute('y2')!);
 
         // Top should be inset by 5
         expect(y1).toBeGreaterThanOrEqual(5);
@@ -180,8 +180,8 @@ describe('RuleX mark', () => {
         });
 
         const rule = container.querySelector('g.rule-x > line') as SVGLineElement;
-        const y1 = parseFloat(rule.getAttribute('y1'));
-        const y2 = parseFloat(rule.getAttribute('y2'));
+        const y1 = parseFloat(rule.getAttribute('y1')!);
+        const y2 = parseFloat(rule.getAttribute('y2')!);
 
         // Should use specified y1/y2 values (scaled)
         // Y-axis is inverted in SVG, so y1 (20) appears lower (higher value) than y2 (80)
@@ -227,8 +227,8 @@ describe('RuleX mark', () => {
     });
 
     it('passes index to accessor functions', () => {
-        const y1 = vi.fn((d, i) => i * 10);
-        const stroke = vi.fn((d, i) => 'gray');
+        const y1 = vi.fn((d: any, i: number) => i * 10);
+        const stroke = vi.fn((d: any, i: number) => 'gray');
         render(RuleXTest, {
             props: {
                 plotArgs: {

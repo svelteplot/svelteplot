@@ -138,12 +138,12 @@ describe('AxisY mark', () => {
     });
 
     it('passes index to accessor functions', () => {
-        const checkIndex = vi.fn((d) => d);
+        const checkIndex = vi.fn((d: any) => d);
         const { container } = render(AxisYTest, {
             props: {
                 plotArgs: { height: 250, y: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFontSize: (d, i) => checkIndex(i) + 5
+                    tickFontSize: (d: any, i: number) => checkIndex(i) + 5
                 }
             }
         });
@@ -158,12 +158,12 @@ describe('AxisY mark', () => {
     });
 
     it('passes index to tickFormat functions', () => {
-        const checkIndex = vi.fn((d) => String(d));
+        const checkIndex = vi.fn((d: any) => String(d));
         const { container } = render(AxisYTest, {
             props: {
                 plotArgs: { height: 250, y: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFormat: (d, i) => checkIndex(i)
+                    tickFormat: (d: any, i: number) => checkIndex(i)
                 }
             }
         });
@@ -178,13 +178,13 @@ describe('AxisY mark', () => {
     });
 
     it('passes ticks array to tickFormat functions', () => {
-        const checkTicks = vi.fn((d, i, ticks) => String(d));
+        const checkTicks = vi.fn((d: any, i: number, ticks: any[]) => String(d));
         const { container } = render(AxisYTest, {
             props: {
                 plotArgs: { width: 500, y: { domain: [0, 100] } },
                 axisArgs: {
                     interval: 20,
-                    tickFormat: (d, i, ticks) => checkTicks(d, i, ticks)
+                    tickFormat: (d: any, i: number, ticks: any[]) => checkTicks(d, i, ticks)
                 }
             }
         });
