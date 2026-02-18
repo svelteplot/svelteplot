@@ -25,7 +25,9 @@ export function resolveColor(color: string, canvas: HTMLCanvasElement) {
                 const y0 = +(gradient.getAttribute('y1') ?? 0);
                 const y1 = +(gradient.getAttribute('y2') ?? 0);
                 const ctx = canvas.getContext('2d');
-                if (!ctx) return color;
+                // If we cannot obtain a 2D context, fall back to a safe color instead of returning
+                // the original gradient URL (e.g., "url(#gradient1)"), which is not a valid canvas color.
+                if (!ctx) return 'transparent';
                 const ctxGradient = ctx.createLinearGradient(x0, y0, x1, y1);
                 for (const stop of gradient.querySelectorAll('stop')) {
                     const offset = +(stop.getAttribute('offset') ?? 0);
