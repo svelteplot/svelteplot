@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import { tick } from 'svelte';
-import SymbolLegendTest from './symbolLegend.test.svelte';
+import SymbolLegendTest from './symbolLegend.fixture.svelte';
 
 const catData = [
     { x: 1, y: 1, cat: 'A' },

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import LineTest from './line.test.svelte';
 
 describe('Line mark', () => {
@@ -194,7 +195,7 @@ describe('Line mark', () => {
                 ],
                 x: 'x',
                 y: 'y',
-                text: (d) => d.label
+                text: (d: any) => d.label
             }
         });
 
@@ -213,7 +214,7 @@ describe('Line mark', () => {
                 x: 'x',
                 y: 'y',
                 stroke: 'label',
-                text: (d) => d.label
+                text: (d: any) => d.label
             }
         });
 
@@ -345,14 +346,14 @@ describe('Line mark', () => {
     });
 });
 
-function formatHTML(html) {
+function formatHTML(html: string) {
     var tab = '\t';
     var result = '';
     var indent = '';
 
     html.replace(/<!---->/g, '')
         .split(/>\s*</)
-        .forEach(function (element) {
+        .forEach(function (element: string) {
             if (element.match(/^\/\w/)) {
                 indent = indent.substring(tab.length);
             }

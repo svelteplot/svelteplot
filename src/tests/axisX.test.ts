@@ -216,12 +216,12 @@ describe('AxisX mark', () => {
     });
 
     it('passes index to accessor functions', () => {
-        const checkIndex = vi.fn((d) => d);
+        const checkIndex = vi.fn((d: any) => d);
         const { container } = render(AxisXTest, {
             props: {
                 plotArgs: { width: 500, x: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFontSize: (d, i) => checkIndex(i) + 5
+                    tickFontSize: (d: any, i: number) => checkIndex(i) + 5
                 }
             }
         });
@@ -236,12 +236,12 @@ describe('AxisX mark', () => {
     });
 
     it('passes index to tickFormat functions', () => {
-        const checkIndex = vi.fn((d) => String(d));
+        const checkIndex = vi.fn((d: any) => String(d));
         const { container } = render(AxisXTest, {
             props: {
                 plotArgs: { width: 500, x: { domain: [0, 100] } },
                 axisArgs: {
-                    tickFormat: (d, i) => checkIndex(i)
+                    tickFormat: (d: any, i: number) => checkIndex(i)
                 }
             }
         });
@@ -256,13 +256,13 @@ describe('AxisX mark', () => {
     });
 
     it('passes ticks array to tickFormat functions', () => {
-        const checkTicks = vi.fn((d, i, ticks) => String(d));
+        const checkTicks = vi.fn((d: any, i: number, ticks: any[]) => String(d));
         const { container } = render(AxisXTest, {
             props: {
                 plotArgs: { width: 500, x: { domain: [0, 100] } },
                 axisArgs: {
                     interval: 20,
-                    tickFormat: (d, i, ticks) => checkTicks(d, i, ticks)
+                    tickFormat: (d: any, i: number, ticks: any[]) => checkTicks(d, i, ticks)
                 }
             }
         });
@@ -327,7 +327,7 @@ describe('AxisX mark', () => {
                     x: {
                         domain: [0, 4],
                         ticks: [1, 2, 3, 4],
-                        tickFormat(d, i) {
+                        tickFormat(d: any, i: number) {
                             return [i < 2 ? 'Foo' : 'Bar', d];
                         }
                     }
@@ -357,7 +357,7 @@ describe('AxisX mark', () => {
                         domain: [0, 4],
                         ticks: [1, 2, 3, 4],
                         removeDuplicateTicks: false,
-                        tickFormat(d, i) {
+                        tickFormat(d: any, i: number) {
                             return [i < 2 ? 'Foo' : 'Bar', d];
                         }
                     }

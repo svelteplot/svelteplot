@@ -44,6 +44,7 @@
 // more points.
 //
 
+import type { ScaleBand } from 'd3-scale';
 import type { Snippet } from 'svelte';
 import { getPatternId } from 'svelteplot/helpers/getBaseStyles';
 import type { StackOptions } from 'svelteplot/transforms/stack';
@@ -113,7 +114,7 @@ type WaffleProps = {
 
 export function wafflePolygon(
     y: 'x' | 'y',
-    options: WaffleOptions,
+    options: WaffleOptions<any>,
     scales: PlotScales
 ): (d: ScaledDataRecord) => WaffleProps {
     const x = y === 'y' ? 'x' : 'y';
@@ -121,14 +122,17 @@ export function wafflePolygon(
     const y2 = `${y}2`;
     const xScale = scales[x as 'x' | 'y'];
     const yScale = scales[y as 'x' | 'y'];
+    const xBandScale = xScale.fn as ScaleBand<string | number>;
+    const mapY = (value: number) =>
+        (yScale.fn as (input: number) => number | undefined)(value) ?? 0;
 
-    const barwidth = xScale.fn.bandwidth();
+    const barwidth = xBandScale.bandwidth();
 
     const { unit = 1, gap = 1 } = options;
     const round = maybeRound(options.round);
 
     // The length of a unit along y in pixels.
-    const scale = Math.abs(yScale.fn(unit) - yScale.fn(0));
+    const scale = Math.abs(mapY(unit) - mapY(0));
 
     // The number of cells on each row (or column) of the waffle.
     const multiple = options.multiple ?? Math.max(1, Math.floor(Math.sqrt(barwidth / scale)));
@@ -140,20 +144,21 @@ export function wafflePolygon(
     // The reference position.
     const tx = (barwidth - multiple * cx) / 2;
 
-    const transform = y === 'y' ? ([x, y]) => [x * cx, -y * cy] : ([x, y]) => [y * cy, x * cx];
+    const transform =
+        y === 'y' ? ([x, y]: Point) => [x * cx, -y * cy] : ([x, y]: Point) => [y * cy, x * cx];
     // const mx = typeof x0 === 'function' ? (i) => x0(i) - barwidth / 2 : () => x0;
     const [ix, iy] = y === 'y' ? [0, 1] : [1, 0];
 
-    const y0 = yScale.fn(0);
+    const y0 = mapY(0);
     const mx = -barwidth / 2;
 
     return (d: ScaledDataRecord) => {
-        const y1val = d.resolved[y1];
-        const y2val = d.resolved[y2];
+        const y1val = (d.resolved as any)[y1] as number;
+        const y2val = (d.resolved as any)[y2] as number;
         const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
         P.pop();
         const id = getPatternId();
-        const pos = [d[x] + tx + mx, y0];
+        const pos = [(d as any)[x] + tx + mx, y0];
         return {
             pattern: {
                 id,

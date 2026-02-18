@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { normalizeX, normalizeY, normalizeParallelX, normalizeParallelY } from './normalize.js';
+import type { DataRecord } from '../types/index.js';
 
 const data = [
     { id: 'a1', group: 'A', x: 1, y: 2 },
@@ -10,7 +11,7 @@ const data = [
 
 describe('normalizeY', () => {
     it('normalizes per group using sum as basis', () => {
-        const { data: normalized, ...channels } = normalizeY(
+        const { data: normalized, ...rest } = normalizeY<DataRecord>(
             {
                 data,
                 y: 'y',
@@ -18,14 +19,16 @@ describe('normalizeY', () => {
             },
             'sum'
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.y).toBe('__y');
+        const yChannel = channels['y'] as string;
+        expect(yChannel).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
         const result = normalized.map((d) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[yChannel]
         }));
 
         // For group A: y values are 2 and 4, sum = 6
@@ -39,7 +42,7 @@ describe('normalizeY', () => {
     });
 
     it('excepts options as object', () => {
-        const { data: normalized, ...channels } = normalizeY(
+        const { data: normalized, ...rest } = normalizeY<DataRecord>(
             {
                 data,
                 y: 'y',
@@ -47,14 +50,16 @@ describe('normalizeY', () => {
             },
             { basis: 'sum' }
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.y).toBe('__y');
+        const yChannel = channels['y'] as string;
+        expect(yChannel).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
         const result = normalized.map((d) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[yChannel]
         }));
 
         // For group A: y values are 2 and 4, sum = 6
@@ -68,7 +73,7 @@ describe('normalizeY', () => {
     });
 
     it('normalizes to [0, 1] range using extent as basis', () => {
-        const { data: normalized, ...channels } = normalizeY(
+        const { data: normalized, ...rest } = normalizeY<DataRecord>(
             {
                 data,
                 y: 'y',
@@ -76,13 +81,15 @@ describe('normalizeY', () => {
             },
             'extent'
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.y).toBe('__y');
+        const yChannel = channels['y'] as string;
+        expect(yChannel).toBe('__y');
 
         const result = normalized.map((d) => ({
             id: d.id,
             group: d.group,
-            y: d[channels.y]
+            y: d[yChannel]
         }));
 
         // For group A: y values 2, 4 -> (y - 2) / (4 - 2)
@@ -98,19 +105,21 @@ describe('normalizeY', () => {
 
 describe('normalizeX', () => {
     it('normalizes using max as basis', () => {
-        const { data: normalized, ...channels } = normalizeX(
+        const { data: normalized, ...rest } = normalizeX<DataRecord>(
             {
                 data,
                 x: 'x'
             },
             'max'
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.x).toBe('__x');
+        const xChannel = channels['x'] as string;
+        expect(xChannel).toBe('__x');
 
         const result = normalized.map((d) => ({
             id: d.id,
-            x: d[channels.x]
+            x: d[xChannel]
         }));
 
         // x values: 1, 3, 2, 4 -> max = 4
@@ -132,7 +141,7 @@ describe('normalizeParallelY', () => {
             { Id: 'row2', Measurement: 'm2', Value: 6 }
         ];
 
-        const { data: normalized, ...channels } = normalizeParallelY(
+        const { data: normalized, ...rest } = normalizeParallelY<DataRecord>(
             {
                 data: parallelData,
                 x: 'Measurement',
@@ -141,16 +150,18 @@ describe('normalizeParallelY', () => {
             },
             'extent'
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.y).toBe('__y');
+        const yChannel = channels['y'] as string;
+        expect(yChannel).toBe('__y');
         // grouping is restored by original z channel
-        expect(channels.z).toBe('Id');
+        expect(channels['z']).toBe('Id');
 
         const result = normalized.map((d) => ({
-            Id: d.Id,
-            Measurement: d.Measurement,
-            Value: d.Value,
-            y: d[channels.y]
+            Id: d['Id'],
+            Measurement: d['Measurement'],
+            Value: d['Value'],
+            y: d[yChannel]
         }));
 
         // For each Measurement (axis) independently:
@@ -176,7 +187,7 @@ describe('normalizeParallelX', () => {
             { Id: 'row2', Measurement: 'm2', Value: 6 }
         ];
 
-        const { data: normalized, ...channels } = normalizeParallelX(
+        const { data: normalized, ...rest } = normalizeParallelX<DataRecord>(
             {
                 data: parallelData,
                 x: 'Value',
@@ -185,16 +196,18 @@ describe('normalizeParallelX', () => {
             },
             'extent'
         );
+        const channels = rest as Record<string, unknown>;
 
-        expect(channels.x).toBe('__x');
+        const xChannel = channels['x'] as string;
+        expect(xChannel).toBe('__x');
         // grouping is restored by original z channel
-        expect(channels.z).toBe('Id');
+        expect(channels['z']).toBe('Id');
 
         const result = normalized.map((d) => ({
-            Id: d.Id,
-            Measurement: d.Measurement,
-            Value: d.Value,
-            x: d[channels.x]
+            Id: d['Id'],
+            Measurement: d['Measurement'],
+            Value: d['Value'],
+            x: d[xChannel]
         }));
 
         // For each Measurement (axis) independently (now along x):

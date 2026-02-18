@@ -70,58 +70,60 @@ function normalize(options: NormalizeOptions): MapIndexObject {
 
 function normalizeBasis(basis: BasisFunction): MapIndexObject {
     return {
-        mapIndex(I, S, T) {
+        mapIndex(I: number[], S: RawValue[], T: RawValue[]) {
             const b = +basis(I, S);
             for (const i of I) {
-                T[i] = S[i] === null ? NaN : S[i] / b;
+                T[i] = S[i] === null ? NaN : (S[i] as number) / b;
             }
         }
     };
 }
 
-function normalizeAccessor(f) {
-    return normalizeBasis((I, S) => f(I, (i) => S[i]));
+function normalizeAccessor(f: (I: number[], accessor: (i: number) => any) => number) {
+    return normalizeBasis((I, S) => f(I, (i: number) => S[i]));
 }
 
 const normalizeExtent: MapIndexObject = {
-    mapIndex(I, S, T) {
-        const [s1, s2] = extent(I, (i) => S[i]);
-        const d = s2 - s1;
+    mapIndex(I: number[], S: RawValue[], T: RawValue[]) {
+        const [s1, s2] = extent(I, (i) => S[i] as number);
+        const d = (s2 ?? 0) - (s1 ?? 0);
         for (const i of I) {
-            T[i] = S[i] === null ? NaN : (S[i] - s1) / d;
+            T[i] = S[i] === null ? NaN : ((S[i] as number) - (s1 ?? 0)) / d;
         }
     }
 };
 
-const normalizeFirst = normalizeBasis((I, S) => {
+const normalizeFirst = normalizeBasis((I: number[], S: RawValue[]) => {
     for (let i = 0; i < I.length; ++i) {
         const s = S[I[i]];
-        if (s != null && isFinite(s)) return s;
+        if (s != null && isFinite(s as number)) return s as number;
     }
+    return NaN;
 });
 
-const normalizeLast = normalizeBasis((I, S) => {
+const normalizeLast = normalizeBasis((I: number[], S: RawValue[]) => {
     for (let i = I.length - 1; i >= 0; --i) {
         const s = S[I[i]];
-        if (s != null && isFinite(s)) return s;
+        if (s != null && isFinite(s as number)) return s as number;
     }
+    return NaN;
 });
 
-const normalizeDeviation = {
-    mapIndex(I: number[], S: RawValue[], T: number[]) {
-        const m = mean(I, (i) => S[i]);
-        const d = deviation(I, (i) => S[i]);
+const normalizeDeviation: MapIndexObject = {
+    mapIndex(I: number[], S: RawValue[], T: RawValue[]) {
+        const m = mean(I, (i) => S[i] as number);
+        const d = deviation(I, (i) => S[i] as number);
         for (const i of I) {
-            T[i] = S[i] === null ? NaN : d ? (S[i] - m) / d : 0;
+            T[i] = S[i] === null ? NaN : d ? ((S[i] as number) - (m ?? 0)) / d : 0;
         }
     }
 };
 
-const normalizeMax = normalizeAccessor(max);
-const normalizeMean = normalizeAccessor(mean);
-const normalizeMedian = normalizeAccessor(median);
-const normalizeMin = normalizeAccessor(min);
-const normalizeSum = normalizeAccessor(sum);
+const normalizeMax = normalizeAccessor(max as any);
+const normalizeMean = normalizeAccessor(mean as any);
+const normalizeMedian = normalizeAccessor(median as any);
+const normalizeMin = normalizeAccessor(min as any);
+const normalizeSum = normalizeAccessor(sum as any);
 
 /**
  * Convenience wrapper for normalizeY for parallel coordinates.
@@ -148,8 +150,8 @@ export function normalizeParallelY<T>(
         // restore original grouping by line
         z: args.z,
         // sort by original order
-        sort: args.z
-    });
+        sort: args.z as any
+    } as unknown as TransformArg<T>);
 }
 
 /**
@@ -177,6 +179,6 @@ export function normalizeParallelX<T>(
         // restore original grouping by line
         z: args.z,
         // sort by original order
-        sort: args.z
-    });
+        sort: args.z as any
+    } as unknown as TransformArg<T>);
 }
