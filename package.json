@@ -68,7 +68,7 @@
         "format": "eslint --fix package.json && prettier --write .",
         "lint": "prettier --check src && eslint src package.json",
         "lint:oxlint": "oxlint --type-aware",
-        "lint:types": "tsc --noEmit",
+        "lint:types": "svelte-kit sync && tsc --noEmit -p tsconfig.lint-types.json",
         "prepack": "npx svelte-package",
         "preview": "vite preview",
         "release-next": "npm version prerelease --preid next && npm publish && git push && git push --tags && sleep 1 && npm dist-tag add svelteplot@$(npm view . version) next",
