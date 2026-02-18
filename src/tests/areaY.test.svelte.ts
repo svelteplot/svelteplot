@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import AreaYTest from './areaY.test.svelte';
 
 describe('AreaY mark', () => {
@@ -99,7 +100,7 @@ describe('AreaY mark', () => {
                     y: 'y',
                     fill: 'g',
                     class: 'my-area-group',
-                    areaClass: (d) => `my-area-${d.g}`
+                    areaClass: (d: any) => `my-area-${d.g}`
                 }
             }
         });

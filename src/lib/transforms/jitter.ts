@@ -1,4 +1,4 @@
-import type { TransformArg, TransformReturn } from '../types/index.js';
+import type { TransformArg } from '../types/index.js';
 import { resolveChannel } from '../helpers/resolve.js';
 import { randomUniform, randomNormal } from 'd3-random';
 import { isDate } from '../helpers/typeChecks.js';
@@ -24,14 +24,14 @@ type JitterOptions = {
 /**
  * adds random noise to the x channel values
  */
-export function jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'> {
+export function jitterX<T>(args: TransformArg<T>, options: JitterOptions) {
     return jitter(args, { x: options });
 }
 
 /**
  * adds random noise to the y channel values
  */
-export function jitterY<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'y'> {
+export function jitterY<T>(args: TransformArg<T>, options: JitterOptions) {
     return jitter(args, { y: options });
 }
 
@@ -40,10 +40,10 @@ type PositionalScale = 'x' | 'x1' | 'x2' | 'y' | 'y1' | 'y2';
 /**
  * adds random noise to one or more positional channels
  */
-export function jitter<T, C extends TransformArg<T>>(
-    { data, ...channels }: C,
+export function jitter<T>(
+    { data, ...channels }: TransformArg<T>,
     options: Partial<Record<PositionalScale, JitterOptions>>
-): TransformReturn<C, T> {
+) {
     const jitterChannels = (Object.keys(options) as PositionalScale[]).filter((ch) => channels[ch]);
     // if no jitter channels are defined return early
     if (!jitterChannels.length)
@@ -72,8 +72,8 @@ export function jitter<T, C extends TransformArg<T>>(
     ) as Record<PositionalScale, () => number>;
 
     return {
-        data: data.map((row) => {
-            let newRow: T = { ...row };
+        data: data.map((row: T) => {
+            let newRow = { ...row } as T;
             jitterChannels.forEach((channel) => {
                 const value = resolveChannel(channel, row, channels);
                 const random = jitterFns[channel];
