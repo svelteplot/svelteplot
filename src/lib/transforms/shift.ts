@@ -23,7 +23,11 @@ export function shiftX(
         shiftBy = { x: shiftBy };
     }
     if (shiftBy) {
-        if (shiftBy) return shiftChannels('x', shiftBy, { data, ...channels });
+        if (shiftBy)
+            return shiftChannels('x', shiftBy as Record<string, string | number>, {
+                data,
+                ...channels
+            });
     }
     return { data, ...channels };
 }
@@ -43,18 +47,22 @@ export function shiftY(
     if (typeof shiftBy === 'number' || typeof shiftBy === 'string') {
         shiftBy = { y: shiftBy };
     }
-    if (shiftBy) return shiftChannels('y', shiftBy, { data, ...channels });
+    if (shiftBy)
+        return shiftChannels('y', shiftBy as Record<string, string | number>, {
+            data,
+            ...channels
+        });
     return { data, ...channels };
 }
 
 function shiftChannels(
     shiftDim: 'x' | 'y',
-    shiftBy: RequireAtLeastOne<ShiftYOptions | ShiftXOptions>,
-    { data, ...channels }
+    shiftBy: Record<string, string | number>,
+    { data, ...channels }: TransformArg<DataRecord>
 ) {
     return {
-        data: data.map((d) => {
-            const newRow = { ...d };
+        data: data.map((d: DataRecord) => {
+            const newRow: DataRecord = { ...d };
             for (const [channel, shift] of Object.entries(shiftBy)) {
                 const shiftFrom = (channels[channel] != null ? channel : shiftDim) as
                     | 'x'
@@ -67,12 +75,14 @@ function shiftChannels(
                     newRow[`__shift_${channel}`] =
                         (resolveChannel(shiftFrom, d, channels) as number) + shift;
                 } else if (typeof shift === 'string') {
-                    const [, sign, value, unit] = shift.match(/^([+-])?(\d+)? ?([a-z]+)$/);
-                    const step = (sign === '-' ? -1 : 1) * (value || 1);
+                    const match = shift.match(/^([+-])?(\d+)? ?([a-z]+)$/);
+                    if (!match) throw new Error(`Invalid shift format: ${shift}`);
+                    const [, sign, value, unit] = match;
+                    const step = (sign === '-' ? -1 : 1) * (Number(value) || 1);
                     const interval = maybeTimeInterval(unit);
                     if (!interval) throw new Error(`Invalid shift interval: ${shift}`);
                     newRow[`__shift_${channel}`] = interval.offset(
-                        resolveChannel(shiftFrom, d, channels),
+                        resolveChannel(shiftFrom, d, channels) as Date,
                         step
                     );
                 }

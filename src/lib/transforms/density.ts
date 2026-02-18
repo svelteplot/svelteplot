@@ -15,18 +15,19 @@ import { maybeInterval } from '../helpers/autoTicks';
 import { groupFacetsAndZ } from '../helpers/group';
 import isDataRecord from '../helpers/isDataRecord';
 import { resolveChannel } from '../helpers/resolve';
-import type { TransformArg } from '../types';
+import type { DataRecord, TransformArg } from '../types';
 import { ORIGINAL_NAME_KEYS } from '../constants.js';
 
-type Kernel =
+type KernelName =
     | 'uniform'
     | 'triangular'
     | 'epanechnikov'
     | 'quartic'
     | 'triweight'
     | 'gaussian'
-    | 'cosine'
-    | ((u: number) => number);
+    | 'cosine';
+
+type Kernel = KernelName | ((u: number) => number);
 
 type DensityOptions<T> = {
     /**
@@ -53,7 +54,7 @@ type DensityOptions<T> = {
 };
 
 // see https://github.com/jasondavies/science.js/blob/master/src/stats/kernel.js
-const KERNEL = {
+const KERNEL: Record<KernelName, (u: number) => number> = {
     uniform(u: number): number {
         if (u <= 1 && u >= -1) return 0.5;
         return 0;
@@ -114,7 +115,7 @@ const CHANNELS = {
     y: Symbol('y')
 };
 
-const BANDWIDTH_FACTOR = {
+const BANDWIDTH_FACTOR: Record<KernelName, number> = {
     gaussian: 0.9,
     epanechnikov: 2.34,
     uniform: 1.06,
@@ -125,11 +126,11 @@ const BANDWIDTH_FACTOR = {
 };
 
 function bandwidthSilverman(x: number[]) {
-    const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
+    const iqr = quantileSorted(x, 0.75)! - quantileSorted(x, 0.25)!;
     const xvar = variance(x);
 
-    const hi = Math.sqrt(xvar);
-    let lo;
+    const hi = Math.sqrt(xvar!);
+    let lo: number;
     if (!(lo = Math.min(hi, iqr / 1.34))) {
         (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
     }
@@ -155,63 +156,69 @@ function density1d<T>(
     const densityChannel = independent === 'x' ? 'y' : 'x';
 
     const { kernel, bandwidth, interval, trim, channel, cumulative } = {
-        kernel: 'epanechnikov',
-        bandwidth: bandwidthSilverman,
-        interval: undefined,
+        kernel: 'epanechnikov' as Kernel,
+        bandwidth: bandwidthSilverman as number | ((data: number[]) => number),
+        interval: undefined as number | string | undefined,
         trim: false,
-        cumulative: false,
+        cumulative: false as false | 1 | -1,
         channel: densityChannel,
         ...options
     };
     // one-dimensional kernel density estimation
     const k = maybeKernel(kernel || KERNEL.epanechnikov);
 
-    const outData = [];
+    const outData: DataRecord[] = [];
 
     const isRawDataArray =
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
 
     // compute bandwidth before grouping
-    const resolvedData: T[] = (
+    const resolvedData = (
         isRawDataArray
             ? data.map(
-                  (d) =>
+                  (d: any) =>
                       ({
                           [VALUE]: d,
-                          [WEIGHT]: typeof weight === 'function' ? weight(d) : 1
+                          [WEIGHT]: typeof weight === 'function' ? (weight as any)(d) : 1
                       }) as any
               )
-            : data.map((d) => ({
+            : data.map((d: any) => ({
                   [VALUE]: resolveChannel(independent, d, channels),
-                  [WEIGHT]: typeof weight === 'function' ? weight(d) : 1,
+                  [WEIGHT]: typeof weight === 'function' ? (weight as any)(d) : 1,
                   ...d
               }))
-    ).filter((d) => isValid(d[VALUE]) && isValid(d[WEIGHT]) && d[WEIGHT] >= 0);
+    ).filter(
+        (d: any) => isValid(d[VALUE]) && isValid(d[WEIGHT]) && (d[WEIGHT] as number) >= 0
+    ) as DataRecord[];
 
-    const values = resolvedData.map((d) => d[VALUE]);
+    const values = resolvedData.map((d: any) => d[VALUE] as number);
 
     // compute bandwidth from full data
+    const kernelName = typeof kernel === 'string' ? kernel : null;
     const bw =
         typeof bandwidth === 'function'
-            ? (BANDWIDTH_FACTOR[kernel] ?? 1) * bandwidth(values.toSorted((a, b) => a - b))
+            ? ((kernelName ? BANDWIDTH_FACTOR[kernelName] : null) ?? 1) *
+              bandwidth(values.toSorted((a: number, b: number) => a - b))
             : bandwidth;
 
-    const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
-    let [min, max] = extent(values);
+    const I = maybeInterval(interval ?? roundToTerminating(bw / 5))!;
+    let [min, max] = extent(values) as [number | undefined, number | undefined];
     if (!trim) {
-        const r = max - min;
-        min = I.floor(min - r * 0.2);
-        max = I.floor(max + r * 0.2);
+        const r = (max ?? 0) - (min ?? 0);
+        min = (I as any).floor((min ?? 0) - r * 0.2);
+        max = (I as any).floor((max ?? 0) + r * 0.2);
     }
-    const atValues = I.range(I.floor(min), I.offset(max)).map((d) => +d.toFixed(5));
+    const atValues = (I as any)
+        .range((I as any).floor(min), (I as any).offset(max))
+        .map((d: number) => +d.toFixed(5));
     // let minX = Infinity;
     // let maxX = -Infinity;
 
-    const res = groupFacetsAndZ(resolvedData, channels, (items, groupProps) => {
-        const values = items.map((d) => d[VALUE]);
-        const weights = items.map((d) => d[WEIGHT]);
+    const res = groupFacetsAndZ(resolvedData, channels as any, (items: any[], groupProps) => {
+        const values = items.map((d: any) => d[VALUE] as number);
+        const weights = items.map((d: any) => d[WEIGHT] as number);
 
-        let kdeValues = kde1d(values as number[], weights, atValues, k, bw, cumulative)
+        let kdeValues = kde1d(values, weights, atValues, k, bw, cumulative)
             .filter(([x, density]) => x != null && !isNaN(density))
             .sort((a, b) => a[0] - b[0]);
 
@@ -250,7 +257,7 @@ function density1d<T>(
             typeof channels[independent] === 'string' ? channels[independent] : undefined,
         sort: [{ channel: CHANNELS[independent], order: 'ascending' }],
         data: outData
-    };
+    } as any;
 }
 
 function kde1d(

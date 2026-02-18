@@ -70,23 +70,30 @@ const ThresholdGenerators: { [k in NamedThresholdsGenerator]: ThresholdCountGene
     'freedman-diaconis': thresholdFreedmanDiaconis
 };
 
-function binBy(byDim: 'x' | 'y', { data, ...channels }, options: BinOptions) {
+function binBy(
+    byDim: 'x' | 'y',
+    { data, ...channels }: TransformArg<DataRecord>,
+    options: BinOptions
+) {
     const { domain, thresholds = 'auto', interval } = options;
-    const bin = d3Bin();
+    const bin = d3Bin<DataRecord, number>();
     if (domain) bin.domain(domain);
     if (interval) {
-        const [lo, hi] = extent(data.map((d) => resolveChannel(byDim, d, channels)));
-        bin.thresholds(maybeInterval(interval).range(lo, hi));
+        const [lo, hi] = extent(
+            data.map((d: DataRecord) => resolveChannel(byDim, d, channels) as number)
+        );
+        const iv = maybeInterval(interval);
+        if (iv) bin.thresholds((iv as any).range(lo, hi));
     } else if (thresholds)
         bin.thresholds(
             // use a generator
             typeof thresholds === 'string' && ThresholdGenerators[thresholds] !== undefined
                 ? ThresholdGenerators[thresholds]
-                : thresholds
+                : (thresholds as any)
         );
 
     // channels.x is the input
-    bin.value((d) => resolveChannel(byDim, d, channels));
+    bin.value((d: DataRecord) => resolveChannel(byDim, d, channels) as number);
 
     // y, y1, y2, fill, stroke, etc are outputs
     const outputs = [
@@ -109,28 +116,37 @@ function binBy(byDim: 'x' | 'y', { data, ...channels }, options: BinOptions) {
         [ORIGINAL_NAME_KEYS[byDim]]: typeof channels[byDim] === 'string' ? channels[byDim] : null
     };
 
-    const newData = [];
+    const newData: DataRecord[] = [];
 
     let passedGroups: DataRecord[] = [];
 
     const bins = bin(data);
 
-    (options.cumulative < 0 ? bins.toReversed() : bins).forEach((group) => {
+    (((options.cumulative ?? 0) as number) < 0 ? bins.toReversed() : bins).forEach((group) => {
+        const x0 = group.x0;
+        const x1 = group.x1;
         const itemBinProps: DataRecord = {
-            [CHANNELS[`${byDim}1`]]: group.x0,
-            [CHANNELS[`${byDim}2`]]: group.x1,
-            [CHANNELS[`${byDim}`]]: isDate(group.x0)
-                ? new Date(Math.round((group.x0.getTime() + group.x1.getTime()) * 0.5))
-                : (group.x0 + group.x1) * 0.5
+            [CHANNELS[`${byDim}1`]]: x0 as RawValue,
+            [CHANNELS[`${byDim}2`]]: x1 as RawValue,
+            [CHANNELS[`${byDim}`]]: isDate(x0 as RawValue)
+                ? new Date(Math.round(((x0 as any).getTime() + (x1 as any).getTime()) * 0.5))
+                : ((x0 ?? 0) + (x1 ?? 0)) * 0.5
         };
         if (options.cumulative) passedGroups = [...passedGroups, ...group];
 
         const newGroupChannels = groupFacetsAndZ(
-            options.cumulative ? passedGroups : group,
+            options.cumulative ? passedGroups : (group as DataRecord[]),
             channels,
             (items, itemGroupProps) => {
-                const item = { ...itemBinProps, ...itemGroupProps };
-                reduceOutputs(item, items, options, outputs, channels, newChannels);
+                const item = { ...itemBinProps, ...itemGroupProps } as DataRecord;
+                reduceOutputs(
+                    item,
+                    items as DataRecord[],
+                    options as any,
+                    outputs as any,
+                    channels as any,
+                    newChannels as any
+                );
                 newData.push(item);
             }
         );
@@ -147,10 +163,10 @@ function binBy(byDim: 'x' | 'y', { data, ...channels }, options: BinOptions) {
  * @param param0
  * @param options
  */
-export function binX<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function binX(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: BinXOptions = { thresholds: 'auto', cumulative: false }
-): TransformArg<T, DataRecord> {
+): TransformArg<DataRecord> {
     return binBy('x', { data, ...channels }, options);
 }
 
@@ -160,24 +176,24 @@ export function binX<T>(
  * @param param0
  * @param options
  */
-export function binY<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function binY(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: BinYOptions = { thresholds: 'auto', cumulative: false }
-): TransformArg<T, DataRecord> {
+): TransformArg<DataRecord> {
     return binBy('y', { data, ...channels }, options);
 }
 
 /**
  * for binning in x and y dimension simultaneously
  */
-export function bin<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function bin(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: BinOptions = { thresholds: 'auto', cumulative: false }
-): TransformArg<T, DataRecord> {
+): TransformArg<DataRecord> {
     const { domain, thresholds = 'auto', interval, cumulative = false } = options;
 
-    const binX = d3Bin();
-    const binY = d3Bin();
+    const binX = d3Bin<DataRecord, number>();
+    const binY = d3Bin<DataRecord, number>();
 
     if (domain) {
         // this really doesn't make sense...
@@ -186,16 +202,23 @@ export function bin<T>(
     }
 
     // channels.x is the input
-    binX.value((d) => resolveChannel('x', d, channels));
-    binY.value((d) => resolveChannel('y', d, channels));
+    binX.value((d: DataRecord) => resolveChannel('x', d, channels) as number);
+    binY.value((d: DataRecord) => resolveChannel('y', d, channels) as number);
 
     let yThresholds: number[] | Date[] = [];
 
     if (interval) {
-        const [xlo, xhi] = extent(data.map((d) => resolveChannel('x', d, channels)));
-        const [ylo, yhi] = extent(data.map((d) => resolveChannel('y', d, channels)));
-        binX.thresholds(maybeInterval(interval).range(xlo, xhi));
-        binY.thresholds((yThresholds = maybeInterval(interval).range(ylo, yhi)));
+        const [xlo, xhi] = extent(
+            data.map((d: DataRecord) => resolveChannel('x', d, channels) as number)
+        );
+        const [ylo, yhi] = extent(
+            data.map((d: DataRecord) => resolveChannel('y', d, channels) as number)
+        );
+        const ivl = maybeInterval(interval);
+        if (ivl) {
+            binX.thresholds((ivl as any).range(xlo, xhi));
+            binY.thresholds((yThresholds = (ivl as any).range(ylo, yhi)));
+        }
     } else if (thresholds) {
         // when binning in x and y, we need to ensure we are using consistent thresholds
         const t =
@@ -203,14 +226,14 @@ export function bin<T>(
                 ? ThresholdGenerators[thresholds]
                 : thresholds;
 
-        binX.thresholds(t);
-        binY.thresholds(t);
+        binX.thresholds(t as any);
+        binY.thresholds(t as any);
 
         yThresholds = binY(data)
             .slice(1)
-            .map((g) => g.x0);
+            .map((g) => g.x0) as number[];
 
-        binY.thresholds(yThresholds);
+        binY.thresholds(yThresholds as any);
     }
 
     // y, y1, y2, fill, stroke, etc are outputs
@@ -233,24 +256,28 @@ export function bin<T>(
     const groupByPropName =
         groupBy !== true && typeof channels[groupBy] === 'string' ? channels[groupBy] : '__group';
 
-    if (groupBy !== true) newChannels[groupBy] = groupByPropName;
+    if (groupBy !== true) (newChannels as any)[groupBy] = groupByPropName;
 
     // consistent intervals
 
-    const newData = [];
+    const newData: DataRecord[] = [];
     binX(data).forEach((groupX) => {
-        const newRecordBaseX = {
-            [CHANNELS.x1]: groupX.x0,
-            [CHANNELS.x2]: groupX.x1,
-            [CHANNELS.x]: isDate(groupX.x0)
-                ? new Date(Math.round((groupX.x0.getTime() + groupX.x1.getTime()) * 0.5))
-                : (groupX.x0 + groupX.x1) * 0.5
+        const gx0 = groupX.x0 as number | undefined;
+        const gx1 = groupX.x1 as number | undefined;
+        const newRecordBaseX: DataRecord = {
+            [CHANNELS.x1]: gx0 as RawValue,
+            [CHANNELS.x2]: gx1 as RawValue,
+            [CHANNELS.x]: isDate(gx0 as RawValue)
+                ? new Date(Math.round(((gx0 as any).getTime() + (gx1 as any).getTime()) * 0.5))
+                : ((gx0 ?? 0) + (gx1 ?? 0)) * 0.5
         };
 
-        const [ylo, yhi] = extent(groupX.map((d) => resolveChannel('y', d, channels)));
+        const [ylo, yhi] = extent(
+            groupX.map((d: DataRecord) => resolveChannel('y', d, channels) as number)
+        );
 
-        const tExtentLo = yThresholds.filter((d) => d < ylo).at(-1);
-        const tExtentHi = yThresholds.filter((d) => d > yhi).at(0);
+        const tExtentLo = (yThresholds as number[]).filter((d) => d < (ylo as number)).at(-1);
+        const tExtentHi = (yThresholds as number[]).filter((d) => d > (yhi as number)).at(0);
 
         binY(groupX).forEach((groupY, i) => {
             if (groupY.length === 0) return;
@@ -259,23 +286,34 @@ export function bin<T>(
             // therefore we need to align with the thresholds
             const y1 = groupY.x0 === ylo ? tExtentLo : groupY.x0;
             const y2 = groupY.x1 === yhi ? tExtentHi : groupY.x1;
-            const newRecordBaseY = {
+            const newRecordBaseY: DataRecord = {
                 ...newRecordBaseX,
-                [CHANNELS.y1]: y1,
-                [CHANNELS.y2]: y2,
-                [CHANNELS.y]: isDate(y1)
-                    ? new Date(Math.round((y1.getTime() + y2.getTime()) * 0.5))
-                    : (y1 + y2) * 0.5
+                [CHANNELS.y1]: y1 as RawValue,
+                [CHANNELS.y2]: y2 as RawValue,
+                [CHANNELS.y]: isDate(y1 as RawValue)
+                    ? new Date(Math.round(((y1 as any).getTime() + (y2 as any).getTime()) * 0.5))
+                    : ((y1 ?? 0) + (y2 ?? 0)) * 0.5
             };
 
-            const newGroupChannels = groupFacetsAndZ(groupY, channels, (items, itemGroupProps) => {
-                const newRecord = {
-                    ...newRecordBaseY,
-                    ...itemGroupProps
-                };
-                reduceOutputs(newRecord, items, options, outputs, channels, newChannels);
-                newData.push(newRecord);
-            });
+            const newGroupChannels = groupFacetsAndZ(
+                groupY as DataRecord[],
+                channels,
+                (items, itemGroupProps) => {
+                    const newRecord = {
+                        ...newRecordBaseY,
+                        ...itemGroupProps
+                    } as DataRecord;
+                    reduceOutputs(
+                        newRecord,
+                        items as DataRecord[],
+                        options as any,
+                        outputs as any,
+                        channels as any,
+                        newChannels as any
+                    );
+                    newData.push(newRecord);
+                }
+            );
 
             newChannels = { ...newChannels, ...newGroupChannels };
         });
