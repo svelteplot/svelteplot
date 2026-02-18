@@ -4,7 +4,9 @@ import { resolveChannel } from './resolve.js';
 import { POSITION_CHANNELS } from './index.js';
 import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
 
-type ReducerFunc = (group: Iterable<DataRow>) => RawValue;
+// Permissive to accept d3-array functions which have overloaded signatures
+// with optional accessor params and may return undefined
+type ReducerFunc = (group: Iterable<any>, ...rest: any[]) => any;
 type ReducerOption = ReducerName | ReducerFunc;
 
 type Digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -32,13 +34,15 @@ export type ReducerName =
     | 'variance'
     | ReducerPercentile;
 
-const niceReduceNames: Partial<Record<ReducerName, string>> = {
+const niceReduceNames: Record<string, string> = {
     count: 'Frequency',
     deviation: 'Standard Deviation',
     mean: 'Average'
 };
 
-const StaticReducer: Record<ReducerName, ReducerFunc> = {
+// Typed as Record<string, ...> because the Proxy wrapper adds virtual
+// percentile keys (p00–p99) that don't exist on the static object
+const StaticReducer: Record<string, ReducerFunc> = {
     count: (d) => Array.from(d).length,
     min,
     max,
@@ -46,13 +50,13 @@ const StaticReducer: Record<ReducerName, ReducerFunc> = {
     sum,
     mean,
     median,
-    identity: (d) => d,
+    identity: (d: Iterable<DataRow>) => d,
     variance,
     deviation,
-    first: (d: number[]) => d[0],
-    last: (d: number[]) => d.at(-1),
-    difference: (d: number[]) => d.at(-1) - d[0],
-    ratio: (d: number[]) => d.at(-1) / d[0]
+    first: ((d: any[]) => d[0]) as ReducerFunc,
+    last: ((d: any[]) => d.at(-1)) as ReducerFunc,
+    difference: ((d: any[]) => d.at(-1) - d[0]) as ReducerFunc,
+    ratio: ((d: any[]) => d.at(-1) / d[0]) as ReducerFunc
     // TODO: proportion
     // TODO: proportion-facet
     // TODO: min-index
@@ -97,8 +101,8 @@ export function reduceOutputs(
     data: DataRecord[],
     options: Record<ChannelName, ReducerOption>,
     outputs: Iterable<ChannelName>,
-    channels: Channels,
-    newChannels: Channels
+    channels: Channels<any>,
+    newChannels: Channels<any>
 ) {
     for (const k of outputs) {
         if (options[k] != null) {
@@ -111,7 +115,7 @@ export function reduceOutputs(
 
             if (typeof options[k] === 'string') {
                 const reducerName =
-                    niceReduceNames[options[k] as ReducerName] ??
+                    niceReduceNames[options[k] as string] ??
                     `${String(options[k]).charAt(0).toUpperCase()}${String(options[k]).slice(1)}`;
                 // we have a named reducer like 'count', so let's try to preserve the
                 // source channel mapping for axis labels

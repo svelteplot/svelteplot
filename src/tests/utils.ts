@@ -5,10 +5,10 @@ export function getRectDims(rect: SVGRectElement) {
         ?.getAttribute('transform')
         ?.match(/translate\((\d+(?:\.\d+)?),(\d+(?:\.\d+)?)\)/);
     return {
-        x: Math.round(+t[1]),
-        y: Math.round(+t[2]),
-        w: Math.round(+rect.getAttribute('width')),
-        h: Math.round(+rect.getAttribute('height')),
+        x: Math.round(+t![1]),
+        y: Math.round(+t![2]),
+        w: Math.round(+rect.getAttribute('width')!),
+        h: Math.round(+rect.getAttribute('height')!),
         fill: rect.style.fill,
         stroke: rect.style.stroke,
         strokeWidth: rect.style.strokeWidth
@@ -24,9 +24,9 @@ export function getTranslate(element: SVGElement) {
 }
 
 export function getPathDims(path: SVGPathElement) {
-    const r = makeAbsolute(parseSVG(path.getAttribute('d')));
-    const x = r.flatMap((d) => [d.x, d.x0, d.x1]).filter((x) => x != null);
-    const y = r.flatMap((d) => [d.y, d.y0, d.y1]).filter((y) => y != null);
+    const r = makeAbsolute(parseSVG(path.getAttribute('d')!));
+    const x = r.flatMap((d: any) => [d.x, d.x0, d.x1]).filter((x: number | undefined) => x != null);
+    const y = r.flatMap((d: any) => [d.y, d.y0, d.y1]).filter((y: number | undefined) => y != null);
     const [tx, ty] = getTranslate(path);
     return {
         x: Math.round(Math.min(...x)) + tx,
@@ -40,5 +40,5 @@ export function getPathDims(path: SVGPathElement) {
 }
 
 export function parsePath(path: SVGPathElement) {
-    return makeAbsolute(parseSVG(path.getAttribute('d')));
+    return makeAbsolute(parseSVG(path.getAttribute('d')!));
 }

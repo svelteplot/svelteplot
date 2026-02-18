@@ -7,9 +7,9 @@ type Setter = (v: any) => void;
  * property setter functions on the result.
  */
 export default function <T extends object>(
-    d3func: (...args: RawValue[]) => T,
-    args: RawValue[] = [],
-    props: Record<string, RawValue> = {}
+    d3func: (...args: any[]) => T,
+    args: any[] = [],
+    props: Record<string, any> = {}
 ): T {
     const res = d3func(...args);
     const resWithKeys = res as Record<string, unknown>;

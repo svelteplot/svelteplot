@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { dodgeX, dodgeY } from './dodge.js';
+import type { ScaledDataRecord } from '../types/index.js';
 
 type Pt = { x: number; y: number; r?: number };
 
@@ -26,7 +27,7 @@ describe('dodge transforms', () => {
             { x: 0, y: 50 }
         ];
         const plot = mockPlotState();
-        const out = dodgeX({ data }, plot);
+        const out = dodgeX({ data: data as ScaledDataRecord[] }, plot);
         expect(out).toBe(data);
     });
 
@@ -39,7 +40,10 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ marginLeft: 10 });
         const r = 2;
         const padding = 0;
-        const out = dodgeX({ data, dodgeX: { anchor: 'left', r, padding } }, plot);
+        const out = dodgeX(
+            { data: data as ScaledDataRecord[], dodgeX: { anchor: 'left', r, padding } },
+            plot
+        );
 
         // Expect consecutive placements at: marginLeft + (r + padding) + k * (2r)
         expect(out.map((d) => d.x)).toEqual([12, 16, 20]);
@@ -56,7 +60,10 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ marginLeft: 10, facetWidth: 100 });
         const r = 2;
         const padding = 0;
-        const out = dodgeX({ data, dodgeX: { anchor: 'right', r, padding } }, plot);
+        const out = dodgeX(
+            { data: data as ScaledDataRecord[], dodgeX: { anchor: 'right', r, padding } },
+            plot
+        );
 
         // Right edge baseline is marginLeft + facetWidth
         // Expect placements at baseline - (r + padding) - k * (2r)
@@ -73,11 +80,14 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ marginLeft: 10, facetWidth: 100 });
         const r = 2;
         const padding = 0;
-        const out = dodgeX({ data, dodgeX: { anchor: 'middle', r, padding } }, plot);
+        const out = dodgeX(
+            { data: data as ScaledDataRecord[], dodgeX: { anchor: 'middle', r, padding } },
+            plot
+        );
 
         // Center baseline is marginLeft + facetWidth/2 = 60
         expect(out[0].x).toBe(60);
-        expect([...out.map((d) => d.x)].sort((a, b) => a - b)).toEqual([56, 60, 64]);
+        expect(out.map((d) => d.x).sort((a, b) => a! - b!)).toEqual([56, 60, 64]);
         expect(out.map((d) => d.y)).toEqual([50, 50, 50]);
     });
 
@@ -90,7 +100,10 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ facetHeight: 80 });
         const r = 2;
         const padding = 0;
-        const out = dodgeY({ data, dodgeY: { anchor: 'bottom', r, padding } }, plot);
+        const out = dodgeY(
+            { data: data as ScaledDataRecord[], dodgeY: { anchor: 'bottom', r, padding } },
+            plot
+        );
 
         // Bottom baseline is facetHeight, placements go upward
         expect(out.map((d) => d.y)).toEqual([78, 74, 70]);
@@ -107,11 +120,14 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ marginTop: 5, facetHeight: 80 });
         const r = 2;
         const padding = 0;
-        const out = dodgeY({ data, dodgeY: { anchor: 'middle', r, padding } }, plot);
+        const out = dodgeY(
+            { data: data as ScaledDataRecord[], dodgeY: { anchor: 'middle', r, padding } },
+            plot
+        );
 
         // Vertical center baseline is (marginTop + height)/2 = 42.5
         expect(out[0].y).toBe(42.5);
-        expect([...out.map((d) => d.y)].sort((a, b) => a - b)).toEqual([38.5, 42.5, 46.5]);
+        expect(out.map((d) => d.y).sort((a, b) => a! - b!)).toEqual([38.5, 42.5, 46.5]);
         expect(out.map((d) => d.x)).toEqual([20, 20, 20]);
     });
 
@@ -124,7 +140,10 @@ describe('dodge transforms', () => {
         const plot = mockPlotState({ marginLeft: 10 });
         const padding = 0;
         // Provide r channel to use per-point radii
-        const out = dodgeX({ data, r: 'r', dodgeX: { anchor: 'left', padding } }, plot);
+        const out = dodgeX(
+            { data: data as ScaledDataRecord[], r: 'r', dodgeX: { anchor: 'left', padding } },
+            plot
+        );
 
         // With radii [2,4,2], placements from left baseline should be:
         // 10 + 2 = 12, then +6 = 18, then +6 = 24
@@ -139,7 +158,10 @@ describe('dodge transforms', () => {
         ];
         const plot = mockPlotState({ facetHeight: 80 });
         const padding = 0;
-        const out = dodgeY({ data, r: 'r', dodgeY: { anchor: 'bottom', padding } }, plot);
+        const out = dodgeY(
+            { data: data as ScaledDataRecord[], r: 'r', dodgeY: { anchor: 'bottom', padding } },
+            plot
+        );
 
         // From bottom baseline (80) with radii [2,4,2] -> [78, 72, 66]
         expect(out.map((d) => d.y)).toEqual([78, 72, 66]);

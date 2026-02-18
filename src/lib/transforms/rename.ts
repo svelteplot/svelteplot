@@ -10,11 +10,11 @@ export const RENAME = Symbol('renamed');
 /**
  * renames a channel without modifying the data
  */
-export function renameChannels<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function renameChannels(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: RenameChannelsOptions
-): TransformArg<T, DataRecord> {
-    const newChannels = channels;
+): TransformArg<DataRecord> {
+    const newChannels = channels as any;
     for (const [from, to] of Object.entries(options) as [ScaledChannelName, ScaledChannelName][]) {
         if (newChannels[from] !== undefined) {
             newChannels[to] = newChannels[from];
@@ -30,10 +30,10 @@ export function renameChannels<T>(
 /**
  * renames a channel and copy the data
  */
-export function renameChannelsAndData<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function renameChannelsAndData(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: RenameChannelsOptions
-): TransformArg<T, DataRecord> {
+): TransformArg<DataRecord> {
     const newData = [];
     for (const datum of data) {
         const newDatum = { ...datum };
@@ -55,15 +55,15 @@ export function renameChannelsAndData<T>(
  * copies a channel's accessor to multiple target channels, then removes
  * the source channel
  */
-export function replaceChannels<T>(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function replaceChannels(
+    { data, ...channels }: TransformArg<DataRecord>,
     options: ReplaceChannelsOptions
-): TransformArg<T, DataRecord> {
+): TransformArg<DataRecord> {
     const newChannels = { ...channels };
     for (const [from, to] of Object.entries(options)) {
-        if (newChannels[from] !== undefined) {
+        if ((newChannels as any)[from] !== undefined) {
             for (const t of to) {
-                newChannels[t] = newChannels[from];
+                (newChannels as any)[t] = (newChannels as any)[from];
             }
             delete newChannels[from];
         }

@@ -10,12 +10,13 @@ import { pick } from 'es-toolkit';
 import { RAW_VALUE } from '../../transforms/recordize.js';
 import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
+import type { ScaleBand } from 'd3-scale';
 
-// Extend the MouseEvent type to include the properties we're using
+// Extend the MouseEvent type to include custom plot data properties
 declare global {
     interface MouseEvent {
-        layerX?: number;
-        layerY?: number;
+        readonly layerX: number;
+        readonly layerY: number;
         dataX?: number | string | Date;
         dataY?: number | string | Date;
     }
@@ -112,7 +113,10 @@ export function addEventHandlers<T extends DataRow>({
                             origEvent.clientY - facetRect.top + (plotOptions.marginTop ?? 0);
 
                         if (scales.projection) {
-                            const [x, y] = scales.projection.invert([relativeX, relativeY]);
+                            const [x, y] = (scales.projection as any).invert([
+                                relativeX,
+                                relativeY
+                            ]);
                             origEvent.dataX = x;
                             origEvent.dataY = y;
                         } else {
@@ -121,7 +125,7 @@ export function addEventHandlers<T extends DataRow>({
                         }
                     }
 
-                    eventHandler(
+                    (eventHandler as any)(
                         origEvent,
                         datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
                         datum[INDEX]
@@ -138,7 +142,7 @@ export function addEventHandlers<T extends DataRow>({
 
         return () => {
             for (const [eventName, handler] of listeners.entries()) {
-                node.removeEventListener(eventName.substring(2), handler);
+                node.removeEventListener(eventName.substring(2), handler as EventListener);
             }
         };
     };
@@ -146,13 +150,17 @@ export function addEventHandlers<T extends DataRow>({
 
 function invertScale(scale: PlotScale, position: number) {
     if (scale.type === 'band') {
-        const range = scale.fn.range();
-        const domain = scale.fn.domain();
-        const eachBand = scale.fn.step();
-        const extent = range[1] - range[0];
-        const posInRange = (position - range[0]) * Math.sign(extent);
+        const bandScale = scale.fn as ScaleBand<string | number>;
+        const range = bandScale.range();
+        const domain = bandScale.domain();
+        const eachBand = bandScale.step();
+        const start = range[0] ?? 0;
+        const end = range[1] ?? start;
+        const extent = end - start;
+        const posInRange = (position - start) * Math.sign(extent);
         const index = Math.floor(posInRange / eachBand);
         return domain[index];
     }
-    return scale.fn.invert ? scale.fn.invert(position) : undefined;
+    const maybeInvert = scale.fn as { invert?: (value: number) => number | string | Date };
+    return maybeInvert.invert ? maybeInvert.invert(position) : undefined;
 }

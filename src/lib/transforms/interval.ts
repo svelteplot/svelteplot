@@ -29,8 +29,8 @@ function interval<T>(dim: 'x' | 'y', { data, ...options }: TransformArg<T>) {
             const val = resolveChannel(dim, row, options);
             return {
                 ...row,
-                [`__${dim}1`]: interval.floor(val),
-                [`__${dim}2`]: interval.offset(interval.floor(val))
+                [`__${dim}1`]: (interval as any).floor(val),
+                [`__${dim}2`]: (interval as any).offset((interval as any).floor(val))
             };
         });
         return {

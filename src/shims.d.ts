@@ -59,6 +59,21 @@ declare module 'svg-path-parser' {
     export default mod;
 }
 
+declare module 'interval-tree-1d' {
+    type Interval = [number, number, ...any[]];
+    type QueryCallback = (interval: Interval) => void;
+    interface IntervalTreeInstance {
+        insert(interval: Interval): void;
+        remove(interval: Interval): void;
+        queryInterval(lo: number, hi: number, cb: QueryCallback): void;
+        queryPoint(point: number, cb: QueryCallback): void;
+    }
+    function createIntervalTree(intervals?: Interval[]): IntervalTreeInstance;
+    export default createIntervalTree;
+}
+
+declare module 'd3-time';
+
 declare module '*.svelte' {
     import type { ComponentType } from 'svelte';
     export type MarkerShape =

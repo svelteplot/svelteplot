@@ -26,6 +26,7 @@ import {
 import { range as d3Range } from 'd3-array';
 import type {
     ColorScaleOptions,
+    ColorScheme,
     PlotDefaults,
     PlotOptions,
     RawValue,
@@ -49,10 +50,7 @@ import { coalesce, maybeNumber } from './index.js';
 import { getLogTicks } from './getLogTicks.js';
 import { isPlainObject } from 'es-toolkit';
 
-const Scales: Record<
-    ScaleType,
-    (domain?: number[], range?: [number, number]) => (val: any) => any
-> = {
+const Scales: Partial<Record<ScaleType, (...args: any[]) => any>> = {
     point: scalePoint,
     band: scaleBand,
     linear: scaleLinear,
@@ -130,7 +128,9 @@ export function autoScale({
 
     const niceTickCount =
         name === 'x' || name === 'y'
-            ? Math.round(Math.abs(range[0] - range[1]) / scaleOptions.tickSpacing)
+            ? Math.round(
+                  Math.abs((range[0] as number) - (range[1] as number)) / scaleOptions.tickSpacing
+              )
             : undefined;
 
     const scaleProps = {
@@ -190,16 +190,18 @@ export function autoScale({
             : {})
     };
 
-    fn = callWithProps(Scales[type], [], scaleProps);
+    // The scale function is augmented with custom ticks() methods below,
+    // so we type it broadly to allow property assignments
+    fn = callWithProps(Scales[type]!, [], scaleProps) as any;
     if (type === 'band' || type === 'point') {
         fn.ticks = () => domain;
     }
     if (type === 'log') {
-        fn.ticks = (count: number) => getLogTicks(domain, count);
+        fn.ticks = (count: number) => getLogTicks(domain as [number, number], count);
     } else if (type === 'symlog') {
-        const maxabs = Math.max(Math.abs(domain[0]), Math.abs(domain[1]));
+        const maxabs = Math.max(Math.abs(domain[0] as number), Math.abs(domain[1] as number));
         fn.ticks = (count: number) => {
-            const ticks = getLogTicks([scaleProps.constant + 1, maxabs], count / 2);
+            const ticks = getLogTicks([(scaleProps.constant ?? 1) + 1, maxabs], count / 2);
             return [...ticks.map((t) => -t).reverse(), 0, ...ticks];
         };
     }
@@ -242,12 +244,14 @@ export function autoScaleColor({
         let scheme_ = scheme || plotDefaults.categoricalColorScheme;
 
         if (isPlainObject(scheme_)) {
-            const newScheme = Object.values(scheme_);
-            const newDomain = Object.keys(scheme_);
+            const schemeObj = scheme_ as Record<string, any>;
+            const newScheme = Object.values(schemeObj);
+            const newDomain: any[] = Object.keys(schemeObj);
             // for every value in domain that's not part of the scheme, map to unknown
             for (const v of domain) {
-                if (scheme_[v] == null) {
-                    newDomain.push(v);
+                const key = String(v);
+                if (schemeObj[key] == null) {
+                    newDomain.push(key);
                     newScheme.push(unknown);
                 }
             }
@@ -259,10 +263,12 @@ export function autoScaleColor({
         range = Array.isArray(scheme_)
             ? scheme_
             : isCategoricalScheme(scheme_)
-              ? categoricalSchemes.get(scheme_)
-              : ordinalScheme(scheme_)(domain.length);
-        fn = scaleOrdinal().domain(domain).range(range);
-    } else if (!!ThresholdScales[type]) {
+              ? (categoricalSchemes.get(scheme_) ?? [])
+              : ordinalScheme(scheme_ as string)(domain.length);
+        fn = scaleOrdinal()
+            .domain(domain as string[])
+            .range(range as any);
+    } else if (ThresholdScales[type as keyof typeof ThresholdScales]) {
         const scheme_ = scheme || plotDefaults.colorScheme;
 
         range =
@@ -273,25 +279,31 @@ export function autoScaleColor({
                     d3Range(n)
                         .map((i) => i / (n - 1))
                         .map(
-                            scaleLinear(
-                                scheme_.map((c, i) => i / (scheme_.length - 1)),
+                            (scaleLinear as any)(
+                                scheme_.map((_c: any, i: number) => i / (scheme_.length - 1)),
                                 scheme_
                             ).interpolate(interpolateLab)
                         )
                   : interpolate
                     ? d3Range(n).map((i) => interpolate(i / (n - 1)))
-                    : isOrdinalScheme(scheme_)
-                      ? ordinalScheme(scheme_)(n)
+                    : isOrdinalScheme(scheme_ as ColorScheme)
+                      ? ordinalScheme(scheme_ as ColorScheme)(n)
                       : null;
 
         if (range == null) {
             throw new Error('unknown ordinal scheme ' + scheme_);
         }
-        if (scaleOptions.reverse) range = range.toReversed();
-        fn = ThresholdScales[type]().domain(domain).range(range);
-    } else if (!!SequentialScales[type] || !!DivergingScales[type]) {
+        if (scaleOptions.reverse) range = (range as any[]).toReversed();
+        fn = (ThresholdScales[type as keyof typeof ThresholdScales] as any)()
+            .domain(domain)
+            .range(range);
+    } else if (
+        SequentialScales[type as keyof typeof SequentialScales] ||
+        DivergingScales[type as keyof typeof DivergingScales]
+    ) {
         // continuous color scale
-        const scale = SequentialScales[type] || DivergingScales[type];
+        const scale = (SequentialScales[type as keyof typeof SequentialScales] ||
+            DivergingScales[type as keyof typeof DivergingScales]) as any;
 
         const scheme_ = scheme || plotDefaults.colorScheme;
         if (interpolate) {
@@ -302,35 +314,35 @@ export function autoScaleColor({
             const step = 1 / (scheme_.length - 1);
             fn = scale(
                 domain,
-                (type === 'linear' ? scaleLinear : scaleLog)(
+                ((type === 'linear' ? scaleLinear : scaleLog) as any)(
                     d3Range(0, 1 + step / 2, step),
                     scheme_
                 ).interpolate(interpolateLab)
             );
         } else if (
-            !!DivergingScales[type] ||
-            (scaleOptions.type === 'auto' && isDivergingScheme(scheme_))
+            DivergingScales[type as keyof typeof DivergingScales] ||
+            ((scaleOptions.type as string) === 'auto' && isDivergingScheme(scheme_ as string))
         ) {
             // diverging color scheme, explicit or auto-detected
-            const maxabs = Math.max(Math.abs(domain[0]), Math.abs(domain[1]));
+            const maxabs = Math.max(Math.abs(domain[0] as number), Math.abs(domain[1] as number));
             const domain_ = pivot != null ? [domain[0], pivot, domain[1]] : [-maxabs, 0, maxabs];
-            fn = scale(domain_, quantitativeScheme(scheme_));
+            fn = scale(domain_, quantitativeScheme(scheme_ as string));
         } else if (
-            !!SequentialScales[type] ||
-            (scaleOptions.type === 'auto' && isQuantitativeScheme(scheme_))
+            SequentialScales[type as keyof typeof SequentialScales] ||
+            ((scaleOptions.type as string) === 'auto' && isQuantitativeScheme(scheme_ as string))
         ) {
             // sequential
-            fn = scale(domain, quantitativeScheme(scheme_));
+            fn = scale(domain, quantitativeScheme(scheme_ as string));
         }
         if (type === 'log') {
-            fn.ticks = (count: number) => getLogTicks(domain, count);
+            (fn as any).ticks = (count: number) => getLogTicks(domain as [number, number], count);
         }
     }
     if (!fn) {
         console.error('color problem', type);
         // problem
-        fn = () => 'red';
-        fn.range = () => ['red'];
+        fn = (() => 'red') as any;
+        (fn as any).range = () => ['red'];
     }
     return fn;
 }

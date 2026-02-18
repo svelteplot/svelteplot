@@ -15,7 +15,7 @@ type SelectOptions =
 
 /**
  * selects one datum per group based on the given criteria; use "first"/"last"
- * for positional selection, or {channel: "min"/"max"} for value-based selection
+ * for positional selection, or `{channel: "min"/"max"}` for value-based selection
  */
 export function select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions) {
     const newData: DataRecord[] = [];
@@ -23,7 +23,7 @@ export function select({ data, ...channels }: TransformArg<DataRecord>, options:
         if (typeof options === 'string') {
             if (options !== 'first' && options !== 'last')
                 throw new Error('unknown sort option: ' + options);
-            newData.push(options === 'first' ? items[0] : items.at(-1));
+            newData.push(options === 'first' ? items[0] : items.at(-1)!);
         } else {
             const sortOptions = Object.entries(options) as [ChannelName, 'min' | 'max'][];
             if (!sortOptions.length) throw new Error('must provide the channel to sort by');
@@ -35,9 +35,15 @@ export function select({ data, ...channels }: TransformArg<DataRecord>, options:
                     ...item,
                     __sortby: resolveChannel(sortOptions[0][0], item, channels)
                 }))
-                .sort((a, b) => (a.__sortby > b.__sortby ? 1 : a.__sortby < b.__sortby ? -1 : 0))
+                .sort((a, b) =>
+                    (a.__sortby as any) > (b.__sortby as any)
+                        ? 1
+                        : (a.__sortby as any) < (b.__sortby as any)
+                          ? -1
+                          : 0
+                )
                 .at(sortOptions[0][1] === 'min' ? 0 : -1);
-            newData.push(selected);
+            newData.push(selected!);
         }
     });
     return { data: newData, ...channels };
