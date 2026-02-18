@@ -527,9 +527,7 @@ export function projectXY(
 export function projectX(channel: 'x' | 'x1' | 'x2', scales: PlotScales, value: RawValue) {
     const x = (scales.x.fn as (input: RawValue) => number | undefined)(value) ?? NaN;
     const xBandwidth =
-        scales.x.type === 'band'
-            ? (scales.x.fn as { bandwidth: () => number }).bandwidth()
-            : 0;
+        scales.x.type === 'band' ? (scales.x.fn as { bandwidth: () => number }).bandwidth() : 0;
     return (
         x +
         (channel === 'x' && scales.x.type === 'band'
@@ -543,9 +541,7 @@ export function projectX(channel: 'x' | 'x1' | 'x2', scales: PlotScales, value: 
 export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: RawValue) {
     const y = (scales.y.fn as (input: RawValue) => number | undefined)(value) ?? NaN;
     const yBandwidth =
-        scales.y.type === 'band'
-            ? (scales.y.fn as { bandwidth: () => number }).bandwidth()
-            : 0;
+        scales.y.type === 'band' ? (scales.y.fn as { bandwidth: () => number }).bandwidth() : 0;
     return (
         y +
         (channel === 'y' && scales.y.type === 'band'
