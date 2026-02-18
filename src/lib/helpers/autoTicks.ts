@@ -2,7 +2,7 @@ import type { RawValue, ScaleType } from '../types/index.js';
 import { maybeTimeInterval } from './time.js';
 import { extent, range as rangei } from 'd3-array';
 
-type IntervalLike = {
+export type IntervalLike = {
     floor: (d: number) => number;
     round?: (d: number) => number;
     offset: (d: number, step?: number) => number;
@@ -52,7 +52,10 @@ export function autoTicks(
         const [lo, hi] = extent(domain as number[]);
         if (lo == null || hi == null) return [];
         const I = maybeInterval(interval);
-        return I.range(lo, I.offset(hi)).filter((d: number) => d >= lo && d <= hi);
+        if (!I) return [];
+        return (I as IntervalLike)
+            .range(lo, (I as IntervalLike).offset(hi))
+            .filter((d: number) => d >= lo && d <= hi);
     }
     return typeof scaleFn.ticks === 'function' ? scaleFn.ticks(count) : [];
 }

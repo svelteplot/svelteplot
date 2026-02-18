@@ -19,7 +19,7 @@ export function geoCentroid<Datum extends DataRecord>({
 }: { data: Datum[] } & TransformArg<Datum>): TransformArg<WithCentroid<Datum>> {
     const transformedData = data.map((d: Datum) => ({
         ...d,
-        [CENTROID]: d3GeoCentroid(resolveProp(options.geometry, d, d))
+        [CENTROID]: d3GeoCentroid(resolveProp(options.geometry as any, d as any, d as any) as any)
     })) as WithCentroid<Datum>[];
 
     const newOptions = { ...options } as unknown as Channels<WithCentroid<Datum>>;

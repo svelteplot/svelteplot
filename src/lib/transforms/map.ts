@@ -6,7 +6,8 @@ import type {
     MapOptions,
     MapMethod,
     DataRecord,
-    Channels
+    Channels,
+    RawValue
 } from '../types/index.js';
 import { count, rank } from 'd3-array';
 import { groupFacetsAndZ } from '../helpers/group.js';
@@ -17,8 +18,8 @@ import { sort } from './sort';
  * Maps one or more positional channels using specified mapping methods.
  */
 export function map<T>(args: TransformArg<T>, options: MapOptions) {
-    const { data, ...channels } = sort(args);
-    const newChannels: Channels = {};
+    const { data, ...channels } = sort(args) as { data: T[] } & Channels<T>;
+    const newChannels: Channels<any> = {};
     const newData: DataRecord[] = [];
 
     groupFacetsAndZ(data, channels, (groupedData) => {
@@ -70,12 +71,13 @@ export function mapY<T>(args: TransformArg<T>, mapper: MapMethod) {
 function maybeMap(map: MapMethod): MapIndexObject {
     if (map == null) throw new Error('missing map');
     if (typeof map === 'object' && typeof map.mapIndex === 'function') return map;
-    if (typeof map === 'function') return mapFunction(map);
+    if (typeof map === 'function')
+        return mapFunction(map as (I: number[], S: RawValue[]) => RawValue[]);
     switch (`${map}`.toLowerCase()) {
         case 'cumsum':
             return mapCumsum;
         case 'rank':
-            return mapFunction((I, V) => rank(I, (i) => V[i]));
+            return mapFunction((I, V) => Array.from(rank(I, (i: number) => V[i] as number)));
         case 'quantile':
             return mapFunction((I, V) => rankQuantile(I, (i) => V[i]));
     }
@@ -84,12 +86,12 @@ function maybeMap(map: MapMethod): MapIndexObject {
 
 function rankQuantile(I: number[], f: (i: number) => any): number[] {
     const n = count(I, f) - 1;
-    return rank(I, f).map((r) => r / n);
+    return Array.from(rank(I, f)).map((r) => r / n);
 }
 
-function mapFunction(f: (I: number[], S: number[]) => number[]): MapIndexObject {
+function mapFunction(f: (I: number[], S: RawValue[]) => RawValue[]): MapIndexObject {
     return {
-        mapIndex(I: number[], S: number[], T: number[]) {
+        mapIndex(I: number[], S: RawValue[], T: RawValue[]) {
             const M = f(I, S);
             if (M.length !== I.length) throw new Error('map function returned a mismatched length');
             for (let i = 0, n = I.length; i < n; ++i) T[I[i]] = M[i];
@@ -98,8 +100,8 @@ function mapFunction(f: (I: number[], S: number[]) => number[]): MapIndexObject 
 }
 
 const mapCumsum: MapIndexObject = {
-    mapIndex(I: number[], S: number[], T: number[]) {
+    mapIndex(I: number[], S: RawValue[], T: RawValue[]) {
         let sum = 0;
-        for (const i of I) T[i] = sum += S[i];
+        for (const i of I) T[i] = sum += S[i] as number;
     }
 };

@@ -38,21 +38,33 @@ const niceReduceNames: Partial<Record<ReducerName, string>> = {
     mean: 'Average'
 };
 
-const StaticReducer: Record<ReducerName, ReducerFunc> = {
+const StaticReducer: Record<string, ReducerFunc> = {
     count: (d) => Array.from(d).length,
-    min,
-    max,
-    mode,
-    sum,
-    mean,
-    median,
-    identity: (d) => d,
-    variance,
-    deviation,
-    first: (d: number[]) => d[0],
-    last: (d: number[]) => d.at(-1),
-    difference: (d: number[]) => d.at(-1) - d[0],
-    ratio: (d: number[]) => d.at(-1) / d[0]
+    min: min as unknown as ReducerFunc,
+    max: max as unknown as ReducerFunc,
+    mode: mode as unknown as ReducerFunc,
+    sum: sum as unknown as ReducerFunc,
+    mean: mean as unknown as ReducerFunc,
+    median: median as unknown as ReducerFunc,
+    identity: (d) => d as RawValue,
+    variance: variance as unknown as ReducerFunc,
+    deviation: deviation as unknown as ReducerFunc,
+    first: (d) => {
+        const arr = Array.from(d);
+        return arr[0] as RawValue;
+    },
+    last: (d) => {
+        const arr = Array.from(d);
+        return arr.at(-1) as RawValue;
+    },
+    difference: (d) => {
+        const arr = Array.from(d) as number[];
+        return arr.at(-1)! - arr[0];
+    },
+    ratio: (d) => {
+        const arr = Array.from(d) as number[];
+        return arr.at(-1)! / arr[0];
+    }
     // TODO: proportion
     // TODO: proportion-facet
     // TODO: min-index
@@ -87,7 +99,7 @@ function isReducerName(r: ReducerOption): r is ReducerName {
 export function mayberReducer(r: ReducerOption): ReducerFunc {
     if (typeof r === 'function') return r;
     if (typeof r === 'string' && isReducerName(r)) {
-        return Reducer[r] as ReducerFunc;
+        return (Reducer as Record<string, ReducerFunc>)[r];
     }
     throw new Error('unknown reducer ' + r);
 }
@@ -97,8 +109,8 @@ export function reduceOutputs(
     data: DataRecord[],
     options: Record<ChannelName, ReducerOption>,
     outputs: Iterable<ChannelName>,
-    channels: Channels,
-    newChannels: Channels
+    channels: Channels<Record<string | symbol, RawValue>>,
+    newChannels: Channels<Record<string | symbol, RawValue>>
 ) {
     for (const k of outputs) {
         if (options[k] != null) {
@@ -106,12 +118,12 @@ export function reduceOutputs(
                 channels[k] == null ? data : data.map((d) => resolveChannel(k, d, channels));
             const reducer = mayberReducer(options[k]);
 
-            newDatum[`__${k}`] = reducer(values);
+            (newDatum as Record<string, RawValue>)[`__${k}`] = reducer(values);
             newChannels[k] = `__${k}`;
 
             if (typeof options[k] === 'string') {
                 const reducerName =
-                    niceReduceNames[options[k] as ReducerName] ??
+                    (niceReduceNames as Record<string, string>)[options[k] as string] ??
                     `${String(options[k]).charAt(0).toUpperCase()}${String(options[k]).slice(1)}`;
                 // we have a named reducer like 'count', so let's try to preserve the
                 // source channel mapping for axis labels

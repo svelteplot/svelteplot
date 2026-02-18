@@ -23,7 +23,13 @@ export function coalesce(...args: (RawValue | undefined | null)[]) {
 }
 
 export function testFilter<T>(datum: T, options: Channels<T>) {
-    return options.filter == null || resolveProp(options.filter as ConstantAccessor<T>, datum);
+    return (
+        options.filter == null ||
+        resolveProp(
+            options.filter as ConstantAccessor<T>,
+            datum as Record<string | symbol, RawValue>
+        )
+    );
 }
 
 export function randomId() {

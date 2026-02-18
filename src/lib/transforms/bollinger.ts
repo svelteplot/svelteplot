@@ -41,18 +41,18 @@ export function bollingerDim<T>(
 ): TransformArg<T> {
     const { n = 20, k = 2 } = options;
     const bands = bollinger(
-        data.map((datum: DataRecord) => resolveChannel(dim, datum, channels)) as number[],
+        data.map((datum) => resolveChannel(dim, datum as DataRecord, channels) as number),
         n,
         [-k, 0, k]
     );
     const otherDim = dim === 'x' ? 'y' : 'x';
     return {
-        data: data.map((datum: DataRecord, i: number) => ({
-            __x: resolveChannel(otherDim, datum, channels),
+        data: data.map((datum, i: number) => ({
+            __x: resolveChannel(otherDim, datum as DataRecord, channels),
             __lo: bands[0][i],
             __avg: bands[1][i],
             __hi: bands[2][i]
-        })),
+        })) as T[],
         ...channels,
         [otherDim]: '__x',
         [dim]: '__avg',

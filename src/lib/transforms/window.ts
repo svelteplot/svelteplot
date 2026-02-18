@@ -2,7 +2,7 @@ import { maybeInterval } from '../helpers/autoTicks.js';
 import { isValid } from '../helpers/index.js';
 import { mayberReducer, type ReducerName } from '../helpers/reduce.js';
 import { resolveChannel } from '../helpers/resolve.js';
-import type { DataRecord, ScaledChannelName, TransformArg } from '../types/index.js';
+import type { DataRecord, RawValue, ScaledChannelName, TransformArg } from '../types/index.js';
 import { groups as d3Groups } from 'd3-array';
 
 type WindowOptions = {
@@ -38,9 +38,9 @@ function windowDim(
     options: WindowOptions
 ) {
     const { anchor = 'middle', reduce = 'mean', strict = false } = options;
-    let { k, interval } = options;
+    let { k } = options;
 
-    interval = maybeInterval(interval, 'time');
+    const interval = maybeInterval(options.interval);
     // we only change the data, but not the
     if (!((k = Math.floor(k)) > 0)) throw new Error(`invalid k: ${k}`);
 
@@ -84,12 +84,14 @@ function windowDim(
             const newDatum = { ...values[i] };
             let yWindow: Set<number> = new Set();
             if (interval) {
-                const minDate = interval.offset(Y[i].value, -shift);
-                const maxDate = interval.offset(Y[i].value, -shift + k);
+                const minDate = interval.offset(Y[i].value as Date & number, -shift);
+                const maxDate = interval.offset(Y[i].value as Date & number, -shift + k);
                 yWindow = new Set(
-                    Y.filter(({ value }) => value >= minDate && value <= maxDate).map(
-                        ({ index }) => index
-                    )
+                    Y.filter(
+                        ({ value }) =>
+                            (value as number) >= (minDate as number) &&
+                            (value as number) <= (maxDate as number)
+                    ).map(({ index }) => index)
                 );
             }
             for (const channel of reduceChannels) {

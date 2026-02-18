@@ -11,11 +11,9 @@ import { RAW_VALUE } from '../../transforms/recordize.js';
 import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
 
-// Extend the MouseEvent type to include the properties we're using
+// Extend the MouseEvent type to include custom data properties
 declare global {
     interface MouseEvent {
-        layerX?: number;
-        layerY?: number;
         dataX?: number | string | Date;
         dataY?: number | string | Date;
     }
@@ -104,7 +102,7 @@ export function addEventHandlers<T extends DataRow>({
                             facetEl = facetEl.parentElement;
                         }
                         const facetRect = (
-                            facetEl?.firstElementChild ?? body
+                            (facetEl?.firstElementChild ?? body) as Element
                         ).getBoundingClientRect();
                         const relativeX =
                             origEvent.clientX - facetRect.left + (plotOptions.marginLeft ?? 0);
@@ -112,7 +110,10 @@ export function addEventHandlers<T extends DataRow>({
                             origEvent.clientY - facetRect.top + (plotOptions.marginTop ?? 0);
 
                         if (scales.projection) {
-                            const [x, y] = scales.projection.invert([relativeX, relativeY]);
+                            const [x, y] = (scales.projection as any).invert([
+                                relativeX,
+                                relativeY
+                            ]);
                             origEvent.dataX = x;
                             origEvent.dataY = y;
                         } else {
@@ -121,7 +122,7 @@ export function addEventHandlers<T extends DataRow>({
                         }
                     }
 
-                    eventHandler(
+                    (eventHandler as Function)(
                         origEvent,
                         datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
                         datum[INDEX]
@@ -138,7 +139,7 @@ export function addEventHandlers<T extends DataRow>({
 
         return () => {
             for (const [eventName, handler] of listeners.entries()) {
-                node.removeEventListener(eventName.substring(2), handler);
+                node.removeEventListener(eventName.substring(2), handler as EventListener);
             }
         };
     };
@@ -146,7 +147,7 @@ export function addEventHandlers<T extends DataRow>({
 
 function invertScale(scale: PlotScale, position: number) {
     if (scale.type === 'band') {
-        const range = scale.fn.range();
+        const range = scale.fn.range() as number[];
         const domain = scale.fn.domain();
         const eachBand = scale.fn.step();
         const extent = range[1] - range[0];

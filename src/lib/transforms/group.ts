@@ -2,10 +2,12 @@ import { groupFacetsAndZ } from '../helpers/group.js';
 import { isValid, testFilter } from '../helpers/index.js';
 import { reduceOutputs, type ReducerName } from '../helpers/reduce.js';
 import { resolveChannel } from '../helpers/resolve.js';
-import type { DataRecord, DataRow, RawValue, TransformArg } from '../types/index.js';
-import { groups as d3Groups } from 'd3-array';
+import type { ChannelName, DataRecord, DataRow, RawValue, TransformArg } from '../types/index.js';
+import { groups as d3Groups, type ThresholdCountGenerator } from 'd3-array';
 import { omit } from '../helpers/index.js';
 import { maybeInterval } from '../helpers/autoTicks.js';
+
+type NamedThresholdsGenerator = 'auto' | 'scott' | 'sturges' | 'freedman-diaconis';
 
 type ReducerFunc = (group: DataRow[]) => RawValue;
 type ReducerOption = ReducerName | ReducerFunc;
@@ -55,8 +57,8 @@ type GroupZOptions = GroupXOptions | GroupYOptions;
  * groups the dataset by x and y channel and optionally reduces the group items
  * to output channels fill, stroke, r, opacity, fillOpacity, or strokeOpacity
  */
-export function group(
-    { data, ...channels }: TransformArg<T, DataRecord>,
+export function group<T extends DataRecord>(
+    { data, ...channels }: TransformArg<T>,
     options: GroupXOptions = {}
 ) {
     if (channels.x == null || channels.y == null)
@@ -72,18 +74,25 @@ export function group(
     const yChannel = typeof channels.y === 'string' ? channels.y : '__y';
     let newChannels = omit({ ...channels, x: xChannel, y: yChannel }, 'filter');
 
-    const outputs = ['fill', 'stroke', 'r', 'opacity', 'fillOpacity', 'strokeOpacity'];
+    const outputs: ChannelName[] = [
+        'fill',
+        'stroke',
+        'r',
+        'opacity',
+        'fillOpacity',
+        'strokeOpacity'
+    ];
 
     groups.forEach(([xGroupKey, xGroups]) => {
         xGroups.forEach(([yGroupKey, items]) => {
             const baseRecord = { [xChannel]: xGroupKey, [yChannel]: yGroupKey }; // dim === 'z' ? {} : { [`__${dim}`]: groupKey };
             // copy properties from first item of each group
-            options.copy?.forEach((prop) => {
-                baseRecord[prop] = items[0][prop];
+            options.copy?.forEach((prop: string) => {
+                baseRecord[prop] = (items[0] as DataRecord)[prop];
             });
             const newGroupChannels = groupFacetsAndZ(items, channels, (items, itemGroupProps) => {
-                const item = { ...baseRecord, ...itemGroupProps };
-                reduceOutputs(item, items, options, outputs, channels, newChannels);
+                const item: DataRecord = { ...baseRecord, ...itemGroupProps } as DataRecord;
+                reduceOutputs(item, items, options as never, outputs, channels, newChannels);
                 newData.push(item);
             });
             newChannels = { ...newChannels, ...newGroupChannels };
@@ -96,7 +105,7 @@ export function group(
  * groups the dataset by the x channel and optionally reduces the group items
  * to output channels y, y1, y2, fill, stroke, r, opacity, fillOpacity, or strokeOpacity
  */
-export function groupX(input: TransformArg<T, DataRecord>, options: GroupXOptions = {}) {
+export function groupX<T extends DataRecord>(input: TransformArg<T>, options: GroupXOptions = {}) {
     return groupXYZ('x', input, options);
 }
 
@@ -104,7 +113,7 @@ export function groupX(input: TransformArg<T, DataRecord>, options: GroupXOption
  * groups the dataset by the y channel and optionally reduces the group items
  * to output channels x, x1, x2, fill, stroke, r, opacity, fillOpacity, or strokeOpacity
  */
-export function groupY(input: TransformArg<T, DataRecord>, options: GroupYOptions = {}) {
+export function groupY<T extends DataRecord>(input: TransformArg<T>, options: GroupYOptions = {}) {
     return groupXYZ('y', input, options);
 }
 
@@ -113,16 +122,16 @@ export function groupY(input: TransformArg<T, DataRecord>, options: GroupYOption
  * to output channels x, x1, x2, y, y1, y2, fill, stroke, r, opacity, fillOpacity,
  * or strokeOpacity
  */
-export function groupZ(input: TransformArg<T, DataRecord>, options: GroupZOptions = {}) {
+export function groupZ<T extends DataRecord>(input: TransformArg<T>, options: GroupZOptions = {}) {
     return groupXYZ('z', input, options);
 }
 
 const groupDimRaw = Symbol('groupDimRaw');
 
-function groupXYZ(
+function groupXYZ<T extends DataRecord>(
     dim: 'x' | 'y' | 'z',
-    { data, ...channels }: TransformArg<T, DataRecord>,
-    options: GroupXOptions = {}
+    { data, ...channels }: TransformArg<T>,
+    options: GroupZOptions = {}
 ) {
     // console.log({ dim, data, channels, options });
     if (
@@ -132,9 +141,10 @@ function groupXYZ(
     )
         throw new Error('you must provide a channel to group on ' + dim);
 
+    const opts = options as Record<string, unknown>;
     const propName =
-        options[`${dim}PropName`] != null
-            ? options[`${dim}PropName`]
+        opts[`${dim}PropName`] != null
+            ? (opts[`${dim}PropName`] as string)
             : typeof channels[dim] === 'string' && !options.interval
               ? channels[dim]
               : `__${dim}`;
@@ -143,26 +153,33 @@ function groupXYZ(
     // group by x or y
     const groups =
         dim === 'z'
-            ? [[null, data]]
+            ? ([[null, data]] as [RawValue, DataRecord[]][])
             : d3Groups(
                   data
                       .filter((d) => testFilter(d, channels))
-                      .map((d) => ({ ...d, [groupDimRaw]: resolveChannel(dim, d, channels) }))
+                      .map((d) => ({
+                          ...(d as DataRecord),
+                          [groupDimRaw]: resolveChannel(dim, d, channels)
+                      }))
                       .filter((d) => isValid(d[groupDimRaw])),
-                  (d) => {
-                      return interval ? interval.floor(d[groupDimRaw]) : d[groupDimRaw];
+                  (d): RawValue => {
+                      return interval
+                          ? (interval as { floor: (d: number) => number }).floor(
+                                d[groupDimRaw] as number
+                            )
+                          : d[groupDimRaw];
                   }
               );
     const newData: DataRecord[] = [];
     let newChannels = omit({ ...channels }, 'filter');
     if (dim !== 'z') newChannels[dim] = propName;
 
-    const outputs = [
+    const outputs: ChannelName[] = [
         ...(dim === 'x'
-            ? ['y', 'y1', 'y2']
+            ? (['y', 'y1', 'y2'] as ChannelName[])
             : dim === 'y'
-              ? ['x', 'x1', 'x2']
-              : ['x', 'x1', 'x2', 'y', 'y1', 'y2']),
+              ? (['x', 'x1', 'x2'] as ChannelName[])
+              : (['x', 'x1', 'x2', 'y', 'y1', 'y2'] as ChannelName[])),
         'fill',
         'stroke',
         'r',
@@ -173,16 +190,31 @@ function groupXYZ(
 
     groups.forEach(([groupKey, items]) => {
         const baseRecord = dim === 'z' ? {} : { [propName]: groupKey };
-        const newGroupChannels = groupFacetsAndZ(items, channels, (items, itemGroupProps) => {
-            const copiedProps = {};
-            // copy properties from first item of each group
-            options.copy?.forEach((prop) => {
-                copiedProps[prop] = items[0][prop];
-            });
-            const item = { ...baseRecord, ...copiedProps, ...itemGroupProps };
-            reduceOutputs(item, items, options, outputs, channels, newChannels);
-            newData.push(item);
-        });
+        const newGroupChannels = groupFacetsAndZ(
+            items,
+            channels as never,
+            (items, itemGroupProps) => {
+                const copiedProps: DataRecord = {};
+                // copy properties from first item of each group
+                options.copy?.forEach((prop: string) => {
+                    copiedProps[prop] = (items[0] as DataRecord)[prop];
+                });
+                const item: DataRecord = {
+                    ...baseRecord,
+                    ...copiedProps,
+                    ...itemGroupProps
+                } as DataRecord;
+                reduceOutputs(
+                    item,
+                    items as DataRecord[],
+                    options as never,
+                    outputs,
+                    channels,
+                    newChannels
+                );
+                newData.push(item);
+            }
+        );
         newChannels = { ...newChannels, ...newGroupChannels };
     });
     return { data: newData, ...newChannels };

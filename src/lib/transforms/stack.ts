@@ -106,7 +106,7 @@ function stackXY<T>(
         channels[`${byHigh}`] === undefined
     ) {
         // resolve all channels for easier computation below
-        const resolvedData = indexData(data).map((d, i) => ({
+        const resolvedData = indexData(data as object[]).map((d, i) => ({
             ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
             [S[secondDim]]: resolveChannel(secondDim, d, channels),
             [GROUP]: groupBy === true ? 'G' : resolveChannel(groupBy, d, channels),
@@ -189,18 +189,18 @@ function stackXY<T>(
                 .order(stackOrder)
                 // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
                 .offset(
-                    groupBy === true && options.offset === 'wiggle'
+                    (groupBy === true && options.offset === 'wiggle'
                         ? STACK_OFFSET['center']
-                        : STACK_OFFSET[options.offset]
+                        : STACK_OFFSET[options.offset ?? 'none']) as null
                 )
                 .keys(keys)
-                .value((d, key, i, data) => {
+                .value((d: any, key: any) => {
                     return d[key]?.v == null ? undefined : d[key]?.v;
                 })(stackData);
 
             // and combine it all back into a flat array
             const newData = series
-                .flatMap((s) => s.map((d) => [d[0], d[1], d.data[s.key]?.i]))
+                .flatMap((s) => s.map((d) => [d[0], d[1], (d.data as any)[s.key]?.i]))
                 .filter((d) => d[2] !== undefined)
                 .map((d) => ({ [S[byLow]]: d[0], [S[byHigh]]: d[1], ...resolvedData[d[2]] }));
 
@@ -211,7 +211,7 @@ function stackXY<T>(
         }
 
         return {
-            data: out.sort((a, b) => a[INDEX] - b[INDEX]),
+            data: out.sort((a, b) => a[INDEX] - b[INDEX]) as T[],
             ...channels,
             [byDim]: undefined,
             ...(typeof channels[byDim] === 'string' && !channels[ORIGINAL_NAME_KEYS[byDim]]
@@ -246,10 +246,11 @@ export function stackX<T>(
 
 function applyDefaults(opts: Partial<StackOptions>): StackOptions {
     if (opts === false) return false;
-    if (opts.offset === 'wiggle' && opts.order === undefined) {
-        return { ...DEFAULT_STACK_OPTIONS, order: 'inside-out', ...opts };
+    const o = opts as Partial<Exclude<StackOptions, false>>;
+    if (o.offset === 'wiggle' && o.order === undefined) {
+        return { ...DEFAULT_STACK_OPTIONS, order: 'inside-out', ...o } as StackOptions;
     }
-    return { ...DEFAULT_STACK_OPTIONS, ...opts };
+    return { ...DEFAULT_STACK_OPTIONS, ...o } as StackOptions;
 }
 
 function stackMosaic<T>(
@@ -285,11 +286,18 @@ function stackMosaic<T>(
     if (!x) throw new Error('stackMosaic: missing x channel');
     if (!y) throw new Error('stackMosaic: missing y channel');
     if (!value) throw new Error('stackMosaic: missing value channel');
-    if (min(filtered, (d) => resolveProp(d[value], d)) < 0)
+    const minVal = min(
+        filtered as T[],
+        (d) =>
+            resolveProp((d as Record<string | symbol, any>)[value as string | symbol], d) as number
+    );
+    if (minVal !== undefined && minVal < 0)
         throw new Error('stackMosaic: negative values not supported');
 
-    groupFacetsAndZ<T>(filtered, restArgs, (data) => {
-        const total = sum(data, (d) => resolveProp(d[value], d));
+    groupFacetsAndZ<T>(filtered as T[], restArgs, (data) => {
+        const total = sum(data, (d) =>
+            resolveProp((d as Record<string | symbol, any>)[value as string | symbol], d)
+        );
         let outerPos = 0;
 
         const outerChannel = outer === 'x' ? x : y;
@@ -301,11 +309,20 @@ function stackMosaic<T>(
         const outerOpt = outer === 'x' ? xOpt : yOpt;
         const innerOpt = inner === 'x' ? xOpt : yOpt;
 
-        const grouped = d3Groups(data, (d) => resolveProp(d[outerChannel], d));
-        const innerOrder = new Map(grouped[0][1].map((d, i) => [d[innerChannel], i]));
+        const grouped = d3Groups(data, (d) =>
+            resolveProp((d as Record<string | symbol, any>)[outerChannel as string | symbol], d)
+        );
+        const innerOrder = new Map(
+            grouped[0][1].map((d, i) => [
+                (d as Record<string | symbol, any>)[innerChannel as string | symbol],
+                i
+            ])
+        );
 
         grouped.forEach(([k, items], i) => {
-            const groupValue = sum(items, (d) => resolveProp(d[value], d));
+            const groupValue = sum(items, (d) =>
+                resolveProp((d as Record<string | symbol, any>)[value as string | symbol], d)
+            );
             const o1 = outerPos,
                 o2 = outerPos + groupValue;
             outerPos = o2;
@@ -313,11 +330,20 @@ function stackMosaic<T>(
             let innerPos = 0;
             (i
                 ? items.sort(
-                      (a, b) => innerOrder.get(a[innerChannel]) - innerOrder.get(b[innerChannel])
+                      (a, b) =>
+                          (innerOrder.get(
+                              (a as Record<string | symbol, any>)[innerChannel as string | symbol]
+                          ) ?? 0) -
+                          (innerOrder.get(
+                              (b as Record<string | symbol, any>)[innerChannel as string | symbol]
+                          ) ?? 0)
                   )
                 : items
             ).forEach((d) => {
-                const iv = resolveProp(d[value], d);
+                const iv = resolveProp(
+                    (d as Record<string | symbol, any>)[value as string | symbol],
+                    d
+                );
                 const i1 = innerPos,
                     i2 = innerPos + iv;
                 innerPos = i2;
@@ -357,7 +383,10 @@ function stackMosaic<T>(
  * creates a mosaic layout with the outer (width) dimension along x and
  * the inner (height) dimension along y
  */
-export function stackMosaicX<T>(args, opts) {
+export function stackMosaicX<T>(
+    args: Parameters<typeof stackMosaic<T>>[0],
+    opts?: Parameters<typeof stackMosaic<T>>[2]
+) {
     return stackMosaic(args, { outer: 'x', inner: 'y' }, opts);
 }
 
@@ -365,6 +394,9 @@ export function stackMosaicX<T>(args, opts) {
  * creates a mosaic layout with the outer (height) dimension along y and
  * the inner (width) dimension along x
  */
-export function stackMosaicY<T>(args, opts) {
+export function stackMosaicY<T>(
+    args: Parameters<typeof stackMosaic<T>>[0],
+    opts?: Parameters<typeof stackMosaic<T>>[2]
+) {
     return stackMosaic(args, { outer: 'y', inner: 'x' }, opts);
 }

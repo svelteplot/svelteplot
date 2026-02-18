@@ -25,12 +25,13 @@ function interval<T>(dim: 'x' | 'y', { data, ...options }: TransformArg<T>) {
     ) {
         // derive x1 and x2 from x+interval
         const interval = maybeInterval(options.interval as string | number);
+        if (!interval) return { data, ...options };
         const newData = data.map((row) => {
-            const val = resolveChannel(dim, row, options);
+            const val = resolveChannel(dim, row, options) as Date & number;
             return {
                 ...row,
                 [`__${dim}1`]: interval.floor(val),
-                [`__${dim}2`]: interval.offset(interval.floor(val))
+                [`__${dim}2`]: interval.offset(interval.floor(val) as Date & number)
             };
         });
         return {

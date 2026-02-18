@@ -8,6 +8,7 @@
  */
 import { bisector } from 'd3-array';
 
+import type { CountableTimeInterval, TimeInterval } from 'd3-time';
 import {
     utcSecond,
     utcMinute,
@@ -49,7 +50,7 @@ const durationMonth = durationDay * 30;
 const durationYear = durationDay * 365;
 
 // See https://github.com/d3/d3-time/blob/9e8dc940f38f78d7588aad68a54a25b1f0c2d97b/src/ticks.js#L14-L33
-const tickIntervals = [
+const tickIntervals: [string, number][] = [
     ['millisecond', 1],
     ['2 milliseconds', 2],
     ['5 milliseconds', 5],
@@ -147,15 +148,15 @@ const utcIntervals = new Map([
 export const intervalDuration = Symbol('intervalDuration');
 export const intervalType = Symbol('intervalType');
 
-// We greedily mutate D3’s standard intervals on load so that the hidden fields
+// We greedily mutate D3's standard intervals on load so that the hidden fields
 // are available even if specified as e.g. d3.utcMonth instead of "month".
 for (const [name, interval] of timeIntervals) {
-    interval[intervalDuration] = durations.get(name);
-    interval[intervalType] = 'time';
+    (interval as any)[intervalDuration] = durations.get(name);
+    (interval as any)[intervalType] = 'time';
 }
 for (const [name, interval] of utcIntervals) {
-    interval[intervalDuration] = durations.get(name);
-    interval[intervalType] = 'utc';
+    (interval as any)[intervalDuration] = durations.get(name);
+    (interval as any)[intervalType] = 'utc';
 }
 
 const utcFormatIntervals = [
@@ -227,27 +228,33 @@ export function maybeUtcInterval(input: string) {
 }
 
 function asInterval([name, period]: [string, number], type: 'time' | 'utc') {
-    let interval = (type === 'time' ? timeIntervals : utcIntervals).get(name);
+    let interval: TimeInterval | CountableTimeInterval | undefined = (
+        type === 'time' ? timeIntervals : utcIntervals
+    ).get(name);
     if (period > 1) {
-        interval = interval.every(period);
-        interval[intervalDuration] = durations.get(name) * period;
-        interval[intervalType] = type;
+        interval = (interval as CountableTimeInterval).every(period) ?? undefined;
+        (interval as any)[intervalDuration] = durations.get(name)! * period;
+        (interval as any)[intervalType] = type;
     }
     return interval;
 }
 
 // If the given interval is a standard time interval, we may be able to promote
 // it a larger aligned time interval, rather than showing every nth tick.
-export function generalizeTimeInterval(interval, n) {
+export function generalizeTimeInterval(interval: TimeInterval, n: number) {
     if (!(n > 1)) return; // no need to generalize
-    const duration = interval[intervalDuration];
+    const duration: number | undefined = (interval as any)[intervalDuration];
+    if (duration == null) return;
     if (!tickIntervals.some(([, d]) => d === duration)) return; // nonstandard or unknown interval
     if (duration % durationDay === 0 && durationDay < duration && duration < durationMonth) return; // not generalizable
     const [i] =
         tickIntervals[
-            bisector(([, step]) => Math.log(step)).center(tickIntervals, Math.log(duration * n))
+            bisector(([, step]: [string, number]) => Math.log(step)).center(
+                tickIntervals,
+                Math.log(duration * n)
+            )
         ];
-    return (interval[intervalType] === 'time' ? maybeTimeInterval : maybeUtcInterval)(i);
+    return ((interval as any)[intervalType] === 'time' ? maybeTimeInterval : maybeUtcInterval)(i);
 }
 
 // function formatTimeInterval(name, type, anchor) {

@@ -1,3 +1,4 @@
+// @ts-expect-error interval-tree-1d has no type declarations
 import IntervalTree from 'interval-tree-1d';
 import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import type { ScaledDataRecord, TransformArg, PlotState } from 'svelteplot/types';
@@ -41,8 +42,8 @@ export function dodgeX(
     let {
         anchor = 'left',
         padding = 1,
-        r = args.dodgeX.r
-    } = maybeAnchor(args.dodgeX) as DodgeXOptions;
+        r = (args.dodgeX as BaseDodgeOptions).r
+    } = maybeAnchor(args.dodgeX as DodgeXOptions) as BaseDodgeOptions;
     let anchorFunction: AnchorFunction;
     switch (`${anchor}`.toLowerCase()) {
         case 'left':
@@ -71,8 +72,8 @@ export function dodgeY(
     let {
         anchor = 'bottom',
         padding = 1,
-        r = args.dodgeY.r
-    } = maybeAnchor(args.dodgeY) as DodgeYOptions;
+        r = (args.dodgeY as BaseDodgeOptions).r
+    } = maybeAnchor(args.dodgeY as DodgeYOptions) as BaseDodgeOptions;
     let anchorFunction: AnchorFunction;
     switch (`${anchor}`.toLowerCase()) {
         case 'top':
@@ -117,7 +118,10 @@ function dodge(
         // apply dodge within each facet
         const tree = IntervalTree();
         const data = items.filter(
-            (d) => (typeof d.r !== 'number' || d.r >= 0) && isFinite(d[x]) && isFinite(d[y])
+            (d) =>
+                (typeof d.r !== 'number' || d.r >= 0) &&
+                isFinite(d[x] as number) &&
+                isFinite(d[y] as number)
         ) as { r: number; x: number; y: number }[];
         const intervals = new Float64Array(2 * data.length + 2);
         data.forEach((d, i) => {

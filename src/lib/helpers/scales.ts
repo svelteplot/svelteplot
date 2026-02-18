@@ -46,7 +46,7 @@ export function computeScales(
 ): PlotScales {
     const x = createScale(
         'x',
-        plotOptions.x,
+        plotOptions.x as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -56,7 +56,7 @@ export function computeScales(
     );
     const y = createScale(
         'y',
-        plotOptions.y,
+        plotOptions.y as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -66,7 +66,7 @@ export function computeScales(
     );
     const r = createScale(
         'r',
-        plotOptions.r,
+        plotOptions.r as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -76,7 +76,7 @@ export function computeScales(
     );
     const color = createScale(
         'color',
-        plotOptions.color,
+        plotOptions.color as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -86,7 +86,7 @@ export function computeScales(
     );
     const opacity = createScale(
         'opacity',
-        plotOptions.opacity,
+        plotOptions.opacity as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -96,7 +96,7 @@ export function computeScales(
     );
     const length = createScale(
         'length',
-        plotOptions.length,
+        plotOptions.length as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -106,7 +106,7 @@ export function computeScales(
     );
     const symbol = createScale(
         'symbol',
-        plotOptions.symbol,
+        plotOptions.symbol as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -117,7 +117,7 @@ export function computeScales(
     // create fx and fy scales from mark data directly
     const fx = createScale(
         'fx',
-        plotOptions.fx,
+        plotOptions.fx as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -127,7 +127,7 @@ export function computeScales(
     );
     const fy = createScale(
         'fy',
-        plotOptions.fy,
+        plotOptions.fy as ScaleOptions,
         marks,
         plotOptions,
         plotWidth,
@@ -138,7 +138,7 @@ export function computeScales(
 
     const projection = plotOptions.projection
         ? createProjection(
-              { projOptions: plotOptions.projection, inset: plotOptions.inset },
+              { projOptions: plotOptions.projection as any, inset: plotOptions.inset },
               {
                   width: plotWidth,
                   height: plotHeight,
@@ -149,12 +149,12 @@ export function computeScales(
               }
           )
         : null;
-    return { x, y, r, color, opacity, length, symbol, fx, fy, projection };
+    return { x, y, r, color, opacity, length, symbol, fx, fy, projection } as unknown as PlotScales;
 }
 
-export function createScale<T extends ScaleOptions>(
+export function createScale(
     name: ScaleName,
-    scaleOptions: T,
+    scaleOptions: ScaleOptions,
     marks: Mark<GenericMarkOptions>[],
     plotOptions: PlotOptions,
     plotWidth: number,
@@ -162,11 +162,19 @@ export function createScale<T extends ScaleOptions>(
     plotHasFilledDotMarks: boolean,
     plotDefaults: PlotDefaults
 ) {
-    if (!plotOptions.implicitScales && !scaleOptions.scale) {
+    const scaleOpts = scaleOptions as ScaleOptions & { scale?: (...args: any[]) => any };
+    if (!plotOptions.implicitScales && !scaleOpts.scale) {
         // no scale defined, return a dummy scale
-        const fn = name === 'color' ? () => 'currentColor' : () => 0;
+        const fn = (name === 'color' ? () => 'currentColor' : () => 0) as any;
         fn.range = name === 'color' ? () => ['currentColor'] : () => [0];
-        return { type: 'linear', domain: [0], range: [0], fn, skip: new Map(), isDummy: true };
+        return {
+            type: 'linear' as ScaleType,
+            domain: [0],
+            range: [0],
+            fn,
+            skip: new Map(),
+            isDummy: true
+        };
     }
     // gather all marks that use channels which support this scale
     const dataValues = new Set<RawValue>();
@@ -194,16 +202,17 @@ export function createScale<T extends ScaleOptions>(
             if (!skip.has(channel)) skip.set(channel, new Set());
 
             if (mark.data.length > 0) {
-                const channelOptions = isDataRecord(mark.options[channel])
-                    ? mark.options[channel]
-                    : { value: mark.options[channel], scale: CHANNEL_SCALE[channel] };
+                const channelOptions: { value: any; scale: ScaleName | null; [key: string]: any } =
+                    isDataRecord(mark.options[channel])
+                        ? (mark.options[channel] as any)
+                        : { value: mark.options[channel], scale: CHANNEL_SCALE[channel] };
                 // check if this mark channel is using this scale, which users can prevent
                 // by passing `{ scale: null }` as prop
                 const useScale =
                     channelOptions.scale === name &&
                     // only use scale if implicit scales are enabled or use has explicitly
                     // defined a scale
-                    (plotOptions.implicitScales || scaleOptions.scale) &&
+                    (plotOptions.implicitScales || scaleOpts.scale) &&
                     // type number means, someone is defining a channel as constant, e.g.
                     // <Dot r={10} /> in which case we don't want to pass it through a scale
                     // typeof channelOptions.value !== 'number' &&
@@ -241,7 +250,8 @@ export function createScale<T extends ScaleOptions>(
                             typeof channelOptions.value === 'string' &&
                             !looksLikeANumber(channelOptions.value) &&
                             !channelOptions.value.startsWith('__') &&
-                            mark.data[0][channelOptions.value] !== undefined
+                            (mark.data[0] as Record<string, any>)[channelOptions.value] !==
+                                undefined
                         ) {
                             propNames.add(channelOptions.value);
                         }
@@ -268,12 +278,12 @@ export function createScale<T extends ScaleOptions>(
                 }
 
                 // special handling of marks using the stackX/stackY transform
-                if (
-                    (name === 'x' || name === 'y') &&
-                    mark.options[ORIGINAL_NAME_KEYS[name]] &&
-                    !mark.options[ORIGINAL_NAME_KEYS[name]].startsWith('__')
-                ) {
-                    propNames.add(mark.options[ORIGINAL_NAME_KEYS[name]]);
+                if (name === 'x' || name === 'y') {
+                    const origKey = ORIGINAL_NAME_KEYS[name];
+                    const origVal = mark.options[origKey] as string | undefined;
+                    if (origVal && !origVal.startsWith('__')) {
+                        propNames.add(origVal);
+                    }
                 }
             } else {
                 // also skip marks without data to prevent exceptions
@@ -290,7 +300,7 @@ export function createScale<T extends ScaleOptions>(
     }
 
     // construct domain from data values
-    const valueArr = [...dataValues.values(), ...(scaleOptions.domain || [])].filter(
+    const valueArr = [...Array.from(dataValues), ...(scaleOptions.domain || [])].filter(
         (d) => d != null
     );
 
@@ -301,22 +311,24 @@ export function createScale<T extends ScaleOptions>(
 
     if (VALID_SCALE_TYPES[name] && !VALID_SCALE_TYPES[name].has(type)) {
         throw new Error(`Invalid scale type ${type} for scale
-            ${name}. Valid types are ${[...VALID_SCALE_TYPES[name]].join(', ')}`);
+            ${name}. Valid types are ${Array.from(VALID_SCALE_TYPES[name]).join(', ')}`);
     }
 
     const isOrdinal = isOrdinalScale(type);
 
     if (isOrdinal && sortOrdinalDomain) {
-        valueArr.sort(ascending);
+        valueArr.sort(ascending as (a: any, b: any) => number);
     }
 
     const valueArray =
-        type === 'quantile' || type === 'quantile-cont' ? allDataValues.toSorted() : valueArr;
+        type === 'quantile' || type === 'quantile-cont' ? [...allDataValues].sort() : valueArr;
 
-    let domain = scaleOptions.domain
+    let domain: RawValue[] = scaleOptions.domain
         ? isOrdinal
             ? scaleOptions.domain
-            : extent(scaleOptions.zero ? [0, ...scaleOptions.domain] : scaleOptions.domain)
+            : (extent(
+                  scaleOptions.zero ? [0, ...scaleOptions.domain] : (scaleOptions.domain as any[])
+              ) as unknown as [RawValue, RawValue])
         : type === 'band' ||
             type === 'point' ||
             type === 'ordinal' ||
@@ -324,9 +336,12 @@ export function createScale<T extends ScaleOptions>(
             type === 'quantile' ||
             type === 'quantile-cont'
           ? name === 'y'
-              ? valueArray.toReversed()
+              ? [...valueArray].reverse()
               : valueArray
-          : extent(scaleOptions.zero ? [0, ...valueArray] : valueArray);
+          : (extent(scaleOptions.zero ? [0, ...valueArray] : (valueArray as any[])) as unknown as [
+                RawValue,
+                RawValue
+            ]);
 
     if (scaleOptions.interval) {
         if (isOrdinal) {
@@ -340,10 +355,10 @@ export function createScale<T extends ScaleOptions>(
         }
     }
 
-    if (!scaleOptions.scale) {
+    if (!scaleOpts.scale) {
         throw new Error(`No scale function defined for ${name}`);
     }
-    const fn = scaleOptions.scale({
+    const fn = scaleOpts.scale({
         name,
         type,
         domain,
@@ -368,16 +383,16 @@ export function createScale<T extends ScaleOptions>(
             type === 'time'
                 ? null
                 : propNames.size === 1
-                  ? `${[...propNames.values()][0]}${type === 'log' ? ' (log)' : ''}`
+                  ? `${Array.from(propNames)[0]}${type === 'log' ? ' (log)' : ''}`
                   : null
     };
 }
 
 function domainFromInterval(domain: RawValue[], interval: string | number, name: ScaleName) {
-    const interval_ = maybeInterval(interval);
-    const [lo, hi] = extent(domain);
-    const out = interval_.range(lo, interval_.offset(hi));
-    return name === 'y' ? out.toReversed() : out;
+    const interval_ = maybeInterval(interval)!;
+    const [lo, hi] = extent(domain as any[]) as unknown as [RawValue, RawValue];
+    const out = interval_.range(lo as any, interval_.offset(hi as any) as any);
+    return name === 'y' ? (out as any[]).reverse() : out;
 }
 
 const markTypesWithBandDefault = {
@@ -460,7 +475,7 @@ export function getUsedScales(
                 channel,
                 !skipMarks.has(mark.id) &&
                     toChannelOption(channel, options[channel]).scale !== null &&
-                    !plot.scales[scale].isDummy
+                    !(plot.scales[scale] as any).isDummy
             ];
         })
     ) as { [k in ScaledChannelName]: boolean };
@@ -492,14 +507,16 @@ export function projectXY(
         // TODO: pretty sure this is not how projection streams are supposed to be used
         // efficiently, in observable plot, all data points of a mark are projected using
         // the same stream
-        let x_, y_;
-        const stream = scales.projection.stream({
-            point(px, py) {
+        let x_: number = 0;
+        let y_: number = 0;
+        const proj = scales.projection as any;
+        const stream = proj.stream({
+            point(px: number, py: number) {
                 x_ = px;
                 y_ = py;
             }
         });
-        stream.point(x, y);
+        stream.point(x as number, y as number);
         return [x_, y_];
     }
     return [
@@ -510,22 +527,22 @@ export function projectXY(
 
 export function projectX(channel: 'x' | 'x1' | 'x2', scales: PlotScales, value: RawValue) {
     return (
-        scales.x.fn(value) +
+        (scales.x.fn as any)(value) +
         (channel === 'x' && scales.x.type === 'band'
-            ? scales.x.fn.bandwidth() * 0.5
+            ? (scales.x.fn as any).bandwidth() * 0.5
             : channel === 'x2' && scales.x.type === 'band'
-              ? scales.x.fn.bandwidth()
+              ? (scales.x.fn as any).bandwidth()
               : 0)
     );
 }
 
 export function projectY(channel: 'y' | 'y1' | 'y2', scales: PlotScales, value: RawValue) {
     return (
-        scales.y.fn(value) +
+        (scales.y.fn as any)(value) +
         (channel === 'y' && scales.y.type === 'band'
-            ? scales.y.fn.bandwidth() * 0.5
+            ? (scales.y.fn as any).bandwidth() * 0.5
             : channel === 'y2' && scales.y.type === 'band'
-              ? scales.y.fn.bandwidth()
+              ? (scales.y.fn as any).bandwidth()
               : 0)
     );
 }

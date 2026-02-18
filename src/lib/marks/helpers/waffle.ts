@@ -113,7 +113,7 @@ type WaffleProps = {
 
 export function wafflePolygon(
     y: 'x' | 'y',
-    options: WaffleOptions,
+    options: WaffleOptions<any>,
     scales: PlotScales
 ): (d: ScaledDataRecord) => WaffleProps {
     const x = y === 'y' ? 'x' : 'y';
@@ -140,7 +140,10 @@ export function wafflePolygon(
     // The reference position.
     const tx = (barwidth - multiple * cx) / 2;
 
-    const transform = y === 'y' ? ([x, y]) => [x * cx, -y * cy] : ([x, y]) => [y * cy, x * cx];
+    const transform =
+        y === 'y'
+            ? ([x, y]: Point) => [x * cx, -y * cy] as Point
+            : ([x, y]: Point) => [y * cy, x * cx] as Point;
     // const mx = typeof x0 === 'function' ? (i) => x0(i) - barwidth / 2 : () => x0;
     const [ix, iy] = y === 'y' ? [0, 1] : [1, 0];
 
@@ -148,12 +151,12 @@ export function wafflePolygon(
     const mx = -barwidth / 2;
 
     return (d: ScaledDataRecord) => {
-        const y1val = d.resolved[y1];
-        const y2val = d.resolved[y2];
+        const y1val = (d.resolved as Record<string, any>)[y1] as number;
+        const y2val = (d.resolved as Record<string, any>)[y2] as number;
         const P = wafflePoints(round(y1val / unit), round(y2val / unit), multiple).map(transform);
         P.pop();
         const id = getPatternId();
-        const pos = [d[x] + tx + mx, y0];
+        const pos = [(d[x] ?? 0) + tx + mx, y0];
         return {
             pattern: {
                 id,

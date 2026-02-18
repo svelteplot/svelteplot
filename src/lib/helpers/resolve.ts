@@ -29,18 +29,22 @@ export function resolveProp<K, T>(
         // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
         // "recordized" by the recordi e transform. We want to hide this wrapping to the user
         // so we're passing the original value to accessor functions instead of our wrapped record
+        const d = datum as Record<string | symbol, unknown> | null;
         return datum == null
             ? accessorFn()
-            : accessorFn(datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum, datum[INDEX]);
+            : accessorFn(
+                  d!.hasOwnProperty(RAW_VALUE) ? (d![RAW_VALUE] as T) : datum,
+                  d![INDEX] as number
+              );
     } else {
         const accessorValue = accessor as K;
         // accessor may be a
         if (
             (typeof accessorValue === 'string' || typeof accessorValue === 'symbol') &&
             datum &&
-            datum[accessorValue] !== undefined
+            (datum as Record<string | symbol, unknown>)[accessorValue] !== undefined
         ) {
-            return datum[accessor] as K;
+            return (datum as Record<string | symbol, unknown>)[accessor as string | symbol] as K;
         }
     }
 
@@ -78,16 +82,16 @@ export function resolveChannel<T>(
     datum: DataRow<T>,
     channels: Partial<Record<ChannelName, ChannelAccessor<T> | ChannelAlias>>
 ): RawValue {
-    const scale = CHANNEL_SCALE[channel];
+    const scale = CHANNEL_SCALE[channel as ScaledChannelName];
     // the z channel has an automatic alias mechanism
     const accessor: ChannelAccessor | ChannelAlias =
         channel === 'z' ? channels.z || channels.fill || channels.stroke : channels[channel];
-    const channelOptions = toChannelOption(channel, accessor);
+    const channelOptions = toChannelOption(channel as ScaledChannelName, accessor);
     if (channelOptions.channel) {
         return resolveChannel(channelOptions.channel, datum, channels);
     }
 
-    return resolve(datum, channelOptions.value, channel, scale);
+    return resolve(datum as DataRow, channelOptions.value, channel, scale);
 }
 
 function resolve(
@@ -96,32 +100,38 @@ function resolve(
     channel: ChannelName,
     scale: ScaleName
 ) {
+    const d = datum as Record<string | symbol, unknown> | null;
     if (isDataRecord(datum)) {
         // use accessor function
         if (typeof accessor === 'function')
             // datum[RAW_VALUE] exists if an array of raw values was used as dataset and got
             // "recordized" by the recordize transform. We want to hide this wrapping to the user
             // so we're passing the original value to accessor functions instead of our wrapped record
-            return accessor(datum[RAW_VALUE] != null ? datum[RAW_VALUE] : datum, datum?.[INDEX]);
+            return accessor(
+                d![RAW_VALUE] != null
+                    ? (d![RAW_VALUE] as Record<string | symbol, RawValue>)
+                    : datum,
+                d?.[INDEX] as number
+            );
         // use accessor string
         if (
             (typeof accessor === 'string' || typeof accessor === 'symbol') &&
-            datum[accessor] !== undefined
+            datum[accessor as string] !== undefined
         )
-            return datum[accessor];
+            return datum[accessor as string];
         // fallback to channel name as accessor
         if (accessor === null && datum[channel] !== undefined) return datum[channel];
         return isRawValue(accessor) ? accessor : null;
     } else if (
         Array.isArray(datum) &&
         (typeof accessor === 'string' || typeof accessor === 'number') &&
-        datum[accessor] != null
+        datum[accessor as number] != null
     ) {
-        return datum[accessor];
+        return datum[accessor as number];
     } else {
         // return single value or accessor
         return typeof accessor === 'function'
-            ? accessor(datum, datum?.[INDEX])
+            ? accessor(datum as Record<string | symbol, RawValue>, (d?.[INDEX] ?? 0) as number)
             : accessor !== null && isRawValue(accessor)
               ? accessor
               : !Array.isArray(datum) && (scale === 'x' || scale === 'y')
@@ -161,12 +171,12 @@ export function resolveScaledStyleProps(
             ? { [defaultColorProp]: 'currentColor' }
             : {}),
         ...Object.fromEntries(
-            Object.entries(scaledStyleProps)
+            (Object.entries(scaledStyleProps) as [ScaledChannelName, string][])
                 .filter(([key]) => channels[key] != null)
                 .map(([key, cssAttr]) => [key, cssAttr, resolveChannel(key, datum, channels)])
                 .filter(([key, , value]) => isValid(value) || key === 'fill' || key === 'stroke')
                 .map(([key, cssAttr, value]) => {
-                    if (useScale[key]) {
+                    if (useScale[key as ScaledChannelName]) {
                         if (
                             value == undefined &&
                             (key === 'fill' || key === 'stroke') &&
@@ -174,7 +184,12 @@ export function resolveScaledStyleProps(
                         ) {
                             return [cssAttr, plot.options.color.unknown];
                         }
-                        return [cssAttr, plot.scales[CHANNEL_SCALE[key]].fn(value)];
+                        return [
+                            cssAttr,
+                            plot.scales[CHANNEL_SCALE[key as ScaledChannelName]].fn(
+                                value as RawValue & (string | Date)
+                            )
+                        ];
                     }
                     return [cssAttr, value];
                 })
@@ -219,11 +234,17 @@ export function resolveStyles(
             : {}),
         ...Object.fromEntries(
             (Object.entries(scaledStyleProps) as [ScaledChannelName, string][])
-                .filter(([key]) => channels[key] != null)
+                .filter(([key]) => (channels as Record<string, unknown>)[key] != null)
                 .map(([key, cssAttr]) => [
                     key,
                     cssAttr,
-                    recomputeChannels ? resolveChannel(key, datum?.datum, channels) : datum?.[key]
+                    recomputeChannels
+                        ? resolveChannel(
+                              key,
+                              datum?.datum,
+                              channels as Partial<Record<ChannelName, ChannelAccessor>>
+                          )
+                        : datum?.[key]
                 ])
                 .filter(
                     ([key, , value]) =>

@@ -125,8 +125,8 @@ const BANDWIDTH_FACTOR = {
 };
 
 function bandwidthSilverman(x: number[]) {
-    const iqr = quantileSorted(x, 0.75) - quantileSorted(x, 0.25);
-    const xvar = variance(x);
+    const iqr = (quantileSorted(x, 0.75) ?? 0) - (quantileSorted(x, 0.25) ?? 0);
+    const xvar = variance(x) ?? 0;
 
     const hi = Math.sqrt(xvar);
     let lo;
@@ -154,22 +154,34 @@ function density1d<T>(
 ): TransformArg<T> {
     const densityChannel = independent === 'x' ? 'y' : 'x';
 
-    const { kernel, bandwidth, interval, trim, channel, cumulative } = {
-        kernel: 'epanechnikov',
-        bandwidth: bandwidthSilverman,
-        interval: undefined,
+    const {
+        kernel: _kernel,
+        bandwidth: _bandwidth,
+        interval,
+        trim,
+        channel,
+        cumulative: _cumulative
+    } = {
+        kernel: 'epanechnikov' as Kernel,
+        bandwidth: bandwidthSilverman as number | ((data: number[]) => number),
+        interval: undefined as number | string | undefined,
         trim: false,
-        cumulative: false,
+        cumulative: false as false | 1 | -1,
         channel: densityChannel,
         ...options
     };
+    const kernel = _kernel as Kernel;
+    const bandwidth = _bandwidth as number | ((data: number[]) => number);
+    const cumulative = _cumulative as false | 1 | -1;
     // one-dimensional kernel density estimation
     const k = maybeKernel(kernel || KERNEL.epanechnikov);
 
-    const outData = [];
+    const outData: Record<string | symbol, any>[] = [];
 
     const isRawDataArray =
         Array.isArray(data) && !isDataRecord(data[0]) && channels[independent] == null;
+
+    const weightFn = typeof weight === 'function' ? (weight as (d: T) => number) : null;
 
     // compute bandwidth before grouping
     const resolvedData: T[] = (
@@ -178,26 +190,33 @@ function density1d<T>(
                   (d) =>
                       ({
                           [VALUE]: d,
-                          [WEIGHT]: typeof weight === 'function' ? weight(d) : 1
+                          [WEIGHT]: weightFn ? weightFn(d) : 1
                       }) as any
               )
             : data.map((d) => ({
                   [VALUE]: resolveChannel(independent, d, channels),
-                  [WEIGHT]: typeof weight === 'function' ? weight(d) : 1,
+                  [WEIGHT]: weightFn ? weightFn(d) : 1,
                   ...d
               }))
-    ).filter((d) => isValid(d[VALUE]) && isValid(d[WEIGHT]) && d[WEIGHT] >= 0);
+    ).filter(
+        (d) => isValid((d as any)[VALUE]) && isValid((d as any)[WEIGHT]) && (d as any)[WEIGHT] >= 0
+    );
 
-    const values = resolvedData.map((d) => d[VALUE]);
+    const values: number[] = resolvedData.map((d) => (d as any)[VALUE]);
 
     // compute bandwidth from full data
     const bw =
         typeof bandwidth === 'function'
-            ? (BANDWIDTH_FACTOR[kernel] ?? 1) * bandwidth(values.toSorted((a, b) => a - b))
+            ? ((typeof kernel === 'string' ? BANDWIDTH_FACTOR[kernel] : undefined) ?? 1) *
+              bandwidth(values.toSorted((a, b) => a - b))
             : bandwidth;
 
-    const I = maybeInterval(interval ?? roundToTerminating(bw / 5));
-    let [min, max] = extent(values);
+    const I = maybeInterval(interval ?? roundToTerminating(bw / 5)) as {
+        floor: (d: number) => number;
+        offset: (d: number, step?: number) => number;
+        range: (lo: number, hi: number) => number[];
+    };
+    let [min, max] = extent(values) as [number, number];
     if (!trim) {
         const r = max - min;
         min = I.floor(min - r * 0.2);
@@ -208,10 +227,10 @@ function density1d<T>(
     // let maxX = -Infinity;
 
     const res = groupFacetsAndZ(resolvedData, channels, (items, groupProps) => {
-        const values = items.map((d) => d[VALUE]);
-        const weights = items.map((d) => d[WEIGHT]);
+        const values = items.map((d) => (d as any)[VALUE] as number);
+        const weights = items.map((d) => (d as any)[WEIGHT] as number);
 
-        let kdeValues = kde1d(values as number[], weights, atValues, k, bw, cumulative)
+        let kdeValues = kde1d(values, weights, atValues, k, bw, cumulative)
             .filter(([x, density]) => x != null && !isNaN(density))
             .sort((a, b) => a[0] - b[0]);
 
