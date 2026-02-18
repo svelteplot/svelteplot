@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { binX, bin, type BinXOptions } from './bin.js';
 import { range } from 'd3-array';
 import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
+import type { DataRecord } from '../types/index.js';
 
 describe('binX', () => {
     const input = {
@@ -25,9 +26,24 @@ describe('binX', () => {
         const { data, ...channels } = binX(input, options);
 
         const expectedData = [
-            { [channels.x1]: 0, [channels.x]: 1, [channels.x2]: 2, [channels.y]: 1 },
-            { [channels.x1]: 2, [channels.x]: 3, [channels.x2]: 4, [channels.y]: 2 },
-            { [channels.x1]: 4, [channels.x]: 5, [channels.x2]: 6, [channels.y]: 2 }
+            {
+                [channels.x1 as string]: 0,
+                [channels.x as string]: 1,
+                [channels.x2 as string]: 2,
+                [channels.y as string]: 1
+            },
+            {
+                [channels.x1 as string]: 2,
+                [channels.x as string]: 3,
+                [channels.x2 as string]: 4,
+                [channels.y as string]: 2
+            },
+            {
+                [channels.x1 as string]: 4,
+                [channels.x as string]: 5,
+                [channels.x2 as string]: 6,
+                [channels.y as string]: 2
+            }
         ];
         const expectedChannels = {
             [ORIGINAL_NAME_KEYS.x]: 'x',
@@ -51,9 +67,24 @@ describe('binX', () => {
         const { data, ...channels } = binX(input, options);
 
         const expectedOutputData = [
-            { [channels.x1]: 0, [channels.x]: 1, [channels.x2]: 2, [channels.y]: 1 },
-            { [channels.x1]: 2, [channels.x]: 3, [channels.x2]: 4, [channels.y]: 3 },
-            { [channels.x1]: 4, [channels.x]: 5, [channels.x2]: 6, [channels.y]: 5 }
+            {
+                [channels.x1 as string]: 0,
+                [channels.x as string]: 1,
+                [channels.x2 as string]: 2,
+                [channels.y as string]: 1
+            },
+            {
+                [channels.x1 as string]: 2,
+                [channels.x as string]: 3,
+                [channels.x2 as string]: 4,
+                [channels.y as string]: 3
+            },
+            {
+                [channels.x1 as string]: 4,
+                [channels.x as string]: 5,
+                [channels.x2 as string]: 6,
+                [channels.y as string]: 5
+            }
         ];
 
         const expectedChannels = {
@@ -87,7 +118,7 @@ describe('binX', () => {
 
         const expectedChannels = {
             [ORIGINAL_NAME_KEYS.x]: 'x',
-            [ORIGINAL_NAME_KEYS.y]: 'Average ( y )',
+            [ORIGINAL_NAME_KEYS.y]: 'Average\u2009(\u2009y\u2009)',
             insetLeft: 0.5,
             insetRight: 0.5
         };
@@ -100,12 +131,12 @@ describe('binX', () => {
 
         // Make the test timezone-agnostic by checking date properties rather than exact date objects
         const firstBin = data[0];
-        expect(firstBin[channels.y]).toBe(1.5);
+        expect(firstBin[channels.y as string]).toBe(1.5);
 
         // Check that the dates are roughly a week apart (5-7 days)
-        const x1Time = firstBin[channels.x1].getTime();
-        const x2Time = firstBin[channels.x2].getTime();
-        const xTime = firstBin[channels.x].getTime();
+        const x1Time = (firstBin[channels.x1 as string] as Date).getTime();
+        const x2Time = (firstBin[channels.x2 as string] as Date).getTime();
+        const xTime = (firstBin[channels.x as string] as Date).getTime();
 
         // Check that x is approximately in the middle of x1 and x2
         expect(xTime).toBeGreaterThan(x1Time);
@@ -140,7 +171,7 @@ describe('binX', () => {
     //         x1: '__x1',
     //         x2: '__x2',
     //         __x_origField: 'x',
-    //         __y_origField: 'Average ( y )'
+    //         __y_origField: 'Average ( y )'
     //     });
     //     expect(data).toHaveLength(5);
     //     expect(data[0]).toEqual({
@@ -172,36 +203,29 @@ describe('bin', () => {
         expect(channels[ORIGINAL_NAME_KEYS.y]).toBe('y');
         expect(channels.inset).toBe(0.5);
 
-        // DEBUG: inspect records during development
-        // console.log(
-        //     binned.map((d) => ({
-        //         x1: d[channels.x1],
-        //         x: d[channels.x],
-        //         x2: d[channels.x2],
-        //         y1: d[channels.y1],
-        //         y: d[channels.y],
-        //         y2: d[channels.y2],
-        //         c: d[channels.fill]
-        //     }))
-        // );
-
         // should produce 4 occupied bins
         expect(binned).toHaveLength(4);
 
         // Each input point should map to exactly one bin
         const maxXR = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.x2]) ? d[channels.x2] : -Infinity))
+            ...binned.map((d: DataRecord) => {
+                const v = d[channels.x2 as string];
+                return Number.isFinite(v) ? (v as number) : -Infinity;
+            })
         );
         const maxYT = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.y2]) ? d[channels.y2] : -Infinity))
+            ...binned.map((d: DataRecord) => {
+                const v = d[channels.y2 as string];
+                return Number.isFinite(v) ? (v as number) : -Infinity;
+            })
         );
 
         for (const p of data) {
-            const matches = binned.filter((d) => {
-                const xl = d[channels.x1] ?? -Infinity;
-                const xr = d[channels.x2] ?? Infinity;
-                const yb = d[channels.y1] ?? -Infinity;
-                const yt = d[channels.y2] ?? Infinity;
+            const matches = binned.filter((d: DataRecord) => {
+                const xl = (d[channels.x1 as string] ?? -Infinity) as number;
+                const xr = (d[channels.x2 as string] ?? Infinity) as number;
+                const yb = (d[channels.y1 as string] ?? -Infinity) as number;
+                const yt = (d[channels.y2 as string] ?? Infinity) as number;
                 const lastX = Number.isFinite(xr) && xr === maxXR;
                 const lastY = Number.isFinite(yt) && yt === maxYT;
                 const inX = p.x >= xl && (lastX ? p.x <= xr : p.x < xr);
@@ -212,20 +236,23 @@ describe('bin', () => {
         }
 
         // Sum of counts equals number of input points
-        const total = binned.reduce((acc, d) => acc + d[channels.fill], 0);
+        const total = binned.reduce(
+            (acc: number, d: DataRecord) => acc + (d[channels.fill as string] as number),
+            0
+        );
         expect(total).toBe(data.length);
 
         // For bins with both bounds defined, center equals midpoint
         for (const d of binned) {
-            const xl = d[channels.x1];
-            const xr = d[channels.x2];
-            const yb = d[channels.y1];
-            const yt = d[channels.y2];
+            const xl = d[channels.x1 as string] as number;
+            const xr = d[channels.x2 as string] as number;
+            const yb = d[channels.y1 as string] as number;
+            const yt = d[channels.y2 as string] as number;
             if (Number.isFinite(xl) && Number.isFinite(xr)) {
-                expect(d[channels.x]).toBe((xl + xr) / 2);
+                expect(d[channels.x as string]).toBe((xl + xr) / 2);
             }
             if (Number.isFinite(yb) && Number.isFinite(yt)) {
-                expect(d[channels.y]).toBe((yb + yt) / 2);
+                expect(d[channels.y as string]).toBe((yb + yt) / 2);
             }
         }
     });
@@ -256,18 +283,24 @@ describe('bin', () => {
 
         // Each input point should map to exactly one bin
         const maxXR = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.x2]) ? d[channels.x2] : -Infinity))
+            ...binned.map((d: DataRecord) => {
+                const v = d[channels.x2 as string];
+                return Number.isFinite(v) ? (v as number) : -Infinity;
+            })
         );
         const maxYT = Math.max(
-            ...binned.map((d) => (Number.isFinite(d[channels.y2]) ? d[channels.y2] : -Infinity))
+            ...binned.map((d: DataRecord) => {
+                const v = d[channels.y2 as string];
+                return Number.isFinite(v) ? (v as number) : -Infinity;
+            })
         );
 
         for (const p of data) {
-            const matches = binned.filter((d) => {
-                const xl = d[channels.x1] ?? -Infinity;
-                const xr = d[channels.x2] ?? Infinity;
-                const yb = d[channels.y1] ?? -Infinity;
-                const yt = d[channels.y2] ?? Infinity;
+            const matches = binned.filter((d: DataRecord) => {
+                const xl = (d[channels.x1 as string] ?? -Infinity) as number;
+                const xr = (d[channels.x2 as string] ?? Infinity) as number;
+                const yb = (d[channels.y1 as string] ?? -Infinity) as number;
+                const yt = (d[channels.y2 as string] ?? Infinity) as number;
                 const lastX = Number.isFinite(xr) && xr === maxXR;
                 const lastY = Number.isFinite(yt) && yt === maxYT;
                 const inX = p.x >= xl && (lastX ? p.x <= xr : p.x < xr);
@@ -278,20 +311,23 @@ describe('bin', () => {
         }
 
         // Sum of counts equals number of input points
-        const total = binned.reduce((acc, d) => acc + d[channels.fill], 0);
+        const total = binned.reduce(
+            (acc: number, d: DataRecord) => acc + (d[channels.fill as string] as number),
+            0
+        );
         expect(total).toBe(data.length);
 
         // For bins with both bounds defined, center equals midpoint
         for (const d of binned) {
-            const xl = d[channels.x1];
-            const xr = d[channels.x2];
-            const yb = d[channels.y1];
-            const yt = d[channels.y2];
+            const xl = d[channels.x1 as string] as number;
+            const xr = d[channels.x2 as string] as number;
+            const yb = d[channels.y1 as string] as number;
+            const yt = d[channels.y2 as string] as number;
             if (Number.isFinite(xl) && Number.isFinite(xr)) {
-                expect(d[channels.x]).toBe((xl + xr) / 2);
+                expect(d[channels.x as string]).toBe((xl + xr) / 2);
             }
             if (Number.isFinite(yb) && Number.isFinite(yt)) {
-                expect(d[channels.y]).toBe((yb + yt) / 2);
+                expect(d[channels.y as string]).toBe((yb + yt) / 2);
             }
         }
     });

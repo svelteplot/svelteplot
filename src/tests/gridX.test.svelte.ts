@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import GridXTest from './gridX.test.svelte';
 import { tick } from 'svelte';
 
@@ -54,7 +55,7 @@ describe('GridX mark', () => {
             },
             gridArgs: {
                 dx: 0,
-                dy: 0,
+                dy: 0 as number | (() => number),
                 data: [0, 5, 10]
             }
         });
@@ -82,8 +83,8 @@ describe('GridX mark', () => {
     });
 
     it('passes index to accessor functions', () => {
-        const y1 = vi.fn((d, i) => d + i);
-        const stroke = vi.fn((d, i) => 'gray');
+        const y1 = vi.fn((d: any, i: number) => d + i);
+        const stroke = vi.fn((d: any, i: number) => 'gray');
         render(GridXTest, {
             props: {
                 plotArgs: {
