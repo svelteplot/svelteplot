@@ -309,12 +309,15 @@ export type PlotScale = {
      */
     skip: Map<ScaledChannelName, Set<symbol>>;
     /**
-     * the underlying d3 scale function that maps domain values to range values
+     * the underlying d3 scale function that maps domain values to range values.
+     * Typed as a broad callable since the actual type depends on the scale type
+     * (linear, band, ordinal, etc.) and may be augmented with custom methods.
      */
-    fn: ScaleLinear<RawValue, number> &
-        ScaleBand<RawValue[]> &
-        ScaleOrdinal<string | Date, number> &
-        ScaleOrdinal<string | Date, string>;
+    fn: ((value: any) => any) & Record<string, any>;
+    /**
+     * whether this is a dummy scale (created when no scale was defined)
+     */
+    isDummy?: boolean;
 };
 
 export type PlotScales = Record<ScaleName, PlotScale>;

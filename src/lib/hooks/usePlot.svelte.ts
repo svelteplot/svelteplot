@@ -8,13 +8,13 @@ import type { PlotScales, PlotState as TPlotState } from 'svelteplot/types';
 class PlotState implements TPlotState {
     width: number = $state(50);
     height: number = $state(50);
-    options: PlotOptions = $state({});
+    options: PlotOptions = $state({} as PlotOptions);
     facetWidth: number = $state(0);
     facetHeight: number = $state(0);
     plotWidth: number = $state(0);
     plotHeight: number = $state(0);
-    scales: PlotScales = $state();
-    body: HTMLDivElement = $state();
+    scales: PlotScales = $state(undefined as unknown as PlotScales);
+    body: HTMLDivElement = $state(undefined as unknown as HTMLDivElement);
     /**
      * True if there's a color scale and a symbol scale and both are bound to the same
      * single channel accessor.
@@ -37,8 +37,8 @@ class PlotState implements TPlotState {
     }
 
     /** returns a read-only wrapper exposing only public properties */
-    get publicState() {
-        return new PublicPlotState(this);
+    get publicState(): Readonly<TPlotState> {
+        return new PublicPlotState(this) as unknown as Readonly<TPlotState>;
     }
 }
 
@@ -88,10 +88,10 @@ class PublicPlotState {
 }
 
 /** creates a new PlotState instance from the given initial state */
-export function setPlot(initialState: PlotState): PlotState {
+export function setPlot(initialState: TPlotState): PlotState {
     return new PlotState({
         ...initialState
-    });
+    } as PlotState);
 }
 
 /** returns the current Plot's public state from Svelte context. Must be called within a `<Plot>` component tree. */

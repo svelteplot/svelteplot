@@ -11,11 +11,11 @@ import { RAW_VALUE } from '../../transforms/recordize.js';
 import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
 
-// Extend the MouseEvent type to include the properties we're using
+// Extend the MouseEvent type to include custom plot data properties
 declare global {
     interface MouseEvent {
-        layerX?: number;
-        layerY?: number;
+        readonly layerX: number;
+        readonly layerY: number;
         dataX?: number | string | Date;
         dataY?: number | string | Date;
     }
@@ -112,7 +112,10 @@ export function addEventHandlers<T extends DataRow>({
                             origEvent.clientY - facetRect.top + (plotOptions.marginTop ?? 0);
 
                         if (scales.projection) {
-                            const [x, y] = scales.projection.invert([relativeX, relativeY]);
+                            const [x, y] = (scales.projection as any).invert([
+                                relativeX,
+                                relativeY
+                            ]);
                             origEvent.dataX = x;
                             origEvent.dataY = y;
                         } else {
@@ -121,7 +124,7 @@ export function addEventHandlers<T extends DataRow>({
                         }
                     }
 
-                    eventHandler(
+                    (eventHandler as any)(
                         origEvent,
                         datum.hasOwnProperty(RAW_VALUE) ? datum[RAW_VALUE] : datum,
                         datum[INDEX]
@@ -138,7 +141,7 @@ export function addEventHandlers<T extends DataRow>({
 
         return () => {
             for (const [eventName, handler] of listeners.entries()) {
-                node.removeEventListener(eventName.substring(2), handler);
+                node.removeEventListener(eventName.substring(2), handler as EventListener);
             }
         };
     };
