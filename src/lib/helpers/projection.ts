@@ -86,7 +86,15 @@ export function createProjection(
     // let projFactory;
     let aspectRatio: number = defaultAspectRatio;
 
-    const projFactory = projOptions as unknown as ((...args: unknown[]) => unknown) | undefined;
+    let projFactory: ((...args: unknown[]) => unknown) | undefined;
+    if (typeof projOptions === 'function') {
+        // After destructuring, projOptions may be reassigned from an object `type` property,
+        // which can be a projection initializer function.
+        projFactory = projOptions as (...args: unknown[]) => unknown;
+    } else if (typeof projOptions === 'string') {
+        // String projection types are not handled here; treat as no projection.
+        return;
+    }
 
     // Compute the frame dimensions and invoke the projection initializer.
     const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;

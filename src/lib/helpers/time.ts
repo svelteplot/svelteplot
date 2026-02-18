@@ -231,6 +231,7 @@ function asInterval([name, period]: [string, number], type: 'time' | 'utc') {
     let interval: CountableTimeInterval | undefined = (
         type === 'time' ? timeIntervals : utcIntervals
     ).get(name);
+    if (!interval) throw new Error('invalid interval: ' + name);
     if (period > 1) {
         interval = interval!.every(period) as CountableTimeInterval | undefined;
         (interval as any)[intervalDuration] = durations.get(name)! * period;

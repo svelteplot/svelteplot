@@ -278,6 +278,8 @@ export type LegendScaleOptions = ScaleOptions & {
     legend: boolean;
 };
 
+type OrdinalDomain = string | Date;
+
 export type PlotScale = {
     /**
      * the resolved scale type
@@ -313,7 +315,10 @@ export type PlotScale = {
      * Typed as a broad callable since the actual type depends on the scale type
      * (linear, band, ordinal, etc.) and may be augmented with custom methods.
      */
-    fn: ((value: any) => any) & Record<string, any>;
+    fn:
+        | ScaleLinear<RawValue, number>
+        | ScaleBand<OrdinalDomain>
+        | ScaleOrdinal<OrdinalDomain, number>;
     /**
      * whether this is a dummy scale (created when no scale was defined)
      */

@@ -55,8 +55,8 @@ const StaticReducer: Record<string, ReducerFunc> = {
     deviation,
     first: ((d: any[]) => d[0]) as ReducerFunc,
     last: ((d: any[]) => d.at(-1)) as ReducerFunc,
-    difference: ((d: any[]) => (d.at(-1) ?? 0) - d[0]) as ReducerFunc,
-    ratio: ((d: any[]) => (d.at(-1) ?? 0) / d[0]) as ReducerFunc
+    difference: ((d: any[]) => d.at(-1) - d[0]) as ReducerFunc,
+    ratio: ((d: any[]) => d.at(-1) / d[0]) as ReducerFunc
     // TODO: proportion
     // TODO: proportion-facet
     // TODO: min-index
