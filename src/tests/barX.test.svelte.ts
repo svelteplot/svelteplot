@@ -1,5 +1,6 @@
 import { describe, it, vi, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import BarXTest from './barX.test.svelte';
 import { getPathDims, getRectDims, parsePath } from './utils';
 import { tick } from 'svelte';
@@ -191,15 +192,15 @@ describe('BarX mark', () => {
                 plotArgs: {},
                 barArgs: {
                     data: timeseries,
-                    x: (d, index) => {
+                    x: (d: any, index: number) => {
                         xIndex(index);
                         return d.value;
                     },
-                    fill: (d, index) => {
+                    fill: (d: any, index: number) => {
                         fillIndex(index);
                         return 'steelblue';
                     },
-                    dx: (x, index) => {
+                    dx: (x: any, index: number) => {
                         dxIndex(index);
                         return 0;
                     },
@@ -259,7 +260,7 @@ describe('BarX mark', () => {
                 plotArgs: {},
                 barArgs: {
                     data: [2, -2],
-                    borderRadius: (d) => (d > 0 ? { topRight: 2 } : { topLeft: 2 })
+                    borderRadius: (d: any) => (d > 0 ? { topRight: 2 } : { topLeft: 2 })
                 }
             }
         });
@@ -268,7 +269,7 @@ describe('BarX mark', () => {
         expect(bars.length).toBe(2);
         const paths = Array.from(bars).map((d) =>
             parsePath(d)
-                .map((p) => p.code)
+                .map((p: any) => p.code)
                 .join('')
         );
         expect(paths[0]).toBe('MHAVHVZ');
