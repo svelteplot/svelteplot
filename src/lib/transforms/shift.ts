@@ -23,11 +23,10 @@ export function shiftX(
         shiftBy = { x: shiftBy };
     }
     if (shiftBy) {
-        if (shiftBy)
-            return shiftChannels('x', shiftBy as Record<string, string | number>, {
-                data,
-                ...channels
-            });
+        return shiftChannels('x', shiftBy as Record<string, string | number>, {
+            data,
+            ...channels
+        });
     }
     return { data, ...channels };
 }

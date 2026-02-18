@@ -10,7 +10,7 @@ export const RENAME = Symbol('renamed');
 /**
  * renames a channel without modifying the data
  */
-export function renameChannels<T>(
+export function renameChannels(
     { data, ...channels }: TransformArg<DataRecord>,
     options: RenameChannelsOptions
 ): TransformArg<DataRecord> {
@@ -30,7 +30,7 @@ export function renameChannels<T>(
 /**
  * renames a channel and copy the data
  */
-export function renameChannelsAndData<T>(
+export function renameChannelsAndData(
     { data, ...channels }: TransformArg<DataRecord>,
     options: RenameChannelsOptions
 ): TransformArg<DataRecord> {
@@ -55,7 +55,7 @@ export function renameChannelsAndData<T>(
  * copies a channel's accessor to multiple target channels, then removes
  * the source channel
  */
-export function replaceChannels<T>(
+export function replaceChannels(
     { data, ...channels }: TransformArg<DataRecord>,
     options: ReplaceChannelsOptions
 ): TransformArg<DataRecord> {

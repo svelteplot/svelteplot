@@ -196,7 +196,7 @@ function groupXYZ(
                 const copiedProps: DataRecord = {};
                 // copy properties from first item of each group
                 options.copy?.forEach((prop) => {
-                    copiedProps[prop] = (items as DataRecord[])[0][prop];
+                    copiedProps[prop] = items[0][prop];
                 });
                 const item = { ...baseRecord, ...copiedProps, ...itemGroupProps } as DataRecord;
                 reduceOutputs(
