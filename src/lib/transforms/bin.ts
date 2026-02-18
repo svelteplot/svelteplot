@@ -278,8 +278,7 @@ export function bin(
 
         const tExtentLo =
             (yThresholds as number[]).filter((d) => d < (ylo as number)).at(-1) ?? ylo;
-        const tExtentHi =
-            (yThresholds as number[]).filter((d) => d > (yhi as number)).at(0) ?? yhi;
+        const tExtentHi = (yThresholds as number[]).filter((d) => d > (yhi as number)).at(0) ?? yhi;
 
         binY(groupX).forEach((groupY, i) => {
             if (groupY.length === 0) return;
