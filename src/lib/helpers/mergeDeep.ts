@@ -1,30 +1,28 @@
-type ObjectType = { [key: string]: any };
+type ObjectType = Record<string, unknown>;
 
-function isObject(item: any): item is ObjectType {
-    return item && typeof item === 'object' && !Array.isArray(item);
+function isObject(item: unknown): item is ObjectType {
+    return item != null && typeof item === 'object' && !Array.isArray(item);
 }
 
 export default function mergeDeep<T extends ObjectType>(
     target: Partial<T>,
     ...sources: Partial<T>[]
 ): T {
-    if (!sources.length) return target as T;
-    const source = sources.shift();
-
-    if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-            if (isObject(source[key])) {
-                if (!target[key]) {
-                    Object.assign(target, { [key]: {} });
-                } else {
-                    target[key] = Object.assign({}, target[key]);
+    for (const source of sources) {
+        if (isObject(target) && isObject(source)) {
+            for (const key in source) {
+                if (isObject(source[key])) {
+                    if (!target[key]) {
+                        Object.assign(target, { [key]: {} });
+                    } else {
+                        target[key] = Object.assign({}, target[key]) as T[Extract<keyof T, string>];
+                    }
+                    mergeDeep(target[key] as T, source[key] as Partial<T>);
+                } else if (source[key] !== null) {
+                    Object.assign(target, { [key]: source[key] });
                 }
-                mergeDeep(target[key] as T, source[key]);
-            } else if (source[key] !== null) {
-                Object.assign(target, { [key]: source[key] });
             }
         }
     }
-
-    return mergeDeep(target, ...sources);
+    return target as T;
 }
