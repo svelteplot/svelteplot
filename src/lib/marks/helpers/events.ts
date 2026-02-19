@@ -5,12 +5,17 @@ import type {
     PlotScale,
     PlotState
 } from '../../types/index.js';
-import type { MouseEventHandler } from 'svelte/elements';
 import { pick } from 'es-toolkit';
 import { RAW_VALUE } from '../../transforms/recordize.js';
 import { INDEX } from '../../constants.js';
 import type { Attachment } from 'svelte/attachments';
 import type { ScaleBand } from 'd3-scale';
+
+type MouseEventHandler<T extends EventTarget = EventTarget> = (
+    event: Event & { currentTarget: T },
+    datum?: unknown,
+    index?: number
+) => void;
 
 // Extend the MouseEvent type to include custom plot data properties
 declare global {

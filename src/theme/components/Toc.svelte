@@ -30,7 +30,9 @@
 
     function computeActiveIdx() {
         if (!mounted) return;
-        const positions = anchors.map(({ slugId }) => document.getElementById(slugId).offsetTop);
+        const positions = anchors.map(
+            ({ slugId }) => document.getElementById(slugId)?.offsetTop ?? 0
+        );
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
             if (scrollY >= pos && (scrollY < positions[i + 1] || i === positions.length - 1)) {
@@ -41,13 +43,14 @@
     }
 
     $effect(() => {
-        computeActiveIdx(scrollY);
+        computeActiveIdx();
     });
 
     onMount(() => {
         mounted = true;
         const anchorTarget = decodeURI(page.url.hash);
         if (!anchorTarget) return;
+        /** @type {HTMLElement | null} */
         const ele = document.querySelector(anchorTarget);
         if (ele) scrollY = ele.offsetTop;
         tick().then(computeActiveIdx);

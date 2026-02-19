@@ -7,3 +7,9 @@ repos:
             language: system
             files: \.(js|ts|mts|cts|svelte)$
             pass_filenames: false
+          - id: svelte-check
+            name: svelte-check
+            entry: pnpm exec svelte-check --tsconfig ./tsconfig.json --diagnostic-sources svelte
+            language: system
+            files: \.(svelte|svelte\.ts)$
+            pass_filenames: false
