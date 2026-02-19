@@ -30,7 +30,9 @@
 
     function computeActiveIdx() {
         if (!mounted) return;
-        const positions = anchors.map(({ slugId }) => document.getElementById(slugId)?.offsetTop ?? 0);
+        const positions = anchors.map(
+            ({ slugId }) => document.getElementById(slugId)?.offsetTop ?? 0
+        );
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
             if (scrollY >= pos && (scrollY < positions[i + 1] || i === positions.length - 1)) {
