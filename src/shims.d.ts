@@ -21,7 +21,7 @@ declare module 'virtual:sveltepress/theme-default' {
             hover?: string;
         };
         pwa?: import('@vite-pwa/sveltekit').SvelteKitPWAOptions;
-        i18n?: { footnoteLabel?: string; expansionTitle?: string };
+        i18n?: { footnoteLabel?: string; expansionTitle?: string; lastUpdateAt?: string };
         [key: string]: unknown;
     };
 
