@@ -48,7 +48,8 @@
         mounted = true;
         const anchorTarget = decodeURI(page.url.hash);
         if (!anchorTarget) return;
-        const ele = document.querySelector(anchorTarget) as HTMLElement | null;
+        /** @type {HTMLElement | null} */
+        const ele = document.querySelector(anchorTarget);
         if (ele) scrollY = ele.offsetTop;
         tick().then(computeActiveIdx);
     });

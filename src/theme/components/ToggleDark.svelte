@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { browser } from '$app/environment';
     import { onMount, tick } from 'svelte';
     import themeOptions from 'virtual:sveltepress/theme-default';
@@ -8,36 +8,49 @@
     import { darkMode, isDark } from './layout';
 
     const key = 'SVELTEPRESS_DARK_MODE2';
+    type DarkMode = 'light' | 'dark' | 'auto';
+    type ThemeColor = { light: string; dark: string };
+    type StartViewTransition = (callback: () => Promise<void> | void) => ViewTransition;
 
-    const themeColor = themeOptions.themeColor || { light: '#fff', dark: '#000' };
+    const toThemeColor = (color: unknown): ThemeColor => {
+        if (color && typeof color === 'object' && 'light' in color && 'dark' in color) {
+            const maybeColor = color as { light?: unknown; dark?: unknown };
+            if (typeof maybeColor.light === 'string' && typeof maybeColor.dark === 'string') {
+                return { light: maybeColor.light, dark: maybeColor.dark };
+            }
+        }
+        return { light: '#fff', dark: '#000' };
+    };
+
+    const themeColor = toThemeColor(themeOptions.themeColor);
+
     function addOrRemoveClass() {
         localStorage.setItem(key, $darkMode);
         if ($isDark) {
             document.querySelector('html')?.classList.add('dark');
-            if (themeColor) {
-                document.getElementById('theme-color')?.setAttribute('content', themeColor.dark);
-            }
+            document.getElementById('theme-color')?.setAttribute('content', themeColor.dark);
         } else {
             document.querySelector('html')?.classList.remove('dark');
-            if (themeColor) {
-                document.getElementById('theme-color')?.setAttribute('content', themeColor.light);
-            }
+            document.getElementById('theme-color')?.setAttribute('content', themeColor.light);
         }
     }
 
-    function toggle(evt) {
+    function toggle(evt: MouseEvent) {
+        const startViewTransition = (
+            document as Document & { startViewTransition?: StartViewTransition }
+        ).startViewTransition;
         const isAppearanceTransition =
-            document.startViewTransition &&
+            typeof startViewTransition === 'function' &&
             !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (!isAppearanceTransition) {
-            if (darkMode === 'light') {
+            if ($darkMode === 'light') {
                 $darkMode = 'dark';
                 $isDark = true;
-            } else if (darkMode === 'dark') {
+            } else if ($darkMode === 'dark') {
                 $darkMode = 'auto';
                 $isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            } else if (darkMode === 'auto') {
+            } else if ($darkMode === 'auto') {
                 $darkMode = 'light';
                 $isDark = false;
             }
@@ -70,7 +83,7 @@
             tick().then(addOrRemoveClass);
             return;
         }
-        const transition = document.startViewTransition(async () => {
+        const transition = startViewTransition(async () => {
             await tick();
             addOrRemoveClass();
         });
@@ -94,7 +107,7 @@
         });
     }
 
-    function handleColorSchemeChange(e) {
+    function handleColorSchemeChange(e: MediaQueryList | MediaQueryListEvent) {
         if ($darkMode === 'auto') {
             if (e.matches) {
                 $isDark = true;
@@ -105,7 +118,7 @@
         }
     }
 
-    let mediaQuery;
+    let mediaQuery: MediaQueryList | undefined;
 
     if (browser) {
         let storedMode = window.localStorage.getItem(key);
@@ -113,7 +126,7 @@
             storedMode = 'auto';
             window.localStorage.setItem(key, storedMode);
         }
-        $darkMode = storedMode;
+        $darkMode = storedMode as DarkMode;
         mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         handleColorSchemeChange(mediaQuery);
     }
