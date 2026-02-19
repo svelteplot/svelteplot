@@ -51,16 +51,13 @@ declare module 'virtual:sveltepress/theme-default' {
             themeLight?: string;
             twoslash?: boolean | Record<string, unknown>;
         };
-        themeColor?:
-            | {
-                  gradient?: { start: string; end: string };
-                  primary?: string;
-                  hover?: string;
-              }
-            | {
-                  light: string;
-                  dark: string;
-              };
+        themeColor?: {
+            gradient?: { start: string; end: string };
+            primary?: string;
+            hover?: string;
+            light?: string;
+            dark?: string;
+        };
         pwa?: import('@vite-pwa/sveltekit').SvelteKitPWAOptions & {
             darkManifest?: string;
         };
