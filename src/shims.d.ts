@@ -29,6 +29,17 @@ declare module 'virtual:sveltepress/theme-default' {
     export default themeOptions;
 }
 
+declare module 'virtual:sveltepress/site' {
+    export type SiteConfig = {
+        title?: string;
+        description?: string;
+        [key: string]: unknown;
+    };
+
+    const siteConfig: SiteConfig;
+    export default siteConfig;
+}
+
 declare module 'unified' {
     export type Transformer<Tree = any> = (tree: Tree, file?: any) => any;
     export type Plugin<Params extends any[] = any[], Tree = any> = (
