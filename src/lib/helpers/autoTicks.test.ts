@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { maybeInterval, autoTicks } from './autoTicks.js';
+import { maybeInterval, autoTicks, type IntervalLike } from './autoTicks.js';
 
 describe('maybeInterval', () => {
     it('returns undefined for null', () => {
@@ -11,7 +11,7 @@ describe('maybeInterval', () => {
     });
 
     it('creates integer interval with correct floor/offset/range', () => {
-        const iv = maybeInterval(5)!;
+        const iv = maybeInterval(5)! as IntervalLike;
         expect(iv.floor(12)).toBe(10);
         expect(iv.floor(15)).toBe(15);
         expect(iv.offset(10)).toBe(15);
@@ -19,7 +19,7 @@ describe('maybeInterval', () => {
     });
 
     it('creates fractional interval (e.g. 0.25) with correct floor/offset/range', () => {
-        const iv = maybeInterval(0.25)!;
+        const iv = maybeInterval(0.25)! as IntervalLike;
         // 0.25 → triggers 1/interval branch (negative), n = 4
         expect(iv.floor(0.3)).toBe(0.25);
         expect(iv.floor(0.5)).toBe(0.5);
@@ -29,7 +29,7 @@ describe('maybeInterval', () => {
     });
 
     it('creates round method for numeric intervals', () => {
-        const iv = maybeInterval(5)!;
+        const iv = maybeInterval(5)! as IntervalLike;
         expect(iv.round!(12)).toBe(10);
         expect(iv.round!(13)).toBe(15);
     });
