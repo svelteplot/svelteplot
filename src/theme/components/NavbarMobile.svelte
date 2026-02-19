@@ -26,7 +26,7 @@
         <Logo />
         {#each themeOptions.navbar as navItem (navItem.to)}
             {#if navItem.items}
-                <Expansion title={navItem.title} showIcon={false}>
+                <Expansion title={navItem.title ?? ''} showIcon={false}>
                     {#snippet customTitle()}
                         <div>
                             {#if navItem.icon}

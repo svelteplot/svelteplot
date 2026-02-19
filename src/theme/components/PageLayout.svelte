@@ -62,7 +62,7 @@
 {/snippet}
 
 {#if !isHome}
-    <div pb-4 class="theme-default--page-layout">
+    <div class="theme-default--page-layout pb-4">
         <div class="content">
             {#if title}
                 <h1 class="page-title">

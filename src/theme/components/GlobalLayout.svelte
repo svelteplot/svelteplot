@@ -29,7 +29,7 @@
     /** @type {Props & { [key: string]: any }} */
     const { children, ...rest } = $props();
 
-    resolveSidebar(page.route.id);
+    resolveSidebar(page.route.id ?? '');
 
     let ajaxBar = $state();
 
@@ -68,7 +68,7 @@
         <Backdrop
             show={!$navCollapsed}
             on:close={() => ($navCollapsed = true)}
-            top="56px"
+            top={56}
             zIndex={887} />
         {@render children?.()}
 

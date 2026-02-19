@@ -1,5 +1,4 @@
 <script>
-    import { resolve } from '$app/paths';
     import External from './icons/External.svelte';
     import { getPathFromBase } from './utils';
 
@@ -17,7 +16,7 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
-    href={external ? to : resolve(getPathFromBase(to))}
+    href={external ? to : getPathFromBase(to)}
     class={`svp-action ${type ? `svp-action--${type}` : ''}`}
     target={external ? '_blank' : ''}>
     <span class="label">

@@ -1,5 +1,4 @@
 <script>
-    import { resolve } from '$app/paths';
     import { page } from '$app/state';
     import External from './icons/External.svelte';
     import NavArrowDown from './icons/NavArrowDown.svelte';
@@ -59,7 +58,7 @@
 {:else}
     <!-- eslint-disable svelte/no-navigation-without-resolve -->
     <a
-        href={external ? to : resolve(getPathFromBase(to))}
+        href={external ? to : getPathFromBase(to)}
         class:nav-item--icon={icon}
         class="nav-item"
         class:active

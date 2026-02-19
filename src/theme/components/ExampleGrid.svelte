@@ -1,11 +1,15 @@
 <script lang="ts">
-    import { resolve } from '$app/paths';
     import { shuffle } from 'd3-array';
     import { untrack } from 'svelte';
-    import { slide } from 'svelte/transition';
     import { useDark } from '$shared/ui/isDark.svelte';
+    import { resolve } from '$app/paths';
 
-    const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
+    type ExampleImageModule = { default: string };
+    type ExamplePageModule = { title?: string };
+    type ShowcaseItem = { key: string; title: string };
+    type Props = { examples?: string[] };
+
+    const exampleImages = import.meta.glob<ExampleImageModule>('../../snapshots/*/*.png', {
         eager: true,
         query: {
             enhanced: true,
@@ -13,25 +17,34 @@
         }
     });
 
-    const examplePages = import.meta.glob('../../routes/examples/*/*.svelte', {
+    const examplePages = import.meta.glob<ExamplePageModule>('../../routes/examples/*/*.svelte', {
         eager: true
     });
 
-    let { examples } = $props();
-    let showcase = $state([]);
+    let { examples = [] }: Props = $props();
+    let showcase = $state<ShowcaseItem[]>([]);
 
     let shuffled = $state(false);
 
     const ds = useDark();
+
+    function getExampleImageSrc(exampleKey: string, isDark: boolean): string {
+        const imagePath = `../../snapshots/${exampleKey}${isDark ? '.dark' : ''}.png`;
+        return (exampleImages[imagePath] as ExampleImageModule | undefined)?.default ?? '';
+    }
+
+    function getExamplePath(exampleKey: string): `/examples/${string}` {
+        return `/examples/${exampleKey}`;
+    }
 
     $effect(() => {
         if (shuffled) return;
         showcase = shuffle(
             untrack(() => examples)
                 .slice()
-                .map((d) => ({
+                .map((d: string) => ({
                     key: d,
-                    title: examplePages[`../../routes/examples/${d}.svelte`]?.title
+                    title: examplePages[`../../routes/examples/${d}.svelte`]?.title ?? d
                 }))
         );
         shuffled = true;
@@ -40,10 +53,9 @@
 
 <div class="example-grid-background">
     {#each showcase as example (example.key)}
-        <a animate:slide href={resolve(`/examples/${example.key}`)} title={example.title}
+        <a href={resolve(getExamplePath(example.key))} title={example.title}
             ><enhanced:img
-                src={exampleImages[`../../snapshots/${example.key}${ds.isDark ? '.dark' : ''}.png`]
-                    .default}
+                src={getExampleImageSrc(example.key, ds.isDark)}
                 alt={example.title} /></a>
     {/each}
 </div>
