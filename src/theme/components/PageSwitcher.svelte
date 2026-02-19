@@ -1,57 +1,67 @@
-<script>
+<script lang="ts">
     import { page } from '$app/state';
     import themOptions from 'virtual:sveltepress/theme-default';
     import Next from './icons/Next.svelte';
     import Prev from './icons/Prev.svelte';
     import { pages } from './layout';
     import { getPathFromBase } from './utils';
-    import { resolve } from '$app/paths';
 
-    const routeId = page.route.id;
+    type SwitchPage = { to: string; title?: string };
 
-    const activeIdx = $derived(
-        $pages.findIndex((p) =>
-            routeId.endsWith('/') ? p.to === routeId : p.to?.startsWith(routeId)
-        )
+    const routeId = $derived(page.route.id ?? '');
+    const i18n = $derived((themOptions.i18n ?? {}) as Record<string, string | undefined>);
+
+    const switchPages = $derived(
+        $pages.filter((p): p is SwitchPage => {
+            const maybePage = p as Record<string, unknown>;
+            return typeof maybePage.to === 'string';
+        })
     );
 
-    const hasActivePage = $derived(activeIdx !== -1);
-    const hasPrevPage = $derived(hasActivePage && activeIdx > 0);
-    const hasNextPage = $derived(hasActivePage && activeIdx < $pages.length - 1);
+    const activeIdx = $derived(
+        routeId
+            ? switchPages.findIndex((p) =>
+                  routeId.endsWith('/') ? p.to === routeId : p.to.startsWith(routeId)
+              )
+            : -1
+    );
+
+    const prevPage = $derived(activeIdx > 0 ? switchPages[activeIdx - 1] : null);
+    const nextPage = $derived(
+        activeIdx >= 0 && activeIdx < switchPages.length - 1 ? switchPages[activeIdx + 1] : null
+    );
 
     const DEFAULT_PREVIOUS_TEXT = 'Previous';
     const DEFAULT_NEXT_TEXT = 'Next';
 </script>
 
 <div class="page-switcher">
-    <div class:switcher={hasPrevPage}>
-        {#if hasPrevPage}
-            {@const prevPage = $pages[activeIdx - 1]}
-            <a href={resolve(getPathFromBase(prevPage.to))} class="trigger">
+    <div class:switcher={!!prevPage}>
+        {#if prevPage}
+            <a href={getPathFromBase(prevPage.to)} class="trigger">
                 <div class="hint">
-                    {themOptions.i18n?.previousPage || DEFAULT_PREVIOUS_TEXT}
+                    {i18n.previousPage || DEFAULT_PREVIOUS_TEXT}
                 </div>
                 <div class="title">
                     <div class="switch-icon">
                         <Prev />
                     </div>
                     <div class="title-label">
-                        {prevPage.title}
+                        {prevPage.title ?? prevPage.to}
                     </div>
                 </div>
             </a>
         {/if}
     </div>
-    <div class="right" class:switcher={hasNextPage}>
-        {#if hasNextPage}
-            {@const nextPage = $pages[activeIdx + 1]}
-            <a href={resolve(getPathFromBase(nextPage.to))} class="trigger">
+    <div class="right" class:switcher={!!nextPage}>
+        {#if nextPage}
+            <a href={getPathFromBase(nextPage.to)} class="trigger">
                 <div class="hint">
-                    {themOptions.i18n?.nextPage || DEFAULT_NEXT_TEXT}
+                    {i18n.nextPage || DEFAULT_NEXT_TEXT}
                 </div>
                 <div class="title">
                     <div class="title-label">
-                        {nextPage.title}
+                        {nextPage.title ?? nextPage.to}
                     </div>
                     <div class="switch-icon">
                         <Next />
