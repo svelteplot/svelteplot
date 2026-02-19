@@ -1,13 +1,49 @@
 declare module 'virtual:sveltepress/theme-default' {
+    export type NavItem = {
+        title?: string;
+        to?: string;
+        icon?: string | boolean;
+        items?: NavItem[];
+        external?: boolean;
+        builtInIcon?: boolean;
+        [key: string]: unknown;
+    };
+
     export type LinkItem = {
+        title?: string;
+        to?: string;
         text?: string;
         link?: string;
+        icon?: string | boolean;
+        collapsible?: boolean;
         items?: LinkItem[];
         [key: string]: unknown;
     };
 
+    export type ThemeI18n = {
+        footnoteLabel?: string;
+        expansionTitle?: string;
+        lastUpdateAt?: string;
+        onThisPage?: string;
+        previousPage?: string;
+        nextPage?: string;
+        suggestChangesToThisPage?: string;
+        pwa?: {
+            tip?: string;
+            close?: string;
+            reload?: string;
+            appReadyToWorkOffline?: string;
+            newContentAvailable?: string;
+        };
+    };
+
     export type DefaultThemeOptions = {
         sidebar?: Record<string, LinkItem[]>;
+        navbar?: NavItem[];
+        logo?: string;
+        github?: string;
+        discord?: string;
+        editLink?: string;
         preBuildIconifyIcons?: Record<string, string[]>;
         highlighter?: {
             languages?: unknown[];
@@ -19,14 +55,62 @@ declare module 'virtual:sveltepress/theme-default' {
             gradient?: { start: string; end: string };
             primary?: string;
             hover?: string;
+            light?: string;
+            dark?: string;
         };
-        pwa?: import('@vite-pwa/sveltekit').SvelteKitPWAOptions;
-        i18n?: { footnoteLabel?: string; expansionTitle?: string };
+        pwa?: import('@vite-pwa/sveltekit').SvelteKitPWAOptions & {
+            darkManifest?: string;
+        };
+        i18n?: ThemeI18n;
         [key: string]: unknown;
     };
 
     const themeOptions: DefaultThemeOptions;
     export default themeOptions;
+}
+
+declare module 'virtual:sveltepress/site' {
+    export type SiteConfig = {
+        title?: string;
+        description?: string;
+        [key: string]: unknown;
+    };
+
+    const siteConfig: SiteConfig;
+    export default siteConfig;
+}
+
+declare module 'virtual:pwa-register/svelte' {
+    import type { Writable } from 'svelte/store';
+
+    export function useRegisterSW(options?: {
+        onRegistered?: () => void;
+        onRegisterError?: (error: unknown) => void;
+    }): {
+        needRefresh: Writable<boolean>;
+        offlineReady: Writable<boolean>;
+        updateServiceWorker: (reloadPage?: boolean) => Promise<void>;
+    };
+}
+
+declare module 'virtual:pwa-info' {
+    export const pwaInfo: {
+        webManifest: {
+            linkTag: string;
+        };
+    } | null;
+}
+
+declare module 'svelte/elements' {
+    export interface SVGAttributes<T extends EventTarget> {
+        strokelinecap?: string;
+        strokelinejoin?: string;
+        strokewidth?: string | number;
+        strokedasharray?: string | number;
+        strokedashoffset?: string | number;
+        fillrule?: string;
+        fillopacity?: string | number;
+    }
 }
 
 declare module 'unified' {

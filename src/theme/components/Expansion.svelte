@@ -8,13 +8,16 @@
     /**
      * @typedef {object} Props
      * @property {string} title The title of the expansion
-     * @property {boolean} expanded Determine whether the expansion is expanded or not. It is recomended to use `bind:expanded`
-     * @property {boolean} reverse Determine the expand direction, `false` means down, `true` means up
-     * @property {string} headerStyle Custom header style
-     * @property {import('svelte').Snippet} iconFold custom fold icon
-     * @property {import('svelte').Snippet} iconExpanded custom expand icon
-     * @property {import('svelte').Snippet} customTitle custom title content
-     * @property {'svelte' | 'md'} codeType The code type of the icon, `svelte` or `md`
+     * @property {boolean} [expanded] Determine whether the expansion is expanded or not. It is recomended to use `bind:expanded`
+     * @property {boolean} [reverse] Determine the expand direction, `false` means down, `true` means up
+     * @property {string} [headerStyle] Custom header style
+     * @property {import('svelte').Snippet} [iconFold] custom fold icon
+     * @property {import('svelte').Snippet} [iconExpanded] custom expand icon
+     * @property {import('svelte').Snippet} [customTitle] custom title content
+     * @property {'svelte' | 'md'} [codeType] The code type of the icon, `svelte` or `md`
+     * @property {boolean} [showIcon] Whether to show the leading icon
+     * @property {HTMLDivElement | undefined} [bodyDom] Body element reference
+     * @property {import('svelte').Snippet} [children] Body content snippet
      */
 
     /** @type {Props} */
@@ -32,17 +35,7 @@
         customTitle
     } = $props();
 
-    /**
-     *
-     * @type {string}
-     */
-
-    /**
-     * The panel body dom
-     * @type {HTMLDivElement}
-     */
-
-    function onHeaderClick(e) {
+    function onHeaderClick(/** @type {MouseEvent} */ e) {
         e.stopPropagation();
         expanded = !expanded;
     }

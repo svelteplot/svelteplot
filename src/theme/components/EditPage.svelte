@@ -13,13 +13,14 @@
     const { pageType = 'md' } = $props();
 
     const DEFAULT_TEXT = 'Improve this page';
+    const editLinkTemplate = themeOptions.editLink ?? '';
 
     const editLink = $derived(
         routeId === '/examples/[group]/[page]'
-            ? themeOptions.editLink?.replace(':route', `${page.url.pathname}.svelte`)
+            ? editLinkTemplate.replace(':route', `${page.url.pathname}.svelte`)
             : routeId === '/examples/[group]'
-              ? themeOptions.editLink?.replace(':route', `/examples/%5Bgroup%5D/%2Bpage.svelte`)
-              : themeOptions.editLink.replace(':route', `${routeId}/+page.${pageType}`)
+              ? editLinkTemplate.replace(':route', `/examples/%5Bgroup%5D/%2Bpage.svelte`)
+              : editLinkTemplate.replace(':route', `${routeId}/+page.${pageType}`)
     );
 </script>
 

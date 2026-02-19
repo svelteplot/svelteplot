@@ -1,5 +1,4 @@
 <script>
-    import { resolve } from '$app/paths';
     import { getPathFromBase } from './utils';
 
     /**
@@ -34,7 +33,7 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
-    href={isExternal ? to : resolve(toWithBase)}
+    href={toWithBase}
     class={[
         'link',
         !inline ? 'no-inline' : '',

@@ -67,12 +67,17 @@ export type MarkStyleProps =
     | 'textDecoration'
     | 'width';
 
-import type { MouseEventHandler } from 'svelte/elements';
 import type { ChannelAccessor, ConstantAccessor, DataRecord, RawValue } from './index.js';
 import type * as CSS from 'csstype';
 import type { ScaledChannelName } from './channel.js';
 import type { ScaleName } from './scale.js';
 import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.js';
+
+type MouseEventHandler<T extends EventTarget = EventTarget> = (
+    event: Event & { currentTarget: T },
+    datum?: unknown,
+    index?: number
+) => void;
 
 export type BaseMarkProps<T> = Partial<{
     /**

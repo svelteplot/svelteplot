@@ -8,8 +8,9 @@
      * @property {any} title Title of the feature card
      * @property {any} description Description of the feature card
      * @property {any} [link] Link to navigate to when the card is clicked
-     * @property {(e: any) => any} onkeypress Function to call when the card is pressed
+     * @property {(e: any) => any} [onkeypress] Function to call when the card is pressed
      * @property {import('./types').CustomIcon} [icon] Custom icon to display in the card
+     * @property {boolean} [noRandomIcon] Disable random icon fallback
      */
 
     /** @type {Props} */
