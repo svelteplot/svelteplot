@@ -1,12 +1,13 @@
 <script lang="ts">
     import { page } from '$app/state';
+    import type { Pathname } from '$app/types';
     import themOptions from 'virtual:sveltepress/theme-default';
     import Next from './icons/Next.svelte';
     import Prev from './icons/Prev.svelte';
     import { pages } from './layout';
-    import { getPathFromBase } from './utils';
+    import { resolve } from '$app/paths';
 
-    type SwitchPage = { to: string; title?: string };
+    type SwitchPage = { to: Pathname; title?: string };
 
     const routeId = $derived(page.route.id ?? '');
     const i18n = $derived((themOptions.i18n ?? {}) as Record<string, string | undefined>);
@@ -14,7 +15,7 @@
     const switchPages = $derived(
         $pages.filter((p): p is SwitchPage => {
             const maybePage = p as Record<string, unknown>;
-            return typeof maybePage.to === 'string';
+            return typeof maybePage.to === 'string' && maybePage.to.startsWith('/');
         })
     );
 
@@ -38,7 +39,7 @@
 <div class="page-switcher">
     <div class:switcher={!!prevPage}>
         {#if prevPage}
-            <a href={getPathFromBase(prevPage.to)} class="trigger">
+            <a href={resolve(prevPage.to as any)} class="trigger">
                 <div class="hint">
                     {i18n.previousPage || DEFAULT_PREVIOUS_TEXT}
                 </div>
@@ -55,7 +56,7 @@
     </div>
     <div class="right" class:switcher={!!nextPage}>
         {#if nextPage}
-            <a href={getPathFromBase(nextPage.to)} class="trigger">
+            <a href={resolve(nextPage.to as any)} class="trigger">
                 <div class="hint">
                     {i18n.nextPage || DEFAULT_NEXT_TEXT}
                 </div>

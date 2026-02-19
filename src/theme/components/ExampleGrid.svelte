@@ -2,7 +2,7 @@
     import { shuffle } from 'd3-array';
     import { untrack } from 'svelte';
     import { useDark } from '$shared/ui/isDark.svelte';
-    import { getPathFromBase } from './utils';
+    import { resolve } from '$app/paths';
 
     type ExampleImageModule = { default: string };
     type ExamplePageModule = { title?: string };
@@ -33,6 +33,10 @@
         return (exampleImages[imagePath] as ExampleImageModule | undefined)?.default ?? '';
     }
 
+    function getExamplePath(exampleKey: string): `/examples/${string}` {
+        return `/examples/${exampleKey}`;
+    }
+
     $effect(() => {
         if (shuffled) return;
         showcase = shuffle(
@@ -49,7 +53,7 @@
 
 <div class="example-grid-background">
     {#each showcase as example (example.key)}
-        <a href={getPathFromBase(`/examples/${example.key}`)} title={example.title}
+        <a href={resolve(getExamplePath(example.key))} title={example.title}
             ><enhanced:img
                 src={getExampleImageSrc(example.key, ds.isDark)}
                 alt={example.title} /></a>

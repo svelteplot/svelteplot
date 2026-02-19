@@ -1,6 +1,6 @@
 import { base } from '$app/paths';
 
-function getPathFromBase(path: string) {
+function getPathFromBase(path: string): string {
     if (path === '/') return base || '/';
     if (!base || !path.startsWith('/') || path === base || path.startsWith(`${base}/`)) return path;
     return `${base}${path}`;
