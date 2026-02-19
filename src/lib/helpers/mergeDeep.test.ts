@@ -3,17 +3,20 @@ import mergeDeep from './mergeDeep.js';
 
 describe('mergeDeep', () => {
     it('shallow merges two flat objects', () => {
-        const result = mergeDeep({ a: 1 }, { b: 2 });
+        const result = mergeDeep<Record<string, unknown>>({ a: 1 }, { b: 2 });
         expect(result).toEqual({ a: 1, b: 2 });
     });
 
     it('deep merges nested objects recursively', () => {
-        const result = mergeDeep({ a: { x: 1, y: 2 } }, { a: { y: 3, z: 4 } });
+        const result = mergeDeep<Record<string, unknown>>(
+            { a: { x: 1, y: 2 } },
+            { a: { y: 3, z: 4 } }
+        );
         expect(result).toEqual({ a: { x: 1, y: 3, z: 4 } });
     });
 
     it('applies multiple sources left to right', () => {
-        const result = mergeDeep({ a: 1 }, { a: 2, b: 10 }, { a: 3 });
+        const result = mergeDeep<Record<string, unknown>>({ a: 1 }, { a: 2, b: 10 }, { a: 3 });
         expect(result).toEqual({ a: 3, b: 10 });
     });
 
@@ -23,19 +26,19 @@ describe('mergeDeep', () => {
     });
 
     it('preserves target value when source value is null', () => {
-        const result = mergeDeep({ a: 1, b: 2 }, { a: null, b: 3 });
+        const result = mergeDeep<Record<string, unknown>>({ a: 1, b: 2 }, { a: null, b: 3 });
         expect(result).toEqual({ a: 1, b: 3 });
     });
 
     it('includes non-overlapping keys from both target and sources', () => {
-        const result = mergeDeep({ a: 1 }, { b: 2 }, { c: 3 });
+        const result = mergeDeep<Record<string, unknown>>({ a: 1 }, { b: 2 }, { c: 3 });
         expect(result).toEqual({ a: 1, b: 2, c: 3 });
     });
 
     it('does not mutate source objects', () => {
         const source = { a: { x: 1 } };
         const sourceCopy = JSON.parse(JSON.stringify(source));
-        mergeDeep({ a: { y: 2 } }, source);
+        mergeDeep<Record<string, unknown>>({ a: { y: 2 } }, source);
         expect(source).toEqual(sourceCopy);
     });
 
@@ -60,7 +63,7 @@ describe('mergeDeep', () => {
     it('does not overwrite target value with nested source when target is non-object', () => {
         // If target has a primitive and source has an object for the same key,
         // the source object should win
-        const result = mergeDeep({ a: 42 }, { a: { nested: true } });
+        const result = mergeDeep<Record<string, unknown>>({ a: 42 }, { a: { nested: true } });
         expect(result).toEqual({ a: { nested: true } });
     });
 
@@ -72,14 +75,17 @@ describe('mergeDeep', () => {
     });
 
     it('handles deeply nested objects (3+ levels)', () => {
-        const result = mergeDeep({ a: { b: { c: 1, d: 2 } } }, { a: { b: { c: 10, e: 3 } } });
+        const result = mergeDeep<Record<string, unknown>>(
+            { a: { b: { c: 1, d: 2 } } },
+            { a: { b: { c: 10, e: 3 } } }
+        );
         expect(result).toEqual({ a: { b: { c: 10, d: 2, e: 3 } } });
     });
 
     it('does not mutate the sources array', () => {
         const sources = [{ b: 2 }, { c: 3 }];
         const sourcesCopy = [...sources];
-        mergeDeep({ a: 1 }, ...sources);
+        mergeDeep<Record<string, unknown>>({ a: 1 }, ...sources);
         expect(sources.length).toBe(sourcesCopy.length);
     });
 });
