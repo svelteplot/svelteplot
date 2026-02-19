@@ -6,7 +6,7 @@
      */
 
     /** @type {Props} */
-    let { code = '', lang } = $props();
+    let { code = '', lang = 'text' } = $props();
 
     let highlightedCode = $state('');
 

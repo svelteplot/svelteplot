@@ -3,7 +3,7 @@
 
     let barWidth = $state(0);
 
-    let startedFlag;
+    let startedFlag = /** @type {ReturnType<typeof setTimeout> | undefined} */ (undefined);
 
     let interval = 200;
 

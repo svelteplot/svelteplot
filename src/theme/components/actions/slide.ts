@@ -1,6 +1,6 @@
 import type { Action } from 'svelte/action';
 
-const slide: Action = (node, show) => {
+const slide: Action<HTMLElement, boolean> = (node, show = false) => {
     const initialHeight = `${node.offsetHeight}px`;
     node.style.transition = 'max-height 300ms ease-in-out';
     node.style.maxHeight = show ? initialHeight : '0';

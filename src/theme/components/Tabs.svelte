@@ -12,9 +12,10 @@
     import { crossfade } from 'svelte/transition';
 
     const items = writable([]);
+    /** @typedef {{ left: number; width: number; name?: string }} ItemWidth */
 
     let tabContainer = $state();
-    let itemWidthArray = $state([]);
+    let itemWidthArray = $state(/** @type {ItemWidth[]} */ ([]));
     /**
      * @typedef {object} Props
      * @property {any} activeName - Active tab name
@@ -30,7 +31,7 @@
     setContext(activeNameContextKey, current);
     setContext(itemsKey, items);
 
-    function toggleTab(name) {
+    function toggleTab(/** @type {string} */ name) {
         $current = name;
     }
 
@@ -52,15 +53,17 @@
 
     function computedItems() {
         if (!tabContainer) return;
-        itemWidthArray = [...tabContainer.querySelectorAll('.tab-header-item')].map((item) => ({
-            left: item.offsetLeft,
-            width: item.offsetWidth,
-            name: item.dataset.tabName
-        }));
+        itemWidthArray = /** @type {ItemWidth[]} */ (
+            [...tabContainer.querySelectorAll('.tab-header-item')].map((item) => ({
+                left: item.offsetLeft,
+                width: item.offsetWidth,
+                name: item.dataset.tabName ?? undefined
+            }))
+        );
     }
 
     $effect(() => {
-        tick().then(() => computedItems($items));
+        tick().then(() => computedItems());
     });
 </script>
 
