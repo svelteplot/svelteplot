@@ -58,6 +58,8 @@ import type {
 } from '../marks/index.js';
 import type WaffleX from 'svelteplot/marks/WaffleX.svelte';
 import type WaffleY from 'svelteplot/marks/WaffleY.svelte';
+import type BaseAxisX from 'svelteplot/marks/helpers/BaseAxisX.svelte';
+import type BaseAxisY from 'svelteplot/marks/helpers/BaseAxisY.svelte';
 
 export type PlotState = {
     width: number;
@@ -513,12 +515,36 @@ export type PlotOptions = {
      * Options for the horizontal facet scale, or false to disable, or an
      * array of domain values
      */
-    fx: Partial<XScaleOptions> | false | RawValue[];
+    fx:
+        | (Partial<XScaleOptions> & {
+              /**
+               * customize base axis props used for rendering facet axis
+               */
+              axisProps: Partial<ComponentProps<typeof BaseAxisX>>;
+              /**
+               * customize base axis options used for rendering facet axis
+               */
+              axisOptions: Partial<ComponentProps<typeof BaseAxisX>['options']>;
+          })
+        | false
+        | RawValue[];
     /**
      * Options for the vertical facet scale, or false to disable, or an
      * array of domain values
      */
-    fy: Partial<YScaleOptions> | false | RawValue[];
+    fy:
+        | (Partial<YScaleOptions> & {
+              /**
+               * customize base axis props used for rendering facet axis
+               */
+              axisProps: Partial<ComponentProps<typeof BaseAxisY>>;
+              /**
+               * customize base axis options used for rendering facet axis
+               */
+              axisOptions: Partial<ComponentProps<typeof BaseAxisY>['options']>;
+          })
+        | false
+        | RawValue[];
     /**
      * The plot content as a Svelte snippet. Receives the plot dimensions,
      * options, and resolved scales as arguments.

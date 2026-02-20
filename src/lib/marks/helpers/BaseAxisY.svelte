@@ -6,14 +6,13 @@
     import type {
         AutoMarginStores,
         ConstantAccessor,
-        DataRecord,
         PlotState,
         RawValue,
-        ScaledDataRecord,
         ScaleType
     } from '../../types/index.js';
     import { RAW_VALUE } from '../../transforms/recordize';
     import { INDEX } from '../../constants';
+    import type * as CSS from 'csstype';
 
     type BaseAxisYProps = {
         scaleFn: (d: RawValue) => number;
@@ -30,8 +29,10 @@
         width: number;
         title: string | null;
         options: {
+            // TODO: align with BaseAxisX options
             dx: ConstantAccessor<number>;
             dy: ConstantAccessor<number>;
+            fontWeight: ConstantAccessor<CSS.Property.FontWeight>;
             textAnchor: 'start' | 'middle' | 'end';
         };
         plot: PlotState;
