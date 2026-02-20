@@ -107,7 +107,7 @@
         const fn = callWithProps(line, [], {
             curve: maybeCurve(
                 curve === 'auto' ? 'linear' : curve,
-                bend === true ? 0.6 : bend === false ? tension : (bend ?? tension)
+                bend === true ? 0.6 : bend === false ? 0 : (bend ?? tension)
             ),
             x: (d) => d[0],
             y: (d) => d[1]
