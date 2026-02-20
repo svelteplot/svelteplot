@@ -107,7 +107,13 @@ export type PlotContext = {
     updateDimensions: (width: number, height: number) => void;
 };
 
-type IgnoreDefaults = 'data' | 'facet' | ChannelName | 'title' | 'automatic' | 'children';
+type IgnoreDefaults =
+    | 'data'
+    | 'facet'
+    | Omit<ChannelName, 'stroke' | 'fill'>
+    | 'title'
+    | 'automatic'
+    | 'children';
 
 export type PlotMargin = {
     top?: number | 'auto';
