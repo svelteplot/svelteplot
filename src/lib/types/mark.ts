@@ -83,7 +83,7 @@ export type BaseMarkProps<T> = Partial<{
     /**
      * Filter the data without modifying the inferred scales
      */
-    filter: ConstantAccessor<boolean, T>;
+    filter: ConstantAccessor<boolean, any>;
     /** controls whether this mark participates in faceting; "exclude" to ignore facet filters, "include" to require matching facet values */
     facet: 'auto' | 'include' | 'exclude';
     /** the horizontal facet channel */
@@ -102,6 +102,26 @@ export type BaseMarkProps<T> = Partial<{
     fill: ChannelAccessor<T>;
     /** the fill opacity; a number between 0 and 1 */
     fillOpacity: ConstantAccessor<number, T>;
+    /** font family for text-capable marks */
+    fontFamily: ConstantAccessor<CSS.Property.FontFamily, T>;
+    /** font size for text-capable marks */
+    fontSize: ConstantAccessor<CSS.Property.FontSize | number, T>;
+    /** font style for text-capable marks */
+    fontStyle: ConstantAccessor<CSS.Property.FontStyle, T>;
+    /** font variant for text-capable marks */
+    fontVariant: ConstantAccessor<CSS.Property.FontVariant, T>;
+    /** font weight for text-capable marks */
+    fontWeight: ConstantAccessor<CSS.Property.FontWeight, T>;
+    /** letter spacing for text-capable marks */
+    letterSpacing: ConstantAccessor<CSS.Property.LetterSpacing, T>;
+    /** word spacing for text-capable marks */
+    wordSpacing: ConstantAccessor<CSS.Property.WordSpacing, T>;
+    /** text anchor for text-capable marks */
+    textAnchor: ConstantAccessor<CSS.Property.TextAnchor, T>;
+    /** text transform for text-capable marks */
+    textTransform: ConstantAccessor<CSS.Property.TextTransform, T>;
+    /** text decoration for text-capable marks */
+    textDecoration: ConstantAccessor<CSS.Property.TextDecoration, T>;
     /** how to sort the mark data before rendering; can be a channel name string, an accessor, a comparator, or an object with channel and order */
     sort:
         | string
@@ -132,6 +152,8 @@ export type BaseMarkProps<T> = Partial<{
     /** the SVG stroke dash offset in pixels */
     strokeDashoffset: ConstantAccessor<number, T>;
     /** the CSS mix-blend-mode for compositing (e.g. "multiply", "screen") */
+    blend: ConstantAccessor<CSS.Property.MixBlendMode, T>;
+    /** legacy alias of blend */
     mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode, T>;
     /** a CSS clip-path to clip the mark element */
     clipPath: string;
@@ -241,7 +263,7 @@ export type LinkableMarkProps<T> = {
      */
     download?: ConstantAccessor<boolean, T>;
     // allow data-sveltekit-* attributes on the link element, e.g. data-sveltekit-reload
-    [key: `data-sveltekit-${string}`]: string | boolean | undefined;
+    [key: `data-sveltekit-${string}`]: unknown;
 };
 
 export type BorderRadius =

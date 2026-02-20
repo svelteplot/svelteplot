@@ -158,6 +158,53 @@ declare module 'interval-tree-1d' {
 
 declare module 'd3-time';
 
+declare module 'd3-force' {
+    export interface SimulationNodeDatum {
+        x?: number;
+        y?: number;
+        vx?: number;
+        vy?: number;
+        fx?: number | null;
+        fy?: number | null;
+    }
+
+    export interface SimulationLinkDatum<NodeDatum extends SimulationNodeDatum> {
+        source: NodeDatum | string | number;
+        target: NodeDatum | string | number;
+        index?: number;
+    }
+
+    export interface ForceLink<
+        NodeDatum extends SimulationNodeDatum,
+        LinkDatum extends SimulationLinkDatum<NodeDatum>
+    > {
+        id(id: (node: NodeDatum) => string | number): this;
+    }
+
+    export interface Simulation<
+        NodeDatum extends SimulationNodeDatum,
+        LinkDatum extends SimulationLinkDatum<NodeDatum>
+    > {
+        alphaTarget(alpha: number): this;
+        force(name: string, force: unknown): this;
+        on(type: 'tick', listener: () => void): this;
+        stop(): this;
+    }
+
+    export function forceSimulation<
+        NodeDatum extends SimulationNodeDatum,
+        LinkDatum extends SimulationLinkDatum<NodeDatum> = SimulationLinkDatum<NodeDatum>
+    >(nodes?: NodeDatum[]): Simulation<NodeDatum, LinkDatum>;
+
+    export function forceLink<
+        NodeDatum extends SimulationNodeDatum,
+        LinkDatum extends SimulationLinkDatum<NodeDatum> = SimulationLinkDatum<NodeDatum>
+    >(links?: LinkDatum[]): ForceLink<NodeDatum, LinkDatum>;
+
+    export function forceManyBody(): unknown;
+    export function forceCenter(x?: number, y?: number): unknown;
+}
+
 declare module '*.svelte' {
     import type { ComponentType } from 'svelte';
     export type MarkerShape =

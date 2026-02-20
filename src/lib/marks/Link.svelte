@@ -5,23 +5,23 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface LinkMarkProps extends BaseMarkProps<Datum>, MarkerOptions {
         /** the input data array; each element becomes one link */
-        data: Datum[];
+        data?: Datum[];
         /** sort order for data points before rendering */
-        sort?: ConstantAccessor<RawValue> | { channel: 'stroke' | 'fill' };
+        sort?: ConstantAccessor<RawValue, Datum> | { channel: 'stroke' | 'fill' };
         /**
          * the x1 channel accessor for the start of the link
          */
-        x1: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
         /**
          * the y1 channel accessor for the start of the link
          */
-        y1: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
         /**
          * the x2 channel accessor for the end of the link
          */
-        x2: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
         /** the y2 channel accessor for the end of the link */
-        y2: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
         /**
          * the curve type, defaults to 'auto' which uses a linear curve for planar projections
          * and a spherical line for geographic projections
@@ -31,10 +31,20 @@
          * the tension of the curve, defaults to 0
          */
         tension?: number;
+        /** legacy alias for link curvature */
+        bend?: number | boolean;
         /**
          * the text label for the link, can be a constant or a function
          */
         text?: ConstantAccessor<string, Datum>;
+        /** the fill color for the text label rendered along the link */
+        textFill?: ConstantAccessor<string, Datum>;
+        /** the stroke color for the text label rendered along the link */
+        textStroke?: ConstantAccessor<string, Datum>;
+        /** the offset position for the text label along the link path */
+        textStartOffset?: ConstantAccessor<string, Datum>;
+        /** the stroke width for the text label rendered along the link */
+        textStrokeWidth?: ConstantAccessor<number, Datum>;
     }
     import type {
         DataRecord,
@@ -69,6 +79,7 @@
         data = [{} as Datum],
         curve = 'auto',
         tension = 0,
+        bend,
         text,
         class: className = '',
         ...options
@@ -94,7 +105,10 @@
 
     const linePath: (d: ScaledDataRecord, reversed: boolean) => string = $derived.by(() => {
         const fn = callWithProps(line, [], {
-            curve: maybeCurve(curve === 'auto' ? 'linear' : curve, tension),
+            curve: maybeCurve(
+                curve === 'auto' ? 'linear' : curve,
+                bend === true ? 0.6 : bend === false ? tension : (bend ?? tension)
+            ),
             x: (d) => d[0],
             y: (d) => d[1]
         });

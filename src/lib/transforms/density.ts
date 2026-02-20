@@ -18,7 +18,7 @@ import { resolveChannel } from '../helpers/resolve';
 import type { DataRecord, TransformArg } from '../types';
 import { ORIGINAL_NAME_KEYS } from '../constants.js';
 
-type KernelName =
+export type KernelName =
     | 'uniform'
     | 'triangular'
     | 'epanechnikov'
@@ -27,9 +27,9 @@ type KernelName =
     | 'gaussian'
     | 'cosine';
 
-type Kernel = KernelName | ((u: number) => number);
+export type Kernel = KernelName | ((u: number) => number);
 
-type DensityOptions<T> = {
+export type DensityOptions<T> = {
     /**
      * The kernel function to use for smoothing.
      */
@@ -125,6 +125,10 @@ const BANDWIDTH_FACTOR: Record<KernelName, number> = {
     cosine: 1.06
 };
 
+function isKernelName(value: string): value is KernelName {
+    return value in KERNEL;
+}
+
 function bandwidthSilverman(x: number[]) {
     const iqr = quantileSorted(x, 0.75)! - quantileSorted(x, 0.25)!;
     const xvar = variance(x);
@@ -194,7 +198,7 @@ function density1d<T>(
     const values = resolvedData.map((d: any) => d[VALUE] as number);
 
     // compute bandwidth from full data
-    const kernelName = typeof kernel === 'string' ? kernel : null;
+    const kernelName = typeof kernel === 'string' && isKernelName(kernel) ? kernel : null;
     const bw =
         typeof bandwidth === 'function'
             ? ((kernelName ? BANDWIDTH_FACTOR[kernelName] : null) ?? 1) *
@@ -313,9 +317,9 @@ function kde1d(
     return cdf;
 }
 
-function maybeKernel(kernel: Kernel): (u: number) => number {
+function maybeKernel(kernel: Kernel | string): (u: number) => number {
     if (typeof kernel === 'function') return kernel;
-    return KERNEL[kernel] || KERNEL.epanechnikov;
+    return isKernelName(kernel) ? KERNEL[kernel] : KERNEL.epanechnikov;
 }
 
 // See <http://en.wikipedia.org/wiki/Kernel_(statistics)>.

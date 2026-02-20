@@ -9,13 +9,13 @@ type WindowOptions = {
     /** the window size (number of data points) */
     k: number;
     /** a time interval string to use instead of a fixed window size */
-    interval: string;
+    interval?: string;
     /** where to align the window relative to the current data point */
-    anchor: 'start' | 'middle' | 'end';
+    anchor?: 'start' | 'middle' | 'end';
     /** the reducer function to apply within each window (e.g. "mean", "median", "sum") */
-    reduce: ReducerName;
+    reduce?: ReducerName;
     /** if true, return null when the window has fewer than k values */
-    strict: boolean;
+    strict?: boolean | number;
 };
 
 /**

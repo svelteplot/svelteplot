@@ -8,11 +8,11 @@
         'data' | 'x' | 'y' | 'r' | 'length' | 'rotate'
     > {
         /** the input data array; each element becomes one spike */
-        data: Datum[];
+        data?: Datum[];
         /** the horizontal position channel; bound to the x scale */
-        x: ChannelAccessor<Datum>;
+        x?: ChannelAccessor<Datum>;
         /** the vertical position channel; bound to the y scale */
-        y: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
         /** the radius (width) of the spike base in pixels */
         r?: number;
         /** the length of the spike in pixels */

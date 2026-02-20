@@ -13,6 +13,8 @@
         x?: ChannelAccessor<Datum>;
         /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** optional radius channel, mainly for dodge/sort convenience in label swarms */
+        r?: ChannelAccessor<Datum>;
         /** a Snippet to render as the text content */
         children?: Snippet;
         /** the text content accessor */
@@ -62,7 +64,8 @@
             | 'bottom-left'
             | 'top-right'
             | 'bottom-right'
-            | 'middle',
+            | 'middle'
+            | string,
             Datum
         >;
         /**

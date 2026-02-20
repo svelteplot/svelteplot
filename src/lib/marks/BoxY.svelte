@@ -30,23 +30,23 @@
         /**
          * Options for the rule marks that represent the min/max range
          */
-        rule: Record<string, ChannelAccessor<Datum>>;
+        rule?: Record<string, ChannelAccessor<Datum>>;
         /**
          * Options for the bar marks that represent the IQR range
          */
-        bar: Record<string, ChannelAccessor<Datum>>;
+        bar?: Record<string, ChannelAccessor<Datum>>;
         /**
          * Options for the tick marks that represent the median
          */
-        tickMedian: Record<string, ChannelAccessor<Datum>> | boolean;
+        tickMedian?: Record<string, ChannelAccessor<Datum>> | boolean;
         /**
          * Options for the tick marks that represent the min/max range
          */
-        tickMinMax: Record<string, ChannelAccessor<Datum>> | boolean;
+        tickMinMax?: Record<string, ChannelAccessor<Datum>> | boolean;
         /**
          * Options for the dot marks that represent the outliers
          */
-        dot: Record<string, ChannelAccessor<Datum>>;
+        dot?: Record<string, ChannelAccessor<Datum>>;
     }
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import Box from './helpers/Box.svelte';

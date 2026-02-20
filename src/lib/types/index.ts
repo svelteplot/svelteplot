@@ -119,3 +119,4 @@ export * from './facet';
 export * from './mark';
 export * from './plot';
 export * from './scale';
+export * from '../transforms/density';
