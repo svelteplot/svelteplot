@@ -7,7 +7,7 @@ export type AxisYAnchor = 'left' | 'right' | 'both';
 export type TickFormatFunction = (
     d: number | Date,
     index: number,
-    ticks: (number | Date)[]
+    ticks: (number | string | Date)[]
 ) => string;
 
 export type ScaleName =
