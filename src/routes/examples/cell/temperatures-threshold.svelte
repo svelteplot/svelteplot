@@ -10,8 +10,9 @@
 
 <script lang="ts">
     import { Plot, Cell, formatMonth } from 'svelteplot';
+    import type { SeattleRow } from '../types';
 
-    let { seattle } = $props();
+    let { seattle }: { seattle: SeattleRow[] } = $props();
 
     let clientWidth = $state(500);
 
@@ -43,8 +44,8 @@
             data={seattle}
             filter={(d) => d.date.getUTCFullYear() === 2015}
             {...{
-                [x]: (d) => d.date.getUTCDate(),
-                [y]: (d) => d.date.getUTCMonth()
+                [x]: (d: SeattleRow) => d.date.getUTCDate(),
+                [y]: (d: SeattleRow) => d.date.getUTCMonth()
             }}
             fill="temp_max"
             inset={0.5} />
