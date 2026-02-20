@@ -5,9 +5,10 @@
         'https://svelte.dev/playground/df7b2c9ec47844e686a12926b10b0ac2?version=latest';
 </script>
 
-<script>
-    import { Plot, AxisX, AxisY, Line } from 'svelteplot';
-    let { aapl } = $props();
+<script lang="ts">
+    import { Plot, Line } from 'svelteplot';
+    import type { AaplRow } from '../types';
+    let { aapl }: { aapl: AaplRow[] } = $props();
 </script>
 
 <Plot

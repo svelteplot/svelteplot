@@ -22,7 +22,7 @@
         }
     });
 
-    let hl: false | MetrosRow = $state(false);
+    let hl = $state<MetrosRow | null>(null);
 </script>
 
 <Plot
@@ -53,7 +53,7 @@
             value: (d) =>
                 !hl || hl.Metro === d.Metro ? 1 : 0.1
         }}
-        onmouseenter={(evt, d) => (hl = d)}
+        onmouseenter={(evt, d) => (hl = d ?? null)}
         onmouseleave={() => (hl = null)}
         stroke={(d) => d.R90_10_2015 - d.R90_10_1980} />
     <Text
@@ -61,7 +61,9 @@
         x="POP_2015"
         y="R90_10_2015"
         filter={(d) =>
-            hl ? hl.Metro === d.Metro : d.highlight}
+            hl
+                ? hl.Metro === d.Metro
+                : Boolean(d.highlight)}
         text="nyt_display"
         fill="currentColor"
         stroke="var(--svelteplot-bg)"
