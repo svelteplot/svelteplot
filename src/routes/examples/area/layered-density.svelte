@@ -22,7 +22,7 @@
     import { useDark } from '$shared/ui/isDark.svelte';
 
     const ds = useDark();
-    let { iris }: { olympians: Iris2Row[] } = $props();
+    let { iris }: { iris: Iris2Row[] } = $props();
 </script>
 
 <Plot
@@ -34,12 +34,12 @@
         fillOpacity={0.5}
         {...densityX(
             {
-                data: iris,
+                data: iris as any,
                 x: 'Value',
                 fill: 'Measurement'
             },
             { trim: false, channel: 'y2' }
-        )}
+        ) as any}
         stroke="Measurement"
         curve="basis"
         blend={ds.isDark ? 'screen' : 'multiply'} />

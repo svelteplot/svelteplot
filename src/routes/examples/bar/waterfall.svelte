@@ -20,7 +20,8 @@
 
 <Plot
     x={{
-        tickFormat: (d) => 'JFMAMJJASOND'.charAt(d),
+        tickFormat: (d) =>
+            'JFMAMJJASOND'.charAt(d as number),
         label: false
     }}
     y={{ grid: true }}>
