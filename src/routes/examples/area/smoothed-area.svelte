@@ -17,34 +17,6 @@
     let reduce = $state('mean');
     let anchor = $state('middle');
     let strict = $state(false);
-
-    let niceReduce = $derived(
-        {
-            min: 'minimum',
-            max: 'maximum',
-            mean: 'average',
-            p01: '1-percentile',
-            p25: '25-percentile',
-            p75: '75-percentile',
-            p99: '99-percentile'
-        }[reduce] || reduce
-    );
-
-    const REDUCE_OPTIONS = [
-        'mean',
-        'median',
-        // 'mode',
-        'p01',
-        'p25',
-        'p75',
-        'p99',
-        'min',
-        'max'
-        // 'deviation',
-        // 'variance',
-        // 'ratio',
-        // 'difference'
-    ].sort();
 </script>
 
 <Plot inset={5}>
@@ -57,13 +29,29 @@
     <Line
         {...windowY(
             { data: sftemp, x: 'date', y: 'low' },
-            { k, anchor, strict, reduce }
+            {
+                k,
+                anchor: anchor as
+                    | 'start'
+                    | 'middle'
+                    | 'end',
+                strict,
+                reduce: reduce as any
+            }
         )}
         stroke="var(--svp-blue)" />
     <Line
         {...windowY(
             { data: sftemp, x: 'date', y: 'high' },
-            { k, anchor, strict, reduce }
+            {
+                k,
+                anchor: anchor as
+                    | 'start'
+                    | 'middle'
+                    | 'end',
+                strict,
+                reduce: reduce as any
+            }
         )}
         stroke="var(--svp-red)" />
     <AreaY
@@ -74,7 +62,15 @@
                 y1: 'high',
                 y2: 'low'
             },
-            { k, anchor, strict, reduce }
+            {
+                k,
+                anchor: anchor as
+                    | 'start'
+                    | 'middle'
+                    | 'end',
+                strict,
+                reduce: reduce as any
+            }
         )}
         fillOpacity={0.15}
         fill="yellow"
