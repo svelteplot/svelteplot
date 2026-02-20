@@ -80,7 +80,7 @@ export function resolveChannel<T>(
 ): RawValue {
     const scale = CHANNEL_SCALE[channel as ScaledChannelName];
     // the z channel has an automatic alias mechanism
-    const accessor: ChannelAccessor | ChannelAlias =
+    const accessor: ChannelAccessor<T> | ChannelAlias =
         channel === 'z' ? channels.z || channels.fill || channels.stroke : channels[channel];
     const channelOptions = toChannelOption(channel as ScaledChannelName, accessor);
     if (channelOptions.channel) {

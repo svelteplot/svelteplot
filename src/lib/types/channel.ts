@@ -3,8 +3,28 @@ import type { ConstantAccessor, RawValue } from './index.js';
 /** a record of channel names to their accessor definitions */
 export type Channels<T> = Record<
     string | symbol,
-    ChannelAccessor<T> | ConstantAccessor<T, string | number | boolean | symbol>
+    ChannelAccessor<T> | ConstantAccessor<RawValue, T>
 >;
+
+/** channel accessor callback receiving a typed datum */
+export type ChannelValueAccessor<T = Record<string | symbol, RawValue>> = (
+    d: T,
+    index: number
+) => RawValue;
+
+/** plain objects are allowed as constants, except accessor option objects with `value`/`scale` keys */
+export type ChannelConstantObject = object & {
+    value?: never;
+    scale?: never;
+};
+
+/** constant channel values (non-accessor) */
+export type ChannelConstantValue =
+    | Exclude<RawValue, object>
+    | Date
+    | ChannelConstantObject
+    | null
+    | undefined;
 
 /**
  * a channel accessor: either a simple channel value, or an object with
@@ -24,9 +44,9 @@ export type ChannelAccessor<T = Record<string | symbol, RawValue>> =
  * function, or null/undefined to leave the channel unset
  */
 export type ChannelValue<T = Record<string | symbol, RawValue>> =
-    | RawValue
+    | ChannelConstantValue
     | keyof T
-    | ((d: T, index: number) => RawValue)
+    | ChannelValueAccessor<T>
     | null
     | undefined;
 

@@ -12,23 +12,13 @@
 </script>
 
 <script lang="ts">
-    import {
-        Plot,
-        AreaY,
-        densityX,
-        Line
-    } from 'svelteplot';
+    import { Plot, AreaY, densityX } from 'svelteplot';
     import type { Iris2Row } from '../types';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
     import Select from '$shared/ui/Select.svelte';
+    import type { KernelName } from 'svelteplot/types';
 
-    let { iris }: { olympians: Iris2Row[] } = $props();
-    let kernel = $state('epanechnikov');
-</script>
-
-<Select
-    bind:value={kernel}
-    options={[
+    const kernelOptions: KernelName[] = [
         'gaussian',
         'epanechnikov',
         'uniform',
@@ -36,7 +26,15 @@
         'triweight',
         'cosine',
         'quartic'
-    ]}
+    ];
+
+    let { iris }: { iris: Iris2Row[] } = $props();
+    let kernel = $state<KernelName>('epanechnikov');
+</script>
+
+<Select
+    bind:value={kernel}
+    options={kernelOptions}
     label="Kernel" />
 <Plot
     color={{ legend: true }}
@@ -46,11 +44,11 @@
     <AreaY
         {...densityX(
             {
-                data: iris,
+                data: iris as any,
                 x: 'Value',
                 fill: 'Measurement'
             },
             { kernel }
-        )}
+        ) as any}
         curve="basis" />
 </Plot>

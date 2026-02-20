@@ -73,9 +73,9 @@ import type { ScaledChannelName } from './channel.js';
 import type { ScaleName } from './scale.js';
 import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.js';
 
-type MouseEventHandler<T extends EventTarget = EventTarget> = (
-    event: Event & { currentTarget: T },
-    datum?: unknown,
+type MarkEventHandler<TDatum, TTarget extends EventTarget = EventTarget> = (
+    event: Event & { currentTarget: TTarget },
+    datum?: TDatum,
     index?: number
 ) => void;
 
@@ -83,7 +83,7 @@ export type BaseMarkProps<T> = Partial<{
     /**
      * Filter the data without modifying the inferred scales
      */
-    filter: ConstantAccessor<boolean, any>;
+    filter: ConstantAccessor<boolean, T>;
     /** controls whether this mark participates in faceting; "exclude" to ignore facet filters, "include" to require matching facet values */
     facet: 'auto' | 'include' | 'exclude';
     /** the horizontal facet channel */
@@ -166,65 +166,65 @@ export type BaseMarkProps<T> = Partial<{
     /** the SVG paint-order attribute (e.g. "stroke" to render stroke behind fill) */
     paintOrder: ConstantAccessor<string, T>;
     /** fired when the mark element is clicked */
-    onclick: MouseEventHandler<SVGPathElement>;
+    onclick: MarkEventHandler<T, SVGPathElement>;
     /** fired when the mark element is double-clicked */
-    ondblclick: MouseEventHandler<SVGPathElement>;
+    ondblclick: MarkEventHandler<T, SVGPathElement>;
     /** fired when a mouse button is released over the mark */
-    onmouseup: MouseEventHandler<SVGPathElement>;
+    onmouseup: MarkEventHandler<T, SVGPathElement>;
     /** fired when a mouse button is pressed over the mark */
-    onmousedown: MouseEventHandler<SVGPathElement>;
+    onmousedown: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer enters the mark element */
-    onmouseenter: MouseEventHandler<SVGPathElement>;
+    onmouseenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves within the mark element */
-    onmousemove: MouseEventHandler<SVGPathElement>;
+    onmousemove: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer leaves the mark element */
-    onmouseleave: MouseEventHandler<SVGPathElement>;
+    onmouseleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves out of the mark element */
-    onmouseout: MouseEventHandler<SVGPathElement>;
+    onmouseout: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves onto the mark element */
-    onmouseover: MouseEventHandler<SVGPathElement>;
+    onmouseover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer event is canceled */
-    onpointercancel: MouseEventHandler<SVGPathElement>;
+    onpointercancel: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer becomes active over the mark */
-    onpointerdown: MouseEventHandler<SVGPathElement>;
+    onpointerdown: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer is released over the mark */
-    onpointerup: MouseEventHandler<SVGPathElement>;
+    onpointerup: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer enters the mark element */
-    onpointerenter: MouseEventHandler<SVGPathElement>;
+    onpointerenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer leaves the mark element */
-    onpointerleave: MouseEventHandler<SVGPathElement>;
+    onpointerleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves within the mark element */
-    onpointermove: MouseEventHandler<SVGPathElement>;
+    onpointermove: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves onto the mark element */
-    onpointerover: MouseEventHandler<SVGPathElement>;
+    onpointerover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves out of the mark element */
-    onpointerout: MouseEventHandler<SVGPathElement>;
+    onpointerout: MarkEventHandler<T, SVGPathElement>;
     /** fired continuously while the mark is being dragged */
-    ondrag: MouseEventHandler<SVGPathElement>;
+    ondrag: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element is dropped on the mark */
-    ondrop: MouseEventHandler<SVGPathElement>;
+    ondrop: MarkEventHandler<T, SVGPathElement>;
     /** fired when a drag operation begins on the mark */
-    ondragstart: MouseEventHandler<SVGPathElement>;
+    ondragstart: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element enters the mark */
-    ondragenter: MouseEventHandler<SVGPathElement>;
+    ondragenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element leaves the mark */
-    ondragleave: MouseEventHandler<SVGPathElement>;
+    ondragleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element is over the mark */
-    ondragover: MouseEventHandler<SVGPathElement>;
+    ondragover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a drag operation ends */
-    ondragend: MouseEventHandler<SVGPathElement>;
+    ondragend: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point is placed on the mark */
-    ontouchstart: MouseEventHandler<SVGPathElement>;
+    ontouchstart: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point moves along the mark */
-    ontouchmove: MouseEventHandler<SVGPathElement>;
+    ontouchmove: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point is removed from the mark */
-    ontouchend: MouseEventHandler<SVGPathElement>;
+    ontouchend: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch event is canceled */
-    ontouchcancel: MouseEventHandler<SVGPathElement>;
+    ontouchcancel: MarkEventHandler<T, SVGPathElement>;
     /** fired when the context menu is triggered on the mark */
-    oncontextmenu: MouseEventHandler<SVGPathElement>;
+    oncontextmenu: MarkEventHandler<T, SVGPathElement>;
     /** fired when the mouse wheel is scrolled over the mark */
-    onwheel: MouseEventHandler<SVGPathElement>;
+    onwheel: MarkEventHandler<T, SVGPathElement>;
     /**
      * if you want to give your mark element an extra CSS class
      */
