@@ -112,7 +112,7 @@ export type PlotContext = {
 type IgnoreDefaults =
     | 'data'
     | 'facet'
-    | Omit<ChannelName, 'stroke' | 'fill'>
+    | Exclude<ChannelName, 'stroke' | 'fill'>
     | 'title'
     | 'automatic'
     | 'children';

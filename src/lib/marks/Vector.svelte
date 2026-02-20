@@ -9,7 +9,7 @@
     };
 </script>
 
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface VectorMarkProps extends BaseMarkProps<Datum> {
         /** the input data array; each element becomes one vector */
         data: Datum[];

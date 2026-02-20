@@ -2,7 +2,7 @@
     @component
     Wrapper around the vector mark with presets suitable for spike maps 
 -->
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface SpikeMarkProps extends Omit<
         ComponentProps<typeof Vector>,
         'data' | 'x' | 'y' | 'r' | 'length' | 'rotate'

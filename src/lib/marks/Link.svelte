@@ -2,7 +2,7 @@
     Creates connections between pairs of points with optional curve styling and markers
 -->
 
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface LinkMarkProps extends BaseMarkProps<Datum>, MarkerOptions {
         /** the input data array; each element becomes one link */
         data?: Datum[];

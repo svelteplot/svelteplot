@@ -1,7 +1,7 @@
 <!-- @component
     Creates dots or symbols at specified positions with customizable size and appearance
 -->
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface DotMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
         /** the input data array; each element becomes one dot */
         data?: Datum[];
