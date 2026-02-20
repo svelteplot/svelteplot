@@ -10,12 +10,16 @@
 
 <script lang="ts">
     import { Plot, AreaY, Line, windowY } from 'svelteplot';
+    import type {
+        WindowAnchor,
+        ReducerName
+    } from 'svelteplot/types';
 
     let { sftemp } = $props();
 
     let k = $state(20);
-    let reduce = $state('mean');
-    let anchor = $state('middle');
+    let reduce = $state<ReducerName>('mean');
+    let anchor = $state<WindowAnchor>('middle');
     let strict = $state(false);
 </script>
 
@@ -31,12 +35,9 @@
             { data: sftemp, x: 'date', y: 'low' },
             {
                 k,
-                anchor: anchor as
-                    | 'start'
-                    | 'middle'
-                    | 'end',
+                anchor,
                 strict,
-                reduce: reduce as any
+                reduce
             }
         )}
         stroke="var(--svp-blue)" />
@@ -45,12 +46,9 @@
             { data: sftemp, x: 'date', y: 'high' },
             {
                 k,
-                anchor: anchor as
-                    | 'start'
-                    | 'middle'
-                    | 'end',
+                anchor,
                 strict,
-                reduce: reduce as any
+                reduce
             }
         )}
         stroke="var(--svp-red)" />
@@ -64,12 +62,9 @@
             },
             {
                 k,
-                anchor: anchor as
-                    | 'start'
-                    | 'middle'
-                    | 'end',
+                anchor,
                 strict,
-                reduce: reduce as any
+                reduce
             }
         )}
         fillOpacity={0.15}

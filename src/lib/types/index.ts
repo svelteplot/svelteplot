@@ -120,3 +120,5 @@ export * from './mark';
 export * from './plot';
 export * from './scale';
 export * from '../transforms/density';
+export * from '../transforms/window';
+export * from '../helpers/reduce';
