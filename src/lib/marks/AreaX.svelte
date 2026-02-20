@@ -6,8 +6,12 @@
     interface AreaXMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
         /** the input data array; each element becomes one point in the area */
         data?: Datum[];
-        /** the horizontal position channel */
+        /** the horizontal position channel, implicit stacking is used to derive x1 and x2 channels */
         x?: ChannelAccessor<Datum>;
+        /** the horizontal position channel of the lower end of bands */
+        x1?: ChannelAccessor<Datum>;
+        /** the horizontal position channel of the upper end of bands */
+        x2?: ChannelAccessor<Datum>;
         /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
         /** the series channel; data is grouped into separate areas by unique z values */

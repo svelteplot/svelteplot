@@ -8,8 +8,12 @@
         data?: Datum[];
         /** the horizontal position channel */
         x?: ChannelAccessor<Datum>;
-        /** the vertical position channel */
+        /** the vertical position channel. Implicit stacking is used to derive y1 and y2  */
         y?: ChannelAccessor<Datum>;
+        /** the vertical position channel of the lower end of bands */
+        y1?: ChannelAccessor<Datum>;
+        /** the vertical position channel of the upper end of bands */
+        y2?: ChannelAccessor<Datum>;
         /** the series channel; data is grouped into separate areas by unique z values */
         z?: ChannelAccessor<Datum>;
         /** the curve interpolation method for connecting data points */
