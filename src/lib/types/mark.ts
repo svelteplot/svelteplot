@@ -75,8 +75,8 @@ import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.j
 
 type MarkEventHandler<TDatum, TTarget extends EventTarget = EventTarget> = (
     event: Event & { currentTarget: TTarget },
-    datum?: TDatum,
-    index?: number
+    datum: TDatum,
+    index: number
 ) => void;
 
 export type BaseMarkProps<T> = Partial<{
