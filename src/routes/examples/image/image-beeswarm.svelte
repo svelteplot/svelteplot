@@ -11,7 +11,6 @@
 
 <script lang="ts">
     import { Plot, Image } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
     import type { ExamplesData } from '../types';
     const { presidents2 } = $props() as ExamplesData;
 </script>
