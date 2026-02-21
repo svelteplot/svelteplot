@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { RawValue } from '../../index.js';
+    import type { RawValue } from '../../types/index.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let {
@@ -14,7 +14,7 @@
 
     const projectedStops = $derived(
         stops
-            .map((d) => ({ ...d, py: plot.scales.y.fn(d.y) / plot.height }))
+            .map((d) => ({ ...d, py: (plot.scales.y?.fn(d.y as any) ?? 0) / plot.height }))
             .sort((a, b) => a.py - b.py)
     );
 </script>

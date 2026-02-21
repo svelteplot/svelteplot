@@ -31,7 +31,7 @@
 
     let {
         data,
-        class: className = null,
+        class: className = '',
         n = 20,
         k = 2,
         ...options

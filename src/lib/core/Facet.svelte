@@ -31,7 +31,7 @@
 
     setContext('svelteplot/facet', {
         getTestFacet() {
-            return (datum: DataRecord, options: Partial<BaseMarkProps>) => {
+            return (datum: DataRecord, options: Partial<BaseMarkProps<DataRecord>>) => {
                 return (
                     (options.fx == null || resolveChannel('fx', datum, options) === fx) &&
                     (options.fy == null || resolveChannel('fy', datum, options) === fy)
