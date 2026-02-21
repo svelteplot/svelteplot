@@ -28,11 +28,12 @@
 
     const plot = usePlot();
 
-    function maybeOpacity(value) {
+    function maybeOpacity(value: unknown) {
         return value == null ? 1 : +value;
     }
 
-    const render: Attachment = (canvas: HTMLCanvasElement) => {
+    const render: Attachment = (canvasEl: Element) => {
+        const canvas = canvasEl as HTMLCanvasElement;
         const context = canvas.getContext('2d');
 
         $effect(() => {
@@ -44,7 +45,7 @@
 
                 for (const d of data) {
                     if (!d.valid) continue;
-                    const geometry = resolveProp(mark.options.geometry, d.datum, d.datum);
+                    const geometry = resolveProp((mark.options as any).geometry, d.datum, d.datum);
                     // untrack the filter test to avoid redrawing when not necessary
                     let { stroke, fill, ...restStyles } = resolveScaledStyleProps(
                         d.datum,
@@ -52,7 +53,7 @@
                         usedScales,
                         plot,
                         GEOJSON_PREFER_STROKE.has(geometry.type) ? 'stroke' : 'fill'
-                    );
+                    ) as { fill: string; stroke: string } & Record<string, unknown>;
 
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const fillOpacity = maybeOpacity(restStyles['fill-opacity']);
@@ -62,13 +63,13 @@
                         fill =
                             currentColor ||
                             (currentColor = getComputedStyle(
-                                canvas?.parentElement?.parentElement
+                                canvas?.parentElement?.parentElement ?? canvas
                             ).getPropertyValue('color'));
                     if (`${stroke}`.toLowerCase() === 'currentcolor')
                         stroke =
                             currentColor ||
                             (currentColor = getComputedStyle(
-                                canvas?.parentElement?.parentElement
+                                canvas?.parentElement?.parentElement ?? canvas
                             ).getPropertyValue('color'));
                     if (CSS_VAR.test(fill))
                         fill = getComputedStyle(canvas).getPropertyValue(fill.slice(4, -1));

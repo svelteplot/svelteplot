@@ -1,7 +1,7 @@
 <script lang="ts">
     import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
     import { type ComponentProps } from 'svelte';
-    import type { ScaledDataRecord, UsedScales } from '../../index.js';
+    import type { ScaledDataRecord, UsedScales } from 'svelteplot/types/index.js';
     import type Text from '../Text.svelte';
     import { CSS_VAR } from 'svelteplot/constants';
     import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';
@@ -46,7 +46,7 @@
             args.lineAnchor,
             d.datum,
             args.y != null ? 'middle' : isTop ? 'top' : isBottom ? 'bottom' : 'middle'
-        )
+        ) ?? 'middle'
     );
     const textClassName = $derived(resolveProp(args.textClass, d.datum, null));
     const [x, y] = $derived(
@@ -73,7 +73,7 @@
     const [style, styleClass] = $derived(
         resolveStyles(
             plot,
-            { ...d, __tspanIndex: 0 },
+            { ...d, __tspanIndex: 0 } as any,
             {
                 fontSize: 12,
                 fontWeight: 500,
@@ -92,20 +92,27 @@
     let textElement: SVGTextElement | null = $state(null);
 
     const rootFontSize = $derived(
-        textElement?.ownerDocument?.documentElement && textLines.length > 1
-            ? maybeFromPixel(getComputedStyle(textElement.ownerDocument.documentElement).fontSize)
+        textElement != null && textLines.length > 1
+            ? maybeFromPixel(
+                  getComputedStyle(
+                      (textElement as unknown as SVGTextElement).ownerDocument.documentElement
+                  ).fontSize
+              )
             : 14
     );
 
     const computedFontSize = $derived(
-        textElement && textLines.length > 1 && CSS_VAR.test(fontSize)
+        textElement &&
+            textLines.length > 1 &&
+            typeof fontSize === 'string' &&
+            CSS_VAR.test(fontSize)
             ? maybeFromRem(
                   maybeFromPixel(
                       getComputedStyle(textElement).getPropertyValue(
-                          `--${fontSize.match(CSS_VAR)[1]}`
+                          `--${String(fontSize).match(CSS_VAR)![1]}`
                       )
                   ),
-                  rootFontSize
+                  rootFontSize as number
               )
             : fontSize
     );
@@ -114,7 +121,7 @@
         textLines.length > 1 ? (resolveProp(args.lineHeight, d.datum) ?? 1.2) : 0
     );
 
-    const rotate = $derived(+resolveProp(args.rotate, d.datum, 0));
+    const rotate = $derived(Number(resolveProp(args.rotate, d.datum, 0) ?? 0));
 </script>
 
 {#if textLines.length > 1}
@@ -123,19 +130,19 @@
         bind:this={textElement}
         class={[textClassName]}
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
-        transform="translate({Math.round(x)},{Math.round(
-            y -
+        transform="translate({Math.round(x ?? 0)},{Math.round(
+            (y ?? 0) -
                 (lineAnchor === 'bottom'
                     ? textLines.length - 1
                     : lineAnchor === 'middle'
                       ? (textLines.length - 1) * 0.5
                       : 0) *
-                    computedFontSize *
+                    (computedFontSize as number) *
                     lineHeight
         )}) rotate({rotate})"
         >{#each textLines as line, l (l)}<tspan
                 x="0"
-                dy={l ? computedFontSize * lineHeight : 0}
+                dy={l ? (computedFontSize as number) * lineHeight : 0}
                 class={styleClass}
                 {style}>{line}</tspan
             >{/each}{#if title}<title>{title}</title>{/if}</text>
@@ -144,7 +151,7 @@
     <text
         class={[textClassName, styleClass]}
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
-        transform="translate({Math.round(x)},{Math.round(y)}) rotate({rotate})"
+        transform="translate({Math.round(x ?? 0)},{Math.round(y ?? 0)}) rotate({rotate})"
         {style}
         >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
 {/if}

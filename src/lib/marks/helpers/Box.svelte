@@ -47,7 +47,7 @@
     let markProps: BoxMarkProps = $props();
 
     const {
-        data = [{}],
+        data = [] as Datum[],
         bar,
         rule,
         tickMedian,
@@ -89,7 +89,7 @@
                 fy
             },
             { [xProp]: 'median', [x1Prop]: 'p25', [x2Prop]: 'p75', fill: (rows) => rows }
-        )
+        ) as { data: any[]; [key: string]: any }
     );
 
     const X = Symbol('x'),
@@ -112,13 +112,15 @@
     const sortProps = { [IS_SORTED]: true };
 
     const compareValues = (a: RawValue, b: RawValue) =>
-        (typeof a === 'string' && typeof b === 'string'
-            ? a.localeCompare(b)
-            : a > b
-              ? 1
-              : a < b
-                ? -1
-                : 0) || 0;
+        (typeof a === 'symbol' || typeof b === 'symbol'
+            ? 0
+            : typeof a === 'string' && typeof b === 'string'
+              ? a.localeCompare(b)
+              : (a as number) > (b as number)
+                ? 1
+                : (a as number) < (b as number)
+                  ? -1
+                  : 0) || 0;
 
     const boxData = $derived.by(() => {
         const boxes = grouped
@@ -128,11 +130,11 @@
                 const p75Key = groupChannels[x2Prop];
                 const groupKey = groupChannels[yProp];
 
-                const iqr = row[p75Key] - row[p25Key];
+                const iqr = (row[p75Key] as number) - (row[p25Key] as number);
                 const whisker = iqr * 1.5;
-                const lower = row[p25Key] - whisker;
-                const upper = row[p75Key] + whisker;
-                const data = row[groupChannels.fill].map((d) => ({
+                const lower = (row[p25Key] as number) - whisker;
+                const upper = (row[p75Key] as number) + whisker;
+                const data = (row[groupChannels.fill] as any[]).map((d) => ({
                     ...d,
                     [orientation === 'y' ? Y : X]: resolveChannel(xProp, d, {
                         x,
@@ -141,10 +143,12 @@
                 }));
                 const valueSym = orientation === 'y' ? Y : X;
                 const groupSym = orientation === 'y' ? X : Y;
-                const outliers = data.filter((d) => d[valueSym] < lower || d[valueSym] > upper);
+                const outliers = data.filter(
+                    (d: any) => d[valueSym] < lower || d[valueSym] > upper
+                );
                 const inside = data
-                    .filter((d) => d[valueSym] >= lower && d[valueSym] <= upper)
-                    .sort((a, b) => a[valueSym] - b[valueSym]);
+                    .filter((d: any) => d[valueSym] >= lower && d[valueSym] <= upper)
+                    .sort((a: any, b: any) => a[valueSym] - b[valueSym]);
 
                 return {
                     ...data[0],
@@ -154,15 +158,18 @@
                     [MEDIAN]: row[medianKey],
                     [P75]: row[p75Key],
                     [MIN]: inside.length ? inside[0][valueSym] : null,
-                    [MAX]: inside.length ? inside.at(-1)[valueSym] : null,
-                    [FX]: resolveChannel('fx', data[0], { fx }, null),
-                    [FY]: resolveChannel('fy', data[0], { fy }, null),
+                    [MAX]: inside.length ? (inside.at(-1) as any)[valueSym] : null,
+                    [FX]: resolveChannel('fx', data[0], { fx }),
+                    [FY]: resolveChannel('fy', data[0], { fy }),
                     [OUTLIERS]: outliers
                 };
             })
             .filter(Boolean);
 
-        const stripSortRef = ({ [SORT_REF]: _, ...rest }) => rest;
+        const stripSortRef = (obj: any) => {
+            const { [SORT_REF]: _unused, ...rest } = obj;
+            return rest;
+        };
 
         if (!sort) return boxes.map(stripSortRef);
 
@@ -170,8 +177,8 @@
 
         const sortAccessor =
             typeof sort === 'function'
-                ? (d) => sort(d[SORT_REF])
-                : (d) => {
+                ? (d: any) => sort(d[SORT_REF])
+                : (d: any) => {
                       switch (sort_) {
                           case 'min':
                               return d[MIN];
@@ -200,7 +207,7 @@
     function maybeSort(
         sort: string | ((d: Datum) => RawValue) | undefined
     ): [string | ((d: Datum) => RawValue), 1 | -1] {
-        if (typeof sort !== 'string') return [sort, 1];
+        if (typeof sort !== 'string') return [sort as (d: Datum) => RawValue, 1];
         if (sort.startsWith('-')) {
             return [sort.slice(1), -1];
         }
@@ -249,18 +256,18 @@
             {...{ [yProp]: groupSymbol, [xProp]: MIN }}
             {stroke}
             {...facets}
-            inset="20%"
+            {...{ inset: '20%' } as any}
             {...typeof tickMinMax === 'object' ? tickMinMax : {}} />
         <TickMark
             data={boxData}
             {...{ [yProp]: groupSymbol, [xProp]: MAX }}
             {stroke}
             {...facets}
-            inset="20%"
+            {...{ inset: '20%' } as any}
             {...typeof tickMinMax === 'object' ? tickMinMax : {}} />
     {/if}
     <Dot
-        data={boxData.map((d) => d[OUTLIERS]).flat()}
+        data={boxData.map((d) => (d as any)[OUTLIERS]).flat()}
         {x}
         {y}
         {fx}

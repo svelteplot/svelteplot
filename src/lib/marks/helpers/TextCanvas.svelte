@@ -1,5 +1,5 @@
 <script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
-    interface TextCanvasProps<Datum extends DataRecord<object>> {
+    interface TextCanvasProps<Datum> {
         data: ScaledDataRecord<Datum>[];
         options: BaseMarkProps<Datum> & {
             x?: ChannelAccessor<Datum>;
@@ -164,7 +164,11 @@
                 for (const datum of data) {
                     if (!datum.valid) continue;
 
-                    const frameAnchor = resolveProp(options.frameAnchor, datum.datum, 'middle');
+                    const frameAnchor = resolveProp(
+                        options.frameAnchor,
+                        datum.datum as any,
+                        'middle'
+                    );
                     const isLeft =
                         frameAnchor === 'left' ||
                         frameAnchor === 'top-left' ||
@@ -206,7 +210,7 @@
                     const lineAnchor = normalizeLineAnchor(
                         resolveProp(
                             options.lineAnchor,
-                            datum.datum,
+                            datum.datum as any,
                             options.y != null
                                 ? 'middle'
                                 : isTop
@@ -218,7 +222,7 @@
                     );
                     const defaultTextAnchor = isLeft ? 'start' : isRight ? 'end' : 'middle';
                     const styleProps = resolveScaledStyleProps(
-                        datum.datum,
+                        datum.datum as any,
                         {
                             ...DEFAULT_TEXT_OPTIONS,
                             textAnchor: defaultTextAnchor,
@@ -227,7 +231,7 @@
                         usedScales,
                         plot,
                         'fill'
-                    );
+                    ) as Record<string, unknown>;
 
                     const inheritedFontSize = inheritedFontStyles.fontSize || '12px';
                     const { css: fontSize, numeric: fontSizePx } = toFontSize(
@@ -259,7 +263,7 @@
                             Math.PI) /
                         180;
 
-                    const textLines = String(resolveProp(options.text, datum.datum, ''))
+                    const textLines = String(resolveProp(options.text, datum.datum as any, ''))
                         .split('\n')
                         .map((line) => textTransform(line, textTransformValue));
 

@@ -56,7 +56,7 @@
                         usedScales,
                         plot,
                         'stroke'
-                    );
+                    ) as { fill: string; stroke: string } & Record<string, unknown>;
 
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
@@ -67,12 +67,12 @@
                         1.4
                     ) as number;
 
-                    if (mark.options.outlineStroke) {
+                    const lineOpts = mark.options as any;
+                    if (lineOpts.outlineStroke) {
                         // draw stroke outline first
-                        const outlineStroke = resolveColor(mark.options.outlineStroke, canvas);
-                        const outlineStrokeWidth =
-                            mark.options.outlineStrokeWidth ?? strokeWidth + 2;
-                        const outlineStrokeOpacity = mark.options.outlineStrokeOpacity ?? 1;
+                        const outlineStroke = resolveColor(lineOpts.outlineStroke, canvas);
+                        const outlineStrokeWidth = lineOpts.outlineStrokeWidth ?? strokeWidth + 2;
+                        const outlineStrokeOpacity = lineOpts.outlineStrokeOpacity ?? 1;
 
                         context.lineWidth = outlineStrokeWidth;
                         context.strokeStyle = outlineStroke;
@@ -82,7 +82,7 @@
                         context.stroke();
                     }
 
-                    stroke = resolveColor(stroke, canvas);
+                    stroke = resolveColor(stroke, canvas) as string;
 
                     if (stroke && stroke !== 'none') {
                         context.lineWidth = strokeWidth ?? 1.4;

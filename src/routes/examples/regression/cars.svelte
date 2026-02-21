@@ -9,11 +9,24 @@
 
     let { cars } = $props();
 
-    let type = $state('linear');
+    type RegressionKind =
+        | 'linear'
+        | 'quad'
+        | 'exp'
+        | 'log'
+        | 'pow';
+    const types: RegressionKind[] = [
+        'linear',
+        'quad',
+        'exp',
+        'log',
+        'pow'
+    ];
+
+    let type = $state<RegressionKind>('linear');
     let order = $state(3);
     let span = $state(0.7);
     let confidence = $state(0.99);
-    const types = ['linear', 'quad', 'exp', 'log', 'pow'];
 </script>
 
 <Select label="Type" bind:value={type} options={types} />

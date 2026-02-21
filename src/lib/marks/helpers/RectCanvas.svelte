@@ -70,7 +70,8 @@ Helper class for rendering Cell, Bar and Rect marks in canvas
         return value == null ? 1 : +value;
     }
 
-    const render: Attachment = (canvas: HTMLCanvasElement) => {
+    const render: Attachment = (canvasEl: Element) => {
+        const canvas = canvasEl as HTMLCanvasElement;
         const context = canvas.getContext('2d');
 
         $effect(() => {
@@ -93,27 +94,31 @@ Helper class for rendering Cell, Bar and Rect marks in canvas
                     const miny = Math.min(y1, y2);
                     const maxy = Math.max(y1, y2);
 
-                    const inset = +resolveProp(options.inset, datum.datum, 0);
-                    const insetLeft = +resolveProp(
-                        options.insetLeft,
-                        datum.datum,
-                        useInsetAsFallbackHorizontally ? inset : 0
-                    );
-                    const insetRight = +resolveProp(
-                        options.insetRight,
-                        datum.datum,
-                        useInsetAsFallbackHorizontally ? inset : 0
-                    );
-                    const insetTop = +resolveProp(
-                        options.insetTop,
-                        datum.datum,
-                        useInsetAsFallbackVertically ? inset : 0
-                    );
-                    const insetBottom = +resolveProp(
-                        options.insetBottom,
-                        datum.datum,
-                        useInsetAsFallbackVertically ? inset : 0
-                    );
+                    const inset = resolveProp(options.inset, datum.datum, 0) ?? 0;
+                    const insetLeft =
+                        resolveProp(
+                            options.insetLeft,
+                            datum.datum,
+                            useInsetAsFallbackHorizontally ? inset : 0
+                        ) ?? 0;
+                    const insetRight =
+                        resolveProp(
+                            options.insetRight,
+                            datum.datum,
+                            useInsetAsFallbackHorizontally ? inset : 0
+                        ) ?? 0;
+                    const insetTop =
+                        resolveProp(
+                            options.insetTop,
+                            datum.datum,
+                            useInsetAsFallbackVertically ? inset : 0
+                        ) ?? 0;
+                    const insetBottom =
+                        resolveProp(
+                            options.insetBottom,
+                            datum.datum,
+                            useInsetAsFallbackVertically ? inset : 0
+                        ) ?? 0;
 
                     const rectX = minx + insetLeft;
                     const rectY = miny + insetBottom;
@@ -135,17 +140,17 @@ Helper class for rendering Cell, Bar and Rect marks in canvas
                         usedScales,
                         plot,
                         defaultColorProp
-                    );
+                    ) as { fill: string; stroke: string } & Record<string, unknown>;
 
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const fillOpacity = maybeOpacity(restStyles['fill-opacity']);
                     const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
 
                     if (typeof fill === 'string') {
-                        fill = resolveColor(fill, canvas);
+                        fill = resolveColor(fill, canvas) as string;
                     }
                     if (typeof stroke === 'string') {
-                        stroke = resolveColor(stroke, canvas);
+                        stroke = resolveColor(stroke, canvas) as string;
                     }
 
                     if (stroke && stroke !== 'none') {
