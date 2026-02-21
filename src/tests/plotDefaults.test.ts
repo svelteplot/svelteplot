@@ -49,4 +49,46 @@ describe('plotDefaults', () => {
             height: 300
         });
     });
+
+    it('supports boolean grid shorthand for top-level Plot grid default', () => {
+        const { container } = render(PlotDefaultsTest, {
+            props: { defaults: { grid: true } }
+        });
+        expect(getDefaults(container)).toEqual({
+            grid: { implicit: true }
+        });
+    });
+
+    it('keeps grid mark defaults when grid shorthand is set in child context', () => {
+        const { container } = render(PlotDefaultsNestedTest, {
+            props: {
+                parentDefaults: { grid: { stroke: 'crimson' } },
+                childDefaults: { grid: true }
+            }
+        });
+        expect(getDefaults(container)).toEqual({
+            grid: { stroke: 'crimson', implicit: true }
+        });
+    });
+
+    it('supports boolean frame shorthand for top-level Plot frame default', () => {
+        const { container } = render(PlotDefaultsTest, {
+            props: { defaults: { frame: true } }
+        });
+        expect(getDefaults(container)).toEqual({
+            frame: { implicit: true }
+        });
+    });
+
+    it('keeps frame mark defaults when frame shorthand is set in child context', () => {
+        const { container } = render(PlotDefaultsNestedTest, {
+            props: {
+                parentDefaults: { frame: { stroke: 'crimson' } },
+                childDefaults: { frame: true }
+            }
+        });
+        expect(getDefaults(container)).toEqual({
+            frame: { stroke: 'crimson', implicit: true }
+        });
+    });
 });
