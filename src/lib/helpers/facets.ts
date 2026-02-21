@@ -56,5 +56,3 @@ export function getEmptyFacets(
     }
     return out;
 }
-
-// TODO: write unit tests
