@@ -29,13 +29,7 @@
         k?: number;
     }
 
-    let {
-        data,
-        class: className = '',
-        n = 20,
-        k = 2,
-        ...options
-    }: BollingerXMarkProps = $props();
+    let { data, class: className = '', n = 20, k = 2, ...options }: BollingerXMarkProps = $props();
 
     let args = $derived(
         bollingerX(recordizeX({ data, ...options } as TransformArg<DataRecord>), { n, k })
