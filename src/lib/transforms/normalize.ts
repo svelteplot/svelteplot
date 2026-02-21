@@ -136,7 +136,7 @@ const normalizeSum = normalizeAccessor(sum as any);
 export function normalizeParallelY<T>(
     args: TransformArg<T>,
     basis: NormalizeBasis
-): ReturnType<typeof sort<T>> {
+): TransformArg<T> {
     return sort({
         ...normalizeY(
             {
@@ -165,7 +165,7 @@ export function normalizeParallelY<T>(
 export function normalizeParallelX<T>(
     args: TransformArg<T>,
     basis: NormalizeBasis
-): ReturnType<typeof sort<T>> {
+): TransformArg<T> {
     return sort({
         ...normalizeX(
             {

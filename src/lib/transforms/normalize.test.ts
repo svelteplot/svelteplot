@@ -25,7 +25,7 @@ describe('normalizeY', () => {
         expect(yChannel).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: DataRecord) => ({
             id: d.id,
             group: d.group,
             y: d[yChannel]
@@ -56,7 +56,7 @@ describe('normalizeY', () => {
         expect(yChannel).toBe('__y');
         expect(normalized).toHaveLength(data.length);
 
-        const result = normalized.map((d) => ({
+        const result = normalized.map((d: DataRecord) => ({
             id: d.id,
             group: d.group,
             y: d[yChannel]

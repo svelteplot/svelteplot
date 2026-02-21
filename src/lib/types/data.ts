@@ -4,10 +4,10 @@ import type { ScaledChannelName, ScaledChannelType } from './channel.js';
 export type RawValue = number | Date | boolean | string | symbol | object | null;
 
 /** a data record passed to marks; generic over the user's row shape */
-export type DataRecord<T extends object = Record<string | symbol, RawValue>> = T;
+export type DataRecord<T = Record<string | symbol, RawValue>> = T;
 
 /** a data record after channel accessors have been resolved to concrete values */
-export type ResolvedDataRecord<T extends object = Record<string | symbol, RawValue>> = Partial<
+export type ResolvedDataRecord<T = Record<string | symbol, RawValue>> = Partial<
     Record<ScaledChannelName, any>
 > & {
     /** the original data record before resolution */
@@ -17,7 +17,7 @@ export type ResolvedDataRecord<T extends object = Record<string | symbol, RawVal
 };
 
 /** a data record after scale functions have been applied to channel values */
-export type ScaledDataRecord<T extends object = Record<string | symbol, RawValue>> = Partial<{
+export type ScaledDataRecord<T = Record<string | symbol, RawValue>> = Partial<{
     [K in ScaledChannelName]?: ScaledChannelType<K>;
 }> & {
     /** horizontal pixel offset applied after scaling */
@@ -35,7 +35,7 @@ export type ScaledDataRecord<T extends object = Record<string | symbol, RawValue
 };
 
 /** a data row as passed by the user; can be a record, a raw value, a coordinate pair, or null */
-export type DataRow<T extends object = Record<string | symbol, RawValue>> =
+export type DataRow<T = Record<string | symbol, RawValue>> =
     | DataRecord<T>
     | RawValue
     | [number, number]

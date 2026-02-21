@@ -38,16 +38,17 @@ export function renameChannelsAndData<T extends DataRecord, C extends TransformL
     { data, ...channels }: C,
     options: RenameChannelsOptions
 ): C {
-    const newData = [];
+    const newData: T[] = [];
     for (const datum of data) {
-        const newDatum = { ...datum };
+        const newDatum = { ...datum } as T;
+        const mutableDatum = newDatum as Record<string | symbol, any>;
         for (const [from, to] of Object.entries(options) as [
             ScaledChannelName,
             ScaledChannelName
         ][]) {
             if (channels[from] !== undefined) {
-                newDatum[to] = newDatum[from];
-                delete newDatum[from];
+                mutableDatum[to] = mutableDatum[from];
+                delete mutableDatum[from];
             }
         }
         newData.push(newDatum);
