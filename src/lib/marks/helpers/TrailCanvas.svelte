@@ -1,7 +1,5 @@
 <script lang="ts" generics="Datum extends DataRecord">
     import type {
-        Mark,
-        BaseMarkProps,
         ScaledDataRecord,
         UsedScales,
         CurveName,

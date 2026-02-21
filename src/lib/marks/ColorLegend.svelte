@@ -29,7 +29,7 @@
                   plot.options.color.tickFormat || { ...DEFAULTS.numberFormat, notation: 'compact' }
               ).format
     );
-    const randId = Math.round(Math.random() * 1e6).toFixed(32);
+    const randId = Math.round(Math.random() * 1e6).toString(36);
 </script>
 
 <!--
