@@ -119,7 +119,7 @@ Setting Global and Component Defaults
             tickSize: 0,
             tickPadding: 5
         },
-        frame: { implicit: true },
+        frame: true,
         grid: { implicit: true },
         dot: {
             r: 5
@@ -153,7 +153,7 @@ setPlotDefaults({
         tickSize: 0,
         tickPadding: 5
     },
-    frame: { implicit: true },
+    frame: true,
     grid: { implicit: true },
     dot: {
         r: 5

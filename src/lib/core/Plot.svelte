@@ -59,6 +59,11 @@
 
     // default settings in the plot and marks can be overwritten by
     // defining the svelteplot/defaults context outside of Plot
+    const asGridDefaults = (opts: PlotDefaults['grid'] | undefined) =>
+        opts === true ? { implicit: true } : opts == null ? {} : opts;
+    const isImplicit = (opts: { implicit?: boolean } | true | undefined) =>
+        opts === true ? true : (opts?.implicit ?? false);
+
     const DEFAULTS: PlotDefaults = {
         height: 350,
         initialWidth: 500,
@@ -93,13 +98,13 @@
         },
         gridX: {
             implicit: false,
-            ...USER_DEFAULTS.grid,
-            ...USER_DEFAULTS.gridX
+            ...asGridDefaults(USER_DEFAULTS.grid),
+            ...asGridDefaults(USER_DEFAULTS.gridX)
         },
         gridY: {
             implicit: false,
-            ...USER_DEFAULTS.grid,
-            ...USER_DEFAULTS.gridY
+            ...asGridDefaults(USER_DEFAULTS.grid),
+            ...asGridDefaults(USER_DEFAULTS.gridY)
         }
     };
 
@@ -444,9 +449,9 @@
             marginTop: maybeMargin(margin, 'top', DEFAULTS.margin, autoMargins),
             marginBottom: maybeMargin(margin, 'bottom', DEFAULTS.margin, autoMargins),
             inset: isOneDimensional ? 10 : DEFAULTS.inset,
-            grid: (DEFAULTS.gridX?.implicit ?? false) && (DEFAULTS.gridY?.implicit ?? false),
+            grid: isImplicit(DEFAULTS.gridX) && isImplicit(DEFAULTS.gridY),
             axes: (DEFAULTS.axisX?.implicit ?? false) && (DEFAULTS.axisY?.implicit ?? false),
-            frame: DEFAULTS.frame?.implicit ?? false,
+            frame: isImplicit(DEFAULTS.frame),
             projection: null,
             aspectRatio: null,
             facet: {},
@@ -464,7 +469,7 @@
                 align: 0.5,
                 tickSpacing: DEFAULTS.axisX.tickSpacing ?? 80,
                 tickFormat: 'auto',
-                grid: DEFAULTS.gridX.implicit ?? false
+                grid: isImplicit(DEFAULTS.gridX)
             },
             y: {
                 type: 'auto',
@@ -479,7 +484,7 @@
                 align: 0.5,
                 tickSpacing: DEFAULTS.axisY.tickSpacing ?? 50,
                 tickFormat: 'auto',
-                grid: DEFAULTS.gridY.implicit ?? false
+                grid: isImplicit(DEFAULTS.gridY)
             },
             opacity: {
                 type: 'linear',

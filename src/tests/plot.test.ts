@@ -188,6 +188,21 @@ describe('Plot component', () => {
         expect(svg?.getAttribute('height')).toBe('150');
     });
 
+    it('supports implicit frame via setPlotDefaults({ frame: true })', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                defaults: { frame: true },
+                plotArgs: {
+                    width: 100,
+                    height: 100
+                }
+            }
+        });
+
+        const rect = container.querySelector('svg rect.frame');
+        expect(rect).not.toBeNull();
+    });
+
     it('initial margins', () => {
         const { container } = render(PlotTest, {
             props: {
@@ -515,5 +530,24 @@ describe('Implicit axes', () => {
         // Check for right placement by examining tick positions
         const yTicks = svg?.querySelectorAll('g.axis-y .tick');
         expect(yTicks?.length).toBeGreaterThan(0);
+    });
+});
+
+describe('Implicit grids', () => {
+    it('enables implicit grids from setPlotDefaults({ grid: true })', () => {
+        const { container } = render(PlotTest, {
+            props: {
+                defaults: { grid: true },
+                plotArgs: {
+                    width: 100,
+                    height: 100,
+                    x: { domain: [0, 10] },
+                    y: { domain: [0, 10] }
+                }
+            }
+        });
+
+        expect(container.querySelectorAll('g.grid-x line').length).toBeGreaterThan(0);
+        expect(container.querySelectorAll('g.grid-y line').length).toBeGreaterThan(0);
     });
 });

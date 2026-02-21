@@ -268,7 +268,7 @@ export type PlotDefaults = {
     /**
      * default props for frame marks
      */
-    frame: Partial<ComponentProps<typeof Frame> & { implicit: boolean }>;
+    frame: Partial<ComponentProps<typeof Frame> & { implicit: boolean }> | true;
     /**
      * default props for geo marks
      */
@@ -280,15 +280,21 @@ export type PlotDefaults = {
     /**
      * default props for grid marks, applied to both gridX and gridY marks
      */
-    grid: Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>;
+    grid:
+        | Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>
+        | true;
     /**
      * default props for gridX marks
      */
-    gridX: Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>;
+    gridX:
+        | Partial<Omit<ComponentProps<typeof GridX>, IgnoreDefaults> & { implicit: boolean }>
+        | true;
     /**
      * default props for gridY marks
      */
-    gridY: Partial<Omit<ComponentProps<typeof GridY>, IgnoreDefaults> & { implicit: boolean }>;
+    gridY:
+        | Partial<Omit<ComponentProps<typeof GridY>, IgnoreDefaults> & { implicit: boolean }>
+        | true;
     /**
      * default props for image marks
      */
