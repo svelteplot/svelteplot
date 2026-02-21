@@ -136,7 +136,7 @@ export function autoScale({
     const scaleProps = {
         domain,
         range,
-        ...((type === 'linear' || type === 'log') && scaleOptions.nice
+        ...((type === 'linear' || type === 'log' || type === 'time') && scaleOptions.nice
             ? {
                   nice: scaleOptions.nice ? niceTickCount : true
               }
