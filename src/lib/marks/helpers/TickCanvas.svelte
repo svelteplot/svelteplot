@@ -96,17 +96,17 @@
                 };
 
                 const prepareStyle = (datum: ScaledDataRecord<Datum>) => {
-                    let { stroke, ...restStyles } = resolveScaledStyleProps(
+                    const styleProps = resolveScaledStyleProps(
                         datum.datum,
                         options,
                         usedScales,
                         plot,
                         'stroke'
-                    );
+                    ) as Record<string, unknown>;
 
-                    const opacity = maybeOpacity(restStyles['opacity']);
-                    const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
-                    const lineCap = normalizeLineCap(restStyles['stroke-linecap']);
+                    const opacity = maybeOpacity(styleProps['opacity']);
+                    const strokeOpacity = maybeOpacity(styleProps['stroke-opacity']);
+                    const lineCap = normalizeLineCap(styleProps['stroke-linecap']);
                     const strokeWidth = +(resolveProp(
                         options.strokeWidth,
                         datum.datum,
@@ -121,6 +121,7 @@
                         | number
                         | string;
 
+                    const stroke = styleProps.stroke;
                     const strokeValue = String(stroke || 'currentColor');
                     const alpha = opacity * strokeOpacity;
                     const styleKey = `${strokeValue}|${lineCap}|${strokeWidth}|${alpha}`;
