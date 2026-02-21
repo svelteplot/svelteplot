@@ -1,21 +1,24 @@
 import isDataRecord from '../helpers/isDataRecord.js';
 import { resolveChannel } from '../helpers/resolve.js';
-import type { DataRecord, DataRow, TransformArg } from '../types/index.js';
+import type { DataRecord } from '../types/index.js';
 import { shuffler } from 'd3-array';
 import { randomLcg } from 'd3-random';
 
 export const SORT_KEY = Symbol('sortKey');
 export const IS_SORTED = Symbol('isSorted');
+type TransformLike<T extends DataRecord = DataRecord> = { data: T[] } & Record<
+    string | symbol,
+    any
+>;
 
 /**
  * sorts the data according to the sort channel option; supports channel
  * accessors, comparator functions, and `{channel, order}` objects
  */
-export function sort<T>(
-    { data, ...channels }: TransformArg<T>,
+export function sort<T extends DataRecord, C extends TransformLike<T>>(
+    { data, ...channels }: C,
     options: { reverse?: boolean } = {}
-) {
-    if (!Array.isArray(data)) return { data, ...channels };
+): C {
     if (channels.sort) {
         const { sort } = channels;
         if (
@@ -70,21 +73,21 @@ export function sort<T>(
             // ordering of ordinal domains, and also to avoid double sorting in case
             // this transform is used "outside" a mark
             sort: null
-        };
+        } as C;
     }
     return {
         data,
         ...channels
-    };
+    } as C;
 }
 
 /**
  * shuffles the data row order
  */
 export function shuffle(
-    { data, ...channels }: TransformArg<DataRow[]>,
+    { data, ...channels }: TransformLike,
     options: { seed?: number } = {}
-) {
+): TransformLike {
     const random = randomLcg(options.seed);
     const shuffle = shuffler(random);
     return {
@@ -100,7 +103,7 @@ export function shuffle(
 /**
  * reverses the data row order
  */
-export function reverse({ data, ...channels }: TransformArg<DataRow[]>) {
+export function reverse({ data, ...channels }: TransformLike): TransformLike {
     return {
         data: data.toReversed(),
         ...channels,

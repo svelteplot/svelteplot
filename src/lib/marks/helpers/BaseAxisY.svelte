@@ -7,36 +7,34 @@
         AutoMarginStores,
         ConstantAccessor,
         PlotState,
+        PlotScaleFunction,
         RawValue,
+        ScaledDataRecord,
         ScaleType
     } from '../../types/index.js';
+    import type { AxisTickDatum, AxisYTick, BaseAxisYOptions } from '../../types/axes.js';
     import { RAW_VALUE } from '../../transforms/recordize';
     import { INDEX } from '../../constants';
-    import type * as CSS from 'csstype';
+    type AxisDatum = AxisTickDatum<typeof RAW_VALUE, typeof INDEX>;
+    type AxisTick = AxisYTick<AxisDatum>;
 
     type BaseAxisYProps = {
-        scaleFn: (d: RawValue) => number;
+        scaleFn: PlotScaleFunction;
         scaleType: ScaleType;
         ticks: RawValue[];
         tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
-        anchor: 'left' | 'right';
-        lineAnchor: 'top' | 'center' | 'bottom';
-        tickSize: number;
-        tickPadding: number;
-        tickFontSize: ConstantAccessor<number>;
-        tickClass: ConstantAccessor<number>;
+        anchor?: 'left' | 'right';
+        lineAnchor?: 'top' | 'center' | 'bottom';
+        tickSize?: number;
+        tickPadding?: number;
+        tickFontSize?: ConstantAccessor<number>;
+        tickClass?: ConstantAccessor<string>;
         marginLeft: number;
         width: number;
-        title: string | null;
-        options: {
-            // TODO: align with BaseAxisX options
-            dx: ConstantAccessor<number>;
-            dy: ConstantAccessor<number>;
-            fontWeight: ConstantAccessor<CSS.Property.FontWeight>;
-            textAnchor: 'start' | 'middle' | 'end';
-        };
+        title?: string | null;
+        options: BaseAxisYOptions;
         plot: PlotState;
-        text: boolean | null;
+        text?: boolean | null;
         class: string | undefined;
     };
 
@@ -45,15 +43,15 @@
         scaleType,
         ticks,
         tickFormat,
-        anchor,
-        lineAnchor,
-        tickSize,
-        tickPadding,
-        tickFontSize,
-        tickClass,
+        anchor = 'left',
+        lineAnchor = 'center',
+        tickSize = 6,
+        tickPadding = 3,
+        tickFontSize = 11,
+        tickClass = null,
         marginLeft,
         width,
-        title,
+        title = null,
         plot,
         options,
         text = true,
@@ -64,16 +62,17 @@
         top: 'hanging',
         center: 'middle',
         bottom: 'auto'
-    };
+    } as const;
+    const toScaledDatum = (tick: AxisTick) => ({ datum: tick }) as unknown as ScaledDataRecord;
 
     const positionedTicks = $derived.by(() => {
-        let tickObjects = ticks.map((tick, i) => {
-            const datum = { [RAW_VALUE]: tick, [INDEX]: i };
+        let tickObjects: AxisTick[] = ticks.map((tick, i) => {
+            const datum: AxisDatum = { [RAW_VALUE]: tick, [INDEX]: i };
             return {
                 ...datum,
                 hidden: false,
-                dx: +resolveProp(options.dx, datum, 0),
-                dy: +resolveProp(options.dy, datum, 0),
+                dx: Number(resolveProp(options.dx, datum, 0) ?? 0),
+                dy: Number(resolveProp(options.dy, datum, 0) ?? 0),
                 y: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
                 text: tickFormat(tick, i, ticks),
                 element: null as SVGTextElement | null
@@ -96,7 +95,7 @@
         return tickObjects;
     });
 
-    let tickTexts = $state([] as SVGTextElement[]);
+    let tickTexts = $state([] as (SVGTextElement | undefined)[]);
 
     const isQuantitative = $derived(scaleType !== 'point' && scaleType !== 'band');
 
@@ -123,7 +122,7 @@
                         if (tickTexts[i]) return tickTexts[i].getBoundingClientRect().width;
                         return 0;
                     }) as number[]
-                )
+                ) ?? 0
             ) + Math.max(0, tickPadding + tickSize);
 
         if (!isNaN(maxLabelWidth)) {
@@ -162,7 +161,7 @@
             {@const tickClass_ = resolveProp(tickClass, tick)}
             {@const [textStyle, textClass] = resolveStyles(
                 plot,
-                { datum: tick },
+                toScaledDatum(tick),
                 {
                     fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                     ...options,
@@ -170,7 +169,7 @@
                     stroke: null
                 },
                 'fill',
-                { y: true },
+                { y: true } as any,
                 true
             )}
             <g
@@ -181,10 +180,10 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        { datum: tick },
+                        toScaledDatum(tick),
                         options,
                         'stroke',
-                        { y: true },
+                        { y: true } as any,
                         true
                     )}
                     <line

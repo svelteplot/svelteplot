@@ -10,6 +10,8 @@ export type Mark<T> = {
 export type MarkType =
     | 'area'
     | 'arrow'
+    | 'axisX'
+    | 'axisY'
     | 'barX'
     | 'barY'
     | 'cell'
@@ -21,6 +23,7 @@ export type MarkType =
     | 'gridX'
     | 'gridY'
     | 'image'
+    | 'link'
     | 'line'
     | 'rect'
     | 'regression'
@@ -80,7 +83,7 @@ type MarkEventHandler<TDatum, TTarget extends EventTarget = EventTarget> = (
     index: number
 ) => void;
 
-export type BaseMarkProps<T> = Partial<{
+export type BaseMarkProps<T = DataRecord> = Partial<{
     /**
      * Filter the data without modifying the inferred scales
      */
@@ -236,6 +239,8 @@ export type BaseMarkProps<T> = Partial<{
     style: string;
     /** the CSS cursor style when hovering over the mark (e.g. "pointer", "crosshair") */
     cursor: ConstantAccessor<CSS.Property.Cursor, T>;
+    /** tooltip text shown in an SVG <title> element when provided */
+    title: ConstantAccessor<string, T>;
 }>;
 
 export type LinkableMarkProps<T> = {

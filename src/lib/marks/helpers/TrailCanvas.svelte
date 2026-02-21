@@ -16,7 +16,7 @@
     import { resolveProp, resolveScaledStyleProps } from 'svelteplot/helpers/resolve';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    interface TrailCanvasProps<Datum> {
+    interface TrailCanvasProps<Datum extends object> {
         curve?: CurveName | CurveFactory;
         tension?: number;
         cap?: 'butt' | 'round';

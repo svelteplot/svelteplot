@@ -122,7 +122,7 @@ export function wafflePolygon(
     const y2 = `${y}2`;
     const xScale = scales[x as 'x' | 'y'];
     const yScale = scales[y as 'x' | 'y'];
-    const xBandScale = xScale.fn as ScaleBand<string | number>;
+    const xBandScale = xScale.fn as unknown as ScaleBand<string | number>;
     const mapY = (value: number) =>
         (yScale.fn as (input: number) => number | undefined)(value) ?? 0;
 

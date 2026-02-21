@@ -5,44 +5,38 @@
     import removeIdenticalLines from '../../helpers/removeIdenticalLines.js';
     import type {
         AutoMarginStores,
-        ChannelAccessor,
         ConstantAccessor,
         PlotState,
+        PlotScaleFunction,
         RawValue,
         ScaledDataRecord,
         ScaleType
     } from 'svelteplot/types/index.js';
+    import type { AxisTickDatum, AxisXTick, BaseAxisXOptions } from 'svelteplot/types/axes.js';
     import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
     import { randomId, testFilter } from '../../helpers/index.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
     import wordwrap from 'svelteplot/helpers/wordwrap';
-    import type * as CSS from 'csstype';
+    type AxisDatum = AxisTickDatum<typeof RAW_VALUE, typeof INDEX>;
+    type AxisTick = AxisXTick<AxisDatum>;
 
     type BaseAxisXProps = {
-        scaleFn: (d: RawValue) => number;
+        scaleFn: PlotScaleFunction;
         scaleType: ScaleType;
         ticks: RawValue[];
         tickFormat: (d: RawValue, i: number, ticks: RawValue[]) => string | string[];
-        anchor: 'top' | 'bottom';
-        tickSize: number;
-        tickPadding: number;
-        tickFontSize: ConstantAccessor<number>;
-        tickClass: ConstantAccessor<string>;
+        anchor?: 'top' | 'bottom';
+        tickSize?: number;
+        tickPadding?: number;
+        tickFontSize?: ConstantAccessor<number>;
+        tickClass?: ConstantAccessor<string>;
         marginTop: number;
         height: number;
-        title: string;
-        options: {
-            dx: ConstantAccessor<number>;
-            dy: ConstantAccessor<number>;
-            filter: ChannelAccessor;
-            wordwrap: boolean;
-            fontWeight: ConstantAccessor<CSS.Property.FontWeight>;
-            textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
-            removeDuplicateTicks: boolean;
-        };
-        text: boolean;
+        title: string | null;
+        options: BaseAxisXOptions;
+        text?: boolean | null;
         plot: PlotState;
         class: string | undefined;
     };
@@ -52,16 +46,16 @@
         scaleType,
         ticks,
         tickFormat,
-        anchor,
-        tickSize,
-        tickPadding,
-        tickFontSize,
-        tickClass,
+        anchor = 'bottom',
+        tickSize = 6,
+        tickPadding = 3,
+        tickFontSize = 11,
+        tickClass = null,
         marginTop,
         height,
         options,
         plot,
-        title,
+        title = null,
         class: className = 'axis-x',
         text = true
     }: BaseAxisXProps = $props();
@@ -76,7 +70,7 @@
               ? wordwrap(tick, {
                     maxLineWidth: bandWidth * 0.9,
                     minCharactersPerLine: 4,
-                    fontSize: +resolveProp(tickFontSize, {}, 11),
+                    fontSize: Number(resolveProp(tickFontSize, null, 11) ?? 11),
                     monospace: false
                 })
               : [tick];
@@ -94,23 +88,24 @@
     const { autoMarginTop, autoMarginBottom, autoMarginLeft, autoMarginRight } =
         getContext<AutoMarginStores>('svelteplot/autoMargins');
 
-    let tickTextElements = $state([] as SVGTextElement[]);
+    let tickTextElements = $state([] as (SVGTextElement | undefined)[]);
+    const toScaledDatum = (tick: AxisTick) => ({ datum: tick }) as unknown as ScaledDataRecord;
 
     const positionedTicks = $derived.by(() => {
         let tickObjects = removeIdenticalLines(
             ticks.map((tick, i) => {
-                const datum = { [RAW_VALUE]: tick, [INDEX]: i };
+                const datum: AxisDatum = { [RAW_VALUE]: tick, [INDEX]: i };
                 return {
                     ...datum,
                     hidden: false,
-                    dx: +resolveProp(options.dx, datum, 0),
-                    dy: +resolveProp(options.dy, datum, 0),
-                    x: scaleFn(tick) + (scaleType === 'band' ? scaleFn.bandwidth() * 0.5 : 0),
+                    dx: Number(resolveProp(options.dx, datum, 0) ?? 0),
+                    dy: Number(resolveProp(options.dy, datum, 0) ?? 0),
+                    x: scaleFn(tick) + (isBandScale ? scaleFn.bandwidth() * 0.5 : 0),
                     text: splitTick(tickFormat(tick, i, ticks)),
                     element: null as SVGTextElement | null
                 };
             })
-        );
+        ) as AxisTick[];
         const T = tickObjects.length;
         if (text) {
             for (let i = 0; i < T; i++) {
@@ -125,7 +120,7 @@
                 }
             }
         }
-        return tickObjects as ScaledDataRecord[];
+        return tickObjects;
     });
 
     $effect(() => {
@@ -155,7 +150,7 @@
                             return tickTextElements[i].getBoundingClientRect().height;
                         return 0;
                     }) as number[]
-                )
+                ) ?? 0
             ) +
             Math.max(0, tickPadding + tickSize) +
             (title ? 15 : 0);
@@ -184,7 +179,7 @@
     {#each positionedTicks as tick, t (tick[RAW_VALUE])}
         {#if testFilter(tick, options) && !tick.hidden}
             {@const tickClass_ = resolveProp(tickClass, tick)}
-            {@const tickFontSize_ = +resolveProp(tickFontSize, tick, 10)}
+            {@const tickFontSize_ = Number(resolveProp(tickFontSize, tick, 10) ?? 10)}
             <g
                 class="tick {tickClass_ || ''}"
                 transform="translate({tick.x + tick.dx}, {tickY + tick.dy})"
@@ -192,10 +187,10 @@
                 {#if tickSize}
                     {@const [tickLineStyle, tickLineClass] = resolveStyles(
                         plot,
-                        { datum: tick },
+                        toScaledDatum(tick),
                         options,
                         'stroke',
-                        { x: true },
+                        { x: true } as any,
                         true
                     )}
                     <line
@@ -206,14 +201,14 @@
 
                 {#if text}
                     {@const textLines = tick.text}
-                    {@const prevTextLines = t && positionedTicks[t - 1].text}
+                    {@const prevTextLines = t > 0 ? positionedTicks[t - 1].text : null}
 
                     {@const moveDown =
                         (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize_ * 0.35 : 0)) *
                         (anchor === 'bottom' ? 1 : -1)}
                     {@const [textStyle, textClass] = resolveStyles(
                         plot,
-                        { datum: tick },
+                        toScaledDatum(tick),
                         {
                             fontVariant: isQuantitative ? 'tabular-nums' : 'normal',
                             ...options,
@@ -230,7 +225,7 @@
                             stroke: null
                         },
                         'fill',
-                        { x: true },
+                        { x: true } as any,
                         true
                     )}
                     <text

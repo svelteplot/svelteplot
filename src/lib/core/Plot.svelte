@@ -14,6 +14,7 @@
 
     import type {
         PlotOptions,
+        ResolvedPlotOptions,
         GenericMarkOptions,
         Mark,
         PlotScales,
@@ -375,13 +376,13 @@
     function extendPlotOptions(
         initialOpts: Partial<PlotOptions>,
         opts: PlotOptionsParameters
-    ): PlotOptions {
+    ): ResolvedPlotOptions {
         return mergeDeep<PlotOptions>(
             {},
             { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains },
             smartDefaultPlotOptions(opts),
             initialOptions
-        );
+        ) as ResolvedPlotOptions;
     }
 
     function maybeMargin(
@@ -424,7 +425,7 @@
         explicitDomains,
         hasProjection,
         margin
-    }: PlotOptionsParameters): PlotOptions {
+    }: PlotOptionsParameters): ResolvedPlotOptions {
         const autoXAxis = explicitScales.has('x') || explicitDomains.has('x');
         const autoYAxis = explicitScales.has('y') || explicitDomains.has('y');
         const isOneDimensional = autoXAxis !== autoYAxis;

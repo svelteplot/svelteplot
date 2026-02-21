@@ -1,5 +1,5 @@
 import { getContext } from 'svelte';
-import type { PlotContext, PlotOptions } from 'svelteplot/types/plot';
+import type { PlotContext, ResolvedPlotOptions } from 'svelteplot/types/plot';
 import type { PlotScales, PlotState as TPlotState } from 'svelteplot/types';
 
 /**
@@ -8,7 +8,7 @@ import type { PlotScales, PlotState as TPlotState } from 'svelteplot/types';
 class PlotState implements TPlotState {
     width: number = $state(50);
     height: number = $state(50);
-    options: PlotOptions = $state({} as PlotOptions);
+    options: ResolvedPlotOptions = $state({} as ResolvedPlotOptions);
     facetWidth: number = $state(0);
     facetHeight: number = $state(0);
     plotWidth: number = $state(0);

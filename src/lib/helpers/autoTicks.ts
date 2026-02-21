@@ -41,8 +41,8 @@ export function maybeInterval(interval: null | number | string | IntervalLike) {
 
 export function autoTicks(
     type: ScaleType,
-    ticks: RawValue[],
-    interval: string | number | null,
+    ticks: RawValue[] | undefined,
+    interval: string | number | null | undefined,
     domain: RawValue[],
     scaleFn: { ticks?: (count: number) => RawValue[] },
     count: number

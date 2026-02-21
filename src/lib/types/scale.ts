@@ -1,14 +1,13 @@
-import type { ScaleBand, ScaleLinear, ScaleOrdinal } from 'd3-scale';
 import type { ChannelAccessor, RawValue, ScaledChannelName } from './index.js';
 
 export type AxisXAnchor = 'bottom' | 'top' | 'both';
 export type AxisYAnchor = 'left' | 'right' | 'both';
 
 export type TickFormatFunction = (
-    d: number | Date,
+    d: RawValue,
     index: number,
-    ticks: (number | string | Date)[]
-) => string;
+    ticks: RawValue[]
+) => string | string[];
 
 export type ScaleName =
     | 'x'
@@ -113,7 +112,7 @@ export type ScaleOptions = {
     /**
      * explicit tick values to use instead of automatic tick generation
      */
-    ticks: (number | Date)[];
+    ticks: RawValue[];
     /**
      * desired pixel distance between ticks for automatic tick generation
      */
@@ -238,7 +237,12 @@ export type XScaleOptions = ScaleOptions & {
      * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
      * object, or a function mapping values to strings
      */
-    tickFormat: false | Intl.NumberFormatOptions | TickFormatFunction;
+    tickFormat:
+        | 'auto'
+        | false
+        | Intl.NumberFormatOptions
+        | Intl.DateTimeFormatOptions
+        | TickFormatFunction;
     /**
      * Enable word wrapping for axis tick labels, default true
      */
@@ -266,7 +270,12 @@ export type YScaleOptions = ScaleOptions & {
      * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
      * object, or a function mapping values to strings
      */
-    tickFormat: false | Intl.NumberFormatOptions | TickFormatFunction;
+    tickFormat:
+        | 'auto'
+        | false
+        | Intl.NumberFormatOptions
+        | Intl.DateTimeFormatOptions
+        | TickFormatFunction;
     /**
      * rotate the axis ticks
      */
@@ -285,6 +294,20 @@ export type LegendScaleOptions = ScaleOptions & {
 };
 
 type OrdinalDomain = string | Date;
+
+/**
+ * Broad callable shape for resolved d3 scale functions used internally by marks.
+ * Specific methods only exist for certain scale types and may be undefined.
+ */
+export type PlotScaleFunction = ((value: any) => any) & {
+    range: () => RawValue[];
+    invert: (value: number) => RawValue;
+    bandwidth: () => number;
+    ticks: (count: number) => RawValue[];
+    quantiles: () => number[];
+    thresholds: () => number[];
+    domain: () => RawValue[];
+};
 
 export type PlotScale = {
     /**
@@ -321,10 +344,7 @@ export type PlotScale = {
      * Typed as a broad callable since the actual type depends on the scale type
      * (linear, band, ordinal, etc.) and may be augmented with custom methods.
      */
-    fn:
-        | ScaleLinear<RawValue, number>
-        | ScaleBand<OrdinalDomain>
-        | ScaleOrdinal<OrdinalDomain, number>;
+    fn: PlotScaleFunction;
     /**
      * whether this is a dummy scale (created when no scale was defined)
      */

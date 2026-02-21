@@ -155,7 +155,7 @@ export function addEventHandlers<T extends DataRow>({
 
 function invertScale(scale: PlotScale, position: number) {
     if (scale.type === 'band') {
-        const bandScale = scale.fn as ScaleBand<string | number>;
+        const bandScale = scale.fn as unknown as ScaleBand<string | number>;
         const range = bandScale.range();
         const domain = bandScale.domain();
         const eachBand = bandScale.step();

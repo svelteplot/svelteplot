@@ -1,16 +1,19 @@
 import type { ConstantAccessor, RawValue } from './index.js';
 
-/** a record of channel names to their accessor definitions */
-export type Channels<T> = Record<
-    string | symbol,
-    ChannelAccessor<T> | ConstantAccessor<RawValue, T>
+/** a partial record of channel names to their accessor definitions */
+export type Channels<T = Record<string | symbol, RawValue>> = Partial<
+    Record<string | symbol, ChannelAccessor<T> | ConstantAccessor<RawValue, T>>
 >;
 
+type BivariantCallback<TArgs extends unknown[], TResult> = {
+    bivarianceHack(...args: TArgs): TResult;
+}['bivarianceHack'];
+
 /** channel accessor callback receiving a typed datum */
-export type ChannelValueAccessor<T = Record<string | symbol, RawValue>> = (
-    d: T,
-    index: number
-) => RawValue;
+export type ChannelValueAccessor<T = Record<string | symbol, RawValue>> = BivariantCallback<
+    [d: T, index: number],
+    RawValue
+>;
 
 /** plain objects are allowed as constants, except accessor option objects with `value`/`scale` keys */
 export type ChannelConstantObject = object & {
