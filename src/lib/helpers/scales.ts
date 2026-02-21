@@ -420,11 +420,13 @@ export function inferScaleType(
     if (name === 'symbol') return 'ordinal';
     if (name === 'x' || name === 'y') {
         // if for a positional scale we may infer the scale type from the scale options
-        if (scaleOptions.nice || scaleOptions.zero) return 'linear';
         if (scaleOptions.domain && scaleOptions.domain.length === 2) {
             if (scaleOptions.domain.every(Number.isFinite)) return 'linear';
             if (scaleOptions.domain.every(isDate)) return 'time';
         }
+        if (scaleOptions.zero) return 'linear';
+        if (scaleOptions.nice)
+            return dataValues.length > 0 && dataValues.every(isDateOrNull) ? 'time' : 'linear';
     }
     // for positional scales, try to pick a scale that's required by the mark types
     if (name === 'y' && Array.from(markTypes).some((d) => markTypesWithBandDefault.y.has(d)))

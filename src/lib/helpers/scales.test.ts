@@ -45,6 +45,9 @@ describe('inferScaleType', () => {
         expect(inferScaleType('x', [0, 10], new Set(['tickY']), { nice: true })).toBe('linear');
         expect(inferScaleType('x', [0, 10], new Set(['tickY']), { zero: true })).toBe('linear');
     });
+    it('infers time scale when nice is set on date data', () => {
+        expect(inferScaleType('x', DATES, new Set(['tickY']), { nice: true })).toBe('time');
+    });
 });
 
 describe('looksLikeANumber', () => {
