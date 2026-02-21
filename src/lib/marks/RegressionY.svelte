@@ -3,9 +3,9 @@
 -->
 <script module lang="ts">
     import type { ChannelAccessor } from '../types/index.js';
-    import type { RegressionMarkProps as BaseRegressionMarkProps } from './helpers/Regression.svelte';
+    import type { RegressionOptions } from './helpers/Regression.svelte';
 
-    export type RegressionYMarkProps = BaseRegressionMarkProps & {
+    export type RegressionYMarkProps = RegressionOptions & {
         data?: Record<string | symbol, any>[];
         z?: ChannelAccessor;
     };
