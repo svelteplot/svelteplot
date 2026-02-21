@@ -238,6 +238,7 @@
 </script>
 
 {#if filteredData.length}
+    <!-- TODO: when canvas rendering is requested, render both marks in same <canvas> -->
     <g class="regression-{independent} {className || ''}">
         <Line
             data={regrData}
