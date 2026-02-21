@@ -4,9 +4,16 @@
     export const data = { stateage: '/data/stateage.csv' };
 </script>
 
-<script>
+<script lang="ts">
     import { Plot, RuleX, TickX } from 'svelteplot';
-    let { stateage } = $props();
+
+    type StateAgeRow = {
+        age: string;
+        pop_share: number;
+    };
+
+    let { stateage }: { stateage: StateAgeRow[] } =
+        $props();
 </script>
 
 <Plot

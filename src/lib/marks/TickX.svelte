@@ -3,7 +3,7 @@
     The TickX mark is useful for showing one-dimensional distributions along the x axis. The y axis must be a band scale.
 -->
 
-<script lang="ts" generics="Datum extends DataRow">
+<script lang="ts" generics="Datum = DataRecord | RawValue">
     interface TickXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         /** the input data array; each element becomes one vertical tick */
         data: Datum[];
@@ -26,19 +26,16 @@
     }
     import Mark from '../Mark.svelte';
     import TickCanvas from './helpers/TickCanvas.svelte';
-    import { getContext } from 'svelte';
-    import { resolveChannel, resolveProp, resolveScaledStyles } from '../helpers/resolve.js';
+    import { resolveProp, resolveScaledStyles } from '../helpers/resolve.js';
     import type {
         BaseMarkProps,
         ChannelAccessor,
-        DataRow,
-        FacetContext,
-        ConstantAccessor
+        ConstantAccessor,
+        DataRecord,
+        RawValue
     } from '../types/index.js';
     import { recordizeX } from '../index.js';
-    import { projectX, projectY } from '../helpers/scales.js';
-    import { isValid } from '../helpers/index.js';
-    import { testFilter, parseInset } from '../helpers/index.js';
+    import { parseInset } from '../helpers/index.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
@@ -50,7 +47,7 @@
         ...getPlotDefaults().tickX
     };
     const {
-        data = [{}],
+        data = [{} as Datum],
         class: className = '',
         canvas = false,
         ...options
@@ -59,51 +56,60 @@
         ...markProps
     });
 
-    let args = $derived(recordizeX({ data, ...options }, { withIndex: false }));
-
-    const { getTestFacet } = getContext<FacetContext>('svelteplot/facet');
-    let testFacet = $derived(getTestFacet());
+    let args = $derived(recordizeX({ data, ...options } as any, { withIndex: false }));
 </script>
 
 <Mark
     type="tickX"
     channels={['x', 'y', 'stroke', 'opacity', 'strokeOpacity']}
-    {...markProps}
-    {...args}>
-    {#snippet children({ mark, usedScales, scaledData })}
+    {...markProps as any}
+    {...args as any}>
+    {#snippet children({ usedScales, scaledData })}
         {#if canvas}
-            <TickCanvas data={scaledData} options={args} {usedScales} orientation="vertical" />
+            <TickCanvas
+                data={scaledData}
+                options={args as any}
+                {usedScales}
+                orientation="vertical" />
         {:else}
-            <g class="tick-x">
-                {#each args.data as datum, i (i)}
-                    {#if testFacet(datum, mark.options) && testFilter(datum, args)}
-                        {@const x_ = resolveChannel('x', datum, args)}
-                        {@const y_ = resolveChannel('y', datum, args)}
-                        {@const inset_ = resolveProp(args.inset, datum, 0)}
-                        {@const tickLength_ = resolveProp(args.tickLength, datum, 10)}
-                        {@const dx_ = resolveProp(args.dx, datum, 0)}
-                        {@const dy_ = resolveProp(args.dy, datum, 0)}
-                        {#if isValid(x_) && (isValid(y_) || args.y == null) && (args.filter == null || resolveProp(args.filter, datum))}
-                            {@const x = usedScales.x ? projectX('x', plot.scales, x_) : x_}
-                            {@const y1 =
-                                args.y != null
-                                    ? usedScales.y
-                                        ? projectY('y1', plot.scales, y_)
-                                        : y_
-                                    : plot.options.marginTop}
-                            {@const y2 =
-                                args.y != null
-                                    ? usedScales.y
-                                        ? Number(projectY('y2', plot.scales, y_))
-                                        : y_
-                                    : plot.options.marginTop + plot.plotHeight}
-                            {@const inset = parseInset(inset_, Math.abs(y2 - y1))}
-                            <line
-                                transform="translate({x + dx_}, {dy_})"
-                                style={resolveScaledStyles(datum, args, usedScales, plot, 'stroke')}
-                                y1={y1 + inset + (y1 === y2 ? tickLength_ * 0.5 : 0)}
-                                y2={y2 - inset - (y1 === y2 ? tickLength_ * 0.5 : 0)} />
-                        {/if}
+            {@const yUsesBand = usedScales.y && plot.scales.y.type === 'band'}
+            {@const yBandwidth = yUsesBand ? plot.scales.y.fn.bandwidth() : 0}
+            <g class="tick-x {className || ''}">
+                {#each scaledData as d, i (i)}
+                    {#if d.valid && d.x != null}
+                        {@const inset_ = resolveProp(args.inset, d.datum, 0)}
+                        {@const tickLength_ = Number(
+                            resolveProp(args.tickLength, d.datum, 10) ?? 10
+                        )}
+                        {@const y1 =
+                            args.y != null && d.y != null
+                                ? yUsesBand
+                                    ? d.y - yBandwidth * 0.5
+                                    : d.y
+                                : plot.options.marginTop}
+                        {@const y2 =
+                            args.y != null && d.y != null
+                                ? yUsesBand
+                                    ? d.y + yBandwidth * 0.5
+                                    : d.y
+                                : plot.options.marginTop + plot.plotHeight}
+                        {@const insetValue =
+                            typeof inset_ === 'number' || typeof inset_ === 'string' ? inset_ : 0}
+                        {@const inset = parseInset(insetValue, Math.abs(y2 - y1))}
+                        {@const tickOffset = y1 === y2 ? tickLength_ * 0.5 : 0}
+                        {@const xTransform = d.x}
+                        {@const yTransform = args.y == null ? d.dy : 0}
+                        <line
+                            transform="translate({xTransform}, {yTransform})"
+                            style={resolveScaledStyles(
+                                d.datum,
+                                args as any,
+                                usedScales,
+                                plot,
+                                'stroke'
+                            )}
+                            y1={y1 + inset + tickOffset}
+                            y2={y2 - inset - tickOffset} />
                     {/if}
                 {/each}
             </g>

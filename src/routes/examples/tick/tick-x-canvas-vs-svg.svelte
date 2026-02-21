@@ -6,10 +6,16 @@
     export const sortKey = 21;
 </script>
 
-<script>
+<script lang="ts">
     import { Plot, RuleX, TickX } from 'svelteplot';
 
-    let { stateage } = $props();
+    type StateAgeRow = {
+        age: string;
+        pop_share: number;
+    };
+
+    let { stateage }: { stateage: StateAgeRow[] } =
+        $props();
 
     let ageDomain = $derived([
         ...new Set(stateage.map((d) => d.age))
