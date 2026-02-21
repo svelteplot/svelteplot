@@ -49,13 +49,17 @@
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
-        RawValue,
-        PlotDefaults
+        RawValue
     } from '../types/index.js';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
-    import { arrowPath, maybeSweep, type SweepOption } from '../helpers/arrowPath.js';
+    import {
+        arrowPath,
+        maybeSweep,
+        type SweepFunc,
+        type SweepOption
+    } from '../helpers/arrowPath.js';
     import { replaceChannels } from '../transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
@@ -87,10 +91,10 @@
     const args: ArrowMarkProps = $derived(
         sort(
             replaceChannels(
-                { data: indexData(data), ...options },
+                { data: indexData(data as object[]), ...options },
                 { y: ['y1', 'y2'], x: ['x1', 'x2'] }
             )
-        )
+        ) as unknown as ArrowMarkProps
     );
 </script>
 
@@ -98,29 +102,37 @@
     type="arrow"
     required={['x1', 'x2', 'y1', 'y2']}
     channels={['x1', 'y1', 'x2', 'y2', 'opacity', 'stroke', 'strokeOpacity']}
-    {...args}>
+    {...args as any}>
     {#snippet children({ usedScales, scaledData })}
-        {@const sweep = maybeSweep(args.sweep)}
+        {@const sweep = maybeSweep(args.sweep) as SweepFunc}
         <GroupMultiple class="arrow" length={scaledData.length}>
             {#each scaledData as d, i (i)}
                 {#if d.valid}
-                    {@const inset = resolveProp(args.inset, d.datum, 0)}
-                    {@const insetStart = resolveProp(args.insetStart, d.datum)}
-                    {@const insetEnd = resolveProp(args.insetEnd, d.datum)}
-                    {@const headAngle = resolveProp(args.headAngle, d.datum)}
-                    {@const headLength = resolveProp(args.headLength, d.datum)}
-                    {@const bend = resolveProp(args.bend, d.datum, 0)}
-                    {@const strokeWidth = resolveProp(args.strokeWidth, d.datum, 1)}
+                    {@const datum = d.datum as unknown as Datum}
+                    {@const inset = resolveProp(args.inset, datum, 0)}
+                    {@const insetStart = resolveProp(args.insetStart, datum)}
+                    {@const insetEnd = resolveProp(args.insetEnd, datum)}
+                    {@const headAngle = (resolveProp(args.headAngle, datum, 60) ?? 60) as number}
+                    {@const headLength = (resolveProp(args.headLength, datum, 8) ?? 8) as number}
+                    {@const bendVal =
+                        args.bend === true
+                            ? 22.5
+                            : (resolveProp(
+                                  args.bend as ConstantAccessor<number, Datum>,
+                                  datum,
+                                  0
+                              ) ?? 0)}
+                    {@const strokeWidth = (resolveProp(args.strokeWidth, datum, 1) ?? 1) as number}
                     {@const arrPath = arrowPath(
-                        d.x1,
-                        d.y1,
-                        d.x2,
-                        d.y2,
-                        maybeNumber(coalesce(insetStart, inset)),
-                        maybeNumber(coalesce(insetEnd, inset)),
+                        d.x1 ?? 0,
+                        d.y1 ?? 0,
+                        d.x2 ?? 0,
+                        d.y2 ?? 0,
+                        maybeNumber(coalesce(insetStart, inset)) ?? 0,
+                        maybeNumber(coalesce(insetEnd, inset)) ?? 0,
                         headAngle,
                         headLength,
-                        bend === true ? 22.5 : bend === false ? 0 : bend,
+                        bendVal,
                         strokeWidth,
                         sweep
                     )}
@@ -140,7 +152,7 @@
                         class={[className]}
                         {@attach addEventHandlers({
                             plot,
-                            options,
+                            options: options as any,
                             datum: d?.datum
                         })}>
                         {#if options.onmouseenter || options.onclick}

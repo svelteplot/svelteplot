@@ -32,7 +32,12 @@
         insetBottom?: number;
     }
     import Mark from '../Mark.svelte';
-    import type { BaseRectMarkProps, LinkableMarkProps, DataRecord } from '../types/index.js';
+    import type {
+        BaseRectMarkProps,
+        LinkableMarkProps,
+        DataRecord,
+        ScaledDataRecord
+    } from '../types/index.js';
     import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
     import { resolveProp } from 'svelteplot/helpers/resolve';
@@ -41,13 +46,15 @@
 
     let markProps: FrameMarkProps = $props();
 
+    const _plotDefaults = getPlotDefaults();
+    const _frame = _plotDefaults.frame;
     const DEFAULTS: FrameMarkProps = {
         fill: undefined,
         class: 'frame',
         stroke: undefined,
         fillOpacity: 1,
         strokeOpacity: 1,
-        ...getPlotDefaults().frame
+        ...(_frame != null && _frame !== true ? _frame : {})
     };
 
     const {
@@ -73,8 +80,16 @@
 <Mark type="frame" {automatic}>
     {#snippet children({ usedScales })}
         <RectPath
-            class={className}
-            datum={{ fill, stroke, fillOpacity, strokeOpacity, opacity, datum: {}, valid: true }}
+            class={className ?? null}
+            datum={{
+                fill,
+                stroke,
+                fillOpacity,
+                strokeOpacity,
+                opacity,
+                datum: {} as Datum,
+                valid: true
+            } as unknown as ScaledDataRecord<Datum>}
             x={plot.options.marginLeft + dx}
             y={plot.options.marginTop + dy}
             width={plot.facetWidth}

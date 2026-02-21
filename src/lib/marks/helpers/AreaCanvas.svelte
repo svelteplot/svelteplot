@@ -47,13 +47,13 @@
                     const firstPoint = group[0];
                     if (!firstPoint || !firstPoint.valid) continue;
 
-                    let { fill, stroke, ...restStyles } = resolveScaledStyleProps(
+                    const { fill, stroke, ...restStyles } = resolveScaledStyleProps(
                         firstPoint.datum,
                         mark.options,
                         usedScales,
                         plot,
                         'fill'
-                    );
+                    ) as { fill: string; stroke: string } & Record<string, unknown>;
 
                     const opacity = maybeOpacity(restStyles['opacity']);
                     const fillOpacity = maybeOpacity(restStyles['fill-opacity']);
@@ -65,23 +65,23 @@
                         0
                     ) as number;
 
-                    fill = resolveColor(fill || 'currentColor', canvas);
-                    stroke = resolveColor(stroke, canvas);
+                    const fillStyle = resolveColor(fill || 'currentColor', canvas);
+                    const strokeStyle = resolveColor(stroke, canvas);
 
                     // Start drawing the area
                     context.beginPath();
                     areaPath(group);
 
                     // Fill the area
-                    if (fill && fill !== 'none') {
-                        context.fillStyle = fill;
+                    if (fillStyle && fillStyle !== 'none') {
+                        context.fillStyle = fillStyle;
                         context.globalAlpha = opacity * fillOpacity;
                         context.fill();
                     }
 
                     // Stroke the area outline if strokeWidth > 0
-                    if (stroke && stroke !== 'none' && strokeWidth > 0) {
-                        context.strokeStyle = stroke;
+                    if (strokeStyle && strokeStyle !== 'none' && strokeWidth > 0) {
+                        context.strokeStyle = strokeStyle;
                         context.lineWidth = strokeWidth;
                         context.globalAlpha = opacity * strokeOpacity;
                         context.stroke();

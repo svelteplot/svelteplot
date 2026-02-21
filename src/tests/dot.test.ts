@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import DotTest from './dot.test.svelte';
 import { getTranslate } from './utils';

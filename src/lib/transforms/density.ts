@@ -29,7 +29,7 @@ export type KernelName =
 
 export type Kernel = KernelName | ((u: number) => number);
 
-export type DensityOptions<T> = {
+export type DensityOptions<_T> = {
     /**
      * The kernel function to use for smoothing.
      */
@@ -228,11 +228,11 @@ function density1d<T>(
 
         if (!trim) {
             // trim zero values at begin and end except first and last
-            const firstNonZero = kdeValues.findIndex(([x, v]) => v > 0);
+            const firstNonZero = kdeValues.findIndex(([_x, v]) => v > 0);
 
             // if (firstNonZero > 0) minX = Math.min(minX, kdeValues[firstNonZero - 1][0]);
             const lastNonZero =
-                kdeValues.length - 1 - [...kdeValues].reverse().findIndex(([x, v]) => v > 0);
+                kdeValues.length - 1 - [...kdeValues].reverse().findIndex(([_x, v]) => v > 0);
 
             // if (lastNonZero > -1 && lastNonZero < kdeValues.length - 1)
             //     maxX = Math.max(maxX, kdeValues[lastNonZero + 1][0]);

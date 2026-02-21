@@ -178,7 +178,7 @@ describe('AxisY mark', () => {
     });
 
     it('passes ticks array to tickFormat functions', () => {
-        const checkTicks = vi.fn((d: any, i: number, ticks: any[]) => String(d));
+        const checkTicks = vi.fn((d: any, _i: number, _ticks: any[]) => String(d));
         const { container } = render(AxisYTest, {
             props: {
                 plotArgs: { width: 500, y: { domain: [0, 100] } },

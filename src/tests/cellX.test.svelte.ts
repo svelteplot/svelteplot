@@ -204,13 +204,6 @@ describe('CellX mark', () => {
     });
 
     it('works with groupX transform', () => {
-        const testData = [
-            { season: 1, rating: 8.5 },
-            { season: 1, rating: 8.2 },
-            { season: 2, rating: 7.9 },
-            { season: 2, rating: 8.1 }
-        ];
-
         // Manually simulate grouped data (mean values by season)
         const groupedData = [
             { x: 1, fill: 8.35 }, // mean of 8.5 and 8.2

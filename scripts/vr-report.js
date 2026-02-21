@@ -28,7 +28,7 @@ async function generate() {
     try {
         const raw = await fs.readFile(REPORT_JSON, 'utf8');
         json = JSON.parse(raw);
-    } catch (e) {
+    } catch {
         console.error(`Could not read ${REPORT_JSON}. Run visual tests first.`);
         process.exit(1);
     }

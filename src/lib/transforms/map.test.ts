@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { map, mapX, mapY } from './map.js';
-import type { DataRecord } from '../types/index.js';
 
 type Row = { x: number; y: number; z: string };
 

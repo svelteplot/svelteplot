@@ -1,4 +1,4 @@
-import { parseTimeInterval, maybeTimeInterval } from './time.js';
+import { parseTimeInterval } from './time.js';
 import { describe, it, expect } from 'vitest';
 
 describe('time helpers', () => {

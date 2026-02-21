@@ -1,5 +1,5 @@
 import { mapX, mapY } from './map.js';
-import type { TransformArg, RawValue, MapIndexObject, MapIndexFunction } from '../types/index.js';
+import type { TransformArg, RawValue, MapIndexObject } from '../types/index.js';
 import { min, max, mean, median, sum, deviation, extent } from 'd3-array';
 import { sort } from './sort.js';
 

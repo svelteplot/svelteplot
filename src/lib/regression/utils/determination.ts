@@ -1,5 +1,5 @@
 import { visitPoints } from './points';
-import type { Accessor, DataPoint, PredictFunction } from '../types';
+import type { Accessor, PredictFunction } from '../types';
 
 /**
  * Given a dataset, x- and y-accessors, the mean center of the y-values (uY),

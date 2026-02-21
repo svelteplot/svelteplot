@@ -45,15 +45,15 @@ const admonitions: Plugin<any[], any> = () => {
                 const type = node.name;
                 const ad = customTypes[type];
                 if (ad) {
-                    const [mayBeLabel, ...restChildren] = node.children;
+                    const [_mayBeLabel, ...restChildren] = node.children;
                     const { icon } = node.attributes || {};
 
-                    const [collection, name] = (icon || '').split(':');
+                    const [_collection, _name] = (icon || '').split(':');
 
-                    let title = type.toUpperCase();
+                    let _title = type.toUpperCase();
                     let hasLabel = false;
                     // if (mayBeLabel && mayBeLabel.data?.directiveLabel) {
-                    //     title = mayBeLabel.children[0].value;
+                    //     _title = mayBeLabel.children[0].value;
                     //     hasLabel = true;
                     // }
 

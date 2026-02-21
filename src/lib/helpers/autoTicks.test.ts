@@ -80,7 +80,7 @@ describe('autoTicks', () => {
     });
 
     it('falls back to scaleFn.ticks when no interval', () => {
-        const scaleFn = { ticks: (count: number) => [0, 50, 100] };
+        const scaleFn = { ticks: (_count: number) => [0, 50, 100] };
         const result = autoTicks('linear', null as any, null, [0, 100], scaleFn, 3);
         expect(result).toEqual([0, 50, 100]);
     });

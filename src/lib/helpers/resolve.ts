@@ -140,8 +140,6 @@ const scaledStyleProps: Partial<{ [key in ScaledChannelName]: string }> = {
     opacity: 'opacity'
 };
 
-const scaledStylePropsKeys = Object.keys(scaledStyleProps) as ScaledChannelName[];
-
 // TODO: find a better name
 const oppositeColor: Record<'fill' | 'stroke', 'fill' | 'stroke'> = {
     fill: 'stroke',

@@ -6,7 +6,7 @@
  * It helps identify issues with ESM imports where TypeScript requires .js extensions.
  */
 
-import { readFile, readdir, stat } from 'fs/promises';
+import { readFile, readdir } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
