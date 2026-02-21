@@ -53,9 +53,9 @@
 
     const {
         data = [{} as Datum],
-        class: className = null,
+        class: className = '',
         stack,
-        symbol = null,
+        symbol,
         unit,
         ...options
     }: WaffleXMarkProps = $derived({ ...DEFAULTS, ...markProps });
@@ -78,8 +78,8 @@
     requiredScales={{ y: ['band'] }}
     channels={['x1', 'x2', 'y', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}>
-    {#snippet children({ mark, usedScales, scaledData })}
-        {@const wafflePoly = wafflePolygon('x', args, plot.scales)}
+    {#snippet children({ usedScales, scaledData })}
+        {@const wafflePoly = wafflePolygon('x', args as any, plot.scales)}
         {#each scaledData as d, i (i)}
             {@const borderRadius = resolveProp(args.borderRadius, d?.datum, 0) as BorderRadius}
             {@const hasBorderRadius =
@@ -96,7 +96,7 @@
             <g class={['waffle-x', className]}>
                 <pattern {...pattern}>
                     {#if symbol}
-                        {@render symbol({ ...rect, style, styleClass, datum: d.datum })}
+                        {@render symbol({ ...rect, style, styleClass, datum: d.datum as Datum })}
                     {:else if hasBorderRadius}
                         <path
                             d={roundedRect(rect.x, rect.y, rect.width, rect.height, borderRadius)}

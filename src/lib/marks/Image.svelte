@@ -63,7 +63,7 @@
         ...markProps
     });
 
-    const args = $derived(sort({ data, ...options } as TransformArg<Datum>) as ImageMarkProps);
+    const args = $derived(sort({ data, ...options } as TransformArg<Datum>));
 </script>
 
 <Mark

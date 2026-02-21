@@ -29,27 +29,19 @@
     }
 
     import type {
-        PlotContext,
         DataRecord,
         ChannelAccessor,
         BaseMarkProps,
         ScaledDataRecord,
         UsedScales,
-        ScaledChannelName,
-        MarkType
+        ScaledChannelName
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
     import { sort } from '../index.js';
 
     import Mark from 'svelteplot/Mark.svelte';
 
-    let {
-        data = [{} as Datum],
-        mark,
-        type = 'custom',
-        marks,
-        ...options
-    }: CustomMarkProps = $props();
+    let { data = [{} as Datum], mark, marks, ...options }: CustomMarkProps = $props();
 
     const args = $derived(sort({ data, ...options })) as CustomMarkProps;
 
@@ -69,7 +61,11 @@
     ];
 </script>
 
-<Mark type="custom" required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
+<Mark
+    type="custom"
+    required={[]}
+    channels={channels.filter((d) => !!(options as Record<string, unknown>)[d])}
+    {...args}>
     {#snippet children({ scaledData, usedScales })}
         {#if marks}
             {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}

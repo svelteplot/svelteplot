@@ -50,9 +50,9 @@
 
     const {
         data = [{} as Datum],
-        class: className = null,
+        class: className = '',
         stack,
-        symbol = null,
+        symbol,
         ...options
     }: WaffleYMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
@@ -74,8 +74,8 @@
     requiredScales={{ x: ['band'] }}
     channels={['y1', 'y2', 'x', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}>
-    {#snippet children({ mark, usedScales, scaledData })}
-        {@const wafflePoly = wafflePolygon('y', args, plot.scales)}
+    {#snippet children({ usedScales, scaledData })}
+        {@const wafflePoly = wafflePolygon('y', args as any, plot.scales)}
         {#each scaledData as d, i (i)}
             {@const [style, styleClass] = resolveStyles(
                 plot,
@@ -98,7 +98,7 @@
             <g class={['waffle-y', className]}>
                 <pattern {...pattern}>
                     {#if symbol}
-                        {@render symbol({ ...rect, style, styleClass, datum: d.datum })}
+                        {@render symbol({ ...rect, style, styleClass, datum: d.datum as Datum })}
                     {:else if hasBorderRadius}
                         <path
                             d={roundedRect(rect.x, rect.y, rect.width, rect.height, borderRadius)}

@@ -4,7 +4,8 @@
         UsedScales,
         CurveName,
         ConstantAccessor,
-        DataRecord
+        DataRecord,
+        ChannelAccessor
     } from 'svelteplot/types/index.js';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
@@ -23,10 +24,8 @@
         data: ScaledDataRecord<Datum>[][];
         usedScales: UsedScales;
         options: {
-            fill?: ConstantAccessor<string, Datum>;
+            fill?: ChannelAccessor<Datum>;
             defined?: ConstantAccessor<boolean, Datum>;
-            opacity?: ConstantAccessor<number, Datum>;
-            'fill-opacity'?: ConstantAccessor<number, Datum>;
         };
     }
 
@@ -70,22 +69,22 @@
                     const defined = trailData.map(
                         (d) =>
                             d.valid &&
-                            d.r >= 0 &&
-                            (resolveProp(options.defined, d.datum, true) ?? true)
+                            (d.r ?? 0) >= 0 &&
+                            (resolveProp(options.defined as any, d.datum, true) ?? true)
                     );
 
-                    let { fill, ...restStyles } = resolveScaledStyleProps(
+                    const styleProps = resolveScaledStyleProps(
                         firstPoint.datum,
-                        options,
+                        options as any,
                         usedScales,
                         plot,
                         'fill'
-                    );
+                    ) as Record<string, unknown>;
 
-                    const opacity = maybeOpacity(restStyles['opacity']);
-                    const fillOpacity = maybeOpacity(restStyles['fill-opacity']);
+                    const opacity = maybeOpacity(styleProps['opacity']);
+                    const fillOpacity = maybeOpacity(styleProps['fill-opacity']);
 
-                    fill = resolveColor(fill, canvas);
+                    const fill = resolveColor(String(styleProps.fill || 'currentColor'), canvas);
 
                     context.fillStyle = fill ? fill : 'currentColor';
                     context.beginPath();
