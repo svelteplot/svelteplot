@@ -13,7 +13,7 @@
         data: Datum[];
     }
 
-    let { data = [{}], ...options }: CellYMarkProps = $props();
+    let { data = [{} as Datum], ...options }: CellYMarkProps = $props();
 
     const args = $derived(
         recordizeX({

@@ -66,11 +66,11 @@
 </script>
 
 <Mark
-    type="rect"
     required={[]}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...markProps}
-    {...args}>
+    {...args}
+    type="rect">
     {#snippet children({ usedScales, scaledData })}
         {#if canvas}
             {@const rectCanvasData = scaledData.map((d) => {

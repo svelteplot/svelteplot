@@ -15,7 +15,7 @@
         children?: () => any;
     }
 
-    let { datum = {}, options = {}, children }: AnchorProps = $props();
+    let { datum = {} as Datum, options = {}, children }: AnchorProps = $props();
 
     const href = $derived(resolveProp(options.href, datum, null));
     const target = $derived(resolveProp(options.target, datum, null));
