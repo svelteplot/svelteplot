@@ -27,6 +27,12 @@ export type PenguinsRow = {
     body_mass_g: number;
 };
 
+export type BlsRow = {
+    division: string;
+    date: Date;
+    unemployment: number;
+};
+
 export type LanguagesRow = {
     Language: string;
     Remarks: string;
