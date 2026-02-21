@@ -6,8 +6,6 @@
     interface CustomMarkProps extends BaseMarkProps<Datum> {
         /** the input data array */
         data?: Datum[];
-        /** a custom mark type identifier for debugging */
-        type?: string;
         /** the horizontal position channel; bound to the x scale */
         x?: ChannelAccessor<Datum>;
         /** the starting horizontal position; bound to the x scale */
@@ -37,7 +35,8 @@
         BaseMarkProps,
         ScaledDataRecord,
         UsedScales,
-        ScaledChannelName
+        ScaledChannelName,
+        MarkType
     } from 'svelteplot/types/index.js';
     import type { Snippet } from 'svelte';
     import { sort } from '../index.js';
@@ -70,7 +69,7 @@
     ];
 </script>
 
-<Mark {type} required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
+<Mark type="custom" required={[]} channels={channels.filter((d) => !!options[d])} {...args}>
     {#snippet children({ scaledData, usedScales })}
         {#if marks}
             {@render marks({ records: scaledData.filter((d) => d.valid), usedScales })}

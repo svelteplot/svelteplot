@@ -5,10 +5,25 @@
     interface AnchorProps {
         datum?: Datum;
         options?: {
+            /**
+             * The URL or URL fragment the hyperlink points to.
+             */
             href?: ConstantAccessor<string, Datum>;
+            /**
+             * Where to display the linked URL, e.g. _self, _blank
+             */
             target?: ConstantAccessor<string, Datum>;
+            /**
+             * The relationship of the target object to the link object.
+             */
             rel?: ConstantAccessor<string, Datum>;
+            /**
+             * A MIME type for the linked URL.
+             */
             type?: ConstantAccessor<string, Datum>;
+            /**
+             * Instructs browsers to download a URL instead of navigating to it, so the user will be prompted to save it as a local file.
+             */
             download?: ConstantAccessor<string, Datum>;
             [key: string]: any;
         };

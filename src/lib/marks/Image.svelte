@@ -32,13 +32,14 @@
         ChannelAccessor,
         ConstantAccessor,
         DataRecord,
-        LinkableMarkProps
+        LinkableMarkProps,
+        TransformArg
     } from '../types';
     import { resolveProp } from 'svelteplot/helpers/resolve';
-    import CustomMark from './CustomMark.svelte';
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { sort } from 'svelteplot/transforms';
     import Anchor from './helpers/Anchor.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
 
     let markProps: ImageMarkProps = $props();
 
@@ -62,25 +63,39 @@
         ...markProps
     });
 
-    const args = $derived(sort({ data, ...options }));
+    const args = $derived(sort({ data, ...options } as TransformArg<Datum>) as ImageMarkProps);
 </script>
 
-<CustomMark type="image" {...args}>
-    {#snippet mark({ record, index, usedScales })}
-        {@const w = record.r !== undefined ? record.r * 2 : resolveProp(width, record.datum, 20)}
-        {@const h =
-            record.r !== undefined ? record.r * 2 : resolveProp(height || width, record.datum, 20)}
-        <Anchor {options} datum={record.datum}>
-            <image
-                class={resolveProp(imageClass, record.datum, null)}
-                href={resolveProp(src, record.datum, '')}
-                x={record.x - w * 0.5}
-                y={record.y - h * 0.5}
-                {preserveAspectRatio}
-                clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
-                width={w}
-                height={h}
-                >{#if title}<title>{resolveProp(title, record.datum, '')}</title>{/if}</image>
-        </Anchor>
+<Mark
+    required={['x', 'y']}
+    channels={['x', 'y', 'r', 'fill', 'opacity', 'stroke', 'fillOpacity', 'strokeOpacity']}
+    {...args}
+    type="image">
+    {#snippet children({ scaledData })}
+        {#each scaledData as record, i (i)}
+            {#if record.valid}
+                {@const w =
+                    record.r !== undefined
+                        ? record.r * 2
+                        : Number(resolveProp(width, record.datum, 20) ?? 20)}
+                {@const h =
+                    record.r !== undefined
+                        ? record.r * 2
+                        : Number(resolveProp(height || width, record.datum, 20) ?? 20)}
+                <Anchor {options} datum={record.datum}>
+                    <image
+                        class={resolveProp(imageClass, record.datum, null)}
+                        href={resolveProp(src, record.datum, '')}
+                        x={record.x! - w * 0.5}
+                        y={record.y! - h * 0.5}
+                        {preserveAspectRatio}
+                        clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
+                        width={w}
+                        height={h}
+                        >{#if title}<title>{resolveProp(title, record.datum, '')}</title
+                            >{/if}</image>
+                </Anchor>
+            {/if}
+        {/each}
     {/snippet}
-</CustomMark>
+</Mark>
