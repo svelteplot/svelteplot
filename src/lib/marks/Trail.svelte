@@ -135,17 +135,18 @@
                         {@const defined = trailData.map(
                             (d) =>
                                 d.valid &&
-                                d.r >= 0 &&
+                                (d.r ?? 0) >= 0 &&
                                 (resolveProp(options.defined, d.datum, true) ?? true)
                         )}
-                        {@const pathString = trailPath(samples, defined, d3Path(), {
-                            curve,
-                            cap,
-                            tension,
-                            ...(typeof resolution === 'number'
-                                ? { samplesPerSegment: resolution }
-                                : {})
-                        })}
+                        {@const pathString =
+                            trailPath(samples, defined, d3Path(), {
+                                curve,
+                                cap,
+                                tension,
+                                ...(typeof resolution === 'number'
+                                    ? { samplesPerSegment: resolution }
+                                    : {})
+                            }) || ''}
                         {@const [style, styleClass] = resolveStyles(
                             plot,
                             trailData[0],

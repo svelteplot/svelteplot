@@ -44,4 +44,4 @@
     });
 </script>
 
-<Vector {data} {...options} />
+<Vector {data} {...options as any} />

@@ -19,10 +19,10 @@
         ...getPlotDefaults().boxX
     };
 
-    const props: BoxXMarkProps & { class?: string } = $derived({
+    const resolvedProps = $derived({
         ...DEFAULTS,
         ...markProps
-    });
+    }) as BoxXMarkProps & { class?: string };
 </script>
 
-<Box {...props} orientation="x" />
+<Box {...resolvedProps as any} orientation="x" />

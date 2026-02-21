@@ -62,21 +62,24 @@ Helper component for rendering Rule marks (RuleX and RuleY) in canvas
                 for (const datum of data) {
                     if (!datum.valid) continue;
 
-                    let { stroke, ...restStyles } = resolveScaledStyleProps(
+                    const styleProps = resolveScaledStyleProps(
                         datum.datum,
                         options,
                         usedScales,
                         plot,
                         'stroke'
+                    ) as Record<string, unknown>;
+
+                    const opacity = maybeOpacity(styleProps['opacity']);
+                    const strokeOpacity = maybeOpacity(styleProps['stroke-opacity']);
+
+                    const stroke = resolveColor(
+                        String(styleProps.stroke || 'currentColor'),
+                        canvas
                     );
 
-                    const opacity = maybeOpacity(restStyles['opacity']);
-                    const strokeOpacity = maybeOpacity(restStyles['stroke-opacity']);
-
-                    stroke = resolveColor(stroke || 'currentColor', canvas);
-
                     if (stroke && stroke !== 'none') {
-                        const resolvedLinecap = restStyles['stroke-linecap'] as
+                        const resolvedLinecap = styleProps['stroke-linecap'] as
                             | CanvasLineCap
                             | undefined
                             | null;

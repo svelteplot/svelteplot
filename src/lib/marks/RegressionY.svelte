@@ -2,24 +2,30 @@
     Calculates and displays a regression line with y as the dependent variable
 -->
 <script module lang="ts">
-    export type RegressionYMarkProps = RegressionMarkProps;
+    import type { ChannelAccessor } from '../types/index.js';
+    import type { RegressionMarkProps as BaseRegressionMarkProps } from './helpers/Regression.svelte';
+
+    export type RegressionYMarkProps = BaseRegressionMarkProps & {
+        data?: Record<string | symbol, any>[];
+        z?: ChannelAccessor;
+    };
 </script>
 
 <script lang="ts">
     import { resolveChannel } from '../helpers/resolve.js';
-    import type { ChannelName } from 'svelteplot/types/index.js';
+    import type { ChannelName, DataRecord } from 'svelteplot/types/index.js';
     import Mark from '../Mark.svelte';
-    import Regression, { type RegressionMarkProps } from './helpers/Regression.svelte';
+    import Regression from './helpers/Regression.svelte';
     import { groups as d3Groups } from 'd3-array';
 
-    let { data = [{}], ...options }: RegressionYMarkProps = $props();
+    let { data = [{} as DataRecord], ...options }: RegressionYMarkProps = $props();
 
     let groupBy: ChannelName | null =
         options.stroke != null ? 'stroke' : options.z != null ? 'z' : null;
     // separate groups
     let groups = $derived(
         groupBy !== null
-            ? d3Groups(data, (d) => resolveChannel(groupBy as ChannelName, d, options)).map(
+            ? d3Groups(data, (d) => resolveChannel(groupBy as ChannelName, d, options as any)).map(
                   (g) => g[1]
               )
             : [data]
@@ -28,6 +34,6 @@
 
 <Mark type="regression">
     {#each groups as group, i (i)}
-        <Regression data={group} dependent="y" {...options} />
+        <Regression data={group as any} dependent="y" {...options as any} />
     {/each}
 </Mark>
