@@ -33,7 +33,7 @@
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { groups as d3Groups } from 'd3-array';
-    import { area, type CurveFactory } from 'd3-shape';
+    import { area, type Area, type CurveFactory } from 'd3-shape';
     import callWithProps from '../helpers/callWithProps.js';
     import { maybeCurve } from '../helpers/curves.js';
     import { isValid } from '../helpers/index.js';
@@ -101,7 +101,7 @@
                       y0: (d: ScaledDataRecord) => d.y1,
                       y1: (d: ScaledDataRecord) => d.y2
                   })
-        })
+        }) as unknown as Area<ScaledDataRecord>
     );
 
     function groupAndSort(data: ScaledDataRecord[]) {
@@ -109,12 +109,11 @@
             ? d3Groups(data, (d) => resolveProp(groupByKey, d.datum)).map((d) => d[1])
             : [data];
         if (options.sort) {
-            return groups.toSorted((a, b) =>
-                resolveChannel('sort', a[0].datum, options) >
-                resolveChannel('sort', b[0].datum, options)
-                    ? 1
-                    : -1
-            );
+            return groups.toSorted((a, b) => {
+                const av = resolveChannel('sort', a[0].datum, options) as string | number | null;
+                const bv = resolveChannel('sort', b[0].datum, options) as string | number | null;
+                return av! > bv! ? 1 : -1;
+            });
         }
         return groups;
     }
@@ -125,8 +124,8 @@
     {data}
     channels={['x1', 'x2', 'y1', 'y2', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     required={['x1', 'y1']}
-    {...markProps}
-    {...options}>
+    {...(markProps as any)}
+    {...(options as any)}>
     {#snippet children({ mark, usedScales, scaledData })}
         {@const grouped = groupAndSort(scaledData)}
         {#if canvas}
@@ -136,7 +135,7 @@
                 {#each grouped as areaData, i (i)}
                     {@const datum = areaData[0]}
                     {#if areaData.length > 0}
-                        <Anchor {options} {datum}>
+                        <Anchor options={options as any} {datum}>
                             {@const title = resolveProp(options.title, datum.datum, '')}
                             {@const [style, styleClass] = resolveStyles(
                                 plot,

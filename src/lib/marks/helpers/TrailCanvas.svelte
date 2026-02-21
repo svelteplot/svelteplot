@@ -5,7 +5,8 @@
         ScaledDataRecord,
         UsedScales,
         CurveName,
-        ConstantAccessor
+        ConstantAccessor,
+        DataRecord
     } from 'svelteplot/types/index.js';
     import CanvasLayer from './CanvasLayer.svelte';
     import type { Attachment } from 'svelte/attachments';
@@ -14,7 +15,7 @@
     import type { CurveFactory } from 'd3-shape';
     import { trailPath, type TrailSample } from './trail';
     import { resolveProp, resolveScaledStyleProps } from 'svelteplot/helpers/resolve';
-    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
+    import { usePlot } from 'svelteplot';
 
     interface TrailCanvasProps<Datum extends object> {
         curve?: CurveName | CurveFactory;

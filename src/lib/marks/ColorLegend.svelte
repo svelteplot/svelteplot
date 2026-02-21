@@ -73,7 +73,7 @@
                 </div>
             {/each}
         {:else if scaleType === 'quantile' || scaleType === 'quantize' || scaleType === 'threshold'}
-            {@const domain = extent(plot.scales.color.fn.domain())}
+            {@const domain = extent(plot.scales.color.fn.domain() as number[]) as [number, number]}
             {@const range = plot.scales.color.range}
             {@const tickLabels =
                 scaleType === 'quantile'
@@ -95,28 +95,34 @@
                 marginBottom={20}
                 height={38}
                 inset={0}
-                x={{ domain, ticks }}>
+                x={{ domain: domain as [number, number], ticks }}>
                 <defs>
                     <linearGradient id="gradient-{randId}" x2="1">
-                        <stop offset="0%" stop-color={range[0]} />
+                        <stop offset="0%" stop-color={range[0] as string} />
                         {#each ticks as t, i (i)}
                             {@const offset = (100 * (t - domain[0])) / (domain[1] - domain[0])}
                             <stop
                                 offset="{offset - 0.001}%"
-                                stop-color={plot.scales.color.fn(tickLabels[i] - 0.1)} />
+                                stop-color={plot.scales.color.fn(
+                                    (tickLabels[i] as number) - 0.1
+                                )} />
                             <stop
                                 offset="{offset}%"
-                                stop-color={plot.scales.color.fn(tickLabels[i])} />
+                                stop-color={plot.scales.color.fn(tickLabels[i] as number)} />
                         {/each}
-                        <stop offset="100%" stop-color={range.at(-1)} />
+                        <stop offset="100%" stop-color={range.at(-1) as string} />
                     </linearGradient>
                 </defs>
-                <Frame dy={-5} stroke={null} fill="url(#gradient-{randId})" />
-                <AxisX tickSize={18} dy={-17} tickFormat={(d, i) => tickFormat(tickLabels[i])} />
+                <Frame dy={-5} stroke={undefined} fill="url(#gradient-{randId})" />
+                <AxisX
+                    tickSize={18}
+                    dy={-17}
+                    tickFormat={(d, i) =>
+                        (tickFormat as (d: number) => string)(tickLabels[i] as number)} />
             </Plot>
         {:else}
             <!--- continuous -->
-            {@const domain = extent(plot.scales.color.domain)}
+            {@const domain = extent(plot.scales.color.domain as number[]) as [number, number]}
             {@const ticks = d3Range(domain[0], domain[1], (domain[1] - domain[0]) / 7).slice(1)}
 
             <Plot
@@ -128,7 +134,11 @@
                 marginBottom={20}
                 height={38}
                 inset={0}
-                x={{ domain, tickSpacing: 30, tickFormat }}>
+                x={{
+                    domain: domain as [number, number],
+                    tickSpacing: 30,
+                    tickFormat: tickFormat as any
+                }}>
                 <defs>
                     <linearGradient id="gradient-{randId}" x2="1">
                         {#each ticks as t (t)}
@@ -138,7 +148,7 @@
                         {/each}
                     </linearGradient>
                 </defs>
-                <Frame dy={-5} stroke={null} fill="url(#gradient-{randId})" />
+                <Frame dy={-5} stroke={undefined} fill="url(#gradient-{randId})" />
                 <AxisX tickSize={18} dy={-17} />
             </Plot>
         {/if}

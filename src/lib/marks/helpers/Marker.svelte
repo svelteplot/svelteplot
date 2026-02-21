@@ -33,7 +33,7 @@
         width: 6,
         height: 6,
         orient,
-        color: 'stroke'
+        color: 'stroke' as const
     });
 
     const MARKERS: Record<

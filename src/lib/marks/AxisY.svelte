@@ -10,7 +10,10 @@
         RawValue,
         FacetContext,
         ChannelName,
-        ConstantAccessor
+        ConstantAccessor,
+        TickFormatFunction,
+        DataRecord,
+        ScaledChannelName
     } from '../types/index.js';
     import autoTimeFormat from '../helpers/autoTimeFormat.js';
     import { autoTicks } from '../helpers/autoTicks.js';
@@ -21,7 +24,7 @@
 
     interface AxisYMarkProps extends Omit<
         BaseMarkProps<Datum>,
-        'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
+        'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target' | 'textAnchor'
     > {
         /** custom tick values to display on the axis */
         data?: Datum[];
@@ -69,7 +72,7 @@
 
     let markProps: AxisYMarkProps = $props();
 
-    const DEFAULTS: Omit<AxisYMarkProps, 'data' | ChannelName> = {
+    const DEFAULTS = {
         tickSize: 6,
         tickPadding: 3,
         tickFontSize: 11,
@@ -83,7 +86,7 @@
     const { ticks: magicTicks } = $derived({ ...DEFAULTS, ...markProps });
 
     const {
-        data,
+        data = [] as Datum[],
         automatic = false,
         title,
         anchor = 'left',
@@ -102,12 +105,12 @@
         text = true,
         ...options
     }: AxisYMarkProps = $derived({
-        data: Array.isArray(magicTicks) ? magicTicks : [],
+        data: (Array.isArray(magicTicks) ? magicTicks : []) as Datum[],
         tickCount: typeof magicTicks === 'number' ? magicTicks : undefined,
         interval: typeof magicTicks === 'string' ? magicTicks : undefined,
         ...DEFAULTS,
         ...markProps
-    });
+    } as AxisYMarkProps);
 
     const plot = usePlot();
 
@@ -135,15 +138,14 @@
     );
 
     const useCompactNotation = $derived.by(() => {
-        const range =
-            extent(plot.scales.y.domain).filter(
-                (d): d is number => typeof d === 'number' && Number.isFinite(d)
-            ) ?? [];
-
-        if (range[0] === undefined || range[1] === undefined) return false;
-        const crossesZero = range[0] <= 0 && range[1] >= 0;
+        const numericDomain = plot.scales.y.domain.filter(
+            (d): d is number => typeof d === 'number' && Number.isFinite(d)
+        );
+        if (numericDomain.length < 2) return false;
+        const [min, max] = extent(numericDomain) as [number, number];
+        const crossesZero = min <= 0 && max >= 0;
         if (crossesZero) return true;
-        const magnitudes = range.map((d) =>
+        const magnitudes = [min, max].map((d) =>
             d === 0 ? -Infinity : Math.floor(Math.log10(Math.abs(d)))
         );
         return magnitudes[0] !== magnitudes[1];
@@ -155,7 +157,7 @@
         typeof tickFmt === 'function'
             ? tickFmt
             : plot.scales.y.type === 'band' || plot.scales.y.type === 'point'
-              ? (d) => d
+              ? (d: RawValue) => String(d)
               : plot.scales.y.type === 'time'
                 ? // time scale
                   typeof tickFmt === 'object'
@@ -169,9 +171,9 @@
                         Intl.NumberFormat(plot.options.locale, {
                             // use compact notation if range covers multiple magnitudes
                             ...(useCompactNotation ? { notation: 'compact' } : {}),
-                            ...DEFAULTS.numberFormat,
+                            ...getPlotDefaults().numberFormat,
                             style: plot.options.y.percent ? 'percent' : 'decimal'
-                        }).format(d)
+                        }).format(d as number)
     );
 
     const optionsLabel = $derived(plot.options.y.label);
@@ -210,12 +212,12 @@
     type="axisY"
     data={data.length ? data.map((tick) => ({ __y: tick })) : []}
     channels={['y']}
-    {...{ ...options, y: '__y' }}
+    {...{ ...options, y: '__y' } as any}
     {automatic}>
     {#if left && top && useTitle}
         <text
             style={resolveScaledStyles(
-                null,
+                {} as DataRecord,
                 {
                     opacity: 0.8,
                     ...options,
@@ -224,7 +226,7 @@
                     stroke: null,
                     textAnchor: anchor === 'left' ? 'start' : 'end'
                 },
-                {},
+                {} as Record<ScaledChannelName, boolean>,
                 plot,
                 'fill'
             )}
@@ -239,7 +241,7 @@
             class={className}
             {lineAnchor}
             options={{
-                ...options,
+                ...(options as any),
                 textAnchor:
                     textAnchor == null || textAnchor === 'auto'
                         ? anchor === 'left'
@@ -249,16 +251,16 @@
             }}
             {plot}
             {text}
-            {tickClass}
-            {tickFontSize}
+            tickClass={tickClass as ConstantAccessor<string>}
+            tickFontSize={tickFontSize as ConstantAccessor<number>}
             {tickPadding}
             {ticks}
             {tickSize}
             marginLeft={plot.options.marginLeft}
             scaleFn={plot.scales.y.fn}
             scaleType={plot.scales.y.type}
-            tickFormat={useTickFormat}
-            title={useTitle}
+            tickFormat={useTickFormat as TickFormatFunction}
+            title={useTitle as string | null}
             width={plot.facetWidth} />
     {/if}
 </Mark>
