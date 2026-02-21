@@ -66,6 +66,7 @@
     interface RegressionProps extends RegressionOptions {
         data: DataRecord[];
         dependent: 'x' | 'y';
+        canvas?: boolean;
     }
 
     // Normalize all regression constructors behind one callable adapter shape.
@@ -114,6 +115,7 @@
         span = 0.3,
         confidence = 0.99,
         class: className = '',
+        canvas = false,
         ...options
     }: RegressionProps = $props();
 
@@ -239,6 +241,7 @@
     <g class="regression-{independent} {className || ''}">
         <Line
             data={regrData}
+            {canvas}
             {...{
                 ...options,
                 fx: null,
@@ -250,6 +253,7 @@
         {#if confBandData.length}
             <Area
                 data={confBandData}
+                {canvas}
                 {...dependent === 'y'
                     ? { x1: '__x', y1: '__y1', y2: '__y2' }
                     : { y1: '__x', x1: '__y1', x2: '__y2' }}

@@ -8,6 +8,7 @@
     export type RegressionYMarkProps = RegressionOptions & {
         data?: Record<string | symbol, any>[];
         z?: ChannelAccessor;
+        canvas?: boolean;
     };
 </script>
 
