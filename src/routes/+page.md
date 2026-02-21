@@ -41,6 +41,7 @@ examples:
     - geo/us-choropleth
     - image/image-scatter
     - image/image-beeswarm
+    - line/bls
     - line/geo-line
     - line/gradient-line
     - line/indexed-stocks

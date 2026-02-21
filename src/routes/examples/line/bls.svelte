@@ -1,6 +1,5 @@
 <script module>
-    export const title =
-        'Multiple line chart with highlight';
+    export const title = 'Multiple lines';
     export const description =
         'Multiple unemployment lines by metro division with one series highlighted. Derived from an <a href="https://observablehq.com/@observablehq/plot-multiple-line-highlight">Observable Plot example</a>.';
     export const data = { bls: '/data/bls.csv' };

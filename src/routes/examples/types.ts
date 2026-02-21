@@ -33,6 +33,11 @@ export type BlsRow = {
     unemployment: number;
 };
 
+export type KneelingRow = {
+    year: number;
+    co2: number;
+};
+
 export type LanguagesRow = {
     Language: string;
     Remarks: string;
