@@ -4,7 +4,7 @@
 <script lang="ts" generics="Datum extends DataRecord">
     interface AreaMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
         /** the input data array; each element becomes one point in the area */
-        data: Datum[];
+        data?: Datum[];
         /** the starting horizontal position channel for the area baseline */
         x1?: ChannelAccessor<Datum>;
         /** the ending horizontal position channel for the area topline */

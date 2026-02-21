@@ -26,7 +26,9 @@
     type StateProperties = {
         CENSUSAREA: number;
         STUSPS: string;
+        /** centroid x coordinate */
         cx: number;
+        /** centroid y coordinate */
         cy: number;
     };
 

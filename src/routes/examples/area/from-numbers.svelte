@@ -11,5 +11,5 @@
 </script>
 
 <Plot grid>
-    <AreaY data={[1, 3, 2, 4, undefined, 6, 8, 7]} />
+    <AreaY data={[1, 3, 2, 4, NaN, 6, 8, 7]} />
 </Plot>

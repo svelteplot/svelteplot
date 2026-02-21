@@ -1,5 +1,5 @@
-<script lang="ts" generics="Datum extends DataRecord">
-    interface TextCanvasProps<Datum extends DataRecord> {
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
+    interface TextCanvasProps<Datum extends DataRecord<object>> {
         data: ScaledDataRecord<Datum>[];
         options: BaseMarkProps<Datum> & {
             x?: ChannelAccessor<Datum>;

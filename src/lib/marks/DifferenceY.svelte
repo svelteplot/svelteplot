@@ -5,25 +5,25 @@
         /**
          * the horizontal position of the comparison; bound to the x scale
          */
-        x1: ChannelAccessor<Datum>;
+        x1?: ChannelAccessor<Datum>;
         /**
          * the horizontal position of the metric; bound to the x scale
          */
-        x2: ChannelAccessor<Datum>;
+        x2?: ChannelAccessor<Datum>;
         /** the shared horizontal position channel; used when x1 and x2 are the same */
-        x: ChannelAccessor<Datum>;
+        x?: ChannelAccessor<Datum>;
         /**
          * the vertical position of the comparison; bound to the y scale
          */
-        y1: ChannelAccessor<Datum>;
+        y1?: ChannelAccessor<Datum>;
         /**
          * the vertical position of the metric; bound to the y scale
          */
-        y2: ChannelAccessor<Datum>;
+        y2?: ChannelAccessor<Datum>;
         /** the shared vertical position channel; used when y1 and y2 are the same */
-        y: ChannelAccessor<Datum>;
+        y?: ChannelAccessor<Datum>;
         /** the fill opacity for both positive and negative areas */
-        fillOpacity?: number;
+        fillOpacity?: ConstantAccessor<number, Datum>;
         /**
          * the stroke color of the "positive" area; defaults to 'blue'
          */
@@ -52,6 +52,7 @@
     import type {
         BaseMarkProps,
         ChannelAccessor,
+        ConstantAccessor,
         CurveName,
         DataRecord
     } from 'svelteplot/types/index.js';

@@ -2,31 +2,31 @@
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
-    import { getContext } from 'svelte';
+    import type { Component } from 'svelte';
     import ExamplesGrid from '$shared/ui/ExamplesGrid.svelte';
+
+    type ExampleModule = {
+        default: Component<any>;
+        title: string;
+        description?: string;
+        sortKey?: number;
+        transforms?: string[];
+    };
 
     const pages = import.meta.glob('../**/*.svelte', {
         eager: true
-    }) as Record<
-        string,
-        {
-            title: string;
-            description?: string;
-            sortKey?: number;
-            transforms?: string[];
-        }
-    >;
+    }) as Record<string, ExampleModule>;
 
     // Screenshots are under `static/examples` (Vite publicDir).
     // Do not import from publicDir; construct URLs directly.
+    const group = $derived(page.params.group ?? '');
 
     const indexKey = $derived(
         Object.keys(pages).find(
             (d) =>
                 d
                     .replace(/^..\//, '')
-                    .replace('/_index.svelte', '') ===
-                page.params.group
+                    .replace('/_index.svelte', '') === group
         )
     );
     const indexMod = $derived(
@@ -51,14 +51,12 @@
     );
 
     const subPages = $derived.by(() => {
-        if (pagesByTransform[page.params.group]) {
+        if (pagesByTransform[group]) {
             // If the group matches a transform, return those pages
-            return pagesByTransform[page.params.group];
+            return pagesByTransform[group];
         }
         return Object.keys(pages).filter((d) =>
-            d
-                .replace(/^..\//, '')
-                .startsWith(`${page.params.group}/`)
+            d.replace(/^..\//, '').startsWith(`${group}/`)
         );
     });
 
@@ -83,10 +81,9 @@
     );
 
     const type: 'mark' | 'transform' = $derived(
-        pagesByTransform[page.params.group]
-            ? 'transform'
-            : 'mark'
+        pagesByTransform[group] ? 'transform' : 'mark'
     );
+    const docsHref = $derived(`/${type}s/${group}`);
 </script>
 
 {#if subPages.length}
@@ -94,12 +91,11 @@
 
     <h1>{page.params.group}</h1>
     <p>
-        Examples showing the use of the <a
-            href={resolve(`/${type}s/${page.params.group}`)}
-            >{page.params.group} {type}</a
-        >.
+        Examples showing the use of the
+        <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+        <a href={docsHref}>{page.params.group} {type}</a>.
     </p>
-    {#if indexKey}
+    {#if indexMod}
         <indexMod.default />
     {/if}
     <ExamplesGrid {examples} />

@@ -251,6 +251,19 @@ export type CarsRow = {
     year: number;
 };
 
+/*
+date,precipitation,temp_max,temp_min,wind,weather
+2012-01-01,0,12.8,5,4.7,drizzle
+*/
+export type SeattleRow = {
+    date: Date;
+    precipitation: number;
+    temp_max: number;
+    temp_min: number;
+    wind: number;
+    weather: 'drizzle' | 'rain' | 'sun' | 'snow' | 'fog';
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];

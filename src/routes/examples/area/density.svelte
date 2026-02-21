@@ -23,10 +23,13 @@
 <Plot grid y={{ percent: true }}>
     <RuleY y={0} />
     <AreaY
-        {...densityX({
-            data: olympians,
-            fill: 'sex',
-            x: 'weight',
-            fy: 'sex'
-        })} />
+        {...densityX(
+            {
+                data: olympians as any,
+                fill: 'sex',
+                x: 'weight',
+                fy: 'sex'
+            },
+            {}
+        ) as any} />
 </Plot>

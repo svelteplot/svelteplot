@@ -15,8 +15,9 @@
         RectX,
         BrushX
     } from 'svelteplot';
+    import type { AaplRow } from '../types';
 
-    const { aapl } = $props();
+    const { aapl }: { aapl: AaplRow[] } = $props();
 
     let brush = $state({
         enabled: true,

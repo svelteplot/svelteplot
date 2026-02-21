@@ -1,8 +1,10 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
     import { page } from '$app/state';
 
     import '../../../app.scss';
 
+    let { children }: { children: Snippet } = $props();
     const groupTitle = $derived(page.params.group);
 </script>
 
@@ -14,7 +16,7 @@
 
 <div class="theme-default--page-layout">
     <div class="content">
-        <slot />
+        {@render children()}
     </div>
 </div>
 

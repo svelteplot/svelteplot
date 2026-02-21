@@ -5,17 +5,19 @@ import { resolveChannel } from '../helpers/resolve.js';
 import type { DataRecord, ScaledChannelName, TransformArg } from '../types/index.js';
 import { groups as d3Groups } from 'd3-array';
 
-type WindowOptions = {
+export type WindowAnchor = 'start' | 'middle' | 'end';
+
+export type WindowOptions = {
     /** the window size (number of data points) */
     k: number;
     /** a time interval string to use instead of a fixed window size */
-    interval: string;
+    interval?: string;
     /** where to align the window relative to the current data point */
-    anchor: 'start' | 'middle' | 'end';
+    anchor?: WindowAnchor;
     /** the reducer function to apply within each window (e.g. "mean", "median", "sum") */
-    reduce: ReducerName;
+    reduce?: ReducerName;
     /** if true, return null when the window has fewer than k values */
-    strict: boolean;
+    strict?: boolean | number;
 };
 
 /**

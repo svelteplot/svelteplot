@@ -1,7 +1,7 @@
 <!-- @component
     Creates arrows with customizable heads, angles, and bending
 -->
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     interface ArrowMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         /** the input data array; each element becomes one arrow */
         data: Datum[];

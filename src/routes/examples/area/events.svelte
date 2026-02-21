@@ -11,7 +11,7 @@
 
     let { riaa }: { riaa: RiaaRow[] } = $props();
 
-    let lastClicked = $state();
+    let lastClicked = $state<RiaaRow | null>(null);
 </script>
 
 <Plot
@@ -22,7 +22,7 @@
     opacity={{ range: [0.4, 0.8] }}
     title={!lastClicked
         ? 'Hover an area'
-        : 'You hovered ' + lastClicked.format}>
+        : 'You hovered ' + lastClicked?.format}>
     <AreaY
         data={riaa}
         x="year"
@@ -32,6 +32,6 @@
         fill="group"
         opacity={lastClicked
             ? (d) =>
-                  d.format === lastClicked.format ? 1 : 0
+                  d.format === lastClicked?.format ? 1 : 0
             : 0.8} />
 </Plot>

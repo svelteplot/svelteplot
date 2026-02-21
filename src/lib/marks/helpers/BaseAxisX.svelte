@@ -18,6 +18,7 @@
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
     import wordwrap from 'svelteplot/helpers/wordwrap';
+    import type * as CSS from 'csstype';
 
     type BaseAxisXProps = {
         scaleFn: (d: RawValue) => number;
@@ -37,6 +38,7 @@
             dy: ConstantAccessor<number>;
             filter: ChannelAccessor;
             wordwrap: boolean;
+            fontWeight: ConstantAccessor<CSS.Property.FontWeight>;
             textAnchor: ConstantAccessor<'start' | 'middle' | 'end'> | 'auto';
             removeDuplicateTicks: boolean;
         };

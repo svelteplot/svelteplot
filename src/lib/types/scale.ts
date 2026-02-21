@@ -4,6 +4,12 @@ import type { ChannelAccessor, RawValue, ScaledChannelName } from './index.js';
 export type AxisXAnchor = 'bottom' | 'top' | 'both';
 export type AxisYAnchor = 'left' | 'right' | 'both';
 
+export type TickFormatFunction = (
+    d: number | Date,
+    index: number,
+    ticks: (number | string | Date)[]
+) => string;
+
 export type ScaleName =
     | 'x'
     | 'y'
@@ -180,7 +186,7 @@ export type ColorScaleOptions = ScaleOptions & {
     /**
      * The tick format for the color scale legend.
      */
-    tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
+    tickFormat: false | Intl.NumberFormatOptions | TickFormatFunction;
 };
 
 export type ScaleType =
@@ -232,7 +238,7 @@ export type XScaleOptions = ScaleOptions & {
      * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
      * object, or a function mapping values to strings
      */
-    tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
+    tickFormat: false | Intl.NumberFormatOptions | TickFormatFunction;
     /**
      * Enable word wrapping for axis tick labels, default true
      */
@@ -260,7 +266,7 @@ export type YScaleOptions = ScaleOptions & {
      * custom tick format; false to hide tick labels, an Intl.NumberFormatOptions
      * object, or a function mapping values to strings
      */
-    tickFormat: false | Intl.NumberFormatOptions | ((d: RawValue) => string);
+    tickFormat: false | Intl.NumberFormatOptions | TickFormatFunction;
     /**
      * rotate the axis ticks
      */

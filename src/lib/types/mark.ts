@@ -73,10 +73,10 @@ import type { ScaledChannelName } from './channel.js';
 import type { ScaleName } from './scale.js';
 import type { DodgeXOptions, DodgeYOptions } from 'svelteplot/transforms/dodge.js';
 
-type MouseEventHandler<T extends EventTarget = EventTarget> = (
-    event: Event & { currentTarget: T },
-    datum?: unknown,
-    index?: number
+type MarkEventHandler<TDatum, TTarget extends EventTarget = EventTarget> = (
+    event: Event & { currentTarget: TTarget },
+    datum: TDatum,
+    index: number
 ) => void;
 
 export type BaseMarkProps<T> = Partial<{
@@ -102,6 +102,26 @@ export type BaseMarkProps<T> = Partial<{
     fill: ChannelAccessor<T>;
     /** the fill opacity; a number between 0 and 1 */
     fillOpacity: ConstantAccessor<number, T>;
+    /** font family for text-capable marks */
+    fontFamily: ConstantAccessor<CSS.Property.FontFamily, T>;
+    /** font size for text-capable marks */
+    fontSize: ConstantAccessor<CSS.Property.FontSize | number, T>;
+    /** font style for text-capable marks */
+    fontStyle: ConstantAccessor<CSS.Property.FontStyle, T>;
+    /** font variant for text-capable marks */
+    fontVariant: ConstantAccessor<CSS.Property.FontVariant, T>;
+    /** font weight for text-capable marks */
+    fontWeight: ConstantAccessor<CSS.Property.FontWeight, T>;
+    /** letter spacing for text-capable marks */
+    letterSpacing: ConstantAccessor<CSS.Property.LetterSpacing, T>;
+    /** word spacing for text-capable marks */
+    wordSpacing: ConstantAccessor<CSS.Property.WordSpacing, T>;
+    /** text anchor for text-capable marks */
+    textAnchor: ConstantAccessor<CSS.Property.TextAnchor, T>;
+    /** text transform for text-capable marks */
+    textTransform: ConstantAccessor<CSS.Property.TextTransform, T>;
+    /** text decoration for text-capable marks */
+    textDecoration: ConstantAccessor<CSS.Property.TextDecoration, T>;
     /** how to sort the mark data before rendering; can be a channel name string, an accessor, a comparator, or an object with channel and order */
     sort:
         | string
@@ -132,6 +152,8 @@ export type BaseMarkProps<T> = Partial<{
     /** the SVG stroke dash offset in pixels */
     strokeDashoffset: ConstantAccessor<number, T>;
     /** the CSS mix-blend-mode for compositing (e.g. "multiply", "screen") */
+    blend: ConstantAccessor<CSS.Property.MixBlendMode, T>;
+    /** legacy alias of blend */
     mixBlendMode: ConstantAccessor<CSS.Property.MixBlendMode, T>;
     /** a CSS clip-path to clip the mark element */
     clipPath: string;
@@ -144,65 +166,65 @@ export type BaseMarkProps<T> = Partial<{
     /** the SVG paint-order attribute (e.g. "stroke" to render stroke behind fill) */
     paintOrder: ConstantAccessor<string, T>;
     /** fired when the mark element is clicked */
-    onclick: MouseEventHandler<SVGPathElement>;
+    onclick: MarkEventHandler<T, SVGPathElement>;
     /** fired when the mark element is double-clicked */
-    ondblclick: MouseEventHandler<SVGPathElement>;
+    ondblclick: MarkEventHandler<T, SVGPathElement>;
     /** fired when a mouse button is released over the mark */
-    onmouseup: MouseEventHandler<SVGPathElement>;
+    onmouseup: MarkEventHandler<T, SVGPathElement>;
     /** fired when a mouse button is pressed over the mark */
-    onmousedown: MouseEventHandler<SVGPathElement>;
+    onmousedown: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer enters the mark element */
-    onmouseenter: MouseEventHandler<SVGPathElement>;
+    onmouseenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves within the mark element */
-    onmousemove: MouseEventHandler<SVGPathElement>;
+    onmousemove: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer leaves the mark element */
-    onmouseleave: MouseEventHandler<SVGPathElement>;
+    onmouseleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves out of the mark element */
-    onmouseout: MouseEventHandler<SVGPathElement>;
+    onmouseout: MarkEventHandler<T, SVGPathElement>;
     /** fired when the pointer moves onto the mark element */
-    onmouseover: MouseEventHandler<SVGPathElement>;
+    onmouseover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer event is canceled */
-    onpointercancel: MouseEventHandler<SVGPathElement>;
+    onpointercancel: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer becomes active over the mark */
-    onpointerdown: MouseEventHandler<SVGPathElement>;
+    onpointerdown: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer is released over the mark */
-    onpointerup: MouseEventHandler<SVGPathElement>;
+    onpointerup: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer enters the mark element */
-    onpointerenter: MouseEventHandler<SVGPathElement>;
+    onpointerenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer leaves the mark element */
-    onpointerleave: MouseEventHandler<SVGPathElement>;
+    onpointerleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves within the mark element */
-    onpointermove: MouseEventHandler<SVGPathElement>;
+    onpointermove: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves onto the mark element */
-    onpointerover: MouseEventHandler<SVGPathElement>;
+    onpointerover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a pointer moves out of the mark element */
-    onpointerout: MouseEventHandler<SVGPathElement>;
+    onpointerout: MarkEventHandler<T, SVGPathElement>;
     /** fired continuously while the mark is being dragged */
-    ondrag: MouseEventHandler<SVGPathElement>;
+    ondrag: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element is dropped on the mark */
-    ondrop: MouseEventHandler<SVGPathElement>;
+    ondrop: MarkEventHandler<T, SVGPathElement>;
     /** fired when a drag operation begins on the mark */
-    ondragstart: MouseEventHandler<SVGPathElement>;
+    ondragstart: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element enters the mark */
-    ondragenter: MouseEventHandler<SVGPathElement>;
+    ondragenter: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element leaves the mark */
-    ondragleave: MouseEventHandler<SVGPathElement>;
+    ondragleave: MarkEventHandler<T, SVGPathElement>;
     /** fired when a dragged element is over the mark */
-    ondragover: MouseEventHandler<SVGPathElement>;
+    ondragover: MarkEventHandler<T, SVGPathElement>;
     /** fired when a drag operation ends */
-    ondragend: MouseEventHandler<SVGPathElement>;
+    ondragend: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point is placed on the mark */
-    ontouchstart: MouseEventHandler<SVGPathElement>;
+    ontouchstart: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point moves along the mark */
-    ontouchmove: MouseEventHandler<SVGPathElement>;
+    ontouchmove: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch point is removed from the mark */
-    ontouchend: MouseEventHandler<SVGPathElement>;
+    ontouchend: MarkEventHandler<T, SVGPathElement>;
     /** fired when a touch event is canceled */
-    ontouchcancel: MouseEventHandler<SVGPathElement>;
+    ontouchcancel: MarkEventHandler<T, SVGPathElement>;
     /** fired when the context menu is triggered on the mark */
-    oncontextmenu: MouseEventHandler<SVGPathElement>;
+    oncontextmenu: MarkEventHandler<T, SVGPathElement>;
     /** fired when the mouse wheel is scrolled over the mark */
-    onwheel: MouseEventHandler<SVGPathElement>;
+    onwheel: MarkEventHandler<T, SVGPathElement>;
     /**
      * if you want to give your mark element an extra CSS class
      */
@@ -241,7 +263,7 @@ export type LinkableMarkProps<T> = {
      */
     download?: ConstantAccessor<boolean, T>;
     // allow data-sveltekit-* attributes on the link element, e.g. data-sveltekit-reload
-    [key: `data-sveltekit-${string}`]: string | boolean | undefined;
+    [key: `data-sveltekit-${string}`]: unknown;
 };
 
 export type BorderRadius =

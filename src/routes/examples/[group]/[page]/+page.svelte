@@ -4,19 +4,42 @@
     import codeStyleDark from 'svelte-highlight/styles/atom-one-dark';
 
     import { resolve } from '$app/paths';
+    import type { Component } from 'svelte';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
     import { useDark } from '$shared/ui/isDark.svelte';
     import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
+    type ExampleModule = {
+        default: Component<any>;
+        title: string;
+        description?: string;
+        sortKey?: number;
+        fullCode?: boolean;
+        repl?: string;
+    };
+
+    type NavLink = {
+        key: string | null;
+        title: string | null;
+    };
+
     const pages = import.meta.glob('../../**/*.svelte', {
         eager: true
-    });
+    }) as Record<string, ExampleModule>;
     const pagesSrc = import.meta.glob('../../**/*.svelte', {
         eager: true,
         query: '?raw',
         import: 'default'
-    });
+    }) as Record<string, string>;
+
+    function toPathKey(exampleKey: string) {
+        return `../../${exampleKey}.svelte`;
+    }
+
+    function getModule(exampleKey: string) {
+        return pages[toPathKey(exampleKey)] ?? null;
+    }
 
     const sortedPages = Object.entries(pages)
         .filter(([key]) => key.split('/').length === 4)
@@ -32,7 +55,8 @@
         )
         .map(([key, mod]) => key);
 
-    let { data } = $props();
+    let { data }: { data: Record<string, unknown> } =
+        $props();
 
     const key = $derived(
         `${page.params.group}/${page.params.page}`
@@ -47,41 +71,50 @@
         )
     );
     const mod = $derived(plotKey ? pages[plotKey] : null);
+    const source = $derived(
+        plotKey ? pagesSrc[plotKey] : null
+    );
 
-    const [prevPage, nextPage] = $derived.by(() => {
-        if (!plotKey) return [null, null];
-        const keys = sortedPages.map((d) =>
-            d
-                .replace(/^..\/..\//, '')
-                .replace('.svelte', '')
-        );
-        const index = keys.indexOf(key);
-        let prev = null;
-        let next = null;
-        const prevNext = [
-            index > 0 ? keys[index - 1] : null,
-            index >= 0 && index < keys.length - 1
-                ? keys[index + 1]
-                : null
-        ];
+    const [prevPage, nextPage] = $derived.by(
+        (): [NavLink, NavLink] => {
+            if (!plotKey) {
+                return [
+                    { key: null, title: null },
+                    { key: null, title: null }
+                ];
+            }
 
-        return prevNext.map((key) => ({
-            key,
-            title: key
-                ? pages[
-                      Object.keys(pages).find(
-                          (d) =>
-                              d
-                                  .replace(/^..\/..\//, '')
-                                  .replace(
-                                      '.svelte',
-                                      ''
-                                  ) === key
-                      )!
-                  ].title
-                : null
-        }));
-    });
+            const keys = sortedPages.map((d) =>
+                d
+                    .replace(/^..\/..\//, '')
+                    .replace('.svelte', '')
+            );
+            const index = keys.indexOf(key);
+            const prevNext: [string | null, string | null] =
+                [
+                    index > 0 ? keys[index - 1] : null,
+                    index >= 0 && index < keys.length - 1
+                        ? keys[index + 1]
+                        : null
+                ];
+
+            const toNavLink = (
+                value: string | null
+            ): NavLink => {
+                if (!value)
+                    return { key: null, title: null };
+                return {
+                    key: value,
+                    title: getModule(value)?.title ?? null
+                };
+            };
+
+            return [
+                toNavLink(prevNext[0]),
+                toNavLink(prevNext[1])
+            ];
+        }
+    );
 
     function cleanCode(code: string) {
         if (code.includes('<script lang="ts">')) {
@@ -123,59 +156,62 @@
         <a href={resolve(`/examples/${page.params.group}`)}
             >{page.params.group}</a>
     </div>
-    <h1 class="page-title">{mod.title}</h1>
-    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-    {#if mod.description}<p>{@html mod.description}</p>{/if}
+    <h1 class="page-title">{mod?.title}</h1>
+    {#if mod?.description}
+        <p>
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            {@html mod.description}
+        </p>
+    {/if}
 
     {#key data}
         <div class="screenshot">
-            <mod.default {...data} />
+            {#if mod}<mod.default {...data} />{/if}
         </div>
     {/key}
 
-    {#key plotKey}
+    {#key source}
         <div class="svp-code-block-wrapper">
             <div class="svp-code-block">
-                <CodeBlock
-                    lang="svelte"
-                    isDark={ds.isDark}
-                    code={cleanCode(
-                        pagesSrc[plotKey].substring(
-                            pages[plotKey].fullCode
-                                ? pagesSrc[plotKey].indexOf(
-                                      '<script lang="ts">'
-                                  )
-                                : pagesSrc[
-                                      plotKey
-                                  ].lastIndexOf(
-                                      '</scr' + 'ipt>'
-                                  ) + 9
-                        )
-                    )} />
+                {#if source && mod}
+                    <CodeBlock
+                        lang="svelte"
+                        code={cleanCode(
+                            source.substring(
+                                mod.fullCode
+                                    ? source.indexOf(
+                                          '<script lang="ts">'
+                                      )
+                                    : source.lastIndexOf(
+                                          '</scr' + 'ipt>'
+                                      ) + 9
+                            )
+                        )} />
+                {/if}
             </div>
         </div>
     {/key}
 
-    {#if pages[plotKey].repl}
+    {#if mod?.repl}
         <p>
             <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-            <a href={pages[plotKey].repl} target="_blank"
+            <a href={mod.repl} target="_blank"
                 >Open in Svelte playground</a>
         </p>
     {/if}
 
     <!-- show links to prev and next page -->
     <div class="page-switcher">
-        {#each [prevPage, nextPage] as page, i (i)}
+        {#each [prevPage, nextPage] as nav, i (i)}
             <div
                 class={[
-                    !!page.key && 'switcher',
+                    !!nav.key && 'switcher',
                     i === 1 && 'right'
                 ]}>
-                {#if page.key}
+                {#if nav.key}
                     <a
                         href={resolve(
-                            `/examples/${page.key}`
+                            `/examples/${nav.key}`
                         )}
                         class="trigger">
                         <div class="title">
@@ -183,7 +219,7 @@
                                 <Prev />
                             {/if}
                             <div class="title-label">
-                                {page.title}
+                                {nav.title}
                             </div>
                             {#if i === 1}
                                 <Next />

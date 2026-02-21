@@ -3,7 +3,7 @@
     Useful for adding SVG text labels to your plot.
 -->
 
-<script lang="ts" generics="Datum extends DataRecord">
+<script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
     import type * as CSS from 'csstype';
 
     interface TextCommonMarkProps extends BaseMarkProps<Datum>, LinkableMarkProps<Datum> {
@@ -13,6 +13,8 @@
         x?: ChannelAccessor<Datum>;
         /** the vertical position channel */
         y?: ChannelAccessor<Datum>;
+        /** optional radius channel, mainly for dodge/sort convenience in label swarms */
+        r?: ChannelAccessor<Datum>;
         /** a Snippet to render as the text content */
         children?: Snippet;
         /** the text content accessor */
@@ -136,14 +138,14 @@
 
     const args = $derived(
         sort({
-            data: indexData(data),
+            data: indexData(data as object[]) as any,
             ...options
         })
     ) as TextMarkProps;
 </script>
 
 <Mark
-    {...args}
+    {...args as any}
     type={'text' as const}
     channels={[
         'x',
@@ -157,10 +159,10 @@
         'fillOpacity'
     ]}
     required={[]}>
-    {#snippet children({ mark, scaledData, usedScales })}
+    {#snippet children({ mark, scaledData, usedScales }: any)}
         {#if canvas}
             <g class="text {className || ''}">
-                <TextCanvas data={scaledData} options={args as CanvasTextMarkProps} {usedScales} />
+                <TextCanvas data={scaledData as any} options={args as any} {usedScales} />
             </g>
         {:else}
             <GroupMultiple

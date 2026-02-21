@@ -6,7 +6,7 @@
     interface RectMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, BaseRectMarkProps<Datum> {
         /** the input data array; each element becomes one rectangle */
-        data: Datum[];
+        data?: Datum[];
         /** the horizontal position channel; used as shorthand for x1 and x2 with an interval */
         x?: ChannelAccessor<Datum>;
         /** the starting horizontal position channel */
