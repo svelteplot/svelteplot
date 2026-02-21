@@ -54,7 +54,12 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { coalesce, maybeNumber } from '../helpers/index.js';
     import Mark from '../Mark.svelte';
-    import { arrowPath, maybeSweep, type SweepFunc, type SweepOption } from '../helpers/arrowPath.js';
+    import {
+        arrowPath,
+        maybeSweep,
+        type SweepFunc,
+        type SweepOption
+    } from '../helpers/arrowPath.js';
     import { replaceChannels } from '../transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
@@ -97,7 +102,7 @@
     type="arrow"
     required={['x1', 'x2', 'y1', 'y2']}
     channels={['x1', 'y1', 'x2', 'y2', 'opacity', 'stroke', 'strokeOpacity']}
-    {...(args as any)}>
+    {...args as any}>
     {#snippet children({ usedScales, scaledData })}
         {@const sweep = maybeSweep(args.sweep) as SweepFunc}
         <GroupMultiple class="arrow" length={scaledData.length}>
