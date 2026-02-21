@@ -1,5 +1,5 @@
 import type { Channels } from '../types/index.js';
-import type { MarkStyleProps, DataRow } from '../types/index.js';
+import type { MarkStyleProps } from '../types/index.js';
 import { resolveProp } from './resolve.js';
 
 /**

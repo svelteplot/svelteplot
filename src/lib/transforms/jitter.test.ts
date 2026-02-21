@@ -38,10 +38,6 @@ describe('jitterX', () => {
         // Instead, we'll provide a source function that controls the output values
         const data = [{ x: 5 }, { x: 10 }];
 
-        // Custom source function that controls the exact jitter values
-        let values = [0.05, -0.1]; // The exact jitter values we want
-        let index = 0;
-
         const mockSource = randomLcg(42);
 
         // @ts-ignore - Bypassing type checking for tests
@@ -124,10 +120,6 @@ describe('jitterY', () => {
         // We'll simplify this test by not trying to mock d3-random directly
         // Instead, we'll provide a source function that controls the output values
         const data = [{ x: 5 }, { x: 10 }];
-
-        // Custom source function that controls the exact jitter values
-        let values = [0.05, -0.1]; // The exact jitter values we want
-        let index = 0;
 
         const mockSource = randomLcg(42);
 

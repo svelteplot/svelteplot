@@ -14,7 +14,7 @@ import { test, expect } from 'vitest';
 
 test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
     // Simulate the BaseMarkProps with our fixes
-    interface BaseMarkProps<T> {
+    interface BaseMarkProps {
         fill?: string;
         textAnchor?: string;
         style?: string;
@@ -27,7 +27,7 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
 
     // AxisX interface (fill no longer excluded)
     interface AxisXMarkProps extends Omit<
-        BaseMarkProps<any>,
+        BaseMarkProps,
         'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
     > {
         data?: any[];
@@ -39,7 +39,7 @@ test('AxisX and AxisY accept fill, textAnchor, and style properties', () => {
 
     // AxisY interface (fill no longer excluded, has its own textAnchor)
     interface AxisYMarkProps extends Omit<
-        BaseMarkProps<any>,
+        BaseMarkProps,
         'fillOpacity' | 'paintOrder' | 'title' | 'href' | 'target'
     > {
         data?: any[];

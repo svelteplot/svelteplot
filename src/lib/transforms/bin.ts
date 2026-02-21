@@ -190,7 +190,7 @@ export function bin(
     { data, ...channels }: TransformArg<DataRecord>,
     options: BinOptions = { thresholds: 'auto', cumulative: false }
 ): TransformArg<DataRecord> {
-    const { domain, thresholds = 'auto', interval, cumulative = false } = options;
+    const { domain, thresholds = 'auto', interval } = options;
 
     const binX = d3Bin<DataRecord, number>();
     const binY = d3Bin<DataRecord, number>();
@@ -280,7 +280,7 @@ export function bin(
             (yThresholds as number[]).filter((d) => d < (ylo as number)).at(-1) ?? ylo;
         const tExtentHi = (yThresholds as number[]).filter((d) => d > (yhi as number)).at(0) ?? yhi;
 
-        binY(groupX).forEach((groupY, i) => {
+        binY(groupX).forEach((groupY) => {
             if (groupY.length === 0) return;
             // The first bin.x0 is always equal to the minimum domain value,
             // and the last bin.x1 is always equal to the maximum domain value,

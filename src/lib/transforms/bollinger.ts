@@ -76,7 +76,7 @@ function bollinger(values: number[], N: number, K: number[]) {
         const value = values[i];
         ((sum += value), (sumSquared += value ** 2));
     }
-    for (let n = values.length, m = bands.length; i < n; ++i) {
+    for (let n = values.length; i < n; ++i) {
         const value = values[i];
         ((sum += value), (sumSquared += value ** 2));
         const mean = sum / N;

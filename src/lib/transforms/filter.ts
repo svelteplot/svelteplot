@@ -1,5 +1,5 @@
 import { testFilter } from '../helpers/index.js';
-import type { DataRecord, TransformArg } from '../types/index.js';
+import type { TransformArg } from '../types/index.js';
 
 /**
  * Filters data based on a function provided via `filter` channels.

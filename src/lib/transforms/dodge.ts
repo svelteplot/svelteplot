@@ -201,7 +201,7 @@ function anchorYBottom({ facetHeight: height }: PlotState): [-1 | 0 | 1, number]
 
 function anchorYMiddle({
     facetHeight: height,
-    options: { marginTop, marginBottom }
+    options: { marginTop, marginBottom: _marginBottom }
 }: PlotState): [-1 | 0 | 1, number] {
     return [0, (marginTop + height) / 2];
 }

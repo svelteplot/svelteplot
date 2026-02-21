@@ -24,7 +24,7 @@ export function recordizeX(
     if (dataIsRawValueArray) {
         // we remove x, x1 and x2 from the channels since they make no sense when
         // the data is a raw value array
-        const { x, x1, x2, ...nonXChannels } = channels;
+        const { x: _x, x1: _x1, x2: _x2, ...nonXChannels } = channels;
         return {
             data: data.map((value, index) => ({
                 [RAW_VALUE]: value,
@@ -52,7 +52,7 @@ export function recordizeY(
     if (dataIsRawValueArray) {
         // we remove y, y1 and y2 from the channels since they make no sense when
         // the data is a raw value array
-        const { y, y1, y2, ...nonYChannels } = channels;
+        const { y: _y, y1: _y1, y2: _y2, ...nonYChannels } = channels;
         return {
             data: Array.from(data).map((value, index) => ({
                 [INDEX]: index,

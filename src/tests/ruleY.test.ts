@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
 import RuleYTest from './ruleY.test.svelte';
 import { getTranslate } from './utils';
-import { tick } from 'svelte';
 
 const testData = [
     { x: 'A', y: 10 },
@@ -228,7 +227,7 @@ describe('RuleY mark', () => {
 
     it('passes index to accessor functions', () => {
         const x1 = vi.fn((d: any, i: number) => i * 10);
-        const stroke = vi.fn((d: any, i: number) => 'gray');
+        const stroke = vi.fn((_d: any, _i: number) => 'gray');
         render(RuleYTest, {
             props: {
                 plotArgs: {

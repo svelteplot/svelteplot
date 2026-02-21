@@ -84,7 +84,7 @@ describe('GridX mark', () => {
 
     it('passes index to accessor functions', () => {
         const y1 = vi.fn((d: any, i: number) => d + i);
-        const stroke = vi.fn((d: any, i: number) => 'gray');
+        const stroke = vi.fn((_d: any, _i: number) => 'gray');
         render(GridXTest, {
             props: {
                 plotArgs: {

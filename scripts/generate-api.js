@@ -3,7 +3,6 @@ import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const MARKS_DIR = path.resolve('src/lib/marks');
-const MARKS_DOCS_DIR = path.resolve('src/routes/marks');
 const MARKS_OUT_DIR = path.resolve('src/routes/api/marks');
 const PLOT_OUT_DIR = path.resolve('src/routes/api/plot');
 const TRANSFORMS_OUT_DIR = path.resolve('src/routes/api/transforms');

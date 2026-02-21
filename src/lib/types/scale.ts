@@ -293,8 +293,6 @@ export type LegendScaleOptions = ScaleOptions & {
     legend: boolean;
 };
 
-type OrdinalDomain = string | Date;
-
 /**
  * Broad callable shape for resolved d3 scale functions used internally by marks.
  * Specific methods only exist for certain scale types and may be undefined.

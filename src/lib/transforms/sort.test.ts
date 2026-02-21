@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { sort, shuffle } from './sort.js';
-import type { DataRecord, DataRow } from '../types/index.js';
 
 type Row = { i: number; A: number; B: number; C: string; D: Date };
 

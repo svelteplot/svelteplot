@@ -104,7 +104,7 @@ function parseNumber(value: number | string): number {
         try {
             const [name, period] = parseTimeInterval(value);
             return (durations.get(name) ?? 0) * period;
-        } catch (err) {
+        } catch {
             return 0;
         }
     }

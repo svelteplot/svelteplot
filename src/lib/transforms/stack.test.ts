@@ -142,17 +142,12 @@ describe('stackY transform', () => {
             { make: 'B', model: 'B2', mpg: 400 },
             { make: 'B', model: 'B3', mpg: 450 }
         ];
-        const { data: stackedData, ...channels } = stackY<DataRecord>({
+        const { data: stackedData } = stackY<DataRecord>({
             data: data3,
             x: 'make',
             y: 'mpg'
             // fill: 'make'
         });
-        const result = stackedData.map((d) => ({
-            x: d[channels.x as string],
-            y1: d[channels.y1 as string],
-            y2: d[channels.y2 as string]
-        }));
         expect(stackedData).toHaveLength(data3.length);
     });
 

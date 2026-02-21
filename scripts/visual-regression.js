@@ -223,7 +223,6 @@ const main = async () => {
         const concurrency = Math.max(1, parseInt(process.env.VR_CONCURRENCY || '4', 10));
         const limit = createLimiter(concurrency);
         const running = new Set();
-        let lastRenderLines = 0;
 
         let frame = 0;
         const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
@@ -263,7 +262,6 @@ ${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} 
             running.add(shortRoute);
             renderRunning();
 
-            let routeFailed = false;
             let page;
 
             try {
@@ -288,7 +286,6 @@ ${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} 
                     };
                     records.push(rec);
                     failures.push(rec);
-                    routeFailed = true;
                     running.delete(shortRoute);
                     renderRunning();
                     // console.log(`- completed ${shortRoute}  ${failText}`);
@@ -322,7 +319,6 @@ ${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} 
                         records.push(rec);
                         failures.push(rec);
                         console.warn(`Missing baseline: ${baselinePng}`);
-                        routeFailed = true;
                         continue;
                     }
 
@@ -364,7 +360,6 @@ ${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} 
 
                     if (!passed) {
                         failures.push(rec);
-                        routeFailed = true;
                     } else {
                         completed.push(rec);
                     }
@@ -383,7 +378,6 @@ ${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} 
                 };
                 records.push(rec);
                 failures.push(rec);
-                routeFailed = true;
                 running.delete(shortRoute);
                 // renderRunning();
                 // console.log(`- completed ${shortRoute}  ${failText}`);

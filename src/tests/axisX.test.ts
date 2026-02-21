@@ -256,7 +256,7 @@ describe('AxisX mark', () => {
     });
 
     it('passes ticks array to tickFormat functions', () => {
-        const checkTicks = vi.fn((d: any, i: number, ticks: any[]) => String(d));
+        const checkTicks = vi.fn((d: any, _i: number, _ticks: any[]) => String(d));
         const { container } = render(AxisXTest, {
             props: {
                 plotArgs: { width: 500, x: { domain: [0, 100] } },

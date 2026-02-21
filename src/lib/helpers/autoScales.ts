@@ -98,7 +98,7 @@ export function autoScale({
     plotWidth,
     plotHeight,
     plotHasFilledDotMarks,
-    plotDefaults
+    plotDefaults: _plotDefaults
 }: {
     name: ScaleName;
     type: ScaleType;
@@ -212,10 +212,10 @@ export function autoScaleColor({
     type,
     domain,
     scaleOptions,
-    plotOptions,
-    plotWidth,
-    plotHeight,
-    plotHasFilledDotMarks,
+    plotOptions: _plotOptions,
+    plotWidth: _plotWidth,
+    plotHeight: _plotHeight,
+    plotHasFilledDotMarks: _plotHasFilledDotMarks,
     plotDefaults
 }: {
     name: ScaleName;

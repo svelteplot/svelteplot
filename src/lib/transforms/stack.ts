@@ -106,7 +106,7 @@ function stackXY<T>(
         channels[`${byHigh}`] === undefined
     ) {
         // resolve all channels for easier computation below
-        const resolvedData = indexData(data as object[]).map((d, i) => ({
+        const resolvedData = indexData(data as object[]).map((d) => ({
             ...(isDataRecord(d) ? d : { [RAW_VALUE]: d }),
             [S[secondDim]]: resolveChannel(secondDim, d as any, channels),
             [GROUP]: groupBy === true ? 'G' : resolveChannel(groupBy, d as any, channels),
@@ -150,7 +150,7 @@ function stackXY<T>(
                 // Unit stacking: map each secondary-dimension bucket to an array of values.
                 // Series are positional (0..N-1) within each bucket.
                 let maxKeys = 0;
-                stackData = groupedBySecondDim.map(([k, items]) => {
+                stackData = groupedBySecondDim.map(([_k, items]) => {
                     const values = items
                         // keep original order within bucket; no stable series identity across buckets
                         .map((d) => ({ i: d[INDEX], v: d[S[byDim]] }));
@@ -161,7 +161,7 @@ function stackXY<T>(
             } else {
                 // Grouped stacking: keep consistent series identities using the group key
                 const keySet = new Set<any>(facetData.map((d) => d[GROUP]));
-                stackData = groupedBySecondDim.map(([k, items]) => {
+                stackData = groupedBySecondDim.map(([_k, items]) => {
                     const obj: Record<string | number, { i: number; v: number }> = {};
                     items.forEach((d) => {
                         const key = d[GROUP] as any;
@@ -194,7 +194,7 @@ function stackXY<T>(
                         : STACK_OFFSET[options.offset ?? 'none']) as any
                 )
                 .keys(keys)
-                .value((d: any, key: any, i: any, data: any) => {
+                .value((d: any, key: any, _i: any, _data: any) => {
                     return d[key]?.v == null ? undefined : d[key]?.v;
                 })(stackData);
 
@@ -306,7 +306,7 @@ function stackMosaic<T>(
             grouped[0][1].map((d: any, i: number) => [(d as any)[innerChannel as any], i])
         );
 
-        grouped.forEach(([k, items], i) => {
+        grouped.forEach(([_k, items], i) => {
             const groupValue = sum(items, (d: any) => resolveProp((d as any)[value as any], d));
             const o1 = outerPos,
                 o2 = outerPos + groupValue;

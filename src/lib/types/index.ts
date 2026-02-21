@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { Writable } from 'svelte/store';
 import type { MarkerShape } from '../marks/helpers/Marker.svelte';
 import type { Channels, ScaledChannelName } from './channel.js';
-import type { DataRecord, DataRow, RawValue } from './data.js';
+import type { RawValue } from './data.js';
 import type { BaseMarkProps } from './mark.js';
 
 /** a generic record type used when the specific mark options type is not known */
