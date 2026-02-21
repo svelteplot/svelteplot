@@ -150,7 +150,7 @@ const oppositeColor: Record<'fill' | 'stroke', 'fill' | 'stroke'> = {
 
 export function resolveScaledStyleProps(
     datum: DataRecord,
-    channels: Partial<Record<ScaledChannelName, ChannelAccessor>>,
+    channels: Partial<Record<ScaledChannelName | MarkStyleProps, ChannelAccessor>>,
     useScale: Record<ScaledChannelName, boolean>,
     plot: PlotState,
     defaultColorProp: 'fill' | 'stroke' | null = null
@@ -190,7 +190,9 @@ export function resolveScaledStyleProps(
 
 export function resolveScaledStyles(
     datum: DataRecord,
-    channels: Partial<Record<ScaledChannelName, ChannelAccessor> & { style: string }>,
+    channels: Partial<
+        Record<ScaledChannelName | MarkStyleProps, ChannelAccessor> & { style: string }
+    >,
     useScale: Record<ScaledChannelName, boolean>,
     plot: PlotState,
     defaultColorProp: 'fill' | 'stroke' | null = null
@@ -209,7 +211,9 @@ function stylePropsToCSS(props: Record<string, string>): string {
 export function resolveStyles(
     plot: PlotState,
     datum: ScaledDataRecord,
-    channels: Partial<Record<ChannelName & MarkStyleProps, ChannelAccessor> & { style: string }>,
+    channels: Partial<
+        Record<ScaledChannelName | MarkStyleProps, ChannelAccessor> & { style: string }
+    >,
     defaultColorProp: 'fill' | 'stroke' | null = null,
     useScale: Record<ScaledChannelName, boolean>,
     recomputeChannels = false
@@ -230,7 +234,11 @@ export function resolveStyles(
                     key,
                     cssAttr,
                     (recomputeChannels
-                        ? resolveChannel(key, datum?.datum, channels)
+                        ? resolveChannel(
+                              key,
+                              datum?.datum,
+                              channels as Partial<Record<ChannelName, ChannelAccessor>>
+                          )
                         : datum?.[key]) as RawValue
                 ])
                 .filter(([key, , value]) => isValid(value) || key === 'fill' || key === 'stroke')

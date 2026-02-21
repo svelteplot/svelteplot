@@ -1,21 +1,20 @@
 import isDataRecord from '../helpers/isDataRecord.js';
 import { resolveChannel } from '../helpers/resolve.js';
-import type { DataRecord, DataRow, TransformArg } from '../types/index.js';
 import { shuffler } from 'd3-array';
 import { randomLcg } from 'd3-random';
 
 export const SORT_KEY = Symbol('sortKey');
 export const IS_SORTED = Symbol('isSorted');
+type TransformLike<T = Record<string | symbol, any>> = { data: T[] } & Record<string | symbol, any>;
 
 /**
  * sorts the data according to the sort channel option; supports channel
  * accessors, comparator functions, and `{channel, order}` objects
  */
-export function sort<T>(
-    { data, ...channels }: TransformArg<T>,
+export function sort<T, C extends TransformLike<T> = TransformLike<T>>(
+    { data, ...channels }: C,
     options: { reverse?: boolean } = {}
-) {
-    if (!Array.isArray(data)) return { data, ...channels };
+): C {
     if (channels.sort) {
         const { sort } = channels;
         if (
@@ -34,19 +33,21 @@ export function sort<T>(
             data: isComparator
                 ? data.toSorted(channels.sort as (a: T, b: T) => number)
                 : data
-                      .map((d) => ({
-                          ...d,
-                          [SORT_KEY]: resolveChannel('sort', d, { ...channels, sort }) as
-                              | number
-                              | Date
-                              | string
+                      .map((datum) => ({
+                          datum,
+                          [SORT_KEY]: resolveChannel(
+                              'sort',
+                              datum as any,
+                              { ...channels, sort } as any
+                          ) as number | Date | string
                       }))
-                      .map((d) => ({
-                          ...d,
+                      .map((entry) => ({
+                          ...entry,
                           [SORT_KEY]:
-                              typeof d[SORT_KEY] === 'number' && !Number.isFinite(d[SORT_KEY])
+                              typeof entry[SORT_KEY] === 'number' &&
+                              !Number.isFinite(entry[SORT_KEY])
                                   ? Number.POSITIVE_INFINITY
-                                  : d[SORT_KEY]
+                                  : entry[SORT_KEY]
                       }))
                       .toSorted(
                           (a, b) =>
@@ -62,7 +63,7 @@ export function sort<T>(
                                   ? -1
                                   : 1)
                       )
-                      .map(({ [SORT_KEY]: a, ...rest }) => rest),
+                      .map((entry) => entry.datum),
 
             ...channels,
             [IS_SORTED]: sort,
@@ -70,21 +71,21 @@ export function sort<T>(
             // ordering of ordinal domains, and also to avoid double sorting in case
             // this transform is used "outside" a mark
             sort: null
-        };
+        } as unknown as C;
     }
     return {
         data,
         ...channels
-    };
+    } as unknown as C;
 }
 
 /**
  * shuffles the data row order
  */
 export function shuffle(
-    { data, ...channels }: TransformArg<DataRow[]>,
+    { data, ...channels }: TransformLike,
     options: { seed?: number } = {}
-) {
+): TransformLike {
     const random = randomLcg(options.seed);
     const shuffle = shuffler(random);
     return {
@@ -100,7 +101,7 @@ export function shuffle(
 /**
  * reverses the data row order
  */
-export function reverse({ data, ...channels }: TransformArg<DataRow[]>) {
+export function reverse({ data, ...channels }: TransformLike): TransformLike {
     return {
         data: data.toReversed(),
         ...channels,

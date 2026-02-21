@@ -55,9 +55,13 @@ export type MarkerOptions = {
 };
 
 /** a value that is either a constant or a function that computes a per-datum value */
+type BivariantCallback<TArgs extends unknown[], TResult> = {
+    bivarianceHack(...args: TArgs): TResult;
+}['bivarianceHack'];
+
 export type ConstantAccessor<K, T = Record<string | symbol, RawValue>> =
     | K
-    | ((d: T, index: number) => K)
+    | BivariantCallback<[d: T, index: number], K>
     | null
     | undefined;
 
@@ -113,6 +117,7 @@ export type MapOptions = Partial<Record<ScaledChannelName, MapMethod>>;
 export type UsedScales = Record<ScaledChannelName, boolean>;
 
 export * from './channel';
+export * from './axes';
 export * from './colorScheme';
 export * from './data';
 export * from './facet';

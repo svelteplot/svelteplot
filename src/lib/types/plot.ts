@@ -64,7 +64,7 @@ import type BaseAxisY from 'svelteplot/marks/helpers/BaseAxisY.svelte';
 export type PlotState = {
     width: number;
     height: number;
-    options: PlotOptions;
+    options: ResolvedPlotOptions;
     facetWidth: number;
     facetHeight: number;
     plotWidth: number;
@@ -556,7 +556,7 @@ export type PlotOptions = {
      * options, and resolved scales as arguments.
      */
     children: Snippet<
-        [{ width: number; height: number; options: PlotOptions; scales: PlotScales }]
+        [{ width: number; height: number; options: ResolvedPlotOptions; scales: PlotScales }]
     >;
     /**
      * You can use the header snippet to render a custom title and subtitle for
@@ -572,12 +572,14 @@ export type PlotOptions = {
      * The underlay snippet is useful for adding a layer of custom HTML markup
      * behind the SVG body of your plot, e.g. for a watermark or background image.
      */
-    underlay: Snippet<[PlotOptions]>;
+    underlay: Snippet<[ResolvedPlotOptions]>;
     /**
      * The overlay snippet is useful for adding a layer of custom HTML markup
      * in front of the SVG body of your plot, e.g. for HTML tooltips.
      */
-    overlay: Snippet<[{ width: number; height: number; options: PlotOptions; scales: PlotScales }]>;
+    overlay: Snippet<
+        [{ width: number; height: number; options: ResolvedPlotOptions; scales: PlotScales }]
+    >;
     /**
      * snippet for rendering custom facet axes
      */
@@ -607,4 +609,46 @@ export type PlotOptions = {
      * if set to true, ordinal domains will be sorted alphabetically
      */
     sortOrdinalDomains: boolean;
+};
+
+type ResolvedFacetXOptions = Partial<XScaleOptions> & {
+    /**
+     * customize base axis props used for rendering facet axis
+     */
+    axisProps?: Partial<ComponentProps<typeof BaseAxisX>>;
+    /**
+     * customize base axis options used for rendering facet axis
+     */
+    axisOptions?: Partial<ComponentProps<typeof BaseAxisX>['options']>;
+};
+
+type ResolvedFacetYOptions = Partial<YScaleOptions> & {
+    /**
+     * customize base axis props used for rendering facet axis
+     */
+    axisProps?: Partial<ComponentProps<typeof BaseAxisY>>;
+    /**
+     * customize base axis options used for rendering facet axis
+     */
+    axisOptions?: Partial<ComponentProps<typeof BaseAxisY>['options']>;
+};
+
+/**
+ * Internal plot options shape after shorthand forms (`false`, arrays) are normalized.
+ */
+type ResolvedXScaleOptions = Partial<XScaleOptions> & {
+    tickSpacing: number;
+    ticks?: RawValue[];
+};
+
+type ResolvedYScaleOptions = Partial<YScaleOptions> & {
+    tickSpacing: number;
+    ticks?: RawValue[];
+};
+
+export type ResolvedPlotOptions = Omit<PlotOptions, 'x' | 'y' | 'fx' | 'fy'> & {
+    x: ResolvedXScaleOptions;
+    y: ResolvedYScaleOptions;
+    fx: ResolvedFacetXOptions;
+    fy: ResolvedFacetYOptions;
 };

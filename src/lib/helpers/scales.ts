@@ -17,7 +17,8 @@ import type {
     Mark,
     MarkType,
     PlotDefaults,
-    PlotOptions,
+    PlotScaleFunction,
+    ResolvedPlotOptions,
     PlotScales,
     PlotState,
     RawValue,
@@ -33,11 +34,23 @@ import { createProjection } from './projection.js';
 import { maybeInterval } from './autoTicks.js';
 import { IS_SORTED } from 'svelteplot/transforms/sort.js';
 
+function normalizeScaleFn(fn: any): PlotScaleFunction {
+    const out = fn as PlotScaleFunction;
+    out.range ||= () => [];
+    out.invert ||= (value: number) => value;
+    out.bandwidth ||= () => 0;
+    out.ticks ||= () => [];
+    out.quantiles ||= () => [];
+    out.thresholds ||= () => [];
+    out.domain ||= () => [];
+    return out;
+}
+
 /**
  * compute the plot scales
  */
 export function computeScales(
-    plotOptions: PlotOptions,
+    plotOptions: ResolvedPlotOptions,
     plotWidth: number,
     plotHeight: number,
     plotHasFilledDotMarks: boolean,
@@ -156,7 +169,7 @@ export function createScale(
     name: ScaleName,
     scaleOptions: Partial<ScaleOptions>,
     marks: Mark<GenericMarkOptions>[],
-    plotOptions: PlotOptions,
+    plotOptions: ResolvedPlotOptions,
     plotWidth: number,
     plotHeight: number,
     plotHasFilledDotMarks: boolean,
@@ -166,11 +179,12 @@ export function createScale(
         // no scale defined, return a dummy scale
         const fn: any = name === 'color' ? () => 'currentColor' : () => 0;
         fn.range = name === 'color' ? () => ['currentColor'] : () => [0];
+        const normalizedFn = normalizeScaleFn(fn);
         return {
             type: 'linear' as ScaleType,
             domain: [0],
             range: [0],
-            fn,
+            fn: normalizedFn,
             skip: new Map(),
             isDummy: true,
             manualActiveMarks: 0,
@@ -358,7 +372,7 @@ export function createScale(
     if (!scaleFn) {
         throw new Error(`No scale function defined for ${name}`);
     }
-    const fn = scaleFn({
+    const rawFn = scaleFn({
         name,
         type,
         domain,
@@ -369,6 +383,7 @@ export function createScale(
         plotHasFilledDotMarks,
         plotDefaults
     });
+    const fn = normalizeScaleFn(rawFn);
     const range = fn.range();
 
     return {
