@@ -2,6 +2,16 @@
     @component
     For creating a two-dimensional brush selection
 -->
+<script module lang="ts">
+    export type Brush = {
+        x1?: number | Date;
+        x2?: number | Date;
+        y1?: number | Date;
+        y2?: number | Date;
+        enabled: boolean;
+    };
+</script>
+
 <script lang="ts" generics="Datum extends DataRecord">
     interface BrushMarkProps extends Pick<
         BaseMarkProps<Datum>,
@@ -58,18 +68,9 @@
         ...getPlotDefaults().brush
     };
 
-    type Brush = {
-        x1?: number | Date;
-        x2?: number | Date;
-        y1?: number | Date;
-        y2?: number | Date;
-        enabled: boolean;
-    };
-
     type BrushEvent = MouseEvent & { brush: Brush };
 
     const {
-        data = [{} as Datum],
         stroke,
         strokeWidth,
         strokeDasharray,
@@ -85,7 +86,7 @@
         onbrushstart,
         onbrushend,
         onbrush
-    }: BrushMarkProps = $derived({
+    }: Omit<BrushMarkProps, 'brush'> = $derived({
         ...DEFAULTS,
         ...markProps
     });
@@ -282,10 +283,10 @@
             // draw new brush selection
             action = 'draw';
             if (typeof xScaleFn.invert === 'function' && limitDimension !== 'y') {
-                x1 = x2 = xScaleFn.invert(dragStart[0]);
+                x1 = x2 = xScaleFn.invert(dragStart[0]) as number | Date;
             }
             if (typeof yScaleFn.invert === 'function' && limitDimension !== 'x') {
-                y1 = y2 = yScaleFn.invert(dragStart[1]);
+                y1 = y2 = yScaleFn.invert(dragStart[1]) as number | Date;
             }
         }
         onbrushstart?.({ ...e, brush });
@@ -327,10 +328,10 @@
             const hasX = limitDimension !== 'y';
             const hasY = limitDimension !== 'x';
 
-            const dx1 = !hasX ? 0 : xScaleFn.invert(xScaleFn(x1) + px);
-            const dx2 = !hasX ? 0 : xScaleFn.invert(xScaleFn(x2) + px);
-            const dy1 = !hasY ? 0 : yScaleFn.invert(yScaleFn(y1) + py);
-            const dy2 = !hasY ? 0 : yScaleFn.invert(yScaleFn(y2) + py);
+            const dx1 = (!hasX ? 0 : xScaleFn.invert(xScaleFn(x1) + px)) as number | Date;
+            const dx2 = (!hasX ? 0 : xScaleFn.invert(xScaleFn(x2) + px)) as number | Date;
+            const dy1 = (!hasY ? 0 : yScaleFn.invert(yScaleFn(y1) + py)) as number | Date;
+            const dy2 = (!hasY ? 0 : yScaleFn.invert(yScaleFn(y2) + py)) as number | Date;
 
             if (action === 'move') {
                 // move edges
@@ -339,8 +340,8 @@
                 y1 = dy1;
                 y2 = dy2;
             } else if (action === 'draw') {
-                x2 = !hasX ? 0 : xScaleFn.invert(newPos[0]);
-                y2 = !hasY ? 0 : yScaleFn.invert(newPos[1]);
+                x2 = (!hasX ? 0 : xScaleFn.invert(newPos[0])) as number | Date;
+                y2 = (!hasY ? 0 : yScaleFn.invert(newPos[1])) as number | Date;
 
                 if (constrainToDomain) {
                     x2 = constrain(x2, xDomain as [typeof x2, typeof x2]);
@@ -383,7 +384,7 @@
         action: ActionType,
         swapDir1: string,
         swapDir2: string
-    ) {
+    ): [number | Date, number | Date, ActionType] {
         if (action && v2 < v1) {
             return [
                 v2,
@@ -426,5 +427,5 @@
     stroke="transparent"
     inset={-20}
     {cursor}
-    {onpointerdown}
-    {onpointermove} />
+    onpointerdown={onpointerdown as any}
+    onpointermove={onpointermove as any} />
