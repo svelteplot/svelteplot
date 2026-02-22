@@ -25,14 +25,15 @@
         data: ScaledDataRecord[];
     } = $props();
 
-    function drawSymbolPath(symbolType: string, size: number, context) {
+    function drawSymbolPath(symbolType: string, size: number, context: CanvasRenderingContext2D) {
         // maybeSymbol(symbolType).draw(context, size);
         return d3Symbol(maybeSymbol(symbolType), size).context(context)();
     }
 
     let _markOptions = $state(mark.options);
 
-    const renderDots: Attachment = (canvas: HTMLCanvasElement) => {
+    const renderDots: Attachment = (canvasEl: Element) => {
+        const canvas = canvasEl as HTMLCanvasElement;
         const context = canvas.getContext('2d');
 
         $effect(() => {
@@ -44,8 +45,8 @@
                     if (datum.valid) {
                         let { fill, stroke } = datum;
 
-                        fill = resolveColor(fill, canvas);
-                        stroke = resolveColor(stroke, canvas);
+                        fill = resolveColor(fill ?? 'none', canvas) as string;
+                        stroke = resolveColor(stroke ?? 'none', canvas) as string;
 
                         if (stroke && stroke !== 'none') {
                             const strokeWidth = resolveProp(
@@ -53,17 +54,18 @@
                                 datum.datum,
                                 1.6
                             );
-                            context.lineWidth = strokeWidth;
+                            context.lineWidth = strokeWidth ?? 1.6;
                         }
 
                         context.fillStyle = fill ? fill : 'none';
                         context.strokeStyle = stroke ? stroke : 'none';
-                        context.translate(datum.x, datum.y);
+                        context.translate(datum.x ?? 0, datum.y ?? 0);
 
-                        const size = datum.r * datum.r * Math.PI;
+                        const r = datum.r ?? 1;
+                        const size = r * r * Math.PI;
 
                         context.beginPath();
-                        drawSymbolPath(datum.symbol, size, context);
+                        drawSymbolPath(datum.symbol ?? 'circle', size, context);
                         context.closePath();
 
                         const { opacity = 1, fillOpacity = 1, strokeOpacity = 1 } = datum;
@@ -74,7 +76,7 @@
                         if (strokeOpacity != null)
                             context.globalAlpha = (opacity ?? 1) * strokeOpacity;
                         if (stroke && stroke !== 'none') context.stroke();
-                        context.translate(-datum.x, -datum.y);
+                        context.translate(-(datum.x ?? 0), -(datum.y ?? 0));
                     }
                 }
             }

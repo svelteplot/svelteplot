@@ -47,6 +47,7 @@
          * path string
          */
         d: string;
+        dInv?: string;
         style: string;
         startOffset: string;
         textStyle: string;
@@ -69,7 +70,7 @@
         d,
         dInv,
         style,
-        class: className = null,
+        class: className = '',
         textStyleClass = null,
         startOffset,
         textStyle,
@@ -86,14 +87,14 @@
 
     const points = $derived(text && d != null ? d.split(/[LMC]/).slice(1) : []);
     const hasPath = $derived(points.length > 0);
-    const firstPt = $derived(text && hasPath ? points.at(0).split(',').map(Number) : []);
-    const lastPt = $derived(text && hasPath ? points.at(-1).split(',').map(Number) : []);
-    const leftToRight = $derived(text && hasPath ? firstPt[0] < lastPt.at(-2) : true);
+    const firstPt = $derived(text && hasPath ? (points.at(0)?.split(',').map(Number) ?? []) : []);
+    const lastPt = $derived(text && hasPath ? (points.at(-1)?.split(',').map(Number) ?? []) : []);
+    const leftToRight = $derived(text && hasPath ? firstPt[0] < (lastPt.at(-2) ?? 0) : true);
 
     // use reversed path if the path is not left to right
     const textPath = $derived(!text || leftToRight ? d : dInv);
-    const strokeWidth_ = $derived(resolveProp(strokeWidth, datum, 1.4));
-    const markerScale_ = $derived(resolveProp(markerScale, datum, 1));
+    const strokeWidth_ = $derived(resolveProp(strokeWidth, datum, 1.4) ?? 1.4);
+    const markerScale_ = $derived(resolveProp(markerScale, datum, 1) ?? 1);
 </script>
 
 <g
@@ -105,14 +106,16 @@
         options: mark.options,
         datum: datum
     })}>
-    {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, marker] (key)}
+    {#each Object.entries( { start: markerStart, mid: markerMid, end: markerEnd, all: marker } ) as [key, markerValue] (key)}
         {@const markerId = `marker-${key === 'all' ? '' : `${key}-`}${id}`}
-        {#if isSnippet(marker)}
-            {@render marker(markerId, color)}
-        {:else if marker}
+        {#if isSnippet(markerValue)}
+            {@render (markerValue as any)(markerId, color)}
+        {:else if markerValue}
             <Marker
                 id={markerId}
-                shape={marker === true ? 'circle' : resolveProp(marker, datum)}
+                shape={markerValue === true
+                    ? 'circle'
+                    : ((resolveProp(markerValue, datum) ?? 'circle') as MarkerShape)}
                 {color}
                 markerScale={markerScale_} />
         {/if}
@@ -121,7 +124,7 @@
         <!-- add invisible path in bg for easier mouse access -->
         <path
             {d}
-            style="fill:none;stroke-width: {(strokeWidth || 1) +
+            style="fill:none;stroke-width: {(strokeWidth_ || 1) +
                 10}; stroke: transparent; stroke-opacity:0" />
     {/if}
     <path
