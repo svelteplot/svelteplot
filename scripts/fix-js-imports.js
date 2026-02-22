@@ -3,6 +3,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import MagicString from 'magic-string';
 
+/**
+ * Post-packaging import fixer for files in `dist/`.
+ *
+ * `svelte-package` can emit extensionless relative imports (for example `./foo`
+ * or `./bar` where `bar/index.js` exists). Some strict ESM environments, such
+ * as Svelte REPL, require fully specified import paths. This script rewrites
+ * those relative specifiers to `*.js` or `/index.js` after packaging.
+ */
 const SOURCE_FILE_EXTENSIONS = new Set(['.js', '.svelte', '.d.ts']);
 
 const regexImportFrom =
