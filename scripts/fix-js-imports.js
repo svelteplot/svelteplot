@@ -13,11 +13,13 @@ import MagicString from 'magic-string';
  */
 const SOURCE_FILE_EXTENSIONS = new Set(['.js', '.svelte', '.d.ts']);
 
+// The `d` flag enables match.indices, giving the exact position of each
+// capture group without relying on indexOf.
 const regexImportFrom =
-    /import\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|[^;{]*)\s+from\s+['"]([^'"]*)['"]/g;
+    /import\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s+[\w$]+|[^;{,]*)(?:\s*,\s*\{[^}]*\})?\s+from\s+['"]([^'"]*)['"]/gd;
 const regexExportFrom =
-    /export\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|\*)\s+from\s+['"]([^'"]*)['"]/g;
-const regexDynamicImport = /\bimport\s*\(\s*['"]([^'"]*)['"]\s*\)/g;
+    /export\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|\*)\s+from\s+['"]([^'"]*)['"]/gd;
+const regexDynamicImport = /\bimport\s*\(\s*['"]([^'"]*)['"]\s*\)/gd;
 
 const pathExists = async (targetPath) => {
     try {
@@ -52,15 +54,11 @@ const collectImportSpecifiers = (code) => {
         let match;
 
         while ((match = pattern.exec(code)) !== null) {
-            const specifier = match[1];
-            const relativeIndex = match[0].indexOf(specifier);
-            if (relativeIndex === -1) continue;
-
-            const start = match.index + relativeIndex;
+            const [start, end] = match.indices[1];
             matches.push({
                 start,
-                end: start + specifier.length,
-                specifier
+                end,
+                specifier: match[1]
             });
         }
     }
