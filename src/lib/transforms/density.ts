@@ -11,10 +11,10 @@
  */
 import { extent, quantileSorted, variance } from 'd3-array';
 import { isValid } from '../helpers';
-import { maybeInterval } from '../helpers/autoTicks.js';
-import { groupFacetsAndZ } from '../helpers/group.js';
-import isDataRecord from '../helpers/isDataRecord.js';
-import { resolveChannel } from '../helpers/resolve.js';
+import { maybeInterval } from '../helpers/autoTicks';
+import { groupFacetsAndZ } from '../helpers/group';
+import isDataRecord from '../helpers/isDataRecord';
+import { resolveChannel } from '../helpers/resolve';
 import type { DataRecord, TransformArg } from '../types';
 import { ORIGINAL_NAME_KEYS } from '../constants.js';
 

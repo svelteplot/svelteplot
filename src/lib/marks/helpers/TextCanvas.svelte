@@ -47,8 +47,8 @@
         UsedScales
     } from 'svelteplot/types/index.js';
     import { resolveProp, resolveScaledStyleProps } from '../../helpers/resolve.js';
-    import { CSS_VAR } from 'svelteplot/constants.js';
-    import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles.js';
+    import { CSS_VAR } from 'svelteplot/constants';
+    import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
     import CanvasLayer from './CanvasLayer.svelte';
     import { resolveColor } from './canvas.js';

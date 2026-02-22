@@ -11,10 +11,10 @@
         RawValue,
         ScaledDataRecord,
         ScaleType
-    } from '../../types';
+    } from '../../types/index.js';
     import type { AxisTickDatum, AxisYTick, BaseAxisYOptions } from '../../types/axes.js';
-    import { RAW_VALUE } from '../../transforms/recordize.js';
-    import { INDEX } from '../../constants.js';
+    import { RAW_VALUE } from '../../transforms/recordize';
+    import { INDEX } from '../../constants';
     type AxisDatum = AxisTickDatum<typeof RAW_VALUE, typeof INDEX>;
     type AxisTick = AxisYTick<AxisDatum>;
 

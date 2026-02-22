@@ -1,6 +1,6 @@
 import isDataRecord from '../helpers/isDataRecord.js';
 import type { TransformArgsRow, TransformArgsRecord, DataRecord, DataRow } from '../types/index.js';
-import { INDEX } from '../constants.js';
+import { INDEX } from '../constants';
 
 export const X = Symbol('x');
 export const Y = Symbol('y');

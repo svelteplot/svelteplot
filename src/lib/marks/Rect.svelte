@@ -41,6 +41,7 @@
     import RectPath from './helpers/RectPath.svelte';
     import RectCanvas from './helpers/RectCanvas.svelte';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RectMarkProps = $props();

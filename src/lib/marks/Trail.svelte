@@ -42,10 +42,11 @@
     import Mark from '../Mark.svelte';
     import { path as d3Path } from 'd3-path';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { getPlotDefaults, sort } from 'svelteplot';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { sort } from 'svelteplot/transforms';
     import trailPath, { type TrailSample } from './helpers/trail.js';
     import TrailCanvas from './helpers/TrailCanvas.svelte';
-    import { addEventHandlers } from './helpers/events.js';
+    import { addEventHandlers } from './helpers/events';
     import type { CurveFactory } from 'd3-shape';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

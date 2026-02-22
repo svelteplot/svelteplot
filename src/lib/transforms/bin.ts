@@ -13,7 +13,7 @@ import {
 import { reduceOutputs, type ReducerName } from '../helpers/reduce.js';
 import { groupFacetsAndZ } from '../helpers/group.js';
 import { isDate } from '../helpers/typeChecks.js';
-import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';
+import { ORIGINAL_NAME_KEYS } from 'svelteplot/constants';
 
 type NamedThresholdsGenerator = 'auto' | 'scott' | 'sturges' | 'freedman-diaconis';
 

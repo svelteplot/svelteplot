@@ -40,7 +40,7 @@
     } from '../types/index.js';
     import type { BaseMarkProps } from '../types/index.js';
     import RectPath from './helpers/RectPath.svelte';
-    import { resolveProp } from 'svelteplot/helpers/resolve.js';
+    import { resolveProp } from 'svelteplot/helpers/resolve';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

@@ -10,7 +10,8 @@
     import { range as d3Range, extent } from 'd3-array';
     import { maybeSymbol } from '../helpers/symbols.js';
 
-    import { getPlotDefaults, usePlot } from 'svelteplot';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let { class: className = null }: ColorLegendMarkProps = $props();
 

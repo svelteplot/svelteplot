@@ -12,7 +12,7 @@ import type {
 import { count, rank } from 'd3-array';
 import { groupFacetsAndZ } from '../helpers/group.js';
 import { resolveChannel } from '../helpers/resolve.js';
-import { sort } from './sort.js';
+import { sort } from './sort';
 
 /**
  * Maps one or more positional channels using specified mapping methods.

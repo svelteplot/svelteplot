@@ -19,7 +19,7 @@ import {
     stackOffsetDiverging
 } from 'd3-shape';
 import { sum, groups as d3Groups, min, range } from 'd3-array';
-import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
+import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import { filter } from './filter.js';
 import { sort } from './sort.js';
 import { INDEX, ORIGINAL_NAME_KEYS } from 'svelteplot/constants.js';

@@ -42,7 +42,7 @@
     import { groupX, groupY, BarY, TickY, RuleX, BarX, TickX, RuleY, Dot } from '../../index.js';
     import { resolveChannel } from '../../helpers/resolve.js';
     import type { BaseMarkProps, ChannelAccessor, DataRecord, RawValue } from 'svelteplot/types';
-    import { IS_SORTED } from 'svelteplot/transforms/sort.js';
+    import { IS_SORTED } from 'svelteplot/transforms/sort';
 
     let markProps: BoxMarkProps = $props();
 

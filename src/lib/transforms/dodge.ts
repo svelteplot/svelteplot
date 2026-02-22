@@ -1,5 +1,5 @@
 import IntervalTree from 'interval-tree-1d';
-import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
+import { groupFacetsAndZ } from 'svelteplot/helpers/group';
 import type { ScaledDataRecord, TransformArg, PlotState } from 'svelteplot/types';
 
 type BaseDodgeOptions = {
