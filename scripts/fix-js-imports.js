@@ -16,10 +16,12 @@ const SOURCE_FILE_EXTENSIONS = new Set(['.js', '.svelte', '.d.ts']);
 // The `d` flag enables match.indices, giving the exact position of each
 // capture group without relying on indexOf.
 const regexImportFrom =
-    /import\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s+[\w$]+|[^;{,]*)(?:\s*,\s*\{[^}]*\})?\s+from\s+['"]([^'"]*)['"]/gd;
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+    /import\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s+[\w$]+|[^;{,]*)(?:\s*,\s*\{[^}]*\})?\s+from\s+['"]([^'"]*)['"]/dg;
 const regexExportFrom =
-    /export\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|\*)\s+from\s+['"]([^'"]*)['"]/gd;
-const regexDynamicImport = /\bimport\s*\(\s*['"]([^'"]*)['"]\s*\)/gd;
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+    /export\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|\*)\s+from\s+['"]([^'"]*)['"]/dg;
+const regexDynamicImport = /\bimport\s*\(\s*['"]([^'"]*)['"]\s*\)/dg;
 
 const pathExists = async (targetPath) => {
     try {
@@ -164,6 +166,7 @@ async function main() {
 
     const rootDir = process.argv[2] || 'dist';
     const { updatedFiles } = await fullySpecifyImportsInDirectory(rootDir);
+    // eslint-disable-next-line no-console
     console.log(`fully-specified-imports: updated ${updatedFiles} file(s) in ${rootDir}`);
 }
 
