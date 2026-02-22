@@ -27,6 +27,7 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
+        DataRow,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor,
@@ -51,19 +52,18 @@
     });
 
     const plot = usePlot();
-    const args = $derived(recordizeX({ data, ...options }, { withIndex: false }));
+    const args = $derived(recordizeX({ data: data as DataRow[], ...options }, { withIndex: false }));
 </script>
 
 <Mark
     type="ruleX"
     channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']}
-    {...markProps}
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
         {#if canvas}
             <RuleCanvas
                 data={scaledData}
-                options={args}
+                options={args as any}
                 {usedScales}
                 orientation="vertical"
                 marginTop={plot.options.marginTop}
@@ -73,13 +73,13 @@
                 class="rule-x {className || ''}"
                 length={className ? 2 : scaledData.length}>
                 {#each scaledData as d, i (i)}
-                    {@const inset = resolveProp(args.inset, d.datum, 0)}
-                    {@const insetTop = resolveProp(args.insetTop, d.datum, 0)}
-                    {@const insetBottom = resolveProp(args.insetBottom, d.datum, 0)}
+                    {@const inset = resolveProp(args.inset, d.datum, 0) as number}
+                    {@const insetTop = resolveProp(args.insetTop, d.datum, 0) as number}
+                    {@const insetBottom = resolveProp(args.insetBottom, d.datum, 0) as number}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         d,
-                        args,
+                        args as any,
                         'stroke',
                         usedScales
                     )}

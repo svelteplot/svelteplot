@@ -35,6 +35,7 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
+        DataRecord,
         LinkableMarkProps
     } from '../types/index.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
@@ -50,7 +51,7 @@
 
     const {
         data = [{} as Datum],
-        class: className = null,
+        class: className = '',
         stack,
         canvas = false,
         ...options
@@ -81,20 +82,20 @@
             {@const rectCanvasData = scaledData
                 .filter((d) => d.valid)
                 .map((d) => {
-                    const minx = Math.min(d.x1, d.x2);
-                    const maxx = Math.max(d.x1, d.x2);
+                    const minx = Math.min(d.x1 as number, d.x2 as number);
+                    const maxx = Math.max(d.x1 as number, d.x2 as number);
 
                     return {
                         ...d,
                         x1: minx,
                         x2: maxx,
-                        y1: d.y - bw * 0.5,
-                        y2: d.y + bw * 0.5
+                        y1: (d.y as number) - bw * 0.5,
+                        y2: (d.y as number) + bw * 0.5
                     };
                 })}
             <GroupMultiple class={barGroupClass} length={scaledData.length}>
                 <RectCanvas
-                    {options}
+                    options={options as BaseMarkProps<DataRecord> & BaseRectMarkProps<DataRecord>}
                     data={rectCanvasData}
                     {usedScales}
                     useInsetAsFallbackHorizontally={false} />
@@ -102,17 +103,17 @@
         {:else}
             <GroupMultiple class="bar-x" length={scaledData.length}>
                 {#each scaledData as d, i (i)}
-                    {@const minx = Math.min(d.x1, d.x2)}
-                    {@const maxx = Math.max(d.x1, d.x2)}
+                    {@const minx = Math.min(d.x1 as number, d.x2 as number)}
+                    {@const maxx = Math.max(d.x1 as number, d.x2 as number)}
                     {#if d.valid}
                         <RectPath
                             {usedScales}
                             class={className}
-                            {options}
+                            options={options as BaseRectMarkProps<DataRecord> & BaseMarkProps<DataRecord>}
                             datum={d}
                             x={minx}
                             useInsetAsFallbackHorizontally={false}
-                            y={d.y - bw * 0.5}
+                            y={(d.y as number) - bw * 0.5}
                             width={maxx - minx}
                             height={bw} />
                     {/if}

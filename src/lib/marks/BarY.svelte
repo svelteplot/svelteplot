@@ -34,6 +34,7 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
+        DataRecord,
         DataRow,
         LinkableMarkProps
     } from '../types/index.js';
@@ -50,8 +51,8 @@
     let markProps: BarYMarkProps = $props();
 
     const {
-        data = [{}],
-        class: className = null,
+        data = [{} as Datum],
+        class: className = '',
         stack,
         canvas = false,
         ...options
@@ -80,20 +81,20 @@
             {@const rectCanvasData = scaledData
                 .filter((d) => d.valid)
                 .map((d) => {
-                    const miny = Math.min(d.y1, d.y2);
-                    const maxy = Math.max(d.y1, d.y2);
+                    const miny = Math.min(d.y1 as number, d.y2 as number);
+                    const maxy = Math.max(d.y1 as number, d.y2 as number);
 
                     return {
                         ...d,
-                        x1: d.x - bw * 0.5,
-                        x2: d.x + bw * 0.5,
+                        x1: (d.x as number) - bw * 0.5,
+                        x2: (d.x as number) + bw * 0.5,
                         y1: miny,
                         y2: maxy
                     };
                 })}
             <GroupMultiple class={barGroupClass} length={scaledData.length}>
                 <RectCanvas
-                    {options}
+                    options={options as BaseMarkProps<DataRecord> & BaseRectMarkProps<DataRecord>}
                     data={rectCanvasData}
                     {usedScales}
                     useInsetAsFallbackVertically={false} />
@@ -101,11 +102,11 @@
         {:else}
             <GroupMultiple class="bar-y" length={scaledData.length}>
                 {#each scaledData as d, i (i)}
-                    {@const miny = Math.min(d.y1, d.y2)}
-                    {@const maxy = Math.max(d.y1, d.y2)}
+                    {@const miny = Math.min(d.y1 as number, d.y2 as number)}
+                    {@const maxy = Math.max(d.y1 as number, d.y2 as number)}
                     {#if d.valid}
                         <RectPath
-                            x={d.x - bw * 0.5}
+                            x={(d.x as number) - bw * 0.5}
                             y={miny}
                             options={args}
                             class={className}
