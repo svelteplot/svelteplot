@@ -62,6 +62,7 @@ examples:
     - trail/countries
     - trail/napoleon
     - trail/tdf
+    - vector/shift-map
     - vector/spike-map
     - vector/wind
     - waffle/custom-symbol
