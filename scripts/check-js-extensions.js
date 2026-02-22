@@ -107,10 +107,18 @@ const isTypeOnlyStatement = (statement) => {
     );
 };
 
+const buildExpectedImportPath = (importPath, targetType) => {
+    if (targetType === 'directory') {
+        return `${importPath.replace(/\/$/, '')}/index.js`;
+    }
+
+    return `${importPath}.js`;
+};
+
 // Paths that should have .js extensions (relative paths and alias paths)
-const shouldHaveJsExtension = async (importPath, importerFilePath) => {
+const checkImportPath = async (importPath, importerFilePath) => {
     // Skip Svelte imports
-    if (importPath.endsWith('.svelte')) return false;
+    if (importPath.endsWith('.svelte')) return { shouldFlag: false };
 
     // Skip npm package imports (those that don't start with . or /)
     if (
@@ -119,25 +127,28 @@ const shouldHaveJsExtension = async (importPath, importerFilePath) => {
         !importPath.startsWith('$lib') &&
         !importPath.startsWith('svelteplot')
     )
-        return false;
+        return { shouldFlag: false };
 
     // Skip imports with extensions already
-    if (path.extname(importPath)) return false;
+    if (path.extname(importPath)) return { shouldFlag: false };
 
-    if (importPath.includes('src/theme')) return false;
+    if (importPath.includes('src/theme')) return { shouldFlag: false };
 
     const basePath = resolveImportBasePath(importPath, importerFilePath);
-    if (!basePath) return false;
+    if (!basePath) return { shouldFlag: false };
 
     const targetType = await resolveImportTargetType(basePath);
 
-    // Extensionless imports are valid for directory imports that resolve to index files.
-    if (targetType === 'directory') return false;
+    // For Svelte REPL compatibility, both file and directory imports
+    // should be explicit with .js (directories as /index.js).
+    if (targetType === 'directory' || targetType === 'file') {
+        return {
+            shouldFlag: true,
+            expectedPath: buildExpectedImportPath(importPath, targetType)
+        };
+    }
 
-    // Only enforce .js when the import resolves to a file.
-    if (targetType === 'file') return true;
-
-    return false;
+    return { shouldFlag: false };
 };
 
 async function* walkDirectory(dir) {
@@ -175,10 +186,12 @@ async function checkFile(filePath) {
     while ((match = regexImportFrom.exec(content)) !== null) {
         const importPath = match[1];
         if (isTypeOnlyStatement(match[0])) continue;
-        if (await shouldHaveJsExtension(importPath, filePath)) {
+        const result = await checkImportPath(importPath, filePath);
+        if (result.shouldFlag) {
             issues.push({
                 line: content.substring(0, match.index).split('\n').length,
                 importPath,
+                expectedPath: result.expectedPath,
                 statement: match[0]
             });
         }
@@ -189,10 +202,12 @@ async function checkFile(filePath) {
     while ((match = regexExportFrom.exec(content)) !== null) {
         const importPath = match[1];
         if (isTypeOnlyStatement(match[0])) continue;
-        if (await shouldHaveJsExtension(importPath, filePath)) {
+        const result = await checkImportPath(importPath, filePath);
+        if (result.shouldFlag) {
             issues.push({
                 line: content.substring(0, match.index).split('\n').length,
                 importPath,
+                expectedPath: result.expectedPath,
                 statement: match[0]
             });
         }
@@ -217,8 +232,8 @@ async function main() {
 
             for (const issue of issues) {
                 totalIssues++;
-                console.log(`  ${issue.line}:  ${issue.statement}`);
-                // console.log(`    ${issue.statement}`);
+                console.log(`  Line ${issue.line}: ${issue.importPath} -> ${issue.expectedPath}`);
+                console.log(`    ${issue.statement}`);
             }
             console.log('');
         }
