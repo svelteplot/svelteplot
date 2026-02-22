@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Constrained brush';
     export const data = { penguins: '/data/penguins.csv' };
-    export const repl =
-        'https://svelte.dev/playground/769ab8ce271f451a88dc1726e5bc3661?version=latest';
 </script>
 
 <script>

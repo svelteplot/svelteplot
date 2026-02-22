@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Spike map';
     // export const transforms = ['geoCentroid'];
-    export const repl =
-        'https://svelte.dev/playground/186c3954751e4d04b42f9901f4b00305?version=latest';
     export const data = {
         us: '/data/us-counties-10m.json',
         election: '/data/election.csv'

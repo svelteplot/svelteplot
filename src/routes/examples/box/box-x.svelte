@@ -5,8 +5,6 @@
     export const data = {
         olympians: '/data/olympians.csv'
     };
-    export const repl =
-        'https://svelte.dev/playground/c1fd5c4be22a45a0a1910f68b8bd42e4?version=latest';
 </script>
 
 <script lang="ts">

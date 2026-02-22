@@ -2,8 +2,6 @@
     export const title = 'Datawrapper-style ticks';
     export const sortKey = 99;
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/64f4cbaf8ad14002898da2ed3a0fffb3?version=latest';
 </script>
 
 <script lang="ts">

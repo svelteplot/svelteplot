@@ -4,8 +4,6 @@
         'A waffle chart using a custom SVG symbol for each unit, passed via symbol snippet.';
     export let sortKey = 20;
     export let transforms = ['group'];
-    export let repl =
-        'https://svelte.dev/playground/be263ac346794e71a80e6ce86b592eef?version=5';
     export const data = { penguins: '/data/penguins.csv' };
 </script>
 

@@ -2,8 +2,6 @@
     export const title = 'Tour de France Trail';
     export const data = { tdf: '/data/tdf.csv' };
     export const sortKey = 11;
-    export const repl =
-        'https://svelte.dev/playground/18ab1c4389ca4728801e3c08bbaa9910';
     export const description =
         'This example shows a Trail mark representing the elevation changes throughout the Tour de France route. Data from Github user <a href="https://github.com/jdai20/Project_4">jdai20</a>';
 </script>

@@ -1,8 +1,6 @@
 <script module lang="ts">
     export const title = 'Mosaic/Marimekko chart';
     export const sortKey = 98;
-    export const repl =
-        'https://svelte.dev/playground/8426ef943f63404d8efd40831667ff9e?version=latest';
     export const transforms = ['stack'];
     export const data = { sales: '/data/sales.csv' };
 </script>

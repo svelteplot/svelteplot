@@ -3,7 +3,7 @@
     import { page } from '$app/state';
 
     import type { Component } from 'svelte';
-    import ExamplesGrid from '$shared/ui/ExamplesGrid.svelte';
+    import ExamplesGrid from '$shared/docs/ExamplesGrid.svelte';
 
     type ExampleModule = {
         default: Component<any>;

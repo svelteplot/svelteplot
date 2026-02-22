@@ -4,8 +4,6 @@
         'A line plot with one line shifted by 2 months along the x-axis.';
     export const transforms = ['shift'];
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/0bc63640234d49e4b381ad8e739d8979?version=latest';
 </script>
 
 <script lang="ts">

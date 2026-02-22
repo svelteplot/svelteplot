@@ -3,8 +3,6 @@
     export const description =
         'Bar chart with dynamic border radius based on data values.';
     export const sortKey = 400;
-    export const repl =
-        'https://svelte.dev/playground/ce307022f9a842d086d4cd3e5f0bfb2b?version=latest';
 </script>
 
 <script lang="ts">

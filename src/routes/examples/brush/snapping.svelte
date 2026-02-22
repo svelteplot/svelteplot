@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Brush snapping';
     export const fullCode = true;
-    export const repl =
-        'https://svelte.dev/playground/864395bbab574eeea1e5a87315fb2ec8?version=latest';
 </script>
 
 <script lang="ts">

@@ -1,8 +1,6 @@
 <script module>
     export let title = 'Bubble matrix';
     export const data = { penguins: '/data/penguins.csv' };
-    export const repl =
-        'https://svelte.dev/playground/98d56d6f0f074e689e5aba80c2e10019?version=latest';
 </script>
 
 <script lang="ts">
