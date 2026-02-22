@@ -6,8 +6,6 @@
     export const transforms = ['window', 'bin', 'select'];
     export const fullCode = true;
     export const data = { stocks: '/data/stocks.csv' };
-    export const repl =
-        'https://svelte.dev/playground/0f476e86418f4b1a84f25a6b529b04ec?version=latest';
 </script>
 
 <script lang="ts">

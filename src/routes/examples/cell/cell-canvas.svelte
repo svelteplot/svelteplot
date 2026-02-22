@@ -2,8 +2,6 @@
     export const title = 'Canvas cell';
     export const description =
         'A responsive cell plot that flips coordinates based on the width of the container, displaying Seattle temperatures for 2015. Based on an example from <a href="https://observablehq.com/@observablehq/plot-seattle-temperature-heatmap">Observable Plot</a>. Rendered using canvas.';
-    export const repl =
-        'https://svelte.dev/playground/940b2c2ffa2d4528adb2576636f3cd59';
     export const fullCode = true;
     export const data = { seattle: '/data/seattle.csv' };
 </script>

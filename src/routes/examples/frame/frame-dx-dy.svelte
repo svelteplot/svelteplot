@@ -1,7 +1,5 @@
 <script module>
     export const title = 'Frame with dx and dy';
-    export const repl =
-        'https://svelte.dev/playground/38c7fe8c22b64892b886841f3892464a?version=latest';
 </script>
 
 <script>

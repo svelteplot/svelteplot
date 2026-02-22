@@ -3,8 +3,6 @@
     export const description =
         'You can use an area mark as clipping path for grid lines';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/f66c595241304e668c0edafb6b1dea85?version=latest';
 </script>
 
 <script>

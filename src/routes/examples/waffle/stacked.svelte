@@ -2,8 +2,6 @@
     export let title = 'Stacked waffle';
     export let sortKey = 5;
     export let transforms = ['group'];
-    export let repl =
-        'https://svelte.dev/playground/4ade8154c5fa4de5ba9981a616680ade?version=5';
     export const data = { penguins: '/data/penguins.csv' };
 </script>
 

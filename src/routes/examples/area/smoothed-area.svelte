@@ -4,8 +4,6 @@
         'An area chart showing daily high and low temperatures with smoothed rolling window lines. Based on an example from <a href="https://observablehq.com/@observablehq/plot-window-line-area">Observable Plot</a>.';
     export const transforms = ['window'];
     export const data = { sftemp: '/data/sftemp.csv' };
-    export const repl =
-        'https://svelte.dev/playground/1ebfd73017f74970866d24f1f05979ec?version=latest';
 </script>
 
 <script lang="ts">

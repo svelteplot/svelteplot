@@ -3,8 +3,6 @@
     export const fullCode = true;
     export const description =
         'A bar chart that mimics a waterfall chart by using two y-values for each bar.';
-    export const repl =
-        'https://svelte.dev/playground/d976166117a24704860a92b131f94a13?version=latest';
 </script>
 
 <script lang="ts">

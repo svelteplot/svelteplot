@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Faceted bars';
     export const fullCode = true;
-    export const repl =
-        'https://svelte.dev/playground/722a182f46ef4f968be318d6f0b97e80?version=latest';
 </script>
 
 <script lang="ts">

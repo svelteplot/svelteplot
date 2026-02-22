@@ -1,7 +1,5 @@
 <script module lang="ts">
     export const title = 'Simple rectangles';
-    export const repl =
-        'https://svelte.dev/playground/7a6b0ae12c624ffeb52448adac644b5b?version=5.33.18';
 </script>
 
 <script lang="ts">

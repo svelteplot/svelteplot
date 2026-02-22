@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Line grouping';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/560acc13b1844298a2fce48b9f71ea2e?version=latest';
 </script>
 
 <script lang="ts">

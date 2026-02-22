@@ -1,7 +1,5 @@
 <script module lang="ts">
     export const title = 'Histogram with a topline';
-    export const repl =
-        'https://svelte.dev/playground/42919d4eb5d84d1ca3a0d6c7028eea0d?version=latest';
     export const transforms = ['bin'];
     export const data = {
         olympians: '/data/olympians.csv'
@@ -9,13 +7,13 @@
 </script>
 
 <script lang="ts">
-    let { olympians } = $props();
     import {
         Plot,
         RectY,
         binX,
         CustomMark
     } from 'svelteplot';
+    let { olympians } = $props();
 </script>
 
 <Plot y={{ zero: true }}>

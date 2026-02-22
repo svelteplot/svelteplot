@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Tick spacing';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/365530e1dca146ccb73b3a8d11f1cd03?version=latest';
 </script>
 
 <script>

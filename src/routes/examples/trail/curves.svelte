@@ -1,7 +1,6 @@
 <script module>
     export const title = 'Trail curves';
     export const fullCode = true;
-    export const repl = `https://svelte.dev/playground/b93da293c02441a494baecd02ff7be0b`;
     export const description =
         'This example shows different curve types and line cap styles for Trail marks.';
 </script>

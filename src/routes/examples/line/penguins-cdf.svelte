@@ -4,8 +4,6 @@
     export const description =
         '<a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">Cumulative distribution</a> of body mass in the Palmer penguins dataset, one curve per species.';
     export const transforms = ['density'];
-    export const repl =
-        'https://svelte.dev/playground/9beba1b1cecf4585bfa65adb760db743?version=latest';
 </script>
 
 <script lang="ts">

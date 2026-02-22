@@ -1,8 +1,6 @@
 <script module>
     export let title = 'Simple Bars';
     export let sortKey = 1;
-    export const repl =
-        'https://svelte.dev/playground/53c515c1c4ae4302852a8b76078a5a2b?version=latest';
 </script>
 
 <script>
