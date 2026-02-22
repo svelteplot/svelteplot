@@ -109,7 +109,8 @@
                         <RectPath
                             {usedScales}
                             class={className}
-                            options={options as BaseRectMarkProps<DataRecord> & BaseMarkProps<DataRecord>}
+                            options={options as BaseRectMarkProps<DataRecord> &
+                                BaseMarkProps<DataRecord>}
                             datum={d}
                             x={minx}
                             useInsetAsFallbackHorizontally={false}

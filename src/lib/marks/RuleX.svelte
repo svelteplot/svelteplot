@@ -52,13 +52,12 @@
     });
 
     const plot = usePlot();
-    const args = $derived(recordizeX({ data: data as DataRow[], ...options }, { withIndex: false }));
+    const args = $derived(
+        recordizeX({ data: data as DataRow[], ...options }, { withIndex: false })
+    );
 </script>
 
-<Mark
-    type="ruleX"
-    channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']}
-    {...args}>
+<Mark type="ruleX" channels={['x', 'y1', 'y2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
         {#if canvas}
             <RuleCanvas
