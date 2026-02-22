@@ -49,6 +49,14 @@ function firstPositive(a: number, b: number) {
 
 const UI_REGEX = /import \{\s*([a-z]+)(?:,\s*([a-z]+))*\s*\} from '\$shared\/ui'/i;
 
+const CSS_VARS = {
+    'var(--svelteplot-bg)': 'var(--bg-1)',
+    'var(--svp-red)': '#f43f5e',
+    'var(--svp-blue)': '#0092ff',
+    'var(--svp-green)': '#10b981',
+    'var(--svp-violet)': '#8b5cf6'
+};
+
 export function createREPLState(
     title: string,
     url: string,
@@ -69,7 +77,7 @@ export function createREPLState(
                       .join('\n   ')}\n    import `
                 : 'import '
         )
-        .split(';')
+        .split(';\n')
         // remove data type imports for now
         .filter((line) => !line.trim().startsWith('import type'))
         // remove props since we're importing data
@@ -90,7 +98,7 @@ export function createREPLState(
             }
             return line;
         })
-        .join(';')
+        .join(';\n')
         .split('\n')
         .map((line) => {
             // convert from 4-spaces to 2-spaces
@@ -99,6 +107,13 @@ export function createREPLState(
                 const indent = leadingSpaces / 4;
                 return `${Array.from({ length: indent }, () => '  ').join('')}${line.trim()}`;
             }
+            return line;
+        })
+        // replace css vars
+        .map((line) => {
+            Object.entries(CSS_VARS).map(([varOld, varNew]) => {
+                line = line.replace(varOld, varNew);
+            });
             return line;
         })
         .join('\n');
