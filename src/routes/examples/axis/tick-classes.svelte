@@ -1,7 +1,5 @@
 <script module>
     export const title = 'Tick classes';
-    export const repl =
-        'https://svelte.dev/playground/d949e2daf18a4e1ba98ed1a2e52d9198?version=latest';
 </script>
 
 <script lang="ts">

@@ -21,7 +21,6 @@
         description?: string;
         sortKey?: number;
         fullCode?: boolean;
-        repl?: string;
     };
 
     type NavLink = {

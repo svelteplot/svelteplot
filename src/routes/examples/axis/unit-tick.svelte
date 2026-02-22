@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Unit label tick format';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/df7b2c9ec47844e686a12926b10b0ac2?version=latest';
 </script>
 
 <script lang="ts">

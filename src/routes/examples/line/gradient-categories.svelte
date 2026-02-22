@@ -1,7 +1,5 @@
 <script module>
     export const title = 'Gradient from categories';
-    export const repl =
-        'https://svelte.dev/playground/96fc02c6cbd04b72bb5bd55ab7eb5afa?version=5.38.5';
 </script>
 
 <script>

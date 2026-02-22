@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Brush filter';
     export const data = { penguins: '/data/penguins.csv' };
-    export const repl =
-        'https://svelte.dev/playground/28e886728790471eb8e6124d3f28351b?version=latest';
 </script>
 
 <script>

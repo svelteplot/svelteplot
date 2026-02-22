@@ -4,8 +4,6 @@
         'BoxY plot of highway miles per gallon across vehicle classes, sorted by maximum value from largest to smallest.';
     export const data = { mpg: '/data/mpg.csv' };
     export const sortKey = 25;
-    export const repl =
-        'https://svelte.dev/playground/5bb49d9abacd404ab200e0e790536499';
 </script>
 
 <script lang="ts">

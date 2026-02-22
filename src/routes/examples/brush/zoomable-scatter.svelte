@@ -2,8 +2,6 @@
     export const title = 'Zoomable scatter plot';
     export const fullCode = true;
     export const data = { penguins: '/data/penguins.csv' };
-    export const repl =
-        'https://svelte.dev/playground/a65741288e554d8f9130d48b99a08a49?version=latest';
 </script>
 
 <script lang="ts">

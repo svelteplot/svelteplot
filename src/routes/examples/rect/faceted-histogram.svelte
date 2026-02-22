@@ -4,8 +4,6 @@
         'A faceted histogram showing the distribution of Olympic athletes’ weights, colored by sex. Based on an example from <a href="https://observablehq.com/@observablehq/plot-vertical-histogram">Observable Plot</a>.';
     export const transforms = ['bin'];
     export const sortKey = 41;
-    export const repl =
-        'https://svelte.dev/playground/7b2a18a5ae1c47ebb634bded17cac335?version=5';
     export const data = {
         olympians: '/data/olympians.csv'
     };

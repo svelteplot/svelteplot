@@ -1,8 +1,6 @@
 <script module>
     export const title = 'Gradient line';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/7989004c109a436895de1668c0fee708?version=latest';
 </script>
 
 <script lang="ts">

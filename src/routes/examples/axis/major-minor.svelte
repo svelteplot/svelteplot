@@ -3,8 +3,6 @@
     export const description =
         'You can add minor ticks lines by adding a second axis and disabling the text labels.';
     export const data = { aapl: '/data/aapl.csv' };
-    export const repl =
-        'https://svelte.dev/playground/2e803e9ce10f42a9a3a854c958329a70?version=latest';
 </script>
 
 <script>

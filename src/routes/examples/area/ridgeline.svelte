@@ -7,8 +7,6 @@
         'Ridgeline-style density areas of the daily mean temperatures in Lincoln, NE, with one facet per month. Adapted from <a href="https://austinwehrwein.com/data-visualization/it-brings-me-ggjoy/">this example by Austin Wehrwein</a>.';
     export const transforms = ['density'];
     export const sortKey = 112;
-    export const repl =
-        'https://svelte.dev/playground/6a9f4ce281064c2c95ca56ce0e214a83?version=latest';
 </script>
 
 <script lang="ts">

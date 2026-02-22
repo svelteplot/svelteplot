@@ -6,8 +6,6 @@
     export const description =
         'Density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type.';
     export const transforms = ['density'];
-    export const repl =
-        'https://svelte.dev/playground/24c1d53d571b468bae67922bd8e721d7?version=latest';
 </script>
 
 <script lang="ts">

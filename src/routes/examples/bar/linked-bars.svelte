@@ -2,8 +2,6 @@
     export const title = 'Linked Bars';
     export const description =
         'A bar chart with linked bars, showing the relationship between two datasets.';
-    export const repl =
-        'https://svelte.dev/playground/dd45ca2754ad41499139706342e5f4d4?version=latest';
 </script>
 
 <script>

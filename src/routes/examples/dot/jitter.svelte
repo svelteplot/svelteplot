@@ -4,8 +4,6 @@
     export const transforms = ['jitter'];
     export const data = { cars: '/data/cars.csv' };
     export const description = `This example demonstrates how to apply <a href="/transforms/jitter">jittering</a> along multiple axes.`;
-    export const repl =
-        'https://svelte.dev/playground/fe3b55628a924c7a85e2d6a821ee76dd?version=latest';
 </script>
 
 <script lang="ts">

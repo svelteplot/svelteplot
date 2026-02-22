@@ -7,8 +7,6 @@
         'Density plot of the weights of Olympians, faceted by sex';
     export const transforms = ['density'];
     export const sortKey = 110;
-    export const repl =
-        'https://svelte.dev/playground/742e758c08fa4bb5af260e9fc2201607?version=latest';
 </script>
 
 <script lang="ts">
