@@ -2,7 +2,7 @@ import { csvFormat } from 'd3-dsv';
 
 const uiComponents = Object.fromEntries(
     Object.entries(
-        import.meta.glob('../../../../shared/ui/*.svelte', {
+        import.meta.glob(['../../../../shared/ui/*.svelte', '../../../../shared/ui/*.svelte.ts'], {
             eager: true,
             query: '?raw',
             import: 'default'
@@ -49,6 +49,14 @@ function firstPositive(a: number, b: number) {
 
 const UI_REGEX = /import \{\s*([a-z]+)(?:,\s*([a-z]+))*\s*\} from '\$shared\/ui'/i;
 
+const CSS_VARS = {
+    'var(--svelteplot-bg)': 'var(--bg-1)',
+    'var(--svp-red)': '#f43f5e',
+    'var(--svp-blue)': '#0092ff',
+    'var(--svp-green)': '#10b981',
+    'var(--svp-violet)': '#8b5cf6'
+};
+
 export function createREPLState(
     title: string,
     url: string,
@@ -57,7 +65,6 @@ export function createREPLState(
     datasets: Record<string, object[]>
 ): REPLState {
     const needSharedUIs: string[] = [];
-
     const appCode = source
         .substring(firstPositive(source.indexOf('<script lang="ts">'), source.indexOf('<script>')))
         // add import statements for each dataset
@@ -69,7 +76,7 @@ export function createREPLState(
                       .join('\n   ')}\n    import `
                 : 'import '
         )
-        .split(';')
+        .split(';\n')
         // remove data type imports for now
         .filter((line) => !line.trim().startsWith('import type'))
         // remove props since we're importing data
@@ -90,7 +97,7 @@ export function createREPLState(
             }
             return line;
         })
-        .join(';')
+        .join(';\n')
         .split('\n')
         .map((line) => {
             // convert from 4-spaces to 2-spaces
@@ -99,6 +106,13 @@ export function createREPLState(
                 const indent = leadingSpaces / 4;
                 return `${Array.from({ length: indent }, () => '  ').join('')}${line.trim()}`;
             }
+            return line;
+        })
+        // replace css vars
+        .map((line) => {
+            Object.entries(CSS_VARS).map(([varOld, varNew]) => {
+                line = line.replace(varOld, varNew);
+            });
             return line;
         })
         .join('\n');
@@ -123,13 +137,17 @@ export function createREPLState(
                     ? `import { csvParse, autoType } from 'd3-dsv';\n\nexport default csvParse(\`${csvFormat(datasets[key])}\`, autoType);`
                     : `export default ${JSON.stringify(datasets[key], null, 4)};`
             })),
-            ...needSharedUIs.map((mod) => ({
-                type: 'file',
-                text: true,
-                name: `${mod}.svelte`,
-                basename: `${mod}.svelte`,
-                contents: uiComponents[`${mod}.svelte`]
-            }))
+            // shared/ui
+            ...needSharedUIs.map((mod) => {
+                const path = `${mod}.svelte${mod === 'useDark' ? '.ts' : ''}`;
+                return {
+                    type: 'file',
+                    text: true,
+                    name: path,
+                    basename: path,
+                    contents: uiComponents[mod === 'useDark' ? 'useDark.repl.svelte.ts' : path]
+                };
+            })
         ]
     } as REPLState;
 }

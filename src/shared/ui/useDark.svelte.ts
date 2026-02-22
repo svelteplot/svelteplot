@@ -8,6 +8,6 @@ class DarkState {
 
 const darkState = new DarkState();
 
-export function useDark() {
+export default function useDark() {
     return darkState;
 }

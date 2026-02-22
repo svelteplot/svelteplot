@@ -58,7 +58,7 @@ The [binX](#binX) transform takes **x** as input and outputs **x1** and **x2** r
         binX,
         stackY
     } from 'svelteplot';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
     import { getContext } from 'svelte';
 
     const ds = useDark();
@@ -203,7 +203,7 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
         binX,
         stackY
     } from 'svelteplot';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
     import { getContext } from 'svelte';
 
     import { page } from '$app/state';
@@ -594,7 +594,7 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
     import { getContext } from 'svelte';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
 
     const ds = useDark();
 

@@ -28,10 +28,7 @@
         properties?: Record<string, unknown>;
     };
 
-    const { us, election } = $props() as {
-        us: any;
-        election: ElectionDatum[];
-    };
+    const { us, election } = $props();
 
     const nation = $derived(
         topojson.feature(us, us.objects.nation)
@@ -54,9 +51,7 @@
                 ...feat,
                 properties: {
                     ...feat.properties,
-                    ...(electionByFips.get(
-                        Number(feat.id)
-                    ) ?? {})
+                    ...electionByFips.get(Number(feat.id))
                 }
             };
         })

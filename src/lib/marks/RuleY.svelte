@@ -27,6 +27,7 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
+        DataRow,
         BaseMarkProps,
         ConstantAccessor,
         ChannelAccessor
@@ -51,19 +52,17 @@
     });
 
     const plot = usePlot();
-    const args = $derived(recordizeY({ data, ...options }, { withIndex: false }));
+    const args = $derived(
+        recordizeY({ data: data as DataRow[], ...options }, { withIndex: false })
+    );
 </script>
 
-<Mark
-    type="ruleY"
-    channels={['y', 'x1', 'x2', 'stroke', 'opacity', 'strokeOpacity']}
-    {...markProps}
-    {...args}>
+<Mark type="ruleY" channels={['y', 'x1', 'x2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>
     {#snippet children({ scaledData, usedScales })}
         {#if canvas}
             <RuleCanvas
                 data={scaledData}
-                options={args}
+                options={args as any}
                 {usedScales}
                 orientation="horizontal"
                 marginLeft={plot.options.marginLeft}
@@ -73,13 +72,13 @@
                 class="rule-y {className || ''}"
                 length={className ? 2 : args.data.length}>
                 {#each scaledData as d, i (i)}
-                    {@const inset = resolveProp(args.inset, d.datum, 0)}
-                    {@const insetLeft = resolveProp(args.insetLeft, d.datum, 0)}
-                    {@const insetRight = resolveProp(args.insetRight, d.datum, 0)}
+                    {@const inset = resolveProp(args.inset, d.datum, 0) as number}
+                    {@const insetLeft = resolveProp(args.insetLeft, d.datum, 0) as number}
+                    {@const insetRight = resolveProp(args.insetRight, d.datum, 0) as number}
                     {@const [style, styleClass] = resolveStyles(
                         plot,
                         d,
-                        args,
+                        args as any,
                         'stroke',
                         usedScales
                     )}

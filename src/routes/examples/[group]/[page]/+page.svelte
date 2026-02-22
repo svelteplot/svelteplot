@@ -7,7 +7,7 @@
     import type { Component } from 'svelte';
     import Next from '../../../../theme/components/icons/Next.svelte';
     import Prev from '../../../../theme/components/icons/Prev.svelte';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
     import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
     import {
