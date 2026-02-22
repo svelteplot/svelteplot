@@ -12,7 +12,7 @@
 <script lang="ts">
     import { Plot, Rect, bin } from 'svelteplot';
     import type { OlympiansRow } from '../types';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
 
     let { olympians }: { olympians: OlympiansRow[] } =
         $props();

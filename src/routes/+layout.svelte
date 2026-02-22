@@ -1,6 +1,6 @@
 <script lang="ts">
     import { afterNavigate } from '$app/navigation';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
 
     import '../app.scss';
 

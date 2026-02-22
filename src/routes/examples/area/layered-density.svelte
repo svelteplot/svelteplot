@@ -17,7 +17,7 @@
         densityX
     } from 'svelteplot';
     import type { Iris2Row } from '../types';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
 
     const ds = useDark();
     let { iris }: { iris: Iris2Row[] } = $props();

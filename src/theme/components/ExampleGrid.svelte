@@ -1,7 +1,7 @@
 <script lang="ts">
     import { shuffle } from 'd3-array';
     import { untrack } from 'svelte';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
     import { resolve } from '$app/paths';
 
     type ExampleImageModule = { default: string };

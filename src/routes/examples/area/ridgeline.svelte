@@ -19,7 +19,7 @@
         densityX,
         LinearGradientX
     } from 'svelteplot';
-    import { useDark } from '$shared/ui/isDark.svelte';
+    import { useDark } from '$shared/ui';
 
     type LincolnTemperatureRow = {
         Month: string;

@@ -2,7 +2,7 @@ import { csvFormat } from 'd3-dsv';
 
 const uiComponents = Object.fromEntries(
     Object.entries(
-        import.meta.glob('../../../../shared/ui/*.svelte', {
+        import.meta.glob(['../../../../shared/ui/*.svelte', '../../../../shared/ui/*.svelte.ts'], {
             eager: true,
             query: '?raw',
             import: 'default'
@@ -65,7 +65,6 @@ export function createREPLState(
     datasets: Record<string, object[]>
 ): REPLState {
     const needSharedUIs: string[] = [];
-
     const appCode = source
         .substring(firstPositive(source.indexOf('<script lang="ts">'), source.indexOf('<script>')))
         // add import statements for each dataset
@@ -138,13 +137,17 @@ export function createREPLState(
                     ? `import { csvParse, autoType } from 'd3-dsv';\n\nexport default csvParse(\`${csvFormat(datasets[key])}\`, autoType);`
                     : `export default ${JSON.stringify(datasets[key], null, 4)};`
             })),
-            ...needSharedUIs.map((mod) => ({
-                type: 'file',
-                text: true,
-                name: `${mod}.svelte`,
-                basename: `${mod}.svelte`,
-                contents: uiComponents[`${mod}.svelte`]
-            }))
+            // shared/ui
+            ...needSharedUIs.map((mod) => {
+                const path = `${mod}.svelte${mod === 'useDark' ? '.ts' : ''}`;
+                return {
+                    type: 'file',
+                    text: true,
+                    name: path,
+                    basename: path,
+                    contents: uiComponents[mod === 'useDark' ? 'useDark.repl.svelte.ts' : path]
+                };
+            })
         ]
     } as REPLState;
 }
