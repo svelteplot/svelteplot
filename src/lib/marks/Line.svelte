@@ -49,10 +49,10 @@
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import MarkerPath from './helpers/MarkerPath.svelte';
+    import type { MarkerShape } from './helpers/Marker.svelte';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { line, type CurveFactory, type Line as D3Line } from 'd3-shape';
     import { geoPath } from 'd3-geo';
-    import callWithProps from '../helpers/callWithProps.js';
     import { maybeCurve } from '../helpers/curves.js';
     import { pick } from 'es-toolkit';
     import LineCanvas from './helpers/LineCanvas.svelte';
@@ -72,8 +72,8 @@
         tension: 0,
         canvas: false,
         markerScale: 1,
-        class: null,
-        lineClass: null,
+        class: undefined,
+        lineClass: undefined,
         ...getPlotDefaults().line
     };
 
@@ -98,8 +98,8 @@
      */
     function groupIndex(data: ScaledDataRecord[], groupByKey: ChannelAccessor<Datum> | null) {
         if (!groupByKey) return [data];
-        let group = [];
-        const groups = [group];
+        let group: ScaledDataRecord[] = [];
+        const groups: ScaledDataRecord[][] = [group];
         let lastGroupValue;
         for (const d of data) {
             const groupValue = resolveProp(groupByKey, d.datum);
@@ -121,33 +121,30 @@
 
     const linePath: D3Line<ScaledDataRecord> = $derived(
         plot.scales.projection && curve === 'auto'
-            ? sphereLine(plot.scales.projection)
-            : callWithProps(line, [], {
-                  curve: maybeCurve(curve === 'auto' ? 'linear' : curve, tension),
-                  x: (d) => d.x,
-                  y: (d) => d.y,
-                  defined: (d) => isValid(d.x) && isValid(d.y)
-              })
+            ? (sphereLine(plot.scales.projection) as unknown as D3Line<ScaledDataRecord>)
+            : line<ScaledDataRecord>()
+                  .curve(maybeCurve(curve === 'auto' ? 'linear' : curve, tension ?? 0))
+                  .x((d) => d.x as number)
+                  .y((d) => d.y as number)
+                  .defined((d) => isValid(d.x) && isValid(d.y))
     );
 
-    function sphereLine(projection) {
+    function sphereLine(projection: any) {
         const path = geoPath(projection);
-        const fn = (lineData: ScaledDataRecord[]) => {
-            let line = [];
-            const lines = [line];
+        return (lineData: ScaledDataRecord[]) => {
+            let line: [number, number][] = [];
+            const lines: [number, number][][] = [line];
             for (const { x, y } of lineData) {
                 // if x or y is undefined, start a new line segment
                 if (!isValid(x) || !isValid(y)) {
                     line = [];
                     lines.push(line);
                 } else {
-                    line.push([x, y]);
+                    line.push([x as number, y as number]);
                 }
             }
             return path({ type: 'MultiLineString', coordinates: lines });
         };
-        fn.context = path.context;
-        return fn;
     }
 </script>
 
@@ -166,7 +163,7 @@
                     {#each groupedLineData as lineData, i (i)}
                         {@const pathString = linePath(lineData)}
                         {#if pathString}
-                            <GroupMultiple class={resolveProp(lineClass, lineData[0])}>
+                            <GroupMultiple class={resolveProp(lineClass, lineData[0].datum)}>
                                 {#if options.outlineStroke}
                                     {@const [outlineStyle, outlineStyleClass] = resolveStyles(
                                         plot,
@@ -178,11 +175,11 @@
                                             strokeOpacity: options.outlineStrokeOpacity ?? 1,
                                             strokeWidth:
                                                 options.outlineStrokeWidth ||
-                                                resolveProp(
+                                                ((resolveProp(
                                                     options.strokeWidth,
                                                     lineData[0].datum,
                                                     1.4
-                                                ) + 2
+                                                ) as number) ?? 1.4) + 2
                                         },
                                         'stroke',
                                         usedScales
@@ -208,13 +205,8 @@
                                     plot,
                                     lineData[0],
                                     {
-                                        textAnchor: 'middle',
-                                        ...pick(args, [
-                                            'fontSize',
-                                            'fontWeight',
-                                            'fontStyle',
-                                            'textAnchor'
-                                        ]),
+                                        textAnchor: args.textAnchor || 'middle',
+                                        ...pick(args, ['fontSize', 'fontWeight', 'fontStyle']),
                                         strokeWidth: args.textStrokeWidth
                                             ? args.textStrokeWidth
                                             : args.textStroke
@@ -229,26 +221,40 @@
                                 )}
                                 <MarkerPath
                                     {mark}
+                                    transform=""
                                     scales={plot.scales}
-                                    markerStart={args.markerStart}
-                                    markerMid={args.markerMid}
-                                    markerEnd={args.markerEnd}
-                                    marker={args.marker}
-                                    markerScale={args.markerScale}
-                                    strokeWidth={args.strokeWidth}
-                                    datum={lineData[0].datum}
+                                    markerStart={options.markerStart as
+                                        | boolean
+                                        | MarkerShape
+                                        | undefined}
+                                    markerMid={options.markerMid as
+                                        | boolean
+                                        | MarkerShape
+                                        | undefined}
+                                    markerEnd={options.markerEnd as
+                                        | boolean
+                                        | MarkerShape
+                                        | undefined}
+                                    marker={options.marker as boolean | MarkerShape | undefined}
+                                    markerScale={options.markerScale}
+                                    strokeWidth={options.strokeWidth}
+                                    datum={lineData[0].datum as Datum}
                                     d={pathString}
-                                    dInv={text ? linePath(lineData.toReversed()) : null}
+                                    dInv={text
+                                        ? (linePath(lineData.toReversed()) ?? undefined)
+                                        : undefined}
                                     color={lineData[0].stroke || 'currentColor'}
-                                    {style}
-                                    class={styleClass}
-                                    text={text ? resolveProp(text, lineData[0].datum) : null}
-                                    startOffset={resolveProp(
-                                        args.textStartOffset,
+                                    style={style ?? ''}
+                                    class={styleClass ?? undefined}
+                                    text={text
+                                        ? ((resolveProp(text, lineData[0].datum) as string) ?? '')
+                                        : ''}
+                                    startOffset={(resolveProp(
+                                        options.textStartOffset,
                                         lineData[0].datum,
                                         '50%'
-                                    )}
-                                    {textStyle}
+                                    ) as string) ?? '50%'}
+                                    textStyle={textStyle ?? ''}
                                     {textStyleClass} />
                             </GroupMultiple>
                         {/if}
