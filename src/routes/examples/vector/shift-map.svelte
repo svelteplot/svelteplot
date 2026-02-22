@@ -51,9 +51,9 @@
                 ...feat,
                 properties: {
                     ...feat.properties,
-                    ...(electionByFips.get(
+                    ...electionByFips.get(
                         Number(feat.id)
-                    ) ?? {})
+                    )
                 }
             };
         })
