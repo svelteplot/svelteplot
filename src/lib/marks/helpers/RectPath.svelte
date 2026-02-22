@@ -26,8 +26,8 @@ Helper component for rendering rectangular marks in SVG
         fallbackStyle?: 'fill' | 'stroke';
     }
 
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { roundedRect } from 'svelteplot/helpers/roundedRect';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve.js';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect.js';
     import { addEventHandlers } from './events.js';
     import Anchor from './Anchor.svelte';
     import type { BaseMarkProps, BaseRectMarkProps, BorderRadius } from 'svelteplot/types/mark.js';

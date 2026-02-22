@@ -109,8 +109,8 @@
 
     import MultilineText from './helpers/MultilineText.svelte';
     import TextCanvas from './helpers/TextCanvas.svelte';
-    import { indexData } from 'svelteplot/transforms/recordize';
-    import { getPlotDefaults } from '../hooks/plotDefaults.js';
+    import { indexData } from 'svelteplot/transforms/recordize.js';
+    import { getPlotDefaults } from 'svelteplot';
 
     const DEFAULTS = {
         fontSize: 12,

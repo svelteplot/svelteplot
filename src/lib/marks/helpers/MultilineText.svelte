@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve.js';
     import { type ComponentProps } from 'svelte';
     import type { ScaledDataRecord, UsedScales } from 'svelteplot/types/index.js';
     import type Text from '../Text.svelte';
-    import { CSS_VAR } from 'svelteplot/constants';
-    import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles';
+    import { CSS_VAR } from 'svelteplot/constants.js';
+    import { maybeFromPixel, maybeFromRem } from 'svelteplot/helpers/getBaseStyles.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     const LINE_ANCHOR = {

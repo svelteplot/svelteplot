@@ -6,28 +6,109 @@
  * It helps identify issues with ESM imports where TypeScript requires .js extensions.
  */
 
-import { readFile, readdir } from 'fs/promises';
+import { readFile, readdir, stat } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Convert file:// URLs to paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
+const srcLibDir = path.join(projectRoot, 'src/lib');
 
 // Regular expressions to match import statements without .js extensions
 const regexImportFrom =
-    /import\s+(?:type\s+)?(?:{[^}]*}|\*\s+as\s+[^;]*|[^;{]*)\s+from\s+['"]([^'"]*)['"]/g;
+    /import\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*|[^;{]*)\s+from\s+['"]([^'"]*)['"]/g;
 const regexExportFrom =
-    /export\s+(?:type\s+)?(?:{[^}]*}|\*\s+as\s+[^;]*)\s+from\s+['"]([^'"]*)['"]/g;
+    /export\s+(?:type\s+)?(?:\{[^}]*\}|\*\s+as\s[^;]*)\s+from\s+['"]([^'"]*)['"]/g;
 
 // Skip node_modules and build directories
 const excludedDirs = ['node_modules', 'build', '.svelte-kit', 'dist', '.git', 'examples', 'tests'];
 
 // Only check certain file types
 const includedExtensions = ['.ts', '.js', '.svelte'];
+const sourceFileExtensions = ['.ts', '.js', '.svelte', '.mts', '.cts', '.tsx', '.jsx'];
+
+const resolutionCache = new Map();
+
+const pathExists = async (targetPath) => {
+    try {
+        return await stat(targetPath);
+    } catch {
+        return null;
+    }
+};
+
+const resolveImportBasePath = (importPath, importerFilePath) => {
+    if (importPath.startsWith('.')) {
+        return path.resolve(path.dirname(importerFilePath), importPath);
+    }
+
+    if (importPath === '$lib') {
+        return srcLibDir;
+    }
+
+    if (importPath.startsWith('$lib/')) {
+        return path.join(srcLibDir, importPath.slice('$lib/'.length));
+    }
+
+    if (importPath === 'svelteplot') {
+        return srcLibDir;
+    }
+
+    if (importPath.startsWith('svelteplot/')) {
+        return path.join(srcLibDir, importPath.slice('svelteplot/'.length));
+    }
+
+    if (importPath.startsWith('/')) {
+        return path.join(projectRoot, importPath.slice(1));
+    }
+
+    return null;
+};
+
+const resolveImportTargetType = async (basePath) => {
+    if (resolutionCache.has(basePath)) {
+        return resolutionCache.get(basePath);
+    }
+
+    const baseStat = await pathExists(basePath);
+    if (baseStat?.isDirectory()) {
+        for (const extension of sourceFileExtensions) {
+            const indexStat = await pathExists(path.join(basePath, `index${extension}`));
+            if (indexStat?.isFile()) {
+                resolutionCache.set(basePath, 'directory');
+                return 'directory';
+            }
+        }
+    }
+
+    if (baseStat?.isFile()) {
+        resolutionCache.set(basePath, 'file');
+        return 'file';
+    }
+
+    for (const extension of sourceFileExtensions) {
+        const fileStat = await pathExists(`${basePath}${extension}`);
+        if (fileStat?.isFile()) {
+            resolutionCache.set(basePath, 'file');
+            return 'file';
+        }
+    }
+
+    resolutionCache.set(basePath, 'unknown');
+    return 'unknown';
+};
+
+const isTypeOnlyStatement = (statement) => {
+    const trimmedStatement = statement.trim();
+    return (
+        trimmedStatement.startsWith('import type ') || trimmedStatement.startsWith('export type ')
+    );
+};
 
 // Paths that should have .js extensions (relative paths and alias paths)
-const shouldHaveJsExtension = (importPath) => {
+const shouldHaveJsExtension = async (importPath, importerFilePath) => {
     // Skip Svelte imports
     if (importPath.endsWith('.svelte')) return false;
 
@@ -35,14 +116,28 @@ const shouldHaveJsExtension = (importPath) => {
     if (
         !importPath.startsWith('.') &&
         !importPath.startsWith('/') &&
-        !importPath.startsWith('$lib')
+        !importPath.startsWith('$lib') &&
+        !importPath.startsWith('svelteplot')
     )
         return false;
 
     // Skip imports with extensions already
     if (path.extname(importPath)) return false;
 
-    return true;
+    if (importPath.includes('src/theme')) return false;
+
+    const basePath = resolveImportBasePath(importPath, importerFilePath);
+    if (!basePath) return false;
+
+    const targetType = await resolveImportTargetType(basePath);
+
+    // Extensionless imports are valid for directory imports that resolve to index files.
+    if (targetType === 'directory') return false;
+
+    // Only enforce .js when the import resolves to a file.
+    if (targetType === 'file') return true;
+
+    return false;
 };
 
 async function* walkDirectory(dir) {
@@ -65,6 +160,13 @@ async function checkFile(filePath) {
     const content = await readFile(filePath, 'utf8');
     const issues = [];
 
+    // ignore files in src/theme
+    if (!filePath.includes('src/lib'))
+        return {
+            filePath,
+            issues: []
+        };
+
     // Find all import statements
     let match;
 
@@ -72,7 +174,8 @@ async function checkFile(filePath) {
     regexImportFrom.lastIndex = 0;
     while ((match = regexImportFrom.exec(content)) !== null) {
         const importPath = match[1];
-        if (shouldHaveJsExtension(importPath)) {
+        if (isTypeOnlyStatement(match[0])) continue;
+        if (await shouldHaveJsExtension(importPath, filePath)) {
             issues.push({
                 line: content.substring(0, match.index).split('\n').length,
                 importPath,
@@ -85,7 +188,8 @@ async function checkFile(filePath) {
     regexExportFrom.lastIndex = 0;
     while ((match = regexExportFrom.exec(content)) !== null) {
         const importPath = match[1];
-        if (shouldHaveJsExtension(importPath)) {
+        if (isTypeOnlyStatement(match[0])) continue;
+        if (await shouldHaveJsExtension(importPath, filePath)) {
             issues.push({
                 line: content.substring(0, match.index).split('\n').length,
                 importPath,
@@ -113,10 +217,8 @@ async function main() {
 
             for (const issue of issues) {
                 totalIssues++;
-                console.log(
-                    `  Line ${issue.line}: Missing .js extension in import: ${issue.importPath}`
-                );
-                console.log(`    ${issue.statement}`);
+                console.log(`  ${issue.line}:  ${issue.statement}`);
+                // console.log(`    ${issue.statement}`);
             }
             console.log('');
         }

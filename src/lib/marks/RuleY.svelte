@@ -32,7 +32,6 @@
         ChannelAccessor
     } from '../types/index.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
-    import { IS_SORTED } from 'svelteplot/transforms/sort';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     let markProps: RuleYMarkProps = $props();

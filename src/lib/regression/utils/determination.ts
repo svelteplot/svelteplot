@@ -1,4 +1,4 @@
-import { visitPoints } from './points';
+import { visitPoints } from './points.js';
 import type { Accessor, PredictFunction } from '../types';
 
 /**

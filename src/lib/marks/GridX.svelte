@@ -24,8 +24,8 @@
     import { autoTicks } from '../helpers/autoTicks.js';
     import { testFilter } from '../helpers/index.js';
     import { RAW_VALUE } from '../transforms/recordize.js';
-    import isDataRecord from '../helpers/isDataRecord';
-    import { INDEX } from '../constants';
+    import isDataRecord from '../helpers/isDataRecord.js';
+    import { INDEX } from '../constants.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 

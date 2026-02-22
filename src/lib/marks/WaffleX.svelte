@@ -10,14 +10,13 @@
         LinkableMarkProps,
         BorderRadius
     } from 'svelteplot/types';
-    import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
-    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { wafflePolygon, type WaffleOptions } from './helpers/waffle.js';
+    import { getPlotDefaults, usePlot } from 'svelteplot';
     import { intervalX, recordizeX, sort, stackX } from 'svelteplot/transforms';
-    import type { StackOptions } from 'svelteplot/transforms/stack';
+    import type { StackOptions } from 'svelteplot/transforms/stack.js';
     import Mark from '../Mark.svelte';
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { roundedRect } from 'svelteplot/helpers/roundedRect';
-    import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve.js';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect.js';
 
     interface WaffleXMarkProps
         extends BaseMarkProps<Datum>, LinkableMarkProps<Datum>, WaffleOptions<Datum> {

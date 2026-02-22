@@ -35,8 +35,8 @@
         LinkableMarkProps,
         TransformArg
     } from '../types';
-    import { resolveProp } from 'svelteplot/helpers/resolve';
-    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { resolveProp } from 'svelteplot/helpers/resolve.js';
+    import { getPlotDefaults } from 'svelteplot';
     import { sort } from 'svelteplot/transforms';
     import Anchor from './helpers/Anchor.svelte';
     import Mark from 'svelteplot/Mark.svelte';

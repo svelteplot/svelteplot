@@ -10,13 +10,12 @@
         LinkableMarkProps,
         BorderRadius
     } from '../types';
-    import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
-    import { getPlotDefaults } from '../hooks/plotDefaults';
+    import { wafflePolygon, type WaffleOptions } from './helpers/waffle.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { intervalY, recordizeY, sort, stackY } from '../transforms';
     import Mark from 'svelteplot/Mark.svelte';
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { roundedRect } from 'svelteplot/helpers/roundedRect';
-    import GroupMultiple from './helpers/GroupMultiple.svelte';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve.js';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface WaffleYMarkProps

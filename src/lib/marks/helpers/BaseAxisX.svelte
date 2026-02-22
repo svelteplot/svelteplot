@@ -11,14 +11,14 @@
         RawValue,
         ScaledDataRecord,
         ScaleType
-    } from 'svelteplot/types/index.js';
+    } from 'svelteplot/types';
     import type { AxisTickDatum, AxisXTick, BaseAxisXOptions } from 'svelteplot/types/axes.js';
     import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
     import { randomId, testFilter } from '../../helpers/index.js';
-    import { INDEX } from 'svelteplot/constants';
-    import { RAW_VALUE } from 'svelteplot/transforms/recordize';
-    import wordwrap from 'svelteplot/helpers/wordwrap';
+    import { INDEX } from 'svelteplot/constants.js';
+    import { RAW_VALUE } from 'svelteplot/transforms/recordize.js';
+    import wordwrap from 'svelteplot/helpers/wordwrap.js';
     type AxisDatum = AxisTickDatum<typeof RAW_VALUE, typeof INDEX>;
     type AxisTick = AxisXTick<AxisDatum>;
 

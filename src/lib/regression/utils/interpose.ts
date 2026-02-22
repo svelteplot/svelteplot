@@ -1,4 +1,4 @@
-import { angle, midpoint } from './geometry';
+import { angle, midpoint } from './geometry.js';
 import type { PredictFunction, DataPoint } from '../types';
 
 /**

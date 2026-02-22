@@ -12,8 +12,8 @@
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import { resolveColor } from './canvas.js';
     import type { CurveFactory } from 'd3-shape';
-    import { trailPath, type TrailSample } from './trail';
-    import { resolveProp, resolveScaledStyleProps } from 'svelteplot/helpers/resolve';
+    import { trailPath, type TrailSample } from './trail.js';
+    import { resolveProp, resolveScaledStyleProps } from 'svelteplot/helpers/resolve.js';
     import { usePlot } from 'svelteplot';
 
     interface TrailCanvasProps<Datum extends object> {

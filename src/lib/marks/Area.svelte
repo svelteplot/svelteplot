@@ -51,7 +51,7 @@
         RawValue
     } from '../types/index.js';
     import type { StackOptions } from '../transforms/stack.js';
-    import { addEventHandlers } from './helpers/events';
+    import { addEventHandlers } from './helpers/events.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
