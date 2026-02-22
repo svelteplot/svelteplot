@@ -9,13 +9,13 @@
 </script>
 
 <script lang="ts">
-    let { olympians } = $props();
     import {
         Plot,
         RectY,
         binX,
         CustomMark
     } from 'svelteplot';
+    let { olympians } = $props();
 </script>
 
 <Plot y={{ zero: true }}>

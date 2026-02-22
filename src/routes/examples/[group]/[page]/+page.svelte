@@ -10,6 +10,11 @@
     import { useDark } from '$shared/ui/isDark.svelte';
     import CodeBlock from '../../../../theme/components/CodeBlock.svelte';
 
+    import {
+        createREPLState,
+        encodePlaygroundState
+    } from './replUtils';
+
     type ExampleModule = {
         default: Component<any>;
         title: string;
@@ -141,6 +146,18 @@
         return code.trim();
     }
 
+    const replHash = $derived(
+        encodePlaygroundState(
+            createREPLState(
+                mod?.title,
+                key,
+                source,
+                mod?.data ?? {},
+                data ?? {}
+            )
+        )
+    );
+
     const ds = useDark();
 </script>
 
@@ -192,13 +209,15 @@
         </div>
     {/key}
 
-    {#if mod?.repl}
+    {#await replHash then hash}
         <p>
             <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-            <a href={mod.repl} target="_blank"
+            <a
+                href="https://svelte.dev/playground/hello-world?version=5{hash}"
+                target="_blank"
                 >Open in Svelte playground</a>
         </p>
-    {/if}
+    {/await}
 
     <!-- show links to prev and next page -->
     <div class="page-switcher">

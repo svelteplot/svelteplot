@@ -7,7 +7,7 @@
     export const sortKey = 99;
 </script>
 
-<script>
+<script lang="ts">
     import { Plot } from 'svelteplot';
 </script>
 
