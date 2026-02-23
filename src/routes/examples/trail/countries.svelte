@@ -14,9 +14,10 @@
     import { Plot, Trail, Text, Dot } from 'svelteplot';
     import { useDark } from '$shared/ui';
 
-    let { gapminder } = $props();
+    type GapminderRow = { Year: number; Code: string; 'Fertility rate': number; 'Life expectancy': number; Country?: string };
+    let { gapminder } = $props() as { gapminder: GapminderRow[] };
 
-    const countries = {
+    const countries: Record<string, string> = {
         ind: 'India',
         fra: 'France',
         ken: 'Kenia',
@@ -101,7 +102,7 @@
     <Text
         data={selectedCountries}
         filter={(d) =>
-            d.Year === Math.ceil(maxYear.current)}
+            (d as any).Year === Math.ceil(maxYear.current)}
         x="Fertility rate"
         y="Life expectancy"
         text="Country"

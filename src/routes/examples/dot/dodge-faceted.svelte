@@ -16,7 +16,7 @@
 
 <Plot
     color={{ legend: true }}
-    fx={{ axis: 'bottom' }}
+    fx={{ axis: 'bottom' } as any}
     r={{ zero: false }}
     y={{ grid: true }}>
     <Dot

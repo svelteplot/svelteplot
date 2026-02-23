@@ -5,7 +5,7 @@
     export const data = { aapl: '/data/aapl.csv' };
 </script>
 
-<script>
+<script lang="ts">
     import {
         Plot,
         AreaY,
@@ -13,7 +13,7 @@
         GridX,
         RuleY
     } from 'svelteplot';
-    let { aapl } = $props();
+    let { aapl } = $props() as { aapl: any[] };
 </script>
 
 <Plot>
@@ -23,12 +23,12 @@
         y1={0}
         y2={(date) =>
             aapl
-                .map((d) => ({
+                .map((d: any) => ({
                     value: d.Close,
                     date: d.Date,
-                    diff: Math.abs(d.Date - date)
+                    diff: Math.abs(d.Date - (date as number))
                 }))
-                .sort((a, b) => a.diff - b.diff)[0]
+                .sort((a: any, b: any) => a.diff - b.diff)[0]
                 .value} />
     <Line data={aapl} x="Date" y="Close" />
     <RuleY data={[0]} />

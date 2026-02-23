@@ -17,7 +17,7 @@
     import type { DataRecord } from 'svelteplot/types';
     let { stocks } = $props();
     let stocks2 = $derived(
-        stocks.filter((d) => d.Date < new Date(2018, 0, 1))
+        stocks.filter((d: any) => d.Date < new Date(2018, 0, 1))
     );
     let selection: DataRecord[] = $state([]);
 
@@ -34,10 +34,10 @@
     );
 </script>
 
-<Plot y={{ axis: false }} marginTop={10} inset={4}>
+<Plot y={{ axis: false } as any} marginTop={10} inset={4}>
     <Frame
         fill="currentColor"
-        stroke={false}
+        stroke={false as any}
         fillOpacity={0.02} />
     <Line
         {...normalized}
@@ -59,7 +59,7 @@
         x="Date"
         y="__y"
         fy="Symbol"
-        text={(d) => d.Close.toFixed()}
+        text={(d) => (d.Close as number).toFixed()}
         lineAnchor="bottom"
         fontWeight="bold"
         dy={-3} />

@@ -33,7 +33,7 @@
             inset={10}
             title="Canvas rules"
             y={{ grid: true }}
-            fx={{ axis: 'bottom', padding: 0 }}>
+            fx={{ axis: 'bottom', padding: 0 } as any}>
             <RuleY
                 data={aapl.slice(0, 150)}
                 y="Close"
@@ -45,7 +45,7 @@
             inset={10}
             title="SVG rules"
             y={{ grid: true }}
-            fx={{ axis: 'bottom', padding: 0 }}>
+            fx={{ axis: 'bottom', padding: 0 } as any}>
             <RuleY
                 data={aapl.slice(0, 150)}
                 y="Close"

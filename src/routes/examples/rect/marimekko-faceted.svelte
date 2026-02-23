@@ -38,17 +38,17 @@
     marginTop={15}
     marginRight={15}>
     <Rect
-        {...stacked}
+        {...stacked as any}
         inset={0.5}
         fx="quarter"
         fill="segment" />
     {#snippet overlay()}
-        <HTMLTooltip {...stacked} r={5}>
+        <HTMLTooltip {...stacked as any} r={5}>
             {#snippet children({ datum })}
                 <div class="tooltip">
-                    {datum.market}<br />
-                    {datum.segment}<br />
-                    {datum.value}
+                    {(datum as any).market}<br />
+                    {(datum as any).segment}<br />
+                    {(datum as any).value}
                 </div>
             {/snippet}
         </HTMLTooltip>

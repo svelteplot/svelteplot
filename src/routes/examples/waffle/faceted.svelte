@@ -14,7 +14,7 @@
 <Plot
     x={{
         type: 'band',
-        tickFormat: (d) => d.getFullYear()
+        tickFormat: (d) => String((d as Date).getFullYear())
     }}>
     <WaffleY
         unit={10}

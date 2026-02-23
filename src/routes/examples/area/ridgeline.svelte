@@ -75,7 +75,7 @@
     fy={{
         axis: false,
         domain: months
-    }}
+    } as any}
     x={{ label: 'Mean temperature (C)' }}
     y={{
         percent: true,

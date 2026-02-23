@@ -47,17 +47,17 @@
             },
             { y1: 'min', y2: 'max', interval: '2 weeks' }
         )}
-        opacity="0.4"
-        strokeWidth="1.5" />
+        opacity={0.4}
+        strokeWidth={1.5} />
     <Line
         {...smoothed}
         stroke="Symbol"
-        strokeWidth="2"
+        strokeWidth={2}
         markerEnd="dot" />
     <Text
         {...selectLast(smoothed)}
         fill="Symbol"
         text="Symbol"
-        dx="10"
+        dx={10}
         textAnchor="start" />
 </Plot>

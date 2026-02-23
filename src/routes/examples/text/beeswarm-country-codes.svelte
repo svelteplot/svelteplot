@@ -34,7 +34,7 @@
     );
 
     const fontSize = (d: CountryDatum) =>
-        2 + Math.sqrt(d.Population / maxPopulation) * 50;
+        2 + Math.sqrt((d.Population as number) / maxPopulation) * 50;
 </script>
 
 <Plot

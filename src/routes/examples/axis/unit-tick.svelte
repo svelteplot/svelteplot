@@ -12,7 +12,7 @@
 <Plot
     y={{
         tickFormat: (d, i, ticks) =>
-            `${d}${i === ticks.length - 1 ? ' USD' : ''}`
+            `${String(d)}${i === ticks.length - 1 ? ' USD' : ''}`
     }}>
     <Line data={aapl} x="Date" y="Close" />
 </Plot>

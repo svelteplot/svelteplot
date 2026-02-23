@@ -15,7 +15,7 @@
         domain: ['Panel A', 'Panel B', 'Panel C'],
         axis: 'bottom',
         padding: 0.2
-    }}
+    } as any}
     x={{ domain: [0, 1] }}
     y={{ domain: [0, 1] }}
     grid

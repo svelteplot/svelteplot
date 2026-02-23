@@ -25,10 +25,10 @@
     <CustomMark {data} x1="x1" x2="x2" y1="y1" y2="y2">
         {#snippet mark({ record })}
             <rect
-                x={Math.min(record.x1, record.x2)}
-                y={Math.min(record.y1, record.y2)}
-                width={Math.abs(record.x2 - record.x1)}
-                height={Math.abs(record.y2 - record.y1)}
+                x={Math.min(record.x1 as number, record.x2 as number)}
+                y={Math.min(record.y1 as number, record.y2 as number)}
+                width={Math.abs((record.x2 as number) - (record.x1 as number))}
+                height={Math.abs((record.y2 as number) - (record.y1 as number))}
                 stroke="currentColor"
                 fill="currentColor"
                 fill-opacity="0.5" />

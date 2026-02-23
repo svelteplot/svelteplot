@@ -9,23 +9,23 @@
     };
 </script>
 
-<script>
+<script lang="ts">
     import { Plot } from 'svelteplot';
     import Geo from 'svelteplot/marks/Geo.svelte';
     import * as topojson from 'topojson-client';
 
-    const { us, unemployment } = $props();
+    const { us, unemployment } = $props() as { us: any; unemployment: any[] };
     const rateMap = $derived(
-        new Map(unemployment.map((d) => [d.id, +d.rate]))
+        new Map(unemployment.map((d: any) => [d.id, +d.rate]))
     );
     const counties = $derived(
-        topojson
+        (topojson as any)
             .feature(us, us.objects.counties)
-            .features.map((feat) => {
+            .features.map((feat: any) => {
                 return {
                     ...feat,
                     properties: {
-                        ...feat.properties,
+                        ...(feat as any).properties,
                         unemployment: rateMap.get(+feat.id)
                     }
                 };
@@ -45,5 +45,5 @@
     <Geo
         canvas
         data={counties}
-        fill={(d) => d.properties.unemployment} />
+        fill={(d) => (d as any).properties.unemployment} />
 </Plot>

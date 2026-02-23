@@ -28,10 +28,10 @@
         topojson
             .feature(world, world.objects.countries)
             .features.find(
-                (d) => d.properties.name === selectedName
+                (d) => (d.properties as any).name === selectedName
             )
     );
-    let centroid = $derived(geoCentroid(selected));
+    let centroid = $derived(geoCentroid(selected as any));
 </script>
 
 <Slider bind:value={inset} min={0} max={50} label="inset" />
@@ -55,6 +55,6 @@
         fill="currentColor"
         stroke="var(--svelteplot-bg)"
         onclick={(d, e) =>
-            (selectedName = e.properties.name)} />
+            (selectedName = (e as any).properties.name)} />
     <Geo data={[selected]} />
 </Plot>

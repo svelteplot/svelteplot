@@ -21,6 +21,7 @@
         description?: string;
         sortKey?: number;
         fullCode?: boolean;
+        data?: Record<string, string>;
     };
 
     type NavLink = {
@@ -148,11 +149,11 @@
     const replHash = $derived(
         encodePlaygroundState(
             createREPLState(
-                mod?.title,
+                mod?.title ?? '',
                 key,
-                source,
+                source ?? '',
                 mod?.data ?? {},
-                data ?? {}
+                (data ?? {}) as any
             )
         )
     );

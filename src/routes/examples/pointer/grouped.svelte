@@ -14,9 +14,9 @@
     } from 'svelteplot';
     let { stocks } = $props();
     let stocks2 = $derived(
-        stocks.filter((d) => d.Date < new Date(2018, 0, 1))
+        stocks.filter((d: any) => d.Date < new Date(2018, 0, 1))
     );
-    let sel = $state([]);
+    let sel: any[] = $state([]);
 </script>
 
 <Plot
@@ -43,7 +43,7 @@
                 strokeWidth={3}
                 x="Date"
                 y="Close"
-                text={(d) => d.Close.toFixed()}
+                text={(d: any) => d.Close.toFixed()}
                 lineAnchor="bottom"
                 fontWeight="bold"
                 dy={-3} />
