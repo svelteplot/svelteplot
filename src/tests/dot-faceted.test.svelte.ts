@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
-// @ts-expect-error - Svelte component has no typed default export
 import DotTest from './dot.test.svelte';
 import { tick } from 'svelte';
 
