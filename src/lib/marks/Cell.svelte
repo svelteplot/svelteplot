@@ -72,7 +72,7 @@
     requiredScales={{ x: ['band'], y: ['band'] }}
     channels={['x', 'y', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
     {...args}
-    type={"cell" as MarkType}>
+    type={'cell' as MarkType}>
     {#snippet children({ scaledData, usedScales })}
         {@const bwx = plot.scales.x.fn.bandwidth()}
         {@const bwy = plot.scales.y.fn.bandwidth()}

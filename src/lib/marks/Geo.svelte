@@ -108,14 +108,18 @@
                                 plot,
                                 d,
                                 args as any,
-                                GEOJSON_PREFER_STROKE.has((geometry as any)?.type) ? 'stroke' : 'fill',
+                                GEOJSON_PREFER_STROKE.has((geometry as any)?.type)
+                                    ? 'stroke'
+                                    : 'fill',
                                 usedScales
                             )}
                             <path
                                 d={path(geometry as any)}
                                 {style}
                                 class={[styleClass]}
-                                filter={resolveProp(args.svgFilter, d.datum, undefined) as string | undefined}
+                                filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                                    | string
+                                    | undefined}
                                 {@attach addEventHandlers({
                                     plot,
                                     options: args as any,

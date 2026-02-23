@@ -112,7 +112,10 @@
                         <Anchor options={options as any} datum={d.datum}>
                             <path
                                 transform="translate({d.x}, {d.y})"
-                                d={getSymbolPath(d.symbol as string, (d.r as number) ** 2 * Math.PI)}
+                                d={getSymbolPath(
+                                    d.symbol as string,
+                                    (d.r as number) ** 2 * Math.PI
+                                )}
                                 class={[
                                     dotClass ? resolveProp(dotClass, d.datum as Datum, null) : null,
                                     styleClass

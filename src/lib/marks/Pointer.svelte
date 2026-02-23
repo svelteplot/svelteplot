@@ -123,7 +123,9 @@
 
     const groups = $derived.by(() => {
         const groups: any[][] = [];
-        groupFacetsAndZ(indexData(data as object[]) as any, { x, y, z, fx, fy }, (d) => groups.push(d));
+        groupFacetsAndZ(indexData(data as object[]) as any, { x, y, z, fx, fy }, (d) =>
+            groups.push(d)
+        );
         return groups;
     });
 

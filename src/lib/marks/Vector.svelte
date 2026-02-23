@@ -173,7 +173,7 @@
         'fillOpacity',
         'strokeOpacity'
     ]}
-    {...(args as any)}>
+    {...args as any}>
     {#snippet children({ scaledData, usedScales })}
         <g class="vector" data-l={usedScales.length}>
             {#if canvas}
