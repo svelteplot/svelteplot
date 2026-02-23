@@ -9,7 +9,14 @@
         children?: Snippet<
             [
                 {
-                    mark: Mark<GenericMarkOptions>;
+                    mark: {
+                        id: symbol;
+                        type: MarkType;
+                        channels: ScaledChannelName[];
+                        scales: Set<ScaleName>;
+                        data: DataRecord[];
+                        options: GenericMarkOptions;
+                    };
                     usedScales: ReturnType<typeof getUsedScales>;
                     scaledData: ScaledDataRecord<Datum>[];
                 }
@@ -121,7 +128,7 @@
         mark.channels = channels;
         mark.scales = new Set(
             channels
-                .filter((channel) => options[channel] !== 0)
+                .filter((channel) => (options as any)[channel] !== 0)
                 .map((channel) => CHANNEL_SCALE[channel])
         );
         mark.data = untrack(() => data);
@@ -149,10 +156,10 @@
                     ScaleName
                 ][]) {
                     // check if the mark has defined an accessor for this channel
-                    if (options?.[channel] !== undefined && out[channel] === undefined) {
+                    if ((options as any)?.[channel] !== undefined && out[channel] === undefined) {
                         // resolve value
-                        out[channel] = resolveChannel(channel, row, options, index);
-                        if (options[channel] === INDEX) {
+                        out[channel] = resolveChannel(channel, row, options as any);
+                        if ((options as any)[channel] === INDEX) {
                             const scale = plot.scales[CHANNEL_SCALE[channel]];
                             if (scale.type === 'band' || scale.type === 'point') {
                                 out[channel] = scale.domain[out[channel] % scale.domain.length];
@@ -167,7 +174,13 @@
     let prevResolvedData: ResolvedDataRecord[] = [];
 
     $effect(() => {
-        if (isDifferent(data, mark.data) || isDifferent(resolvedData, prevResolvedData)) {
+        if (
+            isDifferent(
+                data as unknown as ResolvedDataRecord[],
+                mark.data as unknown as ResolvedDataRecord[]
+            ) ||
+            isDifferent(resolvedData, prevResolvedData)
+        ) {
             prevResolvedData = resolvedData;
             // data has changed
             mark.data = data;
@@ -191,11 +204,11 @@
 
     const errors = $derived([
         ...required
-            .filter((name) => options[name] == null)
+            .filter((name) => (options as any)[name] == null)
             .map((name) => `missing channel value for ${mark.type} mark: ${name}`),
         ...Object.entries(requiredScales)
             .filter(([scale, types]) => {
-                return !types.includes(plot.scales[scale].type);
+                return !types.includes((plot.scales as any)[scale].type);
             })
             .map(
                 ([scale, types]) => `scale type mismatch for ${scale} (needs ${types.join(' or ')})`
@@ -204,7 +217,7 @@
 
     $effect(() => {
         for (const name of required) {
-            if (options[name] == null) throw new Error(`missing channel value: ${name}`);
+            if ((options as any)[name] == null) throw new Error(`missing channel value: ${name}`);
         }
     });
 
@@ -219,19 +232,21 @@
                 const out: ScaledDataRecord<Datum> = {
                     datum: row.datum,
                     resolved: row,
-                    index: row[INDEX],
-                    valid: true
+                    index: (row as any)[INDEX],
+                    valid: true,
+                    dx: 0,
+                    dy: 0
                 };
                 // compute dx/dy
-                out.dx = Number(resolveProp<number>(options.dx, out.datum, 0));
-                out.dy = Number(resolveProp<number>(options.dy, out.datum, 0));
+                out.dx = Number(resolveProp<number, Datum>(options.dx, out.datum, 0));
+                out.dy = Number(resolveProp<number, Datum>(options.dy, out.datum, 0));
 
                 // special handling if there's a projection, e.g. a line mark
                 if (plot.scales.projection && mark.type !== 'geo') {
                     for (const suffix of ['', '1', '2']) {
                         if (
-                            options?.[`x${suffix}`] !== undefined &&
-                            options?.[`y${suffix}`] !== undefined
+                            (options as any)?.[`x${suffix}`] !== undefined &&
+                            (options as any)?.[`y${suffix}`] !== undefined
                         ) {
                             // we have two-dimensional accessors
                             // for the x and y channels
@@ -243,12 +258,11 @@
                                           row.x,
                                           row.y,
                                           usedScales.x,
-                                          usedScales.y,
-                                          suffix
+                                          usedScales.y
                                       );
 
-                            out[`x${suffix}`] = x;
-                            out[`y${suffix}`] = y;
+                            (out as any)[`x${suffix}`] = x;
+                            (out as any)[`y${suffix}`] = y;
                             out.valid =
                                 out.valid &&
                                 isValid(row.x) &&
@@ -265,11 +279,14 @@
                     ScaleName
                 ][]) {
                     // check if the mark has defined an accessor for this channel
-                    if (options?.[channel] != null && out[channel] === undefined) {
+                    if (
+                        (options as any)?.[channel] != null &&
+                        (out as any)[channel] === undefined
+                    ) {
                         // resolve value
                         const value = row[channel];
                         // if this channel was renamed, use the original channel for scaling
-                        const origChannel = options?.[RENAME]?.[channel] || channel;
+                        const origChannel = (options as any)?.[RENAME]?.[channel] || channel;
                         const scaled = usedScales[channel]
                             ? scale === 'x'
                                 ? projectX(origChannel as 'x' | 'x1' | 'x2', plot.scales, value)
@@ -283,12 +300,12 @@
                         out.valid = out.valid && (scale === 'color' || isValid(value));
 
                         // apply dx/dy transform
-                        out[channel] =
+                        (out as any)[channel] =
                             Number.isFinite(scaled) && (scale === 'x' || scale === 'y')
                                 ? scaled + (scale === 'x' ? out.dx : out.dy)
                                 : scaled;
                     } else if (defaults[channel]) {
-                        out[channel] = defaults[channel];
+                        (out as any)[channel] = defaults[channel];
                     }
                 }
 
@@ -300,10 +317,10 @@
 
     function dodge<T>(data: ScaledDataRecord<Datum>[], options: BaseMarkProps<T>) {
         if (options.dodgeX) {
-            return dodgeX({ data, ...options }, plot);
+            return dodgeX({ data, ...options } as any, plot) as ScaledDataRecord<Datum>[];
         }
         if (options.dodgeY) {
-            return dodgeY({ data, ...options }, plot);
+            return dodgeY({ data, ...options } as any, plot) as ScaledDataRecord<Datum>[];
         }
         return data;
     }

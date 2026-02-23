@@ -45,16 +45,16 @@
         if (
             projection &&
             typeof projection !== 'function' &&
-            typeof projection?.type !== 'function'
+            typeof (projection as any)?.type !== 'function'
         ) {
             const { type: projFactory, aspectRatio } = namedProjection(
-                isObject(projection) ? projection.type : projection
-            );
+                isObject(projection) ? (projection as any).type : (projection as string)
+            ) as { type: any; aspectRatio: number };
             return {
                 ...(isObject(projection) ? projection : {}),
                 type: projFactory,
                 aspectRatio
-            };
+            } as any;
         }
         return projection;
     });
@@ -62,8 +62,9 @@
     const scales = $derived(
         Object.fromEntries(
             ['x', 'y', 'r', 'color', 'opacity', 'symbol', 'length', 'fx', 'fy'].map((scale) => {
-                const scaleOpts = maybeScaleOptions(restOptions[scale]);
-                const scaleFn = scaleOpts.scale || (scale === 'color' ? autoScaleColor : autoScale);
+                const scaleOpts = maybeScaleOptions((restOptions as any)[scale]);
+                const scaleFn =
+                    (scaleOpts as any)?.scale || (scale === 'color' ? autoScaleColor : autoScale);
                 return [scale, { ...scaleOpts, scale: scaleFn }];
             })
         )
@@ -72,9 +73,9 @@
     function maybeScaleOptions(
         scaleOptions: undefined | false | RawValue[] | object
     ): Partial<ScaleOptions> | undefined {
-        if (scaleOptions === false) return { axis: false };
+        if (scaleOptions === false) return { axis: false } as any;
         if (Array.isArray(scaleOptions)) return { domain: scaleOptions };
-        return scaleOptions || {};
+        return (scaleOptions as any) || {};
     }
 </script>
 
@@ -84,7 +85,7 @@
     <!-- also pass on user header -->
     {#if userHeader}{@render userHeader?.()}{/if}
     {#if restOptions.color?.legend}
-        <ColorLegend />
+        <ColorLegend class={null} />
     {/if}
     {#if restOptions.symbol?.legend}
         <SymbolLegend />
@@ -110,8 +111,8 @@
         restOptions.color?.legend ||
         restOptions.symbol?.legend
             ? header
-            : null}
-        footer={userFooter || restOptions?.caption ? footer : null}
+            : undefined}
+        footer={userFooter || restOptions?.caption ? footer : undefined}
         projection={projectionOpts}
         implicitScales
         {...scales}>
@@ -157,11 +158,16 @@
                 {@render parentChildren?.({
                     options,
                     scales,
+                    hasProjection,
+                    hasExplicitAxisX,
+                    hasExplicitAxisY,
+                    hasExplicitGridX,
+                    hasExplicitGridY,
                     ...restProps
                 })}
-                {#snippet failed(error, reset)}
+                {#snippet failed(error: unknown, reset: () => void)}
                     <text class="error" transform="translate(10,10)">
-                        {#each error.message.split('\n') as line, i (i)}
+                        {#each (error as Error).message.split('\n') as line, i (i)}
                             <tspan x="0" dy={i ? 14 : 0}>{line}</tspan>
                         {/each}
                     </text>{/snippet}
@@ -171,8 +177,8 @@
             <FacetAxes />
         {/snippet}
     </Plot>
-    {#snippet failed(error)}
-        <div class="error">Error: {error.message}</div>
+    {#snippet failed(error: unknown)}
+        <div class="error">Error: {(error as Error).message}</div>
     {/snippet}
 </svelte:boundary>
 
