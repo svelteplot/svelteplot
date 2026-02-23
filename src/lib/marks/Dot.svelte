@@ -57,7 +57,7 @@
 
     const plot = usePlot();
 
-    function getSymbolPath(symbolType, size) {
+    function getSymbolPath(symbolType: string, size: number) {
         return d3Symbol(maybeSymbol(symbolType), size)();
     }
 
@@ -65,7 +65,7 @@
         // todo: move sorting to Mark
         sort(
             recordizeXY({
-                data,
+                data: data as any[],
                 // sort by descending radius by default
                 ...(options.r &&
                 !isOrdinalScale(plot.scales.x.type) &&
@@ -98,7 +98,7 @@
     {#snippet children({ mark, usedScales, scaledData })}
         <g class="dot {className || ''}">
             {#if canvas}
-                <DotCanvas data={scaledData} {mark} />
+                <DotCanvas data={scaledData} {mark} {plot} />
             {:else}
                 {#each scaledData as d, i (i)}
                     {#if d.valid && isValid(d.r)}
@@ -109,18 +109,18 @@
                             'stroke',
                             usedScales
                         )}
-                        <Anchor {options} datum={d.datum}>
+                        <Anchor options={options as any} datum={d.datum}>
                             <path
                                 transform="translate({d.x}, {d.y})"
-                                d={getSymbolPath(d.symbol, d.r ** 2 * Math.PI)}
+                                d={getSymbolPath(d.symbol as string, (d.r as number) ** 2 * Math.PI)}
                                 class={[
-                                    dotClass ? resolveProp(dotClass, d.datum, null) : null,
+                                    dotClass ? resolveProp(dotClass, d.datum as Datum, null) : null,
                                     styleClass
                                 ]}
                                 {style}
                                 {@attach addEventHandlers({
                                     plot,
-                                    options: args,
+                                    options: args as any,
                                     datum: d?.datum
                                 })} />
                         </Anchor>

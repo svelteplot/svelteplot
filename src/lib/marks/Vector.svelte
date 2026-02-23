@@ -71,7 +71,7 @@
         r: defaultRadius
     };
     const {
-        data = [{}],
+        data = [{} as Datum],
         canvas,
         shape = 'arrow',
         anchor = 'middle',
@@ -151,7 +151,7 @@
 
     const args = $derived(
         sort({
-            data: indexData(data),
+            data: indexData(data as object[]) as unknown as Datum[],
             // sort by descending radius by default
             ...options
         })
@@ -173,7 +173,7 @@
         'fillOpacity',
         'strokeOpacity'
     ]}
-    {...args}>
+    {...(args as any)}>
     {#snippet children({ scaledData, usedScales })}
         <g class="vector" data-l={usedScales.length}>
             {#if canvas}
@@ -190,25 +190,25 @@
                                 strokeLinejoin: 'round',
                                 strokeLinecap: 'round',
                                 ...args
-                            },
+                            } as any,
                             shape === 'arrow-filled' ? 'fill' : 'stroke',
                             usedScales
                         )}
                         <path
-                            d={shapePath(shape, d.length, d.r)}
+                            d={shapePath(shape, d.length as number, d.r as number)}
                             transform="translate({d.x}, {d.y}) rotate({resolveProp(
                                 args.rotate,
-                                d.datum,
+                                d.datum as any,
                                 0
-                            )}) {anchor === 'start'
+                            ) as number}) {anchor === 'start'
                                 ? ''
                                 : anchor === 'end'
-                                  ? `translate(0, ${d.length})`
-                                  : `translate(0, ${d.length / 2})`}"
+                                  ? `translate(0, ${d.length as number})`
+                                  : `translate(0, ${(d.length as number) / 2})`}"
                             {style}
                             {@attach addEventHandlers({
                                 plot,
-                                options: args,
+                                options: args as any,
                                 datum: d?.datum
                             })}
                             class={[styleClass]} />

@@ -53,7 +53,7 @@
     };
 
     const {
-        data = [{}],
+        data = [] as Datum[],
         children,
         x,
         y,
@@ -62,20 +62,20 @@
         fy,
         maxDistance = 15,
         tolerance = Number.NEGATIVE_INFINITY,
-        onupdate = null
+        onupdate = undefined
     }: PointerMarkProps = $derived({
         ...DEFAULTS,
         ...markProps
     });
 
-    let selectedData = $state([]);
+    let selectedData = $state<any[]>([]);
 
     function onPointerMove(evt: MouseEvent) {
-        let facetEl = evt.target as SVGElement;
+        let facetEl: Element | null = evt.target as Element;
         while (facetEl && !facetEl.classList.contains('facet')) {
-            facetEl = facetEl.parentElement;
+            facetEl = facetEl.parentElement as Element | null;
         }
-        const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
+        const facetRect = ((facetEl?.firstChild as Element) ?? plot.body).getBoundingClientRect();
 
         const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
         const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
@@ -100,11 +100,11 @@
                 .data()
                 .filter((d) => d !== points[i])
                 .filter(
-                    (d) =>
+                    (d: any) =>
                         (!isFinite(d[POINTER_X]) ||
-                            Math.abs(d[POINTER_X] - points[i]?.[POINTER_X]) < tolerance) &&
+                            Math.abs(d[POINTER_X] - (points[i] as any)?.[POINTER_X]) < tolerance) &&
                         (!isFinite(d[POINTER_Y]) ||
-                            Math.abs(d[POINTER_Y] - points[i]?.[POINTER_Y]) < tolerance)
+                            Math.abs(d[POINTER_Y] - (points[i] as any)?.[POINTER_Y]) < tolerance)
                 );
         });
         selectedData = [...points, ...otherPoints].filter((d) => d != null);
@@ -122,18 +122,18 @@
     });
 
     const groups = $derived.by(() => {
-        const groups = [];
-        groupFacetsAndZ(indexData(data), { x, y, z, fx, fy }, (d) => groups.push(d));
+        const groups: any[][] = [];
+        groupFacetsAndZ(indexData(data as object[]) as any, { x, y, z, fx, fy }, (d) => groups.push(d));
         return groups;
     });
 
     const trees = $derived(
         groups.map((items) =>
-            quadtree()
-                .x(x != null ? (d) => d[POINTER_X] : () => 0)
-                .y(y != null ? (d) => d[POINTER_Y] : () => 0)
+            quadtree<any>()
+                .x(x != null ? (d: any) => d[POINTER_X] : () => 0)
+                .y(y != null ? (d: any) => d[POINTER_Y] : () => 0)
                 .addAll(
-                    items?.map((d) => {
+                    items?.map((d: any) => {
                         const [px, py] = projectXY(
                             plot.scales,
                             resolveChannel('x', d, { x }),

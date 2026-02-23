@@ -27,7 +27,7 @@
         /** CSS class applied to the wrapper element */
         class: string | null;
         /** snippet rendered for each data point with the datum and its projected coordinates */
-        children: Snippet<{ datum: Datum; x: number; y: number }>;
+        children: Snippet<[{ datum: Datum; x: number; y: number }]>;
     }
     import { type Snippet } from 'svelte';
     import type { ChannelAccessor, ConstantAccessor, DataRecord } from '../types/index.js';
@@ -49,7 +49,7 @@
     }: CustomMarkHTMLProps = $props();
 
     function getXY(datum: Datum) {
-        const fa = frameAnchor || 'center';
+        const fa = (frameAnchor || 'center') as string;
         const isLeft = fa.endsWith('left');
         const isRight = fa.endsWith('right');
         const isTop = fa.startsWith('top');

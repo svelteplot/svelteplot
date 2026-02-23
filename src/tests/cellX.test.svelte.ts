@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
-// @ts-expect-error - Svelte component has no typed default export
 import CellXTest from './cellX.test.svelte';
 import { getRectDims, getPathDims } from './utils';
 

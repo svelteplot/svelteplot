@@ -32,7 +32,7 @@
 
     let { data, x, y, r, fx, fy, children }: HTMLTooltipMarkProps = $props();
 
-    let datum = $state(false);
+    let datum = $state<Datum | false>(false);
     let tooltipX = $state();
     let tooltipY = $state();
 
@@ -41,12 +41,12 @@
 
     function onPointerMove(evt: MouseEvent) {
         const plotRect = plot.body.getBoundingClientRect();
-        let facetEl = evt.target as SVGElement;
+        let facetEl: Element | null = evt.target as Element;
         while (facetEl && !facetEl.classList.contains('facet')) {
-            facetEl = facetEl.parentElement;
+            facetEl = facetEl.parentElement as Element | null;
         }
-        const facetIndex = +(facetEl?.dataset?.facet ?? 0);
-        const facetRect = (facetEl?.firstChild ?? plot.body).getBoundingClientRect();
+        const facetIndex = +((facetEl as HTMLElement)?.dataset?.facet ?? 0);
+        const facetRect = ((facetEl?.firstChild as Element) ?? plot.body).getBoundingClientRect();
 
         facetOffsetX = facetRect.left - plotRect.left - plot.options.marginLeft;
         facetOffsetY = facetRect.top - plotRect.top - plot.options.marginTop;
@@ -86,7 +86,7 @@
 
     const trees = $derived(
         groups.map((items) =>
-            quadtree()
+            quadtree<Datum>()
                 .x((d) => projectX('x', plot.scales, resolveChannel('x', d, { x, y, r })))
                 .y((d) => projectY('y', plot.scales, resolveChannel('y', d, { x, y, r })))
                 .addAll(items)
@@ -98,7 +98,7 @@
     class={['svelteplot-tooltip', { hide: !datum }]}
     style:left="{tooltipX ? facetOffsetX + projectX('x', plot.scales, tooltipX) : 0}px"
     style:top="{tooltipY ? facetOffsetY + projectY('y', plot.scales, tooltipY) : 0}px">
-    {@render children({ datum })}
+    {@render children({ datum: datum as Datum })}
 </div>
 
 <style>
