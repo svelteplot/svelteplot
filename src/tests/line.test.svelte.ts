@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import LineTest from './line.test.svelte';
 
 describe('Line mark', () => {

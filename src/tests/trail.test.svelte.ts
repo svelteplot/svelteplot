@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import TrailTest from './trail.test.svelte';
 
 describe('Trail mark', () => {

@@ -1,5 +1,6 @@
 import { describe, it, vi, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
+// @ts-expect-error - Svelte component has no typed default export
 import BarXTest from './barX.test.svelte';
 import { getPathDims, getRectDims, parsePath } from './utils';
 import { tick } from 'svelte';
