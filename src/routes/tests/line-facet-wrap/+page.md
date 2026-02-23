@@ -1,3 +1,0 @@
----
-title: Line Facet Wrapping
----
