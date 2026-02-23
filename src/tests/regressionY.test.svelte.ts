@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 // @ts-ignore - tsc in lint:types does not see default export for .svelte test component
-// @ts-expect-error - Svelte component has no typed default export
+// @ts-ignore - svelte-check errors on .svelte imports, tsc does not
 import RegressionYTest from './regressionY.test.svelte';
 
 const linearData = [
