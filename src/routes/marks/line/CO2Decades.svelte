@@ -3,18 +3,26 @@
     import { range } from 'd3-array';
     import { page } from '$app/stores';
 
-    let { co2 } = $derived($page.data.data);
+    const { co2 } = $derived($page.data.data);
 
-    let co2decades = $derived(
+    type CO2Decade = {
+        date: Date;
+        average: number;
+        interpolated: number;
+        decadeBaseYear: number;
+        yearInDecade: number;
+    };
+
+    const co2decades = $derived(
         co2.map((d: { date: Date }) => {
             const y = d.date.getFullYear();
             const decadeBaseYear = y - (y % 10);
             const yearInDecade = y - decadeBaseYear + d.date.getMonth() / 12;
             return { ...d, decadeBaseYear, yearInDecade };
-        })
+        }) as CO2Decade[]
     );
 
-    const dateFormat = (date) =>
+    const dateFormat = (date: Date) =>
         date.toLocaleString('default', { month: 'short', year: 'numeric' });
 </script>
 
@@ -49,7 +57,7 @@
         text="text"
         textAnchor="start"
         lineAnchor="top"
-        dy="3"
+        dy={3}
         fontStyle="italic"
         opacity={0.5} />
 
@@ -61,7 +69,7 @@
         z="decadeBaseYear"
         x="yearInDecade"
         stroke="average"
-        strokeWidth="1.7"
+        strokeWidth={1.7}
         y="average" />
 
     <!-- labels -->
@@ -71,11 +79,16 @@
             x: 'yearInDecade',
             y: 'average',
             z: 'decadeBaseYear'
-        })}
+        }) as {
+            x: string;
+            y: string;
+            z: string;
+            data: CO2Decade[];
+        }}
         text={(d) =>
             `${Math.max(d.decadeBaseYear, co2decades[0].date.getFullYear())}-'${String(Math.min(d.decadeBaseYear + 9, co2decades.at(-1).date.getFullYear())).substring(2)}`}
         textAnchor="start"
-        dx="5"
+        dx={5}
         stroke="var(--svelteplot-bg)"
         strokeWidth={3}
         fill="average" />

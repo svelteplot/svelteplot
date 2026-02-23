@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
-// @ts-expect-error - Svelte component has no typed default export
+// @ts-ignore - svelte-check errors on .svelte imports, tsc does not
 import AreaYTest from './areaY.test.svelte';
 
 describe('AreaY mark', () => {

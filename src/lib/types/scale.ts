@@ -1,4 +1,4 @@
-import type { ChannelAccessor, RawValue, ScaledChannelName } from './index.js';
+import type { ChannelAccessor, ColorScheme, RawValue, ScaledChannelName } from './index.js';
 
 export type AxisXAnchor = 'bottom' | 'top' | 'both';
 export type AxisYAnchor = 'left' | 'right' | 'both';
@@ -165,7 +165,7 @@ export type ColorScaleOptions = ScaleOptions & {
     /**
      * the name of the color scheme to use, e.g. 'blues', 'turbo', 'rdylbu'
      */
-    scheme: string;
+    scheme: ColorScheme | string[];
     /**
      * fallback color used for null/undefined
      */

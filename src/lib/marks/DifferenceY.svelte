@@ -81,7 +81,7 @@
     const {
         data,
         stroke,
-        class: className = null,
+        class: className = '',
         ...options
     }: DifferenceYMarkProps = $derived({
         ...DEFAULTS,
@@ -92,27 +92,33 @@
     const x1x2Differ = $derived((x1 == null || x2 == null) && x1 !== x2);
 
     const xExtent = $derived(
-        x1x2Differ && x != null ? extent(data, (d) => resolveChannel('x', d, options)) : null
+        x1x2Differ && x != null
+            ? extent(data, (d) => resolveChannel('x', d, options) as number | null | undefined)
+            : null
     );
     const x1Extent = $derived(
-        x1x2Differ && x1 != null ? extent(data, (d) => resolveChannel('x1', d, options)) : null
+        x1x2Differ && x1 != null
+            ? extent(data, (d) => resolveChannel('x1', d, options) as number | null | undefined)
+            : null
     );
     const x2Extent = $derived(
-        x1x2Differ && x2 != null ? extent(data, (d) => resolveChannel('x2', d, options)) : null
+        x1x2Differ && x2 != null
+            ? extent(data, (d) => resolveChannel('x2', d, options) as number | null | undefined)
+            : null
     );
 
     const maxMin = $derived(
-        max([xExtent, x1Extent, x2Extent].filter((d) => d != null).map((d) => d[0]))
+        max([xExtent, x1Extent, x2Extent].filter((d) => d != null).map((d) => d![0] as number))
     );
     const minMax = $derived(
-        min([xExtent, x1Extent, x2Extent].filter((d) => d != null).map((d) => d[1]))
+        min([xExtent, x1Extent, x2Extent].filter((d) => d != null).map((d) => d![1] as number))
     );
 
     const croppedX1 = $derived(
         x1x2Differ
             ? data.filter((d) => {
-                  const x1val = resolveChannel(x1 != null ? 'x1' : 'x', d, options);
-                  return x1val >= maxMin && x1val <= minMax;
+                  const x1val = resolveChannel(x1 != null ? 'x1' : 'x', d, options) as number;
+                  return x1val >= (maxMin as number) && x1val <= (minMax as number);
               })
             : data
     );
@@ -120,8 +126,8 @@
     const croppedX2 = $derived(
         x1x2Differ
             ? data.filter((d) => {
-                  const x2val = resolveChannel(x2 != null ? 'x2' : 'x', d, options);
-                  return x2val >= maxMin && x2val <= minMax;
+                  const x2val = resolveChannel(x2 != null ? 'x2' : 'x', d, options) as number;
+                  return x2val >= (maxMin as number) && x2val <= (minMax as number);
               })
             : data
     );
@@ -146,7 +152,7 @@
         data={croppedX1}
         {...options}
         fill={options.positiveFill || 'pink'}
-        fillOpacity={coalesce(options.positiveFillOpacity, options.fillOpacity, 1)}
+        fillOpacity={coalesce(options.positiveFillOpacity, options.fillOpacity, 1) as number}
         x1={coalesce(x1, x2, x)}
         y1={{ scale: null, value: 0 }}
         y2={coalesce(y1, x1x2Differ ? coalesce(y2, y) : 0)} />
@@ -168,7 +174,7 @@
         data={croppedX2}
         {...options}
         fill={options.negativeFill || 'cyan'}
-        fillOpacity={coalesce(options.negativeFillOpacity, options.fillOpacity, 1)}
+        fillOpacity={coalesce(options.negativeFillOpacity, options.fillOpacity, 1) as number}
         x1={coalesce(x2, x)}
         y1={{ scale: null, value: 0 }}
         y2={coalesce(y2, y)} />

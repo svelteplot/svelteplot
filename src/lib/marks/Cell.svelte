@@ -21,7 +21,8 @@
         BaseMarkProps,
         BaseRectMarkProps,
         ChannelAccessor,
-        LinkableMarkProps
+        LinkableMarkProps,
+        MarkType
     } from '../types/index.js';
     import Mark from '../Mark.svelte';
     import { recordizeY, sort } from '../index.js';
@@ -67,11 +68,11 @@
 </script>
 
 <Mark
-    type="cell"
     required={['x', 'y']}
     requiredScales={{ x: ['band'], y: ['band'] }}
     channels={['x', 'y', 'fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity']}
-    {...args}>
+    {...args}
+    type={'cell' as MarkType}>
     {#snippet children({ scaledData, usedScales })}
         {@const bwx = plot.scales.x.fn.bandwidth()}
         {@const bwy = plot.scales.y.fn.bandwidth()}
@@ -85,10 +86,10 @@
                     )
                     .map((d) => ({
                         ...d,
-                        x1: d.x - bwx * 0.5,
-                        x2: d.x + bwx * 0.5,
-                        y1: d.y - bwy * 0.5,
-                        y2: d.y + bwy * 0.5
+                        x1: (d.x as number) - bwx * 0.5,
+                        x2: (d.x as number) + bwx * 0.5,
+                        y1: (d.y as number) - bwy * 0.5,
+                        y2: (d.y as number) + bwy * 0.5
                     }))}
                 <RectCanvas options={args} data={rectCanvasData} {usedScales} />
             {:else}
@@ -99,8 +100,8 @@
                             class={className}
                             {usedScales}
                             options={args}
-                            x={d.x - bwx * 0.5}
-                            y={d.y - bwy * 0.5}
+                            x={(d.x as number) - bwx * 0.5}
+                            y={(d.y as number) - bwy * 0.5}
                             width={bwx}
                             height={bwy} />
                     {/if}

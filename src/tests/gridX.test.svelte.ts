@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
-// @ts-expect-error - Svelte component has no typed default export
+// @ts-ignore - svelte-check errors on .svelte imports, tsc does not
 import GridXTest from './gridX.test.svelte';
 import { tick } from 'svelte';
 

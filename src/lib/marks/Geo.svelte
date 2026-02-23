@@ -71,7 +71,7 @@
             geoPath,
             [plot.scales.projection],
             options.r
-                ? { pointRadius: (d) => plot.scales.r.fn(resolveChannel('r', d, options)) }
+                ? { pointRadius: (d: any) => plot.scales.r.fn(resolveChannel('r', d, options)) }
                 : { pointRadius: 3 }
         )
     );
@@ -79,7 +79,7 @@
     const args = $derived(
         sort(
             recordize({
-                data,
+                data: data as any[],
                 ...(options.r ? { sort: { channel: '-r' } } : {}),
                 ...options
             })
@@ -101,24 +101,28 @@
             {:else}
                 {#each scaledData as d, i (i)}
                     {#if d.valid}
-                        <Anchor {options} datum={d.datum}>
+                        <Anchor options={options as any} datum={d.datum}>
                             {@const title = resolveProp(args.title, d.datum, '')}
                             {@const geometry = resolveProp(args.geometry, d.datum, d.datum)}
                             {@const [style, styleClass] = resolveStyles(
                                 plot,
                                 d,
-                                args,
-                                GEOJSON_PREFER_STROKE.has(geometry.type) ? 'stroke' : 'fill',
+                                args as any,
+                                GEOJSON_PREFER_STROKE.has((geometry as any)?.type)
+                                    ? 'stroke'
+                                    : 'fill',
                                 usedScales
                             )}
                             <path
-                                d={path(geometry)}
+                                d={path(geometry as any)}
                                 {style}
                                 class={[styleClass]}
-                                filter={resolveProp(args.svgFilter, d.datum, undefined)}
+                                filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                                    | string
+                                    | undefined}
                                 {@attach addEventHandlers({
                                     plot,
-                                    options: args,
+                                    options: args as any,
                                     datum: d?.datum
                                 })}>
                                 {#if title}<title>{title}</title>{/if}
