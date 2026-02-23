@@ -23,13 +23,13 @@
     const facetXScale = $derived(
         scaleBand()
             .paddingInner(plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
-            .domain(fxValues)
+            .domain(fxValues as string[])
             .rangeRound([0, plot.plotWidth])
     );
     const facetYScale = $derived(
         scaleBand()
             .paddingInner(plot.options.fy?.paddingInner ?? plot.options.fy?.padding ?? 0.1)
-            .domain(fyValues)
+            .domain(fyValues as string[])
             .rangeRound([0, plot.plotHeight])
     );
 </script>
@@ -39,17 +39,20 @@
     <g transform="translate({plot.options.marginLeft}, 0)">
         <BaseAxisX
             class="facet-axis-x"
-            scaleFn={facetXScale}
+            scaleFn={facetXScale as any}
             scaleType="band"
             ticks={fxValues}
-            tickFormat={plot.options.fx.tickFormat || ((d) => d)}
+            tickFormat={(plot.options.fx.tickFormat || ((d: any) => d)) as any}
             tickFontSize={11}
             tickSize={0}
             tickPadding={plot.options.x.axis === plot.options.fx.axis ||
             plot.options.x.axis === 'both'
                 ? 25
                 : 5}
-            anchor={plot.options.fx.axis}
+            anchor={plot.options.fx.axis === 'both'
+                ? 'top'
+                : (plot.options.fx.axis as 'top' | 'bottom' | undefined)}
+            title={null}
             options={plot.options.fx.axisOptions || {}}
             {...plot.options.fx.axisProps || {}}
             height={plot.plotHeight}
@@ -61,14 +64,16 @@
     <g transform="translate(0, {plot.options.marginTop})">
         <BaseAxisY
             class="facet-axis-y"
-            scaleFn={facetYScale}
+            scaleFn={facetYScale as any}
             scaleType="band"
             ticks={fyValues}
-            tickFormat={plot.options.fy.tickFormat || ((d) => d)}
+            tickFormat={(plot.options.fy.tickFormat || ((d: any) => d)) as any}
             tickFontSize={11}
             tickSize={0}
             tickPadding={5}
-            anchor={plot.options.fy.axis}
+            anchor={plot.options.fy.axis === 'both'
+                ? 'right'
+                : (plot.options.fy.axis as 'left' | 'right' | undefined)}
             lineAnchor="center"
             options={plot.options.fy.axisOptions || {}}
             {...plot.options.fy.axisProps || {}}

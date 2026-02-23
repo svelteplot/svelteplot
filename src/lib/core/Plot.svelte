@@ -94,8 +94,8 @@
         axisY: {
             anchor: 'left',
             implicit: true,
-            ...USER_DEFAULTS.axis,
-            ...USER_DEFAULTS.axisY
+            ...(USER_DEFAULTS.axis as any),
+            ...(USER_DEFAULTS.axisY as any)
         },
         gridX: {
             implicit: false,
@@ -107,7 +107,7 @@
             ...asGridDefaults(USER_DEFAULTS.grid),
             ...asGridDefaults(USER_DEFAULTS.gridY)
         }
-    };
+    } as PlotDefaults;
 
     let {
         header,
@@ -171,7 +171,7 @@
     );
 
     const explicitDomains = $derived(
-        new Set(SCALES.filter((scale) => !!initialOptions[scale]?.domain))
+        new Set(SCALES.filter((scale) => !!(initialOptions as any)[scale]?.domain))
     );
 
     // one-dimensional plots have different automatic margins and heights
@@ -184,7 +184,7 @@
             explicitScales,
             explicitDomains,
             hasProjection: !!initialOptions.projection,
-            margin: initialOptions.margin,
+            margin: initialOptions.margin as number | 'auto' | undefined,
             inset: initialOptions.inset
         })
     );
@@ -217,7 +217,7 @@
 
     const defaultPointScaleHeight = $derived(
         explicitScales.has('r') && plotOptions.r.range
-            ? plotOptions.r.range[1] * 2
+            ? (plotOptions.r.range[1] as number) * 2
             : DEFAULTS.pointScaleHeight
     );
 
@@ -233,8 +233,8 @@
             ? plotOptions.height(plotWidth)
             : maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
               ? Math.round(
-                    preScales.projection && preScales.projection.aspectRatio
-                        ? ((plotWidth * preScales.projection.aspectRatio) / xFacetCount) *
+                    preScales.projection && (preScales.projection as any).aspectRatio
+                        ? ((plotWidth * (preScales.projection as any).aspectRatio) / xFacetCount) *
                               yFacetCount +
                               plotOptions.marginTop +
                               plotOptions.marginBottom
@@ -260,7 +260,7 @@
               : maybeNumber(plotOptions.height)
     );
 
-    const plotHeight = $derived(height - plotOptions.marginTop - plotOptions.marginBottom);
+    const plotHeight = $derived((height ?? 0) - plotOptions.marginTop - plotOptions.marginBottom);
 
     // TODO: check if there's still a reason to store and expose the plot body element
     let plotBody: HTMLDivElement | null = $state(null);
@@ -280,7 +280,7 @@
         const scales = computeScales(
             plotOptions,
             facetWidth || width,
-            facetHeight || height,
+            facetHeight ?? height ?? 0,
             hasFilledDotMarks,
             marks,
             DEFAULTS
@@ -293,9 +293,9 @@
         return {
             options: plotOptions,
             width,
-            height,
-            facetWidth,
-            facetHeight,
+            height: height ?? 0,
+            facetWidth: facetWidth ?? undefined,
+            facetHeight: facetHeight ?? undefined,
             plotHeight,
             plotWidth,
             scales,
@@ -303,7 +303,7 @@
             hasFilledDotMarks,
             body: plotBody,
             css
-        };
+        } as any;
     }
 
     setContext('svelteplot', {
@@ -363,11 +363,11 @@
         const xDomainExtent =
             x.type === 'band' || x.type === 'point'
                 ? x.domain.length
-                : Math.abs(x.domain[1] - x.domain[0]);
+                : Math.abs((x.domain[1] as number) - (x.domain[0] as number));
         const yDomainExtent =
             y.type === 'band' || y.type === 'point'
                 ? y.domain.length
-                : Math.abs(y.domain[1] - y.domain[0]);
+                : Math.abs((y.domain[1] as number) - (y.domain[0] as number));
         return (
             ((plotWidth / xDomainExtent) * yDomainExtent) / aspectRatio + marginTop + marginBottom
         );
@@ -378,10 +378,10 @@
         opts: PlotOptionsParameters
     ): ResolvedPlotOptions {
         return mergeDeep<PlotOptions>(
-            {},
-            { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains },
-            smartDefaultPlotOptions(opts),
-            initialOptions
+            {} as Partial<PlotOptions>,
+            { sortOrdinalDomains: DEFAULTS.sortOrdinalDomains } as Partial<PlotOptions>,
+            smartDefaultPlotOptions(opts) as any,
+            initialOptions as any
         ) as ResolvedPlotOptions;
     }
 
@@ -510,14 +510,14 @@
                 padding: 0,
                 align: 0
             },
-            color: { type: 'auto', unknown: DEFAULTS.unknown },
+            color: { type: 'auto' as any, unknown: DEFAULTS.unknown },
             length: { type: 'linear' },
             symbol: { type: 'ordinal' },
             fx: { type: 'band', axis: 'top' },
             fy: { type: 'band', axis: 'right' },
             locale: DEFAULTS.locale,
             css: DEFAULTS.css
-        };
+        } as ResolvedPlotOptions;
     }
 
     const mapXY = $derived((x: RawValue, y: RawValue) => {
@@ -548,7 +548,7 @@
                 {#if children}
                     {@render children({
                         width,
-                        height,
+                        height: height ?? 0,
                         options: plotOptions,
                         scales: plotState.scales,
                         mapXY,
@@ -564,7 +564,7 @@
         {#if overlay}<div class="plot-overlay">
                 {@render overlay?.({
                     width,
-                    height,
+                    height: height ?? 0,
                     options: plotOptions,
                     scales: plotState.scales,
                     mapXY,

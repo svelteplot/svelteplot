@@ -556,7 +556,20 @@ export type PlotOptions = {
      * options, and resolved scales as arguments.
      */
     children: Snippet<
-        [{ width: number; height: number; options: ResolvedPlotOptions; scales: PlotScales }]
+        [
+            {
+                width: number;
+                height: number;
+                options: ResolvedPlotOptions;
+                scales: PlotScales;
+                hasProjection: boolean;
+                hasExplicitAxisX: boolean;
+                hasExplicitAxisY: boolean;
+                hasExplicitGridX: boolean;
+                hasExplicitGridY: boolean;
+                [key: string]: any;
+            }
+        ]
     >;
     /**
      * You can use the header snippet to render a custom title and subtitle for
@@ -578,7 +591,20 @@ export type PlotOptions = {
      * in front of the SVG body of your plot, e.g. for HTML tooltips.
      */
     overlay: Snippet<
-        [{ width: number; height: number; options: ResolvedPlotOptions; scales: PlotScales }]
+        [
+            {
+                width: number;
+                height: number;
+                options: ResolvedPlotOptions;
+                scales: PlotScales;
+                hasProjection: boolean;
+                hasExplicitAxisX: boolean;
+                hasExplicitAxisY: boolean;
+                hasExplicitGridX: boolean;
+                hasExplicitGridY: boolean;
+                [key: string]: any;
+            }
+        ]
     >;
     /**
      * snippet for rendering custom facet axes

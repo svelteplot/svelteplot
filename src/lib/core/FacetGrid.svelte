@@ -43,7 +43,7 @@
                     ? (plot.options.fx?.paddingInner ?? plot.options.fx?.padding ?? 0.1)
                     : 0
             )
-            .domain(fxValues)
+            .domain(fxValues as string[])
             .rangeRound([0, plot.plotWidth])
     );
     const facetYScale = $derived(
@@ -54,7 +54,7 @@
                     ? (plot.options.fy?.paddingInner ?? plot.options.fy?.padding ?? 0.1)
                     : 0
             )
-            .domain(fyValues)
+            .domain(fyValues as string[])
             .rangeRound([0, plot.plotHeight])
     );
 
@@ -75,8 +75,8 @@
             data-facet={i * fyValues.length + j}
             fill="currentColor"
             style:display={emptyFacets.get(facetX)?.get(facetY) ? 'none' : 'block'}
-            transform="translate({useFacetX ? facetXScale(facetX) : 0}, {useFacetY
-                ? facetYScale(facetY)
+            transform="translate({useFacetX ? facetXScale(facetX as string) : 0}, {useFacetY
+                ? facetYScale(facetY as string)
                 : 0})">
             <!-- facets need invisible rect -->
             <rect
