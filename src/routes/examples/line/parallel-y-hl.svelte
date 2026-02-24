@@ -30,12 +30,12 @@
         legend: true,
         // legend item order
         domain: [highlight, 'others'],
-        scheme: highlight
+        scheme: (highlight
             ? {
                   [highlight]: 'var(--svp-blue)',
                   others: '#99999922'
               }
-            : undefined
+            : undefined) as any
     }}>
     <Line
         {...normalizeParallelY(

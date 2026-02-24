@@ -31,14 +31,14 @@
                         'gymnastics',
                         'basketball'
                     ].includes(d.sport)
-                ),
+                ) as any,
                 sort: 'weight',
                 x: 'weight',
                 y: 'weight',
                 stroke: 'sport'
             },
             'quantile'
-        )}
+        ) as any}
         text="sport"
         strokeWidth={2} />
 </Plot>

@@ -19,7 +19,7 @@
     marginTop={40}
     x={{ type: 'band', axis: 'top' }}
     y={{ type: 'band' }}
-    color={{ type: 'quantile', scheme: 'PiYG' }}>
+    color={{ type: 'quantile', scheme: 'piyg' }}>
     <Cell
         data={simpsons}
         x="episode"

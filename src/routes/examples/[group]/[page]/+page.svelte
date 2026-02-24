@@ -21,6 +21,7 @@
         description?: string;
         sortKey?: number;
         fullCode?: boolean;
+        data?: Record<string, string>;
     };
 
     type NavLink = {
@@ -127,32 +128,43 @@
             const [beforeScript, script, svelte] =
                 code.split(/<\/?script[^>]*>/);
 
-            const cleanedScript = script
-                .split(';')
-                .filter((line) => {
-                    const trimmed = line.trim();
-                    return !(
-                        trimmed.startsWith('import ') ||
-                        trimmed.includes('ExamplesData') ||
-                        trimmed === ''
-                    );
-                })
-                .join(';')
-                .trim();
+            const cleanedScript =
+                script
+
+                    .split(';')
+                    .filter((line) => {
+                        const trimmed = line.trim();
+                        return !(
+                            trimmed.startsWith('import ') ||
+                            trimmed.includes(
+                                'ExamplesData'
+                            ) ||
+                            trimmed === ''
+                        );
+                    })
+                    .join(';')
+                    .trim() + 'x';
 
             return `<scr${'ipt'} lang="ts">\n    // imports etc.\n    ${cleanedScript}\n</scr${'ipt'}>\n\n${svelte.trim()}`;
         }
         return code.trim();
     }
 
+    const sourceSimple = $derived(
+        (source ?? '')
+            .replace(/\((\w+) as any\)/g, '$1')
+            .replace(/ as any/g, '')
+            .replace(/: any(\W)/g, '$1')
+    );
+
     const replHash = $derived(
         encodePlaygroundState(
             createREPLState(
-                mod?.title,
+                mod?.title ?? '',
                 key,
-                source,
+                sourceSimple ?? '',
                 mod?.data ?? {},
-                data ?? {}
+                (data ?? {}) as any
             )
         )
     );
@@ -193,12 +205,12 @@
                     <CodeBlock
                         lang="svelte"
                         code={cleanCode(
-                            source.substring(
+                            sourceSimple.substring(
                                 mod.fullCode
-                                    ? source.indexOf(
+                                    ? sourceSimple.indexOf(
                                           '<script lang="ts">'
                                       )
-                                    : source.lastIndexOf(
+                                    : sourceSimple.lastIndexOf(
                                           '</scr' + 'ipt>'
                                       ) + 9
                             )

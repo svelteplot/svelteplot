@@ -25,7 +25,7 @@
     y={{ domain: [0, 10] }}>
     {#each ['top', 'bottom', 'center', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as frameAnchor (frameAnchor)}
         <Text
-            {frameAnchor}
+            frameAnchor={frameAnchor as any}
             fontSize={18}
             text={frameAnchor} />
     {/each}

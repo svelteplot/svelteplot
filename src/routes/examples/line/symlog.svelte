@@ -29,7 +29,7 @@
         bind:value={type} />
 </div>
 
-<Plot grid height={300} x={{ type, constant }}>
+<Plot grid height={300} x={{ type: type as any, constant }}>
     <Line data={kneeling} x="year" y="co2" />
 </Plot>
 

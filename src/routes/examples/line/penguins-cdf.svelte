@@ -28,7 +28,7 @@
                 x: 'body_mass_g',
                 stroke: 'species'
             },
-            { cumulative: true, trim: false }
+            { cumulative: 1, trim: false }
         )}
         strokeWidth={2} />
 </Plot>

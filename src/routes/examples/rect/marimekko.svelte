@@ -39,20 +39,24 @@
     marginTop={15}
     marginRight={15}>
     <Rect
-        {...stacked}
+        {...stacked as any}
         inset={0.5}
         opacity={0.5}
         fill="segment" />
     <Text
-        {...stacked}
+        {...stacked as any}
         fontSize={9}
-        text={(d) =>
+        text={(d: any) =>
             [d.market, d.segment, d.value].join('\n')} />
     <!-- add horizontal group labels -->
     <Text
-        data={groups(stacked.data, (d) => d.market).map(
-            ([text, g]) => ({ text, x: g[0][stacked.x] })
-        )}
+        data={groups(
+            stacked.data,
+            (d: any) => d.market
+        ).map(([text, g]) => ({
+            text,
+            x: (g[0] as any)[stacked.x]
+        }))}
         x="x"
         text="text"
         lineAnchor="bottom"
@@ -61,12 +65,13 @@
         frameAnchor="top" />
     <!-- add vertical group labels -->
     <Text
-        data={groups(stacked.data, (d) => d.segment).map(
-            ([text, g]) => ({
-                text,
-                y: g.at(-1)[stacked.y]
-            })
-        )}
+        data={groups(
+            stacked.data,
+            (d: any) => d.segment
+        ).map(([text, g]) => ({
+            text,
+            y: (g.at(-1) as any)[stacked.y]
+        }))}
         y="y"
         text="text"
         lineAnchor="bottom"

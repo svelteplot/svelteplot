@@ -23,7 +23,7 @@
     <Plot
         padding={0}
         color={{
-            scheme: 'OrRd',
+            scheme: 'orrd',
             type: 'threshold',
             domain: [15, 17, 19, 20, 25, 30],
             legend: true

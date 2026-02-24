@@ -26,7 +26,7 @@
     y={{
         type: 'point',
         label: false,
-        tickFormat: (d) => d.toUpperCase()
+        tickFormat: (d) => (d as string).toUpperCase()
     }}>
     <GridY strokeDasharray="1,3" strokeOpacity={0.5} />
     <Dot

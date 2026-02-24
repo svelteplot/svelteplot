@@ -9,7 +9,7 @@
     export const transforms = ['normalize'];
 </script>
 
-<script>
+<script lang="ts">
     import {
         Plot,
         Line,
@@ -35,5 +35,5 @@
                 stroke: 'symbol'
             },
             'first'
-        )} />
+        ) as any} />
 </Plot>

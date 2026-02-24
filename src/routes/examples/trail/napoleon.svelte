@@ -11,14 +11,22 @@
 <script lang="ts">
     import { Plot, Geo, Trail, Text } from 'svelteplot';
     import * as topojson from 'topojson-client';
-    import type { ExamplesData } from '../types';
     import { extent } from 'd3-array';
     import Graticule from 'svelteplot/marks/Graticule.svelte';
     import Frame from 'svelteplot/marks/Frame.svelte';
     import RadioInput from '$shared/ui/RadioInput.svelte';
 
-    const { countries10m, minard } =
-        $props() as ExamplesData;
+    type MinardRow = {
+        long: number;
+        lat: number;
+        group: string;
+        direction: string;
+        survivors: number;
+    };
+    const { countries10m, minard } = $props() as {
+        countries10m: any;
+        minard: MinardRow[];
+    };
 
     const borders = $derived(
         topojson.mesh(
@@ -31,7 +39,7 @@
         topojson.feature(
             countries10m,
             countries10m.objects.countries
-        )
+        ) as any
     );
     const LON = extent(minard, (d) => d.long);
     const LAT = extent(minard, (d) => d.lat);
@@ -105,10 +113,10 @@
     ])}
     <!-- "inner glow" of countries created using masked fills -->
     <Geo
-        data={countries.features.filter((d) =>
-            show.has(d.properties.name)
+        data={countries.features.filter((d: any) =>
+            show.has((d.properties as any).name)
         )}
-        fill={(d) => d.properties.name}
+        fill={(d) => (d as any).properties.name}
         opacity={0.2}
         mask="url(#clip)" />
     <!-- the mask is created using a frame and blurred country borders -->
@@ -153,7 +161,8 @@
         y="lat"
         cap="butt"
         r="survivors"
-        z={(d) => `${d.group}-${d.direction}`}
+        z={(d) =>
+            `${String(d.group)}-${String(d.direction)}`}
         fill={(d) =>
             d.direction === 'A'
                 ? 'currentColor'

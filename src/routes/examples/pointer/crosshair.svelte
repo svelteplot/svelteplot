@@ -3,7 +3,7 @@
     export const data = { aapl: '/data/aapl.csv' };
 </script>
 
-<script>
+<script lang="ts">
     import {
         Plot,
         Line,
@@ -14,6 +14,7 @@
         Pointer
     } from 'svelteplot';
     let { aapl } = $props();
+    const dateFmt: any = 'MMM D, YYYY';
 </script>
 
 <div style="touch-action: none">
@@ -32,10 +33,11 @@
                     <RuleY {data} y="Close" opacity="0.3" />
                     <AxisX
                         data={data.map((d) => d.Date)}
-                        tickFormat="MMM D, YYYY" />
+                        tickFormat={dateFmt} />
                     <AxisY
                         data={data.map((d) => d.Close)}
-                        tickFormat={(d) => d.toFixed()} />
+                        tickFormat={(d) =>
+                            (d as number).toFixed()} />
                 {/if}
             {/snippet}
         </Pointer>

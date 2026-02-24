@@ -275,6 +275,13 @@ export type SeattleRow = {
     weather: 'drizzle' | 'rain' | 'sun' | 'snow' | 'fog';
 };
 
+export type UnemploymentRow = {
+    id: string;
+    state: string;
+    county: string;
+    rate: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];

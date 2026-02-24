@@ -10,7 +10,15 @@
     import { cubicInOut } from 'svelte/easing';
     import { extent } from 'd3-array';
 
-    const { penguins } = $props();
+    type PenguinRow = {
+        culmen_length_mm: number;
+        culmen_depth_mm: number;
+        species: string;
+    };
+
+    const { penguins } = $props() as {
+        penguins: PenguinRow[];
+    };
 
     let brush = $state({ enabled: false });
     let isZoomedIn = $state(false);
@@ -24,8 +32,10 @@
         (d) => d.culmen_depth_mm
     );
 
-    let domainX = $state(fullDomainX);
-    let domainY = $state(fullDomainY);
+    let domainX: [number, number] | [undefined, undefined] =
+        $state(fullDomainX);
+    let domainY: [number, number] | [undefined, undefined] =
+        $state(fullDomainY);
 
     function resetZoom() {
         domainX = fullDomainX;
@@ -45,15 +55,15 @@
     <Plot
         grid
         x={{
-            domain: domainXT.current,
+            domain: domainXT.current as any,
             label: 'culmen_length_mm'
         }}
         y={{
-            domain: domainYT.current,
+            domain: domainYT.current as any,
             label: 'culmen_depth_mm'
         }}>
         <Dot
-            data={penguins}
+            data={penguins as any}
             x="culmen_length_mm"
             y="culmen_depth_mm"
             stroke="species"
@@ -64,15 +74,21 @@
                 cursor="zoom-in"
                 onbrushend={(e) => {
                     if (e.brush.enabled) {
-                        domainX = [e.brush.x1, e.brush.x2];
-                        domainY = [e.brush.y1, e.brush.y2];
+                        domainX = [
+                            e.brush.x1 as any,
+                            e.brush.x2 as any
+                        ];
+                        domainY = [
+                            e.brush.y1 as any,
+                            e.brush.y2 as any
+                        ];
                         brush.enabled = false;
                         isZoomedIn = true;
                     }
                 }} />
         {:else}
             <Frame
-                stroke={false}
+                stroke={'none' as any}
                 fill="transparent"
                 cursor="zoom-out"
                 onpointerup={resetZoom} />

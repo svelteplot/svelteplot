@@ -16,28 +16,31 @@
     } from 'svelteplot';
     import * as topojson from 'topojson-client';
 
-    const { us, election } = $props();
+    const { us, election } = $props() as {
+        us: any;
+        election: any[];
+    };
 
     const nation = $derived(
-        topojson.feature(us, us.objects.nation)
+        (topojson as any).feature(us, us.objects.nation)
     );
     const stateMesh = $derived(
         topojson.mesh(us, us.objects.states)
     );
 
     const _election = $derived(
-        new Map(election.map((d) => [d.fips, d]))
+        new Map(election.map((d: any) => [d.fips, d]))
     );
 
     const counties = $derived(
-        topojson
+        (topojson as any)
             .feature(us, us.objects.counties)
-            .features.map((feat) => {
+            .features.map((feat: any) => {
                 return {
                     ...feat,
                     properties: {
-                        ...feat.properties,
-                        ..._election.get(+feat?.id)
+                        ...(feat as any).properties,
+                        ...(_election.get(+feat?.id) ?? {})
                     }
                 };
             })
@@ -56,7 +59,7 @@
     <Spike
         {...geoCentroid({
             data: counties
-        })}
+        }) as any}
         stroke="var(--svp-green)"
-        length={(d) => d.properties?.votes ?? 0} />
+        length={(d) => (d as any).properties?.votes ?? 0} />
 </Plot>

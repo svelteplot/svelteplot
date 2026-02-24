@@ -37,8 +37,8 @@
     x={{ axis: false }}
     y={{ axis: false }}
     r={{ range: [1, 20] }}
-    fy={{ domain: curves }}
-    fx={{ domain: caps }}>
+    fy={{ domain: curves } as any}
+    fx={{ domain: caps } as any}>
     {#each caps as cap (cap)}
         {#each curves as curve (curve)}
             <Trail

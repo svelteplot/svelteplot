@@ -1,8 +1,8 @@
-<script module>
+<script module lang="ts">
     export const title = 'Gradient from categories';
 </script>
 
-<script>
+<script lang="ts">
     import {
         Plot,
         Dot,
@@ -19,7 +19,7 @@
         { x: 4, y: 2.0, category: 'D' }
     ];
 
-    const scheme = {
+    const scheme: Record<string, string> = {
         A: 'red',
         B: 'blue',
         C: 'orange',
@@ -34,7 +34,7 @@
     );
 </script>
 
-<Plot color={{ scheme }} grid>
+<Plot color={{ scheme: scheme as any }} grid>
     <defs>
         <LinearGradientX id="my-gradient" {stops} />
     </defs>

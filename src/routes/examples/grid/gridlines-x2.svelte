@@ -5,16 +5,19 @@
     export const data = { aapl: '/data/aapl.csv' };
 </script>
 
-<script>
+<script lang="ts">
     import { Plot, Line, GridY } from 'svelteplot';
-    let { aapl } = $props();
+    let { aapl } = $props() as { aapl: any[] };
 </script>
 
 <Plot>
     <GridY
         x1={aapl[0].Date}
         x2={(value) =>
-            aapl.find((d) => Math.abs(d.Close - value) < 1)
-                ?.Date} />
+            aapl.find(
+                (d: any) =>
+                    Math.abs(d.Close - (value as number)) <
+                    1
+            )?.Date} />
     <Line data={aapl} x="Date" y="Close" />
 </Plot>

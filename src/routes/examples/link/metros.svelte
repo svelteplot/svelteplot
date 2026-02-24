@@ -8,7 +8,7 @@
     import type { MetrosRow } from '../types';
     let { metros }: { metros: MetrosRow[] } = $props();
 
-    let hl: false | MetrosRow = $state(false);
+    let hl: false | MetrosRow | null = $state(false);
 </script>
 
 <Plot
@@ -19,7 +19,7 @@
     x={{ type: 'log', label: 'Population' }}
     y={{ label: 'Inequality' }}
     color={{
-        scheme: 'BuRd',
+        scheme: 'burd',
         pivot: 1.5,
         label: 'Change in inequality from 1980 to 2015',
         legend: true
@@ -36,7 +36,9 @@
         opacity={{
             scale: null,
             value: (d) =>
-                !hl || hl.Metro === d.Metro ? 1 : 0.1
+                !hl || (hl as MetrosRow).Metro === d.Metro
+                    ? 1
+                    : 0.1
         }}
         onmouseenter={(event, d) => (hl = d)}
         onmouseleave={() => (hl = null)}
@@ -46,7 +48,9 @@
         x="POP_2015"
         y="R90_10_2015"
         filter={(d) =>
-            hl ? d.Metro === hl.Metro : d.highlight}
+            hl
+                ? d.Metro === (hl as MetrosRow).Metro
+                : !!d.highlight}
         text="nyt_display"
         fill="currentColor"
         stroke="var(--svelteplot-bg)"
