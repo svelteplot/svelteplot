@@ -162,7 +162,7 @@ describe('BarX mark', () => {
             plotArgs: {},
             barArgs: {
                 data: [1, 2, 3, 4, 5],
-                onclick: (evt: MouseEvent, datum: any) => checkDatum(datum)
+                onclick: (evt: Event, datum: any) => checkDatum(datum)
             }
         });
 

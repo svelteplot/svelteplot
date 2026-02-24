@@ -54,7 +54,7 @@
             | 'auto'
             | Intl.DateTimeFormatOptions
             | Intl.NumberFormatOptions
-            | ((d: RawValue, i: number) => string);
+            | TickFormatFunction;
         /** CSS class applied to each tick label */
         tickClass?: ConstantAccessor<string, Datum>;
         /** ticks is a shorthand for defining data, tickCount or interval */

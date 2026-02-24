@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import { resolve } from '$app/paths';
     import { useDark } from '$shared/ui';
     let { examples } = $props();
 
-    const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
+    const exampleImages: Record<string, any> = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,
         query: {
             enhanced: true,

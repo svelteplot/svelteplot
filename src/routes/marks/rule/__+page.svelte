@@ -1,13 +1,12 @@
 <script lang="ts">
     import { Plot, Line, RuleX, RuleY } from '$lib/index.js';
-    import type { Datasets } from 'svelteplot/types/index.js';
     import { getContext } from 'svelte';
     import SineRules from './SineRules.svelte';
     import BarcodeExample from './BarcodeExample.svelte';
     import CandlestickExample from './CandlestickExample.svelte';
     import Code from '../../Code.svelte';
 
-    const { aapl } = getContext<Datasets>('data');
+    const { aapl } = getContext<Record<string, any[]>>('data');
 
     type AAPL = (typeof aapl)[0];
 </script>
@@ -18,8 +17,8 @@
     <p>A common use case for rules are axis lines or value annotations:</p>
 
     <Plot grid testid="rule-annotations">
-        <RuleY data={[90]} stroke="turquoise" strokeWidth="3" />
-        <RuleX data={[new Date(2016, 4, 14)]} stroke="red" strokeWidth="3" opacity="0.5" />
+        <RuleY data={[90]} stroke="turquoise" strokeWidth={3} />
+        <RuleX data={[new Date(2016, 4, 14)]} stroke="red" strokeWidth={3} opacity={0.5} />
         <Line data={aapl} x="Date" y="Close" />
         <RuleY data={[0]} />
     </Plot>

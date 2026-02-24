@@ -8,10 +8,10 @@
             Omit<BaseMarkProps<Datum>, 'fill' | 'stroke' | 'fillOpacity' | 'strokeOpacity'>,
             BaseRectMarkProps<Datum>,
             LinkableMarkProps<Datum> {
-        /** the fill color of the frame */
-        fill?: string;
-        /** the stroke color of the frame */
-        stroke?: string;
+        /** the fill color of the frame; true maps to 'currentColor' */
+        fill?: string | boolean;
+        /** the stroke color of the frame; true maps to 'currentColor' */
+        stroke?: string | boolean;
         /** the fill opacity of the frame */
         fillOpacity?: number;
         /** the stroke opacity of the frame */
@@ -74,6 +74,11 @@
     const dx = $derived(resolveProp(options.dx, null, 0) || 0);
     const dy = $derived(resolveProp(options.dy, null, 0) || 0);
 
+    const resolvedFill = $derived(fill === true ? 'currentColor' : (fill as string | undefined));
+    const resolvedStroke = $derived(
+        stroke === true ? 'currentColor' : (stroke as string | undefined)
+    );
+
     const plot = usePlot();
 </script>
 
@@ -82,8 +87,8 @@
         <RectPath
             class={className ?? null}
             datum={{
-                fill,
-                stroke,
+                fill: resolvedFill,
+                stroke: resolvedStroke,
                 fillOpacity,
                 strokeOpacity,
                 opacity,
@@ -95,7 +100,14 @@
             width={plot.facetWidth}
             height={plot.facetHeight}
             {usedScales}
-            fallbackStyle={fill == null || fill === 'none' ? 'stroke' : 'fill'}
-            options={{ ...options, fill, stroke, fillOpacity, opacity, strokeOpacity }} />
+            fallbackStyle={resolvedFill == null || resolvedFill === 'none' ? 'stroke' : 'fill'}
+            options={{
+                ...options,
+                fill: resolvedFill,
+                stroke: resolvedStroke,
+                fillOpacity,
+                opacity,
+                strokeOpacity
+            }} />
     {/snippet}
 </Mark>

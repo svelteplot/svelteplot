@@ -8,9 +8,9 @@
     let data = $derived(
         rollups(
             penguins,
-            (d) => d.length,
-            (d) => d.species,
-            (d) => d.island
+            (d: any[]) => d.length,
+            (d: any) => d.species,
+            (d: any) => d.island
         )
             .map(([species, group]) => group.map(([island, count]) => ({ species, island, count })))
             .flat(1)
