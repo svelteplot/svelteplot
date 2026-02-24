@@ -26,7 +26,7 @@
     };
 
     const {
-        data = [],
+        data = [{} as Datum],
         stack,
         ...options
     }: RectXMarkProps = $derived({

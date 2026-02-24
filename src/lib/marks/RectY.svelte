@@ -24,7 +24,7 @@
     };
 
     const {
-        data = [],
+        data = [{} as Datum],
         stack,
         ...options
     }: RectYMarkProps = $derived({
