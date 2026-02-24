@@ -14,8 +14,16 @@
     import { Plot, Trail, Text, Dot } from 'svelteplot';
     import { useDark } from '$shared/ui';
 
-    type GapminderRow = { Year: number; Code: string; 'Fertility rate': number; 'Life expectancy': number; Country?: string };
-    let { gapminder } = $props() as { gapminder: GapminderRow[] };
+    type GapminderRow = {
+        Year: number;
+        Code: string;
+        'Fertility rate': number;
+        'Life expectancy': number;
+        Country?: string;
+    };
+    let { gapminder } = $props() as {
+        gapminder: GapminderRow[];
+    };
 
     const countries: Record<string, string> = {
         ind: 'India',

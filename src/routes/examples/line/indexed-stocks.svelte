@@ -27,7 +27,7 @@
         outlineStroke="var(--svelteplot-bg)"
         markerEnd="dot"
         curve="monotone-x"
-        {...(normalizeY(
+        {...normalizeY(
             {
                 data: tech7,
                 x: 'date',
@@ -35,5 +35,5 @@
                 stroke: 'symbol'
             },
             'first'
-        ) as any)} />
+        ) as any} />
 </Plot>

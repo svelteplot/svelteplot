@@ -14,9 +14,14 @@
     import Geo from 'svelteplot/marks/Geo.svelte';
     import * as topojson from 'topojson-client';
 
-    const { us, unemployment } = $props() as { us: any; unemployment: any[] };
+    const { us, unemployment } = $props() as {
+        us: any;
+        unemployment: any[];
+    };
     const rateMap = $derived(
-        new Map(unemployment.map((d: any) => [d.id, +d.rate]))
+        new Map(
+            unemployment.map((d: any) => [d.id, +d.rate])
+        )
     );
     const counties = $derived(
         (topojson as any)

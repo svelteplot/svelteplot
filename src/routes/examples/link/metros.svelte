@@ -36,7 +36,9 @@
         opacity={{
             scale: null,
             value: (d) =>
-                !hl || (hl as MetrosRow).Metro === d.Metro ? 1 : 0.1
+                !hl || (hl as MetrosRow).Metro === d.Metro
+                    ? 1
+                    : 0.1
         }}
         onmouseenter={(event, d) => (hl = d)}
         onmouseleave={() => (hl = null)}
@@ -46,7 +48,9 @@
         x="POP_2015"
         y="R90_10_2015"
         filter={(d) =>
-            hl ? d.Metro === (hl as MetrosRow).Metro : !!d.highlight}
+            hl
+                ? d.Metro === (hl as MetrosRow).Metro
+                : !!d.highlight}
         text="nyt_display"
         fill="currentColor"
         stroke="var(--svelteplot-bg)"

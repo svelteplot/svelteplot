@@ -18,7 +18,7 @@
         {data}
         x1={0}
         x2="width"
-        {...({ y: 'height' } as any)}
+        {...{ y: 'height' } as any}
         fill="category"
         insetBottom={1} />
 </Plot>

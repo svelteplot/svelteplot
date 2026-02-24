@@ -16,9 +16,17 @@
     import Frame from 'svelteplot/marks/Frame.svelte';
     import RadioInput from '$shared/ui/RadioInput.svelte';
 
-    type MinardRow = { long: number; lat: number; group: string; direction: string; survivors: number };
-    const { countries10m, minard } =
-        $props() as { countries10m: any; minard: MinardRow[] };
+    type MinardRow = {
+        long: number;
+        lat: number;
+        group: string;
+        direction: string;
+        survivors: number;
+    };
+    const { countries10m, minard } = $props() as {
+        countries10m: any;
+        minard: MinardRow[];
+    };
 
     const borders = $derived(
         topojson.mesh(
@@ -153,7 +161,8 @@
         y="lat"
         cap="butt"
         r="survivors"
-        z={(d) => `${String(d.group)}-${String(d.direction)}`}
+        z={(d) =>
+            `${String(d.group)}-${String(d.direction)}`}
         fill={(d) =>
             d.direction === 'A'
                 ? 'currentColor'

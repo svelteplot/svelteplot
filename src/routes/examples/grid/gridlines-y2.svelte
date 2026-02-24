@@ -26,10 +26,13 @@
                 .map((d: any) => ({
                     value: d.Close,
                     date: d.Date,
-                    diff: Math.abs(d.Date - (date as number))
+                    diff: Math.abs(
+                        d.Date - (date as number)
+                    )
                 }))
-                .sort((a: any, b: any) => a.diff - b.diff)[0]
-                .value} />
+                .sort(
+                    (a: any, b: any) => a.diff - b.diff
+                )[0].value} />
     <Line data={aapl} x="Date" y="Close" />
     <RuleY data={[0]} />
 </Plot>

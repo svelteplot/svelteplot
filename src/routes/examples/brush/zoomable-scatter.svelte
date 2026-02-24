@@ -16,7 +16,9 @@
         species: string;
     };
 
-    const { penguins } = $props() as { penguins: PenguinRow[] };
+    const { penguins } = $props() as {
+        penguins: PenguinRow[];
+    };
 
     let brush = $state({ enabled: false });
     let isZoomedIn = $state(false);
@@ -30,8 +32,10 @@
         (d) => d.culmen_depth_mm
     );
 
-    let domainX: [number, number] | [undefined, undefined] = $state(fullDomainX);
-    let domainY: [number, number] | [undefined, undefined] = $state(fullDomainY);
+    let domainX: [number, number] | [undefined, undefined] =
+        $state(fullDomainX);
+    let domainY: [number, number] | [undefined, undefined] =
+        $state(fullDomainY);
 
     function resetZoom() {
         domainX = fullDomainX;
@@ -70,8 +74,14 @@
                 cursor="zoom-in"
                 onbrushend={(e) => {
                     if (e.brush.enabled) {
-                        domainX = [e.brush.x1 as any, e.brush.x2 as any];
-                        domainY = [e.brush.y1 as any, e.brush.y2 as any];
+                        domainX = [
+                            e.brush.x1 as any,
+                            e.brush.x2 as any
+                        ];
+                        domainY = [
+                            e.brush.y1 as any,
+                            e.brush.y2 as any
+                        ];
                         brush.enabled = false;
                         isZoomedIn = true;
                     }

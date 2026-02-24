@@ -22,7 +22,7 @@
     y={{ type: 'log' }}
     x={{ label: 'Quantiles ->', percent: true }}>
     <Line
-        {...(mapX(
+        {...mapX(
             {
                 data: olympians.filter((d) =>
                     [
@@ -38,7 +38,7 @@
                 stroke: 'sport'
             },
             'quantile'
-        ) as any)}
+        ) as any}
         text="sport"
         strokeWidth={2} />
 </Plot>

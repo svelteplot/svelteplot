@@ -16,7 +16,10 @@
     } from 'svelteplot';
     import * as topojson from 'topojson-client';
 
-    const { us, election } = $props() as { us: any; election: any[] };
+    const { us, election } = $props() as {
+        us: any;
+        election: any[];
+    };
 
     const nation = $derived(
         (topojson as any).feature(us, us.objects.nation)

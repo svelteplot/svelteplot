@@ -14,7 +14,9 @@
     } from 'svelteplot';
     let { stocks } = $props();
     let stocks2 = $derived(
-        stocks.filter((d: any) => d.Date < new Date(2018, 0, 1))
+        stocks.filter(
+            (d: any) => d.Date < new Date(2018, 0, 1)
+        )
     );
     let sel: any[] = $state([]);
 </script>
