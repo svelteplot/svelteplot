@@ -73,7 +73,7 @@ export function createREPLState(
             Object.keys(data ?? {}).length
                 ? `${Object.entries(data ?? {})
                       .map(([key, url]) => `import ${key} from './${url.split('/').at(-1)}';`)
-                      .join('\n   ')}\n    import `
+                      .join('\n  ')}\n  import `
                 : 'import '
         )
         .split(';\n')
@@ -91,7 +91,7 @@ export function createREPLState(
                     ?.filter((d) => d)
                     ?.map((mod) => {
                         needSharedUIs.push(mod);
-                        return `\n    import ${mod} from './${mod}.svelte'`;
+                        return `\n  import ${mod} from './${mod}.svelte'`;
                     })
                     .join(';');
             }

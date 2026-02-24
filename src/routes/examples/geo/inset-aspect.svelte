@@ -8,8 +8,8 @@
 </script>
 
 <script lang="ts">
-    import { Slider } from '$shared/ui';
     import { Plot, Geo } from 'svelteplot';
+    import { Slider } from '$shared/ui';
     import * as topojson from 'topojson-client';
     import { geoCentroid } from 'd3-geo';
     import type { WorldAtlas } from '../types';
@@ -28,7 +28,9 @@
         topojson
             .feature(world, world.objects.countries)
             .features.find(
-                (d) => (d.properties as any).name === selectedName
+                (d) =>
+                    (d.properties as any).name ===
+                    selectedName
             )
     );
     let centroid = $derived(geoCentroid(selected as any));
