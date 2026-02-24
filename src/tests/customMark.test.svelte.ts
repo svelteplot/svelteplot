@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
+// @ts-ignore - svelte-check errors on .svelte imports, tsc does not
 import CustomMarkTest from './customMark.test.svelte';
 
 const data = [
