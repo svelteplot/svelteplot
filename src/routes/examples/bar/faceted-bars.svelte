@@ -50,7 +50,6 @@
             tickFontSize: 12
         },
         axisOptions: {
-            dy: 20,
             fontWeight: 'bold'
         }
     }}
