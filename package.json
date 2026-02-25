@@ -1,6 +1,6 @@
 {
     "name": "svelteplot",
-    "version": "0.10.3",
+    "version": "0.11.0",
     "description": "A Svelte-native data visualization framework based on the layered grammar of graphics principles.",
     "keywords": [
         "svelte",
