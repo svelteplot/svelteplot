@@ -25,6 +25,19 @@ const linkedBarsData = [
     { url: '/marks/dot', label: 'Rect', value: 2 }
 ];
 
+const facetedBarsData = [
+    { party: 'Union', year: 2025, percent: 30 },
+    { party: 'Union', year: 2021, percent: 22 },
+    { party: 'SPD', year: 2025, percent: 20 },
+    { party: 'SPD', year: 2021, percent: 27 },
+    { party: 'Greens', year: 2025, percent: 16 },
+    { party: 'Greens', year: 2021, percent: 21 },
+    { party: 'FDP', year: 2025, percent: 6 },
+    { party: 'FDP', year: 2021, percent: 12 },
+    { party: 'Linke', year: 2025, percent: 4 },
+    { party: 'Linke', year: 2021, percent: 7 }
+];
+
 describe('BarX mark', () => {
     it('simple bar chart from number array', () => {
         const { container } = render(BarXTest, {
@@ -153,6 +166,59 @@ describe('BarX mark', () => {
         expect(yAxisLabels.length).toBe(6);
         const labels = Array.from(yAxisLabels).map((d) => d.textContent);
         expect(labels.sort()).toEqual(['2019', '2020', '2021', '2022', '2023', '2024']);
+    });
+
+    it('renders axis-y, axis-x and facet axis for faceted bars', () => {
+        const { container } = render(BarXTest, {
+            props: {
+                plotArgs: {
+                    width: 700,
+                    height: 300,
+                    axes: true,
+                    x: {
+                        axis: 'bottom'
+                    },
+                    fx: {
+                        axis: 'bottom',
+                        axisProps: {
+                            tickFontSize: 12
+                        },
+                        axisOptions: {
+                            dy: 20,
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                barArgs: {
+                    data: facetedBarsData,
+                    x: 'percent',
+                    y: 'party',
+                    fx: 'year',
+                    fill: 'party',
+                    opacity: 'year'
+                }
+            }
+        });
+
+        const facetCount = new Set(facetedBarsData.map((d) => d.year)).size;
+
+        expect(container.querySelectorAll('g.axis-y')).toHaveLength(1);
+        expect(container.querySelectorAll('g.axis-x')).toHaveLength(facetCount);
+        expect(container.querySelectorAll('g.facet-axis-x')).toHaveLength(1);
+        expect(container.querySelectorAll('g.facet g.axis-x')).toHaveLength(facetCount);
+
+        const partyAxisLabels = Array.from(container.querySelectorAll('g.axis-y .tick text')).map(
+            (tick) => tick.textContent
+        );
+        expect(new Set(partyAxisLabels)).toEqual(
+            new Set(['Union', 'SPD', 'Greens', 'FDP', 'Linke'])
+        );
+
+        const facetAxisLabels = Array.from(
+            container.querySelectorAll('g.facet-axis-x .tick text')
+        ).map((tick) => tick.textContent);
+        expect(new Set(facetAxisLabels)).toEqual(new Set(['2021', '2025']));
+        expect(facetAxisLabels.every((label) => (label || '').trim().length > 0)).toBe(true);
     });
 
     it('emits correct events after updating data', async () => {
