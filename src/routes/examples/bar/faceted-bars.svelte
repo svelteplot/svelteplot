@@ -4,9 +4,9 @@
 </script>
 
 <script lang="ts">
-    import { Checkbox } from '$shared/ui/index';
-    import { SvelteSet } from 'svelte/reactivity';
     import { Plot, BarY } from 'svelteplot';
+    import { SvelteSet } from 'svelte/reactivity';
+    import { Checkbox } from '$shared/ui';
 
     const resultsLong = [
         { party: 'Union', year: 2025, percent: 30 },
