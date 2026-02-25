@@ -526,11 +526,11 @@ export type PlotOptions = {
               /**
                * customize base axis props used for rendering facet axis
                */
-              axisProps: Partial<ComponentProps<typeof BaseAxisX>>;
+              axisProps?: Partial<ComponentProps<typeof BaseAxisX>>;
               /**
                * customize base axis options used for rendering facet axis
                */
-              axisOptions: Partial<ComponentProps<typeof BaseAxisX>['options']>;
+              axisOptions?: Partial<ComponentProps<typeof BaseAxisX>['options']>;
           })
         | false
         | RawValue[];
@@ -543,11 +543,11 @@ export type PlotOptions = {
               /**
                * customize base axis props used for rendering facet axis
                */
-              axisProps: Partial<ComponentProps<typeof BaseAxisY>>;
+              axisProps?: Partial<ComponentProps<typeof BaseAxisY>>;
               /**
                * customize base axis options used for rendering facet axis
                */
-              axisOptions: Partial<ComponentProps<typeof BaseAxisY>['options']>;
+              axisOptions?: Partial<ComponentProps<typeof BaseAxisY>['options']>;
           })
         | false
         | RawValue[];

@@ -86,7 +86,7 @@
             data: CO2Decade[];
         }}
         text={(d) =>
-            `${Math.max(d.decadeBaseYear, co2decades[0].date.getFullYear())}-'${String(Math.min(d.decadeBaseYear + 9, co2decades.at(-1).date.getFullYear())).substring(2)}`}
+            `${Math.max(d.decadeBaseYear, co2decades[0].date.getFullYear())}-'${String(Math.min(d.decadeBaseYear + 9, co2decades.at(-1)!.date.getFullYear())).substring(2)}`}
         textAnchor="start"
         dx={5}
         stroke="var(--svelteplot-bg)"
@@ -102,7 +102,7 @@
                 y="average"
                 text={(d) => `${dateFormat(d.date)}\n${d.average.toFixed(0)}`}
                 lineAnchor="bottom"
-                fontWeight={(d) => (d.__tspanIndex ? 'bold' : 'normal')}
+                fontWeight={(d) => ((d as any).__tspanIndex ? 'bold' : 'normal')}
                 dy={-5}
                 stroke="var(--svelteplot-bg)"
                 strokeWidth={3}

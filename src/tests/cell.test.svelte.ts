@@ -262,7 +262,7 @@ describe('Cell mark', () => {
                 x: 'x',
                 y: 'y',
                 fill: 'value',
-                onclick: (evt: MouseEvent, datum: any) => checkDatum(datum)
+                onclick: (evt: Event, datum: any) => checkDatum(datum)
             }
         });
 

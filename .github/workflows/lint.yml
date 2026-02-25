@@ -33,8 +33,14 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Run linting
-              run: pnpm run lint
+            - name: Run linting (oxlint)
+              run: pnpm run lint:oxlint
 
-            - name: Run linting
+            - name: Run linting (eslint)
+              run: pnpm run lint:eslint
+
+            - name: Run linting (typescript)
               run: pnpm run lint:types
+
+            - name: Run linting (svelte-check)
+              run: pnpm check

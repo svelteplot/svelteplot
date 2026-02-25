@@ -1,6 +1,7 @@
 <script lang="ts">
     import { resolve } from '$app/paths';
     import { useDark } from '$shared/ui';
+    import { flip } from 'svelte/animate';
 
     const exampleImages = import.meta.glob('../../snapshots/*/*.png', {
         eager: true,
@@ -40,7 +41,7 @@
         <div>
             <h2 id={group}>
                 <a href={resolve(`/examples/${group}`)}
-                    >{pages[groupPages.find((p) => p.endsWith('/_index.svelte'))]?.title ??
+                    >{pages[groupPages.find((p) => p.endsWith('/_index.svelte')) ?? '']?.title ??
                         group}</a>
             </h2>
             <div class="example-grid">
@@ -51,13 +52,15 @@
                         .replace('./', '')
                         .replace('.svelte', ds.isDark ? '.dark.png' : '.png')}`}
                     <a
-                        animate:slide
-                        href={resolve(page.replace('./', './examples/').replace('.svelte', ''))}
+                        animate:flip
+                        href={resolve(
+                            page.replace('./', './examples/').replace('.svelte', '') as any
+                        )}
                         ><div>
                             {#if exampleImages[imageKey]}
                                 <enhanced:img
                                     title={pages[page].title}
-                                    src={exampleImages[imageKey].default}
+                                    src={(exampleImages[imageKey] as any).default}
                                     alt={pages[page].title} />
                             {/if}
                             <div class="title">{pages[page].title}</div>

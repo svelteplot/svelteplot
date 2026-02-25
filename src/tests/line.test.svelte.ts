@@ -328,7 +328,7 @@ describe('Line mark', () => {
                 ],
                 x: 'year',
                 y: 'value',
-                onclick: (event: MouseEvent, datum: any) => checkDatum(datum)
+                onclick: (event: Event, datum: any) => checkDatum(datum)
             }
         });
 

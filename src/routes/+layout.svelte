@@ -13,11 +13,11 @@
             content
                 .querySelectorAll('h1 + .admonition-info, h2 + .admonition-info')
                 .forEach((el) => {
-                    if (el.querySelector('.admonition-content').innerText.startsWith('added in')) {
-                        const version = el
-                            .querySelector('.admonition-content')
-                            .innerText.replace('added in ', '')
-                            .trim();
+                    const admonitionEl = el.querySelector(
+                        '.admonition-content'
+                    ) as HTMLElement | null;
+                    if (admonitionEl?.innerText.startsWith('added in')) {
+                        const version = admonitionEl.innerText.replace('added in ', '').trim();
                         const header = el.previousElementSibling;
                         el.remove();
                         const a = document.createElement('a');

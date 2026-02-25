@@ -2,15 +2,17 @@
     Convenience wrapper for rectangles oriented along the x axis 
 -->
 
-<script lang="ts" generics="Datum extends DataRecord">
-    interface RectXMarkProps extends Omit<ComponentProps<typeof Rect>, 'y'> {
+<script lang="ts" generics="Datum extends DataRow">
+    interface RectXMarkProps extends Omit<ComponentProps<typeof Rect>, 'y' | 'data'> {
+        /** the input data array; each element becomes one rectangle */
+        data?: Datum[];
         /** options for stacking rect data values */
         stack?: Partial<StackOptions>;
     }
 
     import Rect from './Rect.svelte';
     import { intervalY, stackX, recordizeX } from '../index.js';
-    import type { DataRecord } from '../types/index.js';
+    import type { DataRow } from '../types/index.js';
     import { type ComponentProps } from 'svelte';
     import type { StackOptions } from '../transforms/stack.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
