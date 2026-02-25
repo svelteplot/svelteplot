@@ -214,6 +214,64 @@ describe('BarY mark', () => {
         { label: 'bravo', value: 3 }
     ];
 
+    const facetedBarsData = [
+        { party: 'Union', year: 2025, percent: 30 },
+        { party: 'Union', year: 2021, percent: 22 },
+        { party: 'SPD', year: 2025, percent: 20 },
+        { party: 'SPD', year: 2021, percent: 27 },
+        { party: 'Greens', year: 2025, percent: 16 },
+        { party: 'Greens', year: 2021, percent: 21 },
+        { party: 'FDP', year: 2025, percent: 6 },
+        { party: 'FDP', year: 2021, percent: 12 },
+        { party: 'Linke', year: 2025, percent: 4 },
+        { party: 'Linke', year: 2021, percent: 7 }
+    ];
+
+    it('repeats axis-x for all facets and shows facet-axis-x labels', () => {
+        const { container } = render(BarYTest, {
+            props: {
+                plotArgs: {
+                    width: 700,
+                    height: 300,
+                    axes: true,
+                    fx: {
+                        axis: 'bottom',
+                        axisProps: {
+                            tickFontSize: 12
+                        },
+                        axisOptions: {
+                            dy: 20,
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                barArgs: {
+                    data: facetedBarsData,
+                    x: 'year',
+                    y: 'percent',
+                    fx: 'party',
+                    fill: 'party',
+                    opacity: 'year'
+                }
+            }
+        });
+
+        const facetCount = new Set(facetedBarsData.map((d) => d.party)).size;
+
+        expect(container.querySelectorAll('g.axis-y')).toHaveLength(1);
+        expect(container.querySelectorAll('g.axis-x')).toHaveLength(facetCount);
+        expect(container.querySelectorAll('g.facet g.axis-x')).toHaveLength(facetCount);
+        expect(container.querySelectorAll('g.facet-axis-x')).toHaveLength(1);
+
+        const facetAxisLabels = Array.from(
+            container.querySelectorAll('g.facet-axis-x .tick text')
+        ).map((tick) => tick.textContent);
+        expect(new Set(facetAxisLabels)).toEqual(
+            new Set(['Union', 'SPD', 'Greens', 'FDP', 'Linke'])
+        );
+        expect(facetAxisLabels.every((label) => (label || '').trim().length > 0)).toBe(true);
+    });
+
     it('sorts ordinal domain alphabetically by default', () => {
         const { container } = render(BarYTest, {
             props: {

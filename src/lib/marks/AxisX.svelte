@@ -210,7 +210,7 @@
     const useFacetAnchor = $derived(
         facetAnchor !== 'auto' ? facetAnchor : anchor === 'bottom' ? 'bottom-empty' : 'top-empty'
     );
-    const showAxis = $derived(
+    const showFacetAnchoredAxis = $derived(
         useFacetAnchor === 'top'
             ? top
             : useFacetAnchor === 'bottom'
@@ -219,6 +219,7 @@
                 ? topEmpty
                 : bottomEmpty
     );
+    const showAxis = $derived(showFacetAnchoredAxis);
 </script>
 
 <Mark

@@ -42,7 +42,7 @@
 {/each}
 
 <Plot
-    x={{ label: ' ' }}
+    x={{ label: ' ', axis: 'bottom' }}
     y={{ label: '' }}
     fx={{
         axis: 'bottom',
