@@ -54,7 +54,9 @@
         const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
         const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
 
-        const pt = trees[facetIndex].find(relativeX, relativeY, 25);
+        const tree = trees[facetIndex];
+        if (!tree) return;
+        const pt = tree.find(relativeX, relativeY, 25);
         if (pt) {
             tooltipX = resolveChannel('x', pt, { x, y, r });
             tooltipY = resolveChannel('y', pt, { x, y, r });
@@ -73,7 +75,7 @@
         plot.body?.addEventListener('pointermove', onPointerMove);
 
         return () => {
-            plot.body?.removeEventListener('mouseleave', onPointerLeave);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
             plot.body?.removeEventListener('pointermove', onPointerMove);
         };
     });
