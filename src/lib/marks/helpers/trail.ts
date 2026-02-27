@@ -60,7 +60,7 @@ export function trailPath(
 
             const resampled = resampleCurve(segment, curveFactory, Math.max(1, samplesPerSegment));
             smoothedSamples.push(...resampled);
-            smoothedDefined.push(...new Array(resampled.length).fill(true));
+            smoothedDefined.push(...Array.from({ length: resampled.length }, () => true));
 
             // preserve a gap between defined segments
             if (i < len) {
