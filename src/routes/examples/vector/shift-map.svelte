@@ -53,7 +53,7 @@
                     ...feat.properties,
                     ...(electionByFips.get(
                         Number(feat.id)
-                    ) ?? {})
+                    ) as object)
                 }
             };
         })
