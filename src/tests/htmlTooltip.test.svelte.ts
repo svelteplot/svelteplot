@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import { tick } from 'svelte';
+// @ts-ignore - tsc sees no default export; svelte-check sees it fine
 import HTMLTooltipTest from './htmlTooltip.test.svelte';
 
 const data = [
