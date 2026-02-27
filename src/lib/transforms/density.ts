@@ -317,7 +317,7 @@ function kde1d(
     return cdf;
 }
 
-function maybeKernel(kernel: Kernel | string): (u: number) => number {
+function maybeKernel(kernel: Kernel): (u: number) => number {
     if (typeof kernel === 'function') return kernel;
     return isKernelName(kernel) ? KERNEL[kernel] : KERNEL.epanechnikov;
 }

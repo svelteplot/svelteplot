@@ -109,7 +109,7 @@ export type BaseMarkProps<T = DataRecord> = Partial<{
     /** font family for text-capable marks */
     fontFamily: ConstantAccessor<CSS.Property.FontFamily, T>;
     /** font size for text-capable marks */
-    fontSize: ConstantAccessor<CSS.Property.FontSize | number, T>;
+    fontSize: ConstantAccessor<CSS.Property.FontSize<number>, T>;
     /** font style for text-capable marks */
     fontStyle: ConstantAccessor<CSS.Property.FontStyle, T>;
     /** font variant for text-capable marks */
@@ -262,7 +262,7 @@ export type LinkableMarkProps<T> = {
      * the target of the link, e.g. "_blank" or "_self"
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target
      */
-    target?: ConstantAccessor<'_self' | '_blank' | '_parent' | '_top' | string, T>;
+    target?: ConstantAccessor<'_self' | '_blank' | '_parent' | '_top' | (string & {}), T>;
     /**
      * if set to true, the link will be downloaded instead of navigating to it
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
