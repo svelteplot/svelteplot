@@ -18,7 +18,7 @@ export function roundedRect(
     const maxRadius = Math.min(width, height) / 2;
     const [tl, tr, bl, br] = (
         typeof borderRadius === 'number'
-            ? new Array(4).fill(borderRadius)
+            ? Array.from({ length: 4 }, () => borderRadius)
             : [
                   borderRadius?.topLeft || 0,
                   borderRadius?.topRight || 0,

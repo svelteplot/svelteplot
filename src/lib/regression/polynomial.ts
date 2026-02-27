@@ -150,7 +150,7 @@ export default function polynomial<T = DataPoint>(): PolynomialRegression<T> {
 }
 
 function uncenter(k: number, a: number[], x: number, y: number): number[] {
-    const z = new Array<number>(k).fill(0);
+    const z: number[] = Array.from({ length: k }, () => 0);
     for (let i = k - 1; i >= 0; --i) {
         let v = a[i];
         z[i] += v;
@@ -168,7 +168,7 @@ function uncenter(k: number, a: number[], x: number, y: number): number[] {
 // Solve A * x = b using Gaussian elimination
 function gaussianElimination(matrix: Float64Array[]): number[] {
     const n = matrix.length - 1;
-    const coef = new Array<number>(n);
+    const coef: number[] = Array.from({ length: n });
 
     for (let i = 0; i < n; i++) {
         let r = i;

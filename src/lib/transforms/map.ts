@@ -29,7 +29,7 @@ export function map<T>(args: TransformArg<T>, options: MapOptions) {
                 resolveChannel(channel as ScaledChannelName, d, channels)
             );
             const indices = groupedData.map((d, i) => i);
-            const mappedValues = new Array(values.length);
+            const mappedValues: RawValue[] = Array.from({ length: values.length });
             mapper.mapIndex(indices, values, mappedValues);
             newChannels[channel] = `__${channel}`;
             for (let i = 0; i < values.length; ++i) {
