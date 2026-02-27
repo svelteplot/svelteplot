@@ -12,7 +12,7 @@ export function groupFacetsAndZ<T>(
     reduce: (items: T[], groupProps?: Record<string, unknown>) => any
 ) {
     const groupBy: Array<
-        [ChannelName | null, string | null, (d: DataRecord<T>) => RawValue | boolean]
+        [ChannelName | null, string | null, (d: DataRecord<T>) => RawValue]
     > = (['fx', 'fy', 'z'] as ChannelName[]).map((groupChannel) => {
         let groupByChannel: ChannelName | null = null;
         if (groupChannel === 'z') {
