@@ -282,6 +282,6 @@ export function maybeRound(
 ): (x: number) => number {
     if (round === undefined || round === false) return Number;
     if (round === true) return Math.round;
-    if (typeof round !== 'function') throw new Error(`invalid round: ${round}`);
+    if (typeof round !== 'function') throw new Error(`invalid round: ${String(round)}`);
     return round;
 }

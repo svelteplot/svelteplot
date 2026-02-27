@@ -113,7 +113,7 @@ function stackXY<T>(
             [FACET]:
                 groupFacetsBy.length > 0
                     ? groupFacetsBy
-                          .map((channel) => String(resolveChannel(channel, d as any, channels)))
+                          .map((channel) => String(resolveChannel(channel, d as any, channels) as string | number))
                           .join('---')
                     : 'F',
             [S[byDim]]: resolveChannel(byDim, d as any, channels)
