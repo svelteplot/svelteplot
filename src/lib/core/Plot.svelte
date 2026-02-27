@@ -288,8 +288,8 @@
         const colorSymbolRedundant =
             scales.color.uniqueScaleProps?.size === 1 &&
             scales.symbol.uniqueScaleProps?.size === 1 &&
-            [...scales.color.uniqueScaleProps?.values()][0] ===
-                [...scales.symbol.uniqueScaleProps?.values()][0];
+            [...(scales.color.uniqueScaleProps?.values() ?? [])][0] ===
+                [...(scales.symbol.uniqueScaleProps?.values() ?? [])][0];
         return {
             options: plotOptions,
             width,
