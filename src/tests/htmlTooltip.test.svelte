@@ -2,10 +2,12 @@
     import { Dot, Plot, HTMLTooltip } from '$lib/index.js';
     import type { ComponentProps } from 'svelte';
 
+    type Datum = { label: string };
+
     interface Props {
         plotArgs?: ComponentProps<typeof Plot>;
         dotArgs?: ComponentProps<typeof Dot>;
-        tooltipArgs: Omit<ComponentProps<typeof HTMLTooltip>, 'children'>;
+        tooltipArgs: Omit<ComponentProps<typeof HTMLTooltip<Datum>>, 'children'>;
     }
 
     let { plotArgs = {}, dotArgs, tooltipArgs }: Props = $props();
