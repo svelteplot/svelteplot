@@ -220,7 +220,10 @@ export function ordinalRange(scheme: ColorScheme | (string & {}), length: number
 // If the specified domain contains only booleans (ignoring null and undefined),
 // returns a corresponding range where false is mapped to the low color and true
 // is mapped to the high color of the specified scheme.
-export function maybeBooleanRange(domain: boolean[], scheme: ColorScheme | (string & {}) = 'greys') {
+export function maybeBooleanRange(
+    domain: boolean[],
+    scheme: ColorScheme | (string & {}) = 'greys'
+) {
     const range = new Set();
     const [f, t] = ordinalRange(scheme, 2);
     for (const value of domain) {
