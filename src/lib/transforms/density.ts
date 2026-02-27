@@ -136,7 +136,7 @@ function bandwidthSilverman(x: number[]) {
     const hi = Math.sqrt(xvar!);
     let lo: number;
     if (!(lo = Math.min(hi, iqr / 1.34))) {
-        (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
+        lo = hi || Math.abs(x[1]) || 1;
     }
     return lo * Math.pow(x.length, -0.2);
 }

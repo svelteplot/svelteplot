@@ -29,7 +29,7 @@
     } = $props();
 
     let active = $derived(page.url.pathname.startsWith(`${to.endsWith('/') ? to : `${to}/`}`));
-    rest;
+    void rest;
 </script>
 
 {#if items && items.length}
