@@ -186,7 +186,7 @@ const timeFormatIntervals = [
 // from largest to smallest, used to determine the most specific standard time
 // format for a given array of dates. This is a subset of the tick intervals
 // listed above; we only need the breakpoints where the format changes.
-const formatIntervals = [
+const _formatIntervals = [
     utcFormatIntervals[0],
     timeFormatIntervals[0],
     utcFormatIntervals[1],

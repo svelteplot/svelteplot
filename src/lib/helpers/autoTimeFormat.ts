@@ -9,8 +9,8 @@ const DATE_TIME: Intl.DateTimeFormatOptions = {
 };
 
 const autoFormatDateTime = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, DATE_TIME).format;
-    return (date: Date) => format(date).replace(', ', '\n');
+    const formatter = new Intl.DateTimeFormat(locale, DATE_TIME);
+    return (date: Date) => formatter.format(date).replace(', ', '\n');
 };
 
 const DAY_MONTH: Intl.DateTimeFormatOptions = {
@@ -18,8 +18,8 @@ const DAY_MONTH: Intl.DateTimeFormatOptions = {
     day: 'numeric'
 };
 const autoFormatDayMonth = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, DAY_MONTH).format;
-    return (date: Date) => format(date).replace(' ', '\n');
+    const formatter = new Intl.DateTimeFormat(locale, DAY_MONTH);
+    return (date: Date) => formatter.format(date).replace(' ', '\n');
 };
 
 const MONTH_YEAR: Intl.DateTimeFormatOptions = {
@@ -28,8 +28,8 @@ const MONTH_YEAR: Intl.DateTimeFormatOptions = {
 };
 
 const autoFormatMonthYear = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, MONTH_YEAR).format;
-    return (date: Date) => format(date).replace(' ', '\n');
+    const formatter = new Intl.DateTimeFormat(locale, MONTH_YEAR);
+    return (date: Date) => formatter.format(date).replace(' ', '\n');
 };
 
 export default function autoTimeFormat(x: PlotScale, plotWidth: number, plotLocale: string) {

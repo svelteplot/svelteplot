@@ -40,6 +40,7 @@
                     ...feat,
                     properties: {
                         ...(feat as any).properties,
+                        // oxlint-disable-next-line unicorn/no-useless-fallback-in-spread -- TS requires ?? {} for Map.get()
                         ...(_election.get(+feat?.id) ?? {})
                     }
                 };
