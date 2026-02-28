@@ -40,6 +40,8 @@
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
+    import { detectFacet, facetKey } from '../helpers/facets.js';
+    import { SvelteMap } from 'svelte/reactivity';
 
     const plot = usePlot();
 
@@ -71,17 +73,14 @@
     let selectedData = $state<any[]>([]);
 
     function onPointerMove(evt: MouseEvent) {
-        let facetEl: Element | null = evt.target as Element;
-        while (facetEl && !facetEl.classList.contains('facet')) {
-            facetEl = facetEl.parentElement as Element | null;
-        }
-        const facetRect = ((facetEl?.firstChild as Element) ?? plot.body).getBoundingClientRect();
+        const { fxValue, fyValue, offsetX, offsetY } = detectFacet(evt, plot);
+        const bodyRect = plot.body.getBoundingClientRect();
 
-        const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
-        const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
+        const relativeX = evt.clientX - bodyRect.left - offsetX + (plot.options.marginLeft ?? 0);
+        const relativeY = evt.clientY - bodyRect.top - offsetY + (plot.options.marginTop ?? 0);
 
-        // console.log({ relativeX, relativeY }, evt);
-        updateSelection(relativeX, relativeY);
+        const key = facetKey(fxValue, fyValue);
+        updateSelection(relativeX, relativeY, key);
     }
 
     function onPointerLeave() {
@@ -89,13 +88,14 @@
         if (onupdate) onupdate(selectedData);
     }
 
-    function updateSelection(ex: number, ey: number) {
-        // find data row with minimum distance to
-        const points = trees.map((tree) =>
+    function updateSelection(ex: number, ey: number, key: string) {
+        const facetTrees = treeMap.get(key) ?? [];
+        // find data row with minimum distance to cursor
+        const points = facetTrees.map((tree) =>
             tree.find(x != null ? ex : 0, y != null ? ey : 0, maxDistance)
         );
         // also include other points that share the same x or y value
-        const otherPoints = trees.flatMap((tree, i) => {
+        const otherPoints = facetTrees.flatMap((tree, i) => {
             return tree
                 .data()
                 .filter((d) => d !== points[i])
@@ -121,21 +121,19 @@
         };
     });
 
-    const groups = $derived.by(() => {
-        const groups: any[][] = [];
-        groupFacetsAndZ(indexData(data as object[]) as any, { x, y, z, fx, fy }, (d) =>
-            groups.push(d)
-        );
-        return groups;
-    });
-
-    const trees = $derived(
-        groups.map((items) =>
-            quadtree<any>()
+    const treeMap = $derived.by(() => {
+        const map = new SvelteMap<string, ReturnType<typeof quadtree<any>>[]>();
+        groupFacetsAndZ(indexData(data as object[]) as any, { x, y, z, fx, fy }, (items) => {
+            if (!items.length) return;
+            // Recover fx/fy values from the first datum in the group
+            const fxVal = fx ? resolveChannel('fx', items[0], { fx }) : true;
+            const fyVal = fy ? resolveChannel('fy', items[0], { fy }) : true;
+            const key = facetKey(fxVal, fyVal);
+            const tree = quadtree<any>()
                 .x(x != null ? (d: any) => d[POINTER_X] : () => 0)
                 .y(y != null ? (d: any) => d[POINTER_Y] : () => 0)
                 .addAll(
-                    items?.map((d: any) => {
+                    items.map((d: any) => {
                         const [px, py] = projectXY(
                             plot.scales,
                             resolveChannel('x', d, { x }),
@@ -148,10 +146,14 @@
                             [POINTER_X]: px,
                             [POINTER_Y]: py
                         };
-                    }) ?? []
-                )
-        )
-    );
+                    })
+                );
+            const existing = map.get(key) ?? [];
+            existing.push(tree);
+            map.set(key, existing);
+        });
+        return map;
+    });
 </script>
 
 {#if children}

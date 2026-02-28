@@ -27,6 +27,8 @@
     import { quadtree } from 'd3-quadtree';
     import { projectX, projectY } from '../helpers/scales.js';
     import { groupFacetsAndZ } from 'svelteplot/helpers/group.js';
+    import { detectFacet, facetKey } from '../helpers/facets.js';
+    import { SvelteMap } from 'svelte/reactivity';
 
     const plot = usePlot();
 
@@ -40,21 +42,18 @@
     let facetOffsetY = $state(0);
 
     function onPointerMove(evt: MouseEvent) {
-        const plotRect = plot.body.getBoundingClientRect();
-        let facetEl: Element | null = evt.target as Element;
-        while (facetEl && !facetEl.classList.contains('facet')) {
-            facetEl = facetEl.parentElement as Element | null;
-        }
-        const facetIndex = +((facetEl as HTMLElement)?.dataset?.facet ?? 0);
-        const facetRect = ((facetEl?.firstChild as Element) ?? plot.body).getBoundingClientRect();
+        const { fxValue, fyValue, offsetX, offsetY } = detectFacet(evt, plot);
+        const bodyRect = plot.body.getBoundingClientRect();
 
-        facetOffsetX = facetRect.left - plotRect.left - plot.options.marginLeft;
-        facetOffsetY = facetRect.top - plotRect.top - plot.options.marginTop;
+        facetOffsetX = offsetX;
+        facetOffsetY = offsetY;
 
-        const relativeX = evt.clientX - facetRect.left + (plot.options.marginLeft ?? 0);
-        const relativeY = evt.clientY - facetRect.top + (plot.options.marginTop ?? 0);
+        const relativeX = evt.clientX - bodyRect.left - offsetX + (plot.options.marginLeft ?? 0);
+        const relativeY = evt.clientY - bodyRect.top - offsetY + (plot.options.marginTop ?? 0);
 
-        const pt = trees[facetIndex].find(relativeX, relativeY, 25);
+        const key = facetKey(fxValue, fyValue);
+        const facetTrees = treeMap.get(key) ?? [];
+        const pt = facetTrees.length > 0 ? facetTrees[0].find(relativeX, relativeY, 25) : null;
         if (pt) {
             tooltipX = resolveChannel('x', pt, { x, y, r });
             tooltipY = resolveChannel('y', pt, { x, y, r });
@@ -73,25 +72,28 @@
         plot.body?.addEventListener('pointermove', onPointerMove);
 
         return () => {
-            plot.body?.removeEventListener('mouseleave', onPointerLeave);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
             plot.body?.removeEventListener('pointermove', onPointerMove);
         };
     });
 
-    const groups = $derived.by(() => {
-        const groups: Datum[][] = [];
-        groupFacetsAndZ(data, { fx, fy }, (d) => groups.push(d));
-        return groups;
-    });
-
-    const trees = $derived(
-        groups.map((items) =>
-            quadtree<Datum>()
+    const treeMap = $derived.by(() => {
+        const map = new SvelteMap<string, ReturnType<typeof quadtree<Datum>>[]>();
+        groupFacetsAndZ(data, { fx, fy }, (items) => {
+            if (!items.length) return;
+            const fxVal = fx ? resolveChannel('fx', items[0], { fx }) : true;
+            const fyVal = fy ? resolveChannel('fy', items[0], { fy }) : true;
+            const key = facetKey(fxVal, fyVal);
+            const tree = quadtree<Datum>()
                 .x((d) => projectX('x', plot.scales, resolveChannel('x', d, { x, y, r })))
                 .y((d) => projectY('y', plot.scales, resolveChannel('y', d, { x, y, r })))
-                .addAll(items)
-        )
-    );
+                .addAll(items);
+            const existing = map.get(key) ?? [];
+            existing.push(tree);
+            map.set(key, existing);
+        });
+        return map;
+    });
 </script>
 
 <div
