@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { getEmptyFacets } from './facets.js';
+import { getEmptyFacets, invertBand, facetKey } from './facets.js';
 import type { GenericMarkOptions, Mark } from '../types/index.js';
+import { scaleBand } from 'd3-scale';
 
 /**
  * Creates a minimal mock mark for testing getEmptyFacets.
@@ -185,5 +186,91 @@ describe('getEmptyFacets', () => {
         // Gaps still detected
         expect(result.get('A')?.get('Y')).toBe(true);
         expect(result.get('B')?.get('X')).toBe(true);
+    });
+});
+
+describe('invertBand', () => {
+    it('returns correct domain value for pixel inside first band', () => {
+        // Two bands 'A','B' over [0, 200] with no padding → each is 100px wide
+        const scale = scaleBand()
+            .domain(['A', 'B'])
+            .range([0, 200])
+            .paddingInner(0)
+            .paddingOuter(0);
+        expect(invertBand(scale, scale.domain(), 10)).toBe('A');
+        expect(invertBand(scale, scale.domain(), 50)).toBe('A');
+    });
+
+    it('returns correct domain value for pixel inside second band', () => {
+        const scale = scaleBand()
+            .domain(['A', 'B'])
+            .range([0, 200])
+            .paddingInner(0)
+            .paddingOuter(0);
+        expect(invertBand(scale, scale.domain(), 110)).toBe('B');
+        expect(invertBand(scale, scale.domain(), 199)).toBe('B');
+    });
+
+    it('returns undefined for pixel outside all bands', () => {
+        const scale = scaleBand()
+            .domain(['A', 'B'])
+            .range([0, 200])
+            .paddingInner(0)
+            .paddingOuter(0);
+        expect(invertBand(scale, scale.domain(), -10)).toBeUndefined();
+        expect(invertBand(scale, scale.domain(), 210)).toBeUndefined();
+    });
+
+    it('handles single-value domain', () => {
+        const scale = scaleBand().domain(['only']).range([0, 100]).paddingInner(0).paddingOuter(0);
+        expect(invertBand(scale, scale.domain(), 50)).toBe('only');
+    });
+
+    it('works with padding', () => {
+        // With paddingInner=0.5, 3 bands over [0, 300]
+        const scale = scaleBand()
+            .domain(['X', 'Y', 'Z'])
+            .range([0, 300])
+            .paddingInner(0.5)
+            .paddingOuter(0);
+        // Each band should be narrower, but the pixel at the band start should still map correctly
+        const xStart = scale('X')!;
+        expect(invertBand(scale, scale.domain(), xStart + 1)).toBe('X');
+        const yStart = scale('Y')!;
+        expect(invertBand(scale, scale.domain(), yStart + 1)).toBe('Y');
+        const zStart = scale('Z')!;
+        expect(invertBand(scale, scale.domain(), zStart + 1)).toBe('Z');
+    });
+});
+
+describe('facetKey', () => {
+    it('produces same key for same values', () => {
+        expect(facetKey('A', 'X')).toBe(facetKey('A', 'X'));
+    });
+
+    it('produces different keys for different values', () => {
+        expect(facetKey('A', 'X')).not.toBe(facetKey('A', 'Y'));
+        expect(facetKey('A', 'X')).not.toBe(facetKey('B', 'X'));
+    });
+
+    it('handles null values', () => {
+        const key = facetKey(null, null);
+        expect(typeof key).toBe('string');
+        expect(facetKey(null, null)).toBe(key);
+    });
+
+    it('handles boolean true (non-faceted sentinel)', () => {
+        const key = facetKey(true, true);
+        expect(typeof key).toBe('string');
+        expect(facetKey(true, true)).toBe(key);
+    });
+
+    it('distinguishes null from "null" string', () => {
+        expect(facetKey(null, 'a')).not.toBe(facetKey('null', 'a'));
+    });
+
+    it('handles numeric values', () => {
+        expect(facetKey(1, 2)).toBe(facetKey(1, 2));
+        expect(facetKey(1, 2)).not.toBe(facetKey(2, 1));
     });
 });
