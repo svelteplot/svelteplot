@@ -21,7 +21,8 @@ import {
     scaleSqrt,
     scaleSymlog,
     scaleThreshold,
-    scaleTime
+    scaleTime,
+    scaleUtc
 } from 'd3-scale';
 import { range as d3Range } from 'd3-array';
 import type {
@@ -49,12 +50,14 @@ import { interpolateLab, interpolateRound } from 'd3-interpolate';
 import { coalesce, maybeNumber } from './index.js';
 import { getLogTicks } from './getLogTicks.js';
 import { isPlainObject } from 'es-toolkit';
+import { isTemporalScale } from './typeChecks.js';
 
 const Scales: Partial<Record<ScaleType, (...args: any[]) => any>> = {
     point: scalePoint,
     band: scaleBand,
     linear: scaleLinear,
     time: scaleTime,
+    utc: scaleUtc,
     sqrt: scaleSqrt,
     pow: scalePow,
     log: scaleLog,
@@ -136,7 +139,7 @@ export function autoScale({
     const scaleProps = {
         domain,
         range,
-        ...((type === 'linear' || type === 'log' || type === 'time') && scaleOptions.nice
+        ...((type === 'linear' || type === 'log' || isTemporalScale(type)) && scaleOptions.nice
             ? {
                   nice: scaleOptions.nice ? niceTickCount : true
               }
