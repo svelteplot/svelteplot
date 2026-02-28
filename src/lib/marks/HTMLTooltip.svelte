@@ -73,7 +73,7 @@
         plot.body?.addEventListener('pointermove', onPointerMove);
 
         return () => {
-            plot.body?.removeEventListener('mouseleave', onPointerLeave);
+            plot.body?.removeEventListener('pointerleave', onPointerLeave);
             plot.body?.removeEventListener('pointermove', onPointerMove);
         };
     });

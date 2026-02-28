@@ -44,7 +44,9 @@
 <Plot
     x={{ label: ' ', axis: 'bottom' }}
     y={{ label: '' }}
+    color={{ domain: [...parties] }}
     fx={{
+        domain: [...parties],
         axis: 'bottom',
         axisProps: {
             tickFontSize: 12

@@ -186,4 +186,30 @@ describe('getEmptyFacets', () => {
         expect(result.get('A')?.get('Y')).toBe(true);
         expect(result.get('B')?.get('X')).toBe(true);
     });
+
+    it('handles null fx values in domain', () => {
+        const mark = mockMark({
+            fx: 'fx',
+            data: [{ fx: 'A' }, { fx: 'B' }, { fx: null }]
+        });
+        const result = getEmptyFacets([mark], ['A', 'B', null], [true]);
+        // All three facet values (including null) should have data
+        expect(result.get('A')?.get(true)).toBe(false);
+        expect(result.get('B')?.get(true)).toBe(false);
+        expect(result.get(null)?.get(true)).toBe(false);
+    });
+
+    it('handles null fy values in domain', () => {
+        const mark = mockMark({
+            fx: 'fx',
+            fy: 'fy',
+            data: [
+                { fx: 'A', fy: 'X' },
+                { fx: 'A', fy: null }
+            ]
+        });
+        const result = getEmptyFacets([mark], ['A'], ['X', null]);
+        expect(result.get('A')?.get('X')).toBe(false);
+        expect(result.get('A')?.get(null)).toBe(false);
+    });
 });
