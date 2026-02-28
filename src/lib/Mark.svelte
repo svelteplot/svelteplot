@@ -297,7 +297,12 @@
                                     : plot.scales[scale].fn(value)
                             : value;
 
-                        out.valid = out.valid && (scale === 'color' || isValid(value));
+                        out.valid =
+                            out.valid &&
+                            (scale === 'color' ||
+                                scale === 'fx' ||
+                                scale === 'fy' ||
+                                isValid(value));
 
                         // apply dx/dy transform
                         (out as any)[channel] =
