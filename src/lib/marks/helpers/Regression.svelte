@@ -43,6 +43,7 @@
         regressionLoess
     } from '../../regression/index.js';
     import { resolveChannel } from '../../helpers/resolve.js';
+    import { isTemporalScale } from '../../helpers/typeChecks.js';
     import { confidenceInterval } from '../../helpers/math.js';
     import callWithProps from '../../helpers/callWithProps.js';
     import type { DataRecord, FacetContext, RawValue } from 'svelteplot/types/index.js';
@@ -93,7 +94,7 @@
 
     // Convert generated points back to Date for time scales so downstream marks render correctly.
     function toOutputX(value: number, scaleType: string): RawValue {
-        return scaleType === 'time' ? new Date(value) : value;
+        return isTemporalScale(scaleType) ? new Date(value) : value;
     }
 
     function makeTicks(domain: [number, number], count = 40): number[] {

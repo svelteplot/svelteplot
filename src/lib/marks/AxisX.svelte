@@ -18,6 +18,7 @@
     import type * as CSS from 'csstype';
     import autoTimeFormat from '../helpers/autoTimeFormat.js';
     import { autoTicks } from '../helpers/autoTicks.js';
+    import { isTemporalScale } from '../helpers/typeChecks.js';
     import { resolveScaledStyles } from '../helpers/resolve.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { extent } from 'd3-array';
@@ -161,10 +162,14 @@
             ? tickFmt
             : plot.scales.x.type === 'band' || plot.scales.x.type === 'point'
               ? (d: RawValue) => String(d)
-              : plot.scales.x.type === 'time'
-                ? // time scale
+              : isTemporalScale(plot.scales.x.type)
+                ? // time/utc scale
                   typeof tickFmt === 'object'
-                    ? (d: Date) => Intl.DateTimeFormat(plot.options.locale, tickFmt).format(d)
+                    ? (d: Date) =>
+                          Intl.DateTimeFormat(plot.options.locale, {
+                              ...tickFmt,
+                              ...(plot.scales.x.type === 'utc' ? { timeZone: 'UTC' } : {})
+                          }).format(d)
                     : autoTimeFormat(plot.scales.x, plot.plotWidth, plot.options.locale)
                 : // numeric scale
                   typeof tickFmt === 'object'

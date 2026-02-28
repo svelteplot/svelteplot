@@ -64,3 +64,7 @@ export function isColorOrNull(v: RawValue | null | undefined) {
 export function isOpacityOrNull(v: RawValue) {
     return v == null || (typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 1);
 }
+
+export function isTemporalScale(type: string): boolean {
+    return type === 'time' || type === 'utc';
+}

@@ -8,8 +8,11 @@ const DATE_TIME: Intl.DateTimeFormatOptions = {
     day: 'numeric'
 };
 
-const autoFormatDateTime = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, DATE_TIME).format;
+const autoFormatDateTime = (locale: string, utc?: boolean) => {
+    const format = new Intl.DateTimeFormat(locale, {
+        ...DATE_TIME,
+        ...(utc ? { timeZone: 'UTC' } : {})
+    }).format;
     return (date: Date) => format(date).replace(', ', '\n');
 };
 
@@ -17,8 +20,11 @@ const DAY_MONTH: Intl.DateTimeFormatOptions = {
     month: 'short',
     day: 'numeric'
 };
-const autoFormatDayMonth = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, DAY_MONTH).format;
+const autoFormatDayMonth = (locale: string, utc?: boolean) => {
+    const format = new Intl.DateTimeFormat(locale, {
+        ...DAY_MONTH,
+        ...(utc ? { timeZone: 'UTC' } : {})
+    }).format;
     return (date: Date) => format(date).replace(' ', '\n');
 };
 
@@ -27,20 +33,24 @@ const MONTH_YEAR: Intl.DateTimeFormatOptions = {
     year: 'numeric'
 };
 
-const autoFormatMonthYear = (locale: string) => {
-    const format = new Intl.DateTimeFormat(locale, MONTH_YEAR).format;
+const autoFormatMonthYear = (locale: string, utc?: boolean) => {
+    const format = new Intl.DateTimeFormat(locale, {
+        ...MONTH_YEAR,
+        ...(utc ? { timeZone: 'UTC' } : {})
+    }).format;
     return (date: Date) => format(date).replace(' ', '\n');
 };
 
 export default function autoTimeFormat(x: PlotScale, plotWidth: number, plotLocale: string) {
+    const utc = x.type === 'utc';
     const daysPer100Px =
         ((toNumber(x.domain[1] as Date) - toNumber(x.domain[0] as Date)) / plotWidth / 864e5) * 100;
     const format =
         daysPer100Px < 1
-            ? autoFormatDateTime(plotLocale)
+            ? autoFormatDateTime(plotLocale, utc)
             : daysPer100Px < 30
-              ? autoFormatDayMonth(plotLocale)
-              : autoFormatMonthYear(plotLocale);
+              ? autoFormatDayMonth(plotLocale, utc)
+              : autoFormatMonthYear(plotLocale, utc);
     return (date: Date) => format(date).split('\n');
 }
 
