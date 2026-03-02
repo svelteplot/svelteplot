@@ -74,6 +74,7 @@
         colorScheme: 'turbo',
         unknown: '#cccccc99',
         sortOrdinalDomains: true,
+        divergingColorScheme: 'RdBu',
         categoricalColorScheme: 'observable10',
         pointScaleHeight: 20,
         bandScaleHeight: 30,

@@ -25,6 +25,7 @@ export type MarkType =
     | 'image'
     | 'link'
     | 'line'
+    | 'raster'
     | 'rect'
     | 'regression'
     | 'ruleX'

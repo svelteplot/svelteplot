@@ -109,7 +109,7 @@
 
     import MultilineText from './helpers/MultilineText.svelte';
     import TextCanvas from './helpers/TextCanvas.svelte';
-    import { indexData } from 'svelteplot/transforms/recordize';
+    import { indexData, recordize } from 'svelteplot/transforms/recordize';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
 
     const DEFAULTS = {
@@ -137,10 +137,12 @@
     } = $derived(mergedProps);
 
     const args = $derived(
-        sort({
-            data: indexData(data as object[]) as any,
-            ...options
-        })
+        sort(
+            recordize({
+                data,
+                ...options
+            })
+        )
     ) as TextMarkProps;
 </script>
 
