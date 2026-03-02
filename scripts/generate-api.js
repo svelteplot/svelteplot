@@ -784,7 +784,7 @@ async function generateMarksApi() {
             details.push('', '```ts', typeDef, '```');
         }
         if (!details.length) continue;
-        resolvedTypeSections.push([`### ${typeName}`, '', ...details].join('\n'));
+        resolvedTypeSections.push([`### ${String(typeName)}`, '', ...details].join('\n'));
     }
 
     const typeSection = resolvedTypeSections.length
@@ -1066,7 +1066,7 @@ async function generateTransformsApi() {
             const refDetail = resolveTypeDetail(refName, sourceFile, localStringUnionMap);
             if (!refDetail) continue;
             if (explainedTypes.has(refName)) {
-                usedLinks.push(`[${refName}](/api/transforms#${slugify(refName)})`);
+                usedLinks.push(`[${String(refName)}](/api/transforms#${slugify(refName)})`);
                 continue;
             }
             const expanded = expandTypeRecursive(refName, sourceFile, localStringUnionMap);

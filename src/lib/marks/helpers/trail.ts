@@ -60,7 +60,7 @@ export function trailPath(
 
             const resampled = resampleCurve(segment, curveFactory, Math.max(1, samplesPerSegment));
             smoothedSamples.push(...resampled);
-            smoothedDefined.push(...new Array(resampled.length).fill(true));
+            smoothedDefined.push(...Array.from({ length: resampled.length }, () => true));
 
             // preserve a gap between defined segments
             if (i < len) {
@@ -150,7 +150,7 @@ export function trailPath(
             }
         }
 
-        return typeof context.toString === 'function' ? context.toString() : undefined;
+        return typeof context.toString === 'function' ? (context as Path).toString() : undefined;
     }
 
     // Round caps: original capsule behavior.
@@ -231,7 +231,7 @@ export function trailPath(
         ready = false;
     }
 
-    return typeof context.toString === 'function' ? context.toString() : undefined;
+    return typeof context.toString === 'function' ? (context as Path).toString() : undefined;
 }
 
 function resampleCurve(

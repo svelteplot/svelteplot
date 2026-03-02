@@ -54,7 +54,9 @@ describe('BarX mark', () => {
         expect(bars.length).toBe(5);
         const barDims = Array.from(bars).map(getRectDims);
         // check that bar height are equal
-        expect(barDims.map((d) => d.h)).toStrictEqual(new Array(5).fill(barDims[0].h));
+        expect(barDims.map((d) => d.h)).toStrictEqual(
+            Array.from({ length: 5 }, () => barDims[0].h)
+        );
         // check that bar length match data
         expect(barDims.map((d) => d.w)).toStrictEqual([1, 2, 3, 4, 5].map((m) => barDims[0].w * m));
         expect(barDims.map((d) => d.strokeWidth)).toStrictEqual([
@@ -102,7 +104,9 @@ describe('BarX mark', () => {
         expect(bars.length).toBe(5);
         const barDims = Array.from(bars).map(getPathDims);
         // // check that bar height are equal
-        expect(barDims.map((d) => d.h)).toStrictEqual(new Array(5).fill(barDims[0].h));
+        expect(barDims.map((d) => d.h)).toStrictEqual(
+            Array.from({ length: 5 }, () => barDims[0].h)
+        );
         // // check that bar length match data
         expect(barDims.map((d) => d.w)).toStrictEqual([1, 2, 3, 4, 5].map((m) => barDims[0].w * m));
     });
