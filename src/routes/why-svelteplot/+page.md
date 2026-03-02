@@ -133,13 +133,13 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
 ```
 
 ```svelte
-<Plot /* ... */ >
+<Plot>
     <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
     <Line
         data={languages}
         x="Total speakers"
         y="Language"
-        opacity={0.5}/>
+        opacity={0.5} />
     <Dot
         data={languages}
         x="Total speakers"
