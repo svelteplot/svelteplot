@@ -49,7 +49,7 @@
         if (themeOptions.pwa) pwaComponent = (await import('./pwa/Pwa.svelte')).default;
     });
 
-    rest;
+    void rest;
 </script>
 
 <svelte:window onscroll={() => ($oldScrollY = $scrollY)} bind:scrollY={$scrollY} />
