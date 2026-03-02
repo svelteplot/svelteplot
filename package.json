@@ -181,7 +181,7 @@
         "yoctocolors": "^2.1.2"
     },
     "peerDependencies": {
-        "svelte": "^5.53.5"
+        "svelte": "^5.43.0"
     },
     "packageManager": "pnpm@10.30.3"
 }
