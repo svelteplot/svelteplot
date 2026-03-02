@@ -294,7 +294,7 @@ function kde1d(
 
     if (cumulative === -1) {
         let area = 0;
-        const cdf: [number, number][] = new Array(densities.length);
+        const cdf: [number, number][] = Array.from({ length: densities.length });
         for (let i = densities.length - 1; i >= 0; i--) {
             if (i < densities.length - 1) {
                 const dx = densities[i + 1][0] - densities[i][0];
@@ -306,7 +306,7 @@ function kde1d(
     }
 
     let area = 0;
-    const cdf: [number, number][] = new Array(densities.length);
+    const cdf: [number, number][] = Array.from({ length: densities.length });
     for (let i = 0; i < densities.length; i++) {
         if (i > 0) {
             const dx = densities[i][0] - densities[i - 1][0];
