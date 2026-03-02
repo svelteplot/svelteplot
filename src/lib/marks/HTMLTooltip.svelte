@@ -54,6 +54,7 @@
         const key = facetKey(fxValue, fyValue);
         const facetTrees = treeMap.get(key) ?? [];
         const pt = facetTrees.length > 0 ? facetTrees[0].find(relativeX, relativeY, 25) : null;
+
         if (pt) {
             tooltipX = resolveChannel('x', pt, { x, y, r });
             tooltipY = resolveChannel('y', pt, { x, y, r });
