@@ -150,7 +150,7 @@ export function trailPath(
             }
         }
 
-        return typeof context.toString === 'function' ? context.toString() : undefined;
+        return typeof context.toString === 'function' ? (context as Path).toString() : undefined;
     }
 
     // Round caps: original capsule behavior.
@@ -231,7 +231,7 @@ export function trailPath(
         ready = false;
     }
 
-    return typeof context.toString === 'function' ? context.toString() : undefined;
+    return typeof context.toString === 'function' ? (context as Path).toString() : undefined;
 }
 
 function resampleCurve(

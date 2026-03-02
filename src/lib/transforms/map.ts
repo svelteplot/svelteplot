@@ -72,7 +72,7 @@ function maybeMap(map: MapMethod): MapIndexObject {
     if (map == null) throw new Error('missing map');
     if (typeof map === 'object' && typeof map.mapIndex === 'function') return map;
     if (typeof map === 'function') return mapFunction(map);
-    switch (`${map}`.toLowerCase()) {
+    switch ((map as string).toLowerCase()) {
         case 'cumsum':
             return mapCumsum;
         case 'rank':
@@ -80,7 +80,7 @@ function maybeMap(map: MapMethod): MapIndexObject {
         case 'quantile':
             return mapFunction((I, V) => rankQuantile(I, (i) => V[i]));
     }
-    throw new Error(`invalid map: ${map}`);
+    throw new Error(`invalid map: ${map as string}`);
 }
 
 function rankQuantile(I: number[], f: (i: number) => any): number[] {
