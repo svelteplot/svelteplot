@@ -247,7 +247,7 @@ Failed:
 ${failures.map((x) => `${gray(`- ${x.shortRoute} ${x.mode} `)}${failText}`).join('\n')}
 
 Running:
-${[...running].map((r) => `${gray(`- `)}${r} ${spinner[frame % spinner.length]} ${gray(((Date.now() - jobStarted.get(r)) / 1000).toFixed(1) + 's')}`).join('\n')}
+${[...running].map((r) => `${gray(`- `)}${String(r)} ${spinner[frame % spinner.length]} ${gray(((Date.now() - jobStarted.get(r)) / 1000).toFixed(1) + 's')}`).join('\n')}
 `);
         };
         let i = setInterval(renderRunning, 80);

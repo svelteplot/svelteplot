@@ -249,7 +249,7 @@ export function autoScaleColor({
             const newDomain: any[] = Object.keys(schemeObj);
             // for every value in domain that's not part of the scheme, map to unknown
             for (const v of domain) {
-                const key = String(v);
+                const key = String(v as string | number | boolean);
                 if (schemeObj[key] == null) {
                     newDomain.push(key);
                     newScheme.push(unknown);
