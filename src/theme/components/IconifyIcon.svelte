@@ -1,7 +1,7 @@
 <script>
     const { collection, name, ...rest } = $props();
 
-    rest;
+    void rest;
 </script>
 
 <div class="i-{collection}-{name}"></div>
