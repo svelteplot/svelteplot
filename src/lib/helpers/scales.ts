@@ -9,7 +9,7 @@ import {
     isStringOrNull
 } from './typeChecks.js';
 import { CHANNEL_SCALE, ORIGINAL_NAME_KEYS, VALID_SCALE_TYPES } from '../constants.js';
-import { isSymbolOrNull } from './typeChecks.js';
+import { isSymbolOrNull, isTemporalScale } from './typeChecks.js';
 import { resolveProp, toChannelOption } from './resolve.js';
 import type {
     ChannelAccessor,
@@ -394,12 +394,11 @@ export function createScale(
         skip,
         manualActiveMarks,
         uniqueScaleProps,
-        autoTitle:
-            type === 'time'
-                ? null
-                : propNames.size === 1
-                  ? `${[...propNames.values()][0]}${type === 'log' ? ' (log)' : ''}`
-                  : null
+        autoTitle: isTemporalScale(type)
+            ? null
+            : propNames.size === 1
+              ? `${[...propNames.values()][0]}${type === 'log' ? ' (log)' : ''}`
+              : null
     };
 }
 
