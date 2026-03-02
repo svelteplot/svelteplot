@@ -204,14 +204,14 @@ function schemeicyclical(interpolate: (d: number) => string) {
     return (n: number) => quantize(interpolate, Math.floor(n) + 1).slice(0, -1);
 }
 
-export function ordinalScheme(scheme: ColorScheme | string) {
+export function ordinalScheme(scheme: ColorScheme | (string & {})) {
     const s = `${scheme}`.toLowerCase();
     const match = ordinalSchemes.get(s);
     if (!match) throw new Error(`unknown ordinal scheme: ${s}`);
     return match;
 }
 
-export function ordinalRange(scheme: ColorScheme | string, length: number) {
+export function ordinalRange(scheme: ColorScheme | (string & {}), length: number) {
     const s = ordinalScheme(scheme);
     const r = typeof s === 'function' ? s(length) : s;
     return r.length !== length ? r.slice(0, length) : r;
@@ -220,7 +220,10 @@ export function ordinalRange(scheme: ColorScheme | string, length: number) {
 // If the specified domain contains only booleans (ignoring null and undefined),
 // returns a corresponding range where false is mapped to the low color and true
 // is mapped to the high color of the specified scheme.
-export function maybeBooleanRange(domain: boolean[], scheme: ColorScheme | string = 'greys') {
+export function maybeBooleanRange(
+    domain: boolean[],
+    scheme: ColorScheme | (string & {}) = 'greys'
+) {
     const range = new Set();
     const [f, t] = ordinalRange(scheme, 2);
     for (const value of domain) {
@@ -289,7 +292,7 @@ export function isQuantitativeScheme(scheme: string) {
     return quantitativeSchemes.has(String(scheme).toLowerCase());
 }
 
-export function quantitativeScheme(scheme: ColorScheme | string) {
+export function quantitativeScheme(scheme: ColorScheme | (string & {})) {
     const s = `${scheme}`.toLowerCase();
     if (!quantitativeSchemes.has(s)) throw new Error(`unknown quantitative scheme: ${s}`);
     return quantitativeSchemes.get(s);
