@@ -48,8 +48,8 @@
         facetOffsetX = offsetX;
         facetOffsetY = offsetY;
 
-        const relativeX = evt.clientX - bodyRect.left - offsetX + (plot.options.marginLeft ?? 0);
-        const relativeY = evt.clientY - bodyRect.top - offsetY + (plot.options.marginTop ?? 0);
+        const relativeX = evt.clientX - bodyRect.left - offsetX;
+        const relativeY = evt.clientY - bodyRect.top - offsetY;
 
         const key = facetKey(fxValue, fyValue);
         const facetTrees = treeMap.get(key) ?? [];

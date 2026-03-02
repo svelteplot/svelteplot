@@ -129,6 +129,40 @@ describe('Pointer mark (faceted)', () => {
         expect(lastCall[0]).toMatchObject({ x: 25, y: 75 });
     });
 
+    it('selects nearest point with non-zero margins', async () => {
+        const onupdate = vi.fn();
+
+        const { container } = render(PointerFacetedTest, {
+            props: {
+                plotArgs: {
+                    ...defaultPlotArgs,
+                    margin: 20
+                },
+                pointerArgs: {
+                    data: [{ x: 50, y: 50 }],
+                    x: 'x',
+                    y: 'y',
+                    onupdate
+                }
+            }
+        });
+
+        await tick();
+        const plotBody = container.querySelector('.plot-body') as HTMLElement;
+
+        // width=200, margin=20 → plotWidth=160, x range=[20,180], y range=[80,20]
+        // x=50 → projectX = 20 + (50/100)*160 = 100
+        // y=50 → projectY = 80 + (50/100)*(20-80) = 50
+        // In jsdom facetRect.left=0, so clientX=100, clientY=50 should match
+        pointerMove(plotBody, 100, 50);
+        await tick();
+
+        expect(onupdate).toHaveBeenCalled();
+        const lastCall = onupdate.mock.lastCall![0];
+        expect(lastCall).toHaveLength(1);
+        expect(lastCall[0]).toMatchObject({ x: 50, y: 50 });
+    });
+
     it('handles empty data without crashing', async () => {
         const onupdate = vi.fn();
 
