@@ -1,28 +1,29 @@
 <script lang="ts">
-    import { Dot, Plot, HTMLTooltip } from '$lib/index.js';
+    import { Plot, Dot } from '$lib/index.js';
+    import HTMLTooltip from '$lib/marks/HTMLTooltip.svelte';
     import type { ComponentProps } from 'svelte';
-
-    type Datum = { label: string };
 
     interface Props {
         plotArgs?: ComponentProps<typeof Plot>;
-        dotArgs?: ComponentProps<typeof Dot>;
-        tooltipArgs: Omit<ComponentProps<typeof HTMLTooltip<Datum>>, 'children'>;
+        tooltipArgs: Omit<ComponentProps<typeof HTMLTooltip>, 'children'>;
     }
 
-    let { plotArgs = {}, dotArgs, tooltipArgs }: Props = $props();
+    let { plotArgs = {}, tooltipArgs }: Props = $props();
 </script>
 
-<Plot width={100} height={100} axes={false} margin={0} {...plotArgs}>
-    {#if dotArgs}
-        <Dot {...dotArgs} />
-    {/if}
+<Plot width={200} height={100} axes={false} margin={0} {...plotArgs}>
+    <Dot
+        data={tooltipArgs.data}
+        x={tooltipArgs.x}
+        y={tooltipArgs.y}
+        fx={tooltipArgs.fx}
+        fy={tooltipArgs.fy}
+        r={1} />
     {#snippet overlay()}
         <HTMLTooltip {...tooltipArgs}>
             {#snippet children({ datum })}
-                {#if datum}
-                    <span class="tooltip-content" data-label={datum.label}>{datum.label}</span>
-                {/if}
+                <span class="tooltip-content" data-datum={JSON.stringify(datum)}
+                    >{datum ? 'visible' : 'hidden'}</span>
             {/snippet}
         </HTMLTooltip>
     {/snippet}
