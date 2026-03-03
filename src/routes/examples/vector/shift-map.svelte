@@ -54,7 +54,7 @@
                     // oxlint-disable-next-line unicorn/no-useless-fallback-in-spread -- TS requires ?? {} for Map.get()
                     ...(electionByFips.get(
                         Number(feat.id)
-                    ) ?? {})
+                    ) as object)
                 }
             };
         })

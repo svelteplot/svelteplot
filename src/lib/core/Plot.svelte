@@ -11,6 +11,7 @@
     import { setContext } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
     import { writable } from 'svelte/store';
+    import { scaleBand } from 'd3-scale';
 
     import type {
         PlotOptions,
@@ -28,7 +29,7 @@
     import FacetGrid from './FacetGrid.svelte';
 
     import mergeDeep from '../helpers/mergeDeep.js';
-    import { computeScales, projectXY } from '../helpers/scales.js';
+    import { computeScales, normalizeScaleFn, projectXY } from '../helpers/scales.js';
     import { CHANNEL_SCALE, SCALES } from '../constants.js';
     import { getPlotDefaults, setPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
     import { maybeNumber } from 'svelteplot/helpers/index.js';
@@ -285,6 +286,33 @@
             marks,
             DEFAULTS
         );
+        // Fix fx/fy scale ranges: computeScales creates them with empty ranges
+        // because getScaleRange has no case for fx/fy. We set the correct range
+        // here using overall plotWidth/plotHeight, matching FacetGrid's layout.
+        if (scales.fx.domain.length > 0) {
+            const fxOpts = plotOptions.fx;
+            const fxPaddingInner = fxOpts?.paddingInner ?? fxOpts?.padding ?? 0.1;
+            const fxFn = scaleBand()
+                .domain(scales.fx.domain as string[])
+                .paddingOuter(0)
+                .paddingInner(scales.fx.domain.length > 1 ? fxPaddingInner : 0)
+                .rangeRound([0, plotWidth]) as any;
+            fxFn.ticks = () => scales.fx.domain;
+            scales.fx.fn = normalizeScaleFn(fxFn);
+            scales.fx.range = fxFn.range();
+        }
+        if (scales.fy.domain.length > 0) {
+            const fyOpts = plotOptions.fy;
+            const fyPaddingInner = fyOpts?.paddingInner ?? fyOpts?.padding ?? 0.1;
+            const fyFn = scaleBand()
+                .domain(scales.fy.domain as string[])
+                .paddingOuter(0)
+                .paddingInner(scales.fy.domain.length > 1 ? fyPaddingInner : 0)
+                .rangeRound([0, plotHeight]) as any;
+            fyFn.ticks = () => scales.fy.domain;
+            scales.fy.fn = normalizeScaleFn(fyFn);
+            scales.fy.range = fyFn.range();
+        }
         const colorSymbolRedundant =
             scales.color.uniqueScaleProps?.size === 1 &&
             scales.symbol.uniqueScaleProps?.size === 1 &&

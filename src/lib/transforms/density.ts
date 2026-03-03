@@ -136,7 +136,7 @@ function bandwidthSilverman(x: number[]) {
     const hi = Math.sqrt(xvar!);
     let lo: number;
     if (!(lo = Math.min(hi, iqr / 1.34))) {
-        (lo = hi) || (lo = Math.abs(x[1])) || (lo = 1);
+        lo = hi || Math.abs(x[1]) || 1;
     }
     return lo * Math.pow(x.length, -0.2);
 }
@@ -294,7 +294,7 @@ function kde1d(
 
     if (cumulative === -1) {
         let area = 0;
-        const cdf: [number, number][] = new Array(densities.length);
+        const cdf: [number, number][] = Array.from({ length: densities.length });
         for (let i = densities.length - 1; i >= 0; i--) {
             if (i < densities.length - 1) {
                 const dx = densities[i + 1][0] - densities[i][0];
@@ -306,7 +306,7 @@ function kde1d(
     }
 
     let area = 0;
-    const cdf: [number, number][] = new Array(densities.length);
+    const cdf: [number, number][] = Array.from({ length: densities.length });
     for (let i = 0; i < densities.length; i++) {
         if (i > 0) {
             const dx = densities[i][0] - densities[i - 1][0];
@@ -317,7 +317,7 @@ function kde1d(
     return cdf;
 }
 
-function maybeKernel(kernel: Kernel | string): (u: number) => number {
+function maybeKernel(kernel: Kernel): (u: number) => number {
     if (typeof kernel === 'function') return kernel;
     return isKernelName(kernel) ? KERNEL[kernel] : KERNEL.epanechnikov;
 }

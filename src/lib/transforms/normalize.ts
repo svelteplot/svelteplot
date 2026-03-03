@@ -45,7 +45,7 @@ function normalize(options: NormalizeOptions): MapIndexObject {
     if (basis === undefined) return normalizeFirst;
     if (typeof basis === 'function') return normalizeBasis(basis);
     //   if (/^p\d{2}$/i.test(basis)) return normalizeAccessor(percentile(basis));
-    switch (`${basis}`.toLowerCase()) {
+    switch ((basis as string).toLowerCase()) {
         case 'deviation':
             return normalizeDeviation;
         case 'first':
@@ -65,7 +65,7 @@ function normalize(options: NormalizeOptions): MapIndexObject {
         case 'extent':
             return normalizeExtent;
     }
-    throw new Error(`invalid basis: ${basis}`);
+    throw new Error(`invalid basis: ${basis as string}`);
 }
 
 function normalizeBasis(basis: BasisFunction): MapIndexObject {
