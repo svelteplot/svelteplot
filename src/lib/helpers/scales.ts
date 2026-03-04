@@ -313,8 +313,9 @@ export function createScale(
     }
 
     // construct domain from data values
+    // For facet scales (fx/fy), null is a valid grouping category (e.g. penguins with sex=null)
     const valueArr = [...dataValues.values(), ...(scaleOptions.domain || [])].filter(
-        (d) => d != null
+        (d) => d != null || name === 'fx' || name === 'fy'
     );
 
     const type: ScaleType =
