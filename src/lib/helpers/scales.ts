@@ -334,7 +334,9 @@ export function createScale(
     }
 
     const valueArray =
-        type === 'quantile' || type === 'quantile-cont' ? allDataValues.toSorted() : valueArr;
+        type === 'quantile' || type === 'quantile-cont'
+            ? allDataValues.toSorted((a, b) => Number(a) - Number(b))
+            : valueArr;
 
     let domain: RawValue[] = scaleOptions.domain
         ? isOrdinal
