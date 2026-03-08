@@ -181,7 +181,7 @@ The difference between the two scales is only visible when the viewer is not in 
 
     const domain = [
         new Date('2021-01-01T00:00:00Z'),
-        new Date('2021-04-01T00:00:00Z')
+        new Date('2021-02-01T00:00:00Z')
     ];
 </script>
 
@@ -211,7 +211,7 @@ The difference between the two scales is only visible when the viewer is not in 
 
     const domain = [
         new Date('2021-01-01T00:00:00Z'),
-        new Date('2021-04-01T00:00:00Z')
+        new Date('2021-02-01T00:00:00Z')
     ];
 </script>
 
