@@ -165,7 +165,7 @@ export type ColorScaleOptions = ScaleOptions & {
     /**
      * the name of the color scheme to use, e.g. 'blues', 'turbo', 'rdylbu'
      */
-    scheme: ColorScheme | string[];
+    scheme: ColorScheme | string[] | Record<string, string>;
     /**
      * fallback color used for null/undefined
      */

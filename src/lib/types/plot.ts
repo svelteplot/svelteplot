@@ -145,7 +145,7 @@ export type PlotDefaults = {
      * default color scheme
      */
     colorScheme: ColorScheme;
-    categoricalColorScheme: ColorScheme | string[];
+    categoricalColorScheme: ColorScheme | string[] | Record<string, string>;
     /**
      * fallback color to be used for null/NA
      */
