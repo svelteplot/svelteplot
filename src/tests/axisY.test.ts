@@ -254,4 +254,37 @@ describe('AxisY mark', () => {
         );
         expect(ticks.length).toBeGreaterThan(2);
     });
+
+    it('applies fill color to tick text', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { domain: [0, 100] } },
+                axisArgs: { fill: 'red' }
+            }
+        });
+
+        const texts = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick > text') as NodeListOf<SVGTextElement>
+        );
+        expect(texts.length).toBeGreaterThan(0);
+        for (const text of texts) {
+            expect(text.style.fill).toBe('red');
+        }
+    });
+
+    it('applies fill as function accessor', () => {
+        const { container } = render(AxisYTest, {
+            props: {
+                plotArgs: { height: 300, y: { domain: [0, 100] } },
+                axisArgs: { fill: (_d: any, i: number) => (i === 0 ? 'red' : 'blue') }
+            }
+        });
+
+        const texts = Array.from(
+            container.querySelectorAll('g.axis-y > g.tick > text') as NodeListOf<SVGTextElement>
+        );
+        expect(texts.length).toBeGreaterThan(1);
+        expect(texts[0].style.fill).toBe('red');
+        expect(texts[1].style.fill).toBe('blue');
+    });
 });
