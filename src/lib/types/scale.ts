@@ -195,6 +195,7 @@ export type ScaleType =
     | 'log'
     | 'symlog'
     | 'time'
+    | 'utc'
     | 'point'
     | 'ordinal'
     | 'sequential'

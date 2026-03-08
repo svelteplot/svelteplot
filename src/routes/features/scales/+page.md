@@ -135,8 +135,7 @@ Scales can be reversed using the **reverse** option:
 
 ### Time scales
 
-If the domain is dates, SveltePlot will default to a UTC scale. This is a linear scale with ticks
-based on the Gregorian calendar.
+If the domain contains dates, SveltePlot will default to a **time** scale — a linear scale with ticks based on the Gregorian calendar, using the browser's local timezone.
 
 ```svelte live
 <script>
@@ -168,6 +167,57 @@ based on the Gregorian calendar.
         ],
         grid: true
     }} />
+```
+
+#### UTC scale
+
+The `utc` scale type is similar to `time` but always interprets tick boundaries and formats labels in UTC, regardless of the viewer's local timezone. This is useful when your dates are stored as UTC timestamps (common with APIs and CSV files), since the default `time` scale may show shifted labels depending on the viewer's timezone.
+
+The difference between the two scales is only visible when the viewer is not in the UTC timezone.
+
+```svelte live
+<script>
+    import { Plot } from 'svelteplot';
+
+    const domain = [
+        new Date('2021-01-01T00:00:00Z'),
+        new Date('2021-01-02T00:00:00Z')
+    ];
+</script>
+
+<div>
+    <p><strong>time</strong> scale (local timezone)</p>
+    <Plot
+        x={{ type: 'time', domain, grid: true }}
+        marginTop={0}
+        marginLeft={20}
+        marginRight={20}
+        height={70}
+        testid="time-vs-utc-time"></Plot>
+    <p><strong>utc</strong> scale</p>
+    <Plot
+        x={{ type: 'utc', domain, grid: true }}
+        marginTop={0}
+        marginLeft={20}
+        marginRight={20}
+        height={70}
+        testid="time-vs-utc-utc">
+    </Plot>
+</div>
+```
+
+```svelte
+<script>
+    import { Plot } from 'svelteplot';
+
+    const domain = [
+        new Date('2021-01-01T00:00:00Z'),
+        new Date('2021-01-02T00:00:00Z')
+    ];
+</script>
+
+<Plot x={{ type: 'time', domain, grid: true }} />
+<Plot x={{ type: 'utc', domain, grid: true }} />
 ```
 
 ### Logarithmic scales

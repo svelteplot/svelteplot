@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { maybeInterval, autoTicks, type IntervalLike } from './autoTicks.js';
+import { intervalType } from './time.js';
 
 describe('maybeInterval', () => {
     it('returns undefined for null', () => {
@@ -55,6 +56,30 @@ describe('maybeInterval', () => {
     it('throws for object missing offset method', () => {
         const bad = { floor: () => 0, range: () => [] } as any;
         expect(() => maybeInterval(bad)).toThrow('missing offset method');
+    });
+
+    it('returns UTC interval when scaleType is utc', () => {
+        const interval = maybeInterval('month', 'utc') as any;
+        expect(interval).toBeDefined();
+        expect(interval[intervalType]).toBe('utc');
+    });
+
+    it('returns time interval when scaleType is time', () => {
+        const interval = maybeInterval('month', 'time') as any;
+        expect(interval).toBeDefined();
+        expect(interval[intervalType]).toBe('time');
+    });
+
+    it('returns time interval by default for string intervals', () => {
+        const interval = maybeInterval('day') as any;
+        expect(interval).toBeDefined();
+        expect(interval[intervalType]).toBe('time');
+    });
+
+    it('ignores scaleType for numeric intervals', () => {
+        const interval = maybeInterval(5, 'utc') as any;
+        expect(interval).toBeDefined();
+        expect(interval.floor(12)).toBe(10);
     });
 });
 
