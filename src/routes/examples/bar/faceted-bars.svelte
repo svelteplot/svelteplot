@@ -20,6 +20,14 @@
         { party: 'Linke', year: 2025, percent: 4 },
         { party: 'Linke', year: 2021, percent: 7 }
     ];
+    const scheme = {
+        Union: '#55598e',
+        SPD: '#d23a33',
+        Grüne: '#3ca951',
+        FDP: '#efb118',
+        Linke: '#bf1d97'
+    };
+
     const parties = new Set(
         resultsLong.map((r) => r.party)
     );
@@ -44,9 +52,8 @@
 <Plot
     x={{ label: ' ', axis: 'bottom' }}
     y={{ label: '' }}
-    color={{ domain: [...parties] }}
+    color={{ scheme }}
     fx={{
-        domain: [...parties],
         axis: 'bottom',
         axisProps: {
             tickFontSize: 12
