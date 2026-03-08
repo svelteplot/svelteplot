@@ -81,7 +81,7 @@ const uniqueExamplePaths = async () => {
         const withoutExt = noDark.replace(/\.png$/, '');
         set.add(withoutExt);
     }
-    return Array.from(set).sort();
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
 };
 
 // Wait for and clip to the screenshot element on a page

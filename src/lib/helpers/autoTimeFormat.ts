@@ -9,11 +9,11 @@ const DATE_TIME: Intl.DateTimeFormatOptions = {
 };
 
 const autoFormatDateTime = (locale: string, utc?: boolean) => {
-    const format = new Intl.DateTimeFormat(locale, {
+    const formatter = new Intl.DateTimeFormat(locale, {
         ...DATE_TIME,
         ...(utc ? { timeZone: 'UTC' } : {})
-    }).format;
-    return (date: Date) => format(date).replace(', ', '\n');
+    });
+    return (date: Date) => formatter.format(date).replace(', ', '\n');
 };
 
 const DAY_MONTH: Intl.DateTimeFormatOptions = {
@@ -21,11 +21,11 @@ const DAY_MONTH: Intl.DateTimeFormatOptions = {
     day: 'numeric'
 };
 const autoFormatDayMonth = (locale: string, utc?: boolean) => {
-    const format = new Intl.DateTimeFormat(locale, {
+    const formatter = new Intl.DateTimeFormat(locale, {
         ...DAY_MONTH,
         ...(utc ? { timeZone: 'UTC' } : {})
-    }).format;
-    return (date: Date) => format(date).replace(' ', '\n');
+    });
+    return (date: Date) => formatter.format(date).replace(' ', '\n');
 };
 
 const MONTH_YEAR: Intl.DateTimeFormatOptions = {
@@ -34,11 +34,11 @@ const MONTH_YEAR: Intl.DateTimeFormatOptions = {
 };
 
 const autoFormatMonthYear = (locale: string, utc?: boolean) => {
-    const format = new Intl.DateTimeFormat(locale, {
+    const formatter = new Intl.DateTimeFormat(locale, {
         ...MONTH_YEAR,
         ...(utc ? { timeZone: 'UTC' } : {})
-    }).format;
-    return (date: Date) => format(date).replace(' ', '\n');
+    });
+    return (date: Date) => formatter.format(date).replace(' ', '\n');
 };
 
 export default function autoTimeFormat(x: PlotScale, plotWidth: number, plotLocale: string) {

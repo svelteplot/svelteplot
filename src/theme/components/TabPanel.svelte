@@ -7,12 +7,14 @@
     const current = getContext(activeNameContextKey);
     const items = getContext(itemsKey);
 
-    $items.push({
-        name,
-        activeIcon,
-        inactiveIcon
-    });
-    $items = $items;
+    $items = [
+        ...$items,
+        {
+            name,
+            activeIcon,
+            inactiveIcon
+        }
+    ];
 </script>
 
 {#if name === $current}
