@@ -22,13 +22,13 @@ The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Ed
 
 ```svelte
 <script>
-  import { Plot, Raster } from 'svelteplot';
-  
-  const volcano = {
-    width: 87,
-    height: 61,
-    values: [103, 104, 104, 105, 105, 106, ...]
-  };
+    import { Plot, Raster } from 'svelteplot';
+
+    const volcano = {
+        width: 87,
+        height: 61,
+        values: [103, 104, 104, 105, 105, 106 /* ... */]
+    };
 </script>
 
 <Plot color={{ scheme: 'turbo', legend: true }}>
