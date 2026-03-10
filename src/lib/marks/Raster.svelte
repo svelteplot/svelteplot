@@ -207,11 +207,9 @@
                     for (let xi = 0.5; xi < w; ++xi, ++i) {
                         const xData = xScale(bx1 + xi * kx);
                         const yData = yScale(by1 + yi * ky);
-                        // console.log({ xData, yData, xi, w, yi, h });
                         F[i] = (fill as (x: any, y: any) => any)(xData, yData);
                     }
                 }
-                console.log({ F });
             }
             if (typeof fillOpacity === 'function') {
                 FO = new Array(n);
