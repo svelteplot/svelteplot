@@ -1,13 +1,12 @@
 <script module>
     export const title = 'Simple raster';
-    export const description = '.';
+    export const description = '';
 </script>
 
 <script lang="ts">
     import { range } from 'd3-array';
 
     import { Plot, Raster, Text } from 'svelteplot';
-    import { RAW_VALUE } from 'svelteplot/transforms/recordize';
 
     const width = 10;
     const height = 10;
