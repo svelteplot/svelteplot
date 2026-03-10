@@ -196,8 +196,8 @@
             }
         } else if (isSamplerMode) {
             // Evaluate f(x,y) for every grid pixel
-            const xScale = scaleLinear().range([x1Prop, x2Prop]).domain([0, w]);
-            const yScale = scaleLinear().range([y1Prop, y2Prop]).domain([0, h]);
+            const xScale = scaleLinear().range([x1Prop!, x2Prop!]).domain([0, w]);
+            const yScale = scaleLinear().range([y1Prop!, y2Prop!]).domain([0, h]);
             const kx = dx / w;
             const ky = dy / h;
             if (typeof fill === 'function') {

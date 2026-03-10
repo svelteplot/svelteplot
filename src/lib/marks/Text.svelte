@@ -141,9 +141,9 @@
             recordize({
                 data,
                 ...options
-            })
+            } as any)
         )
-    ) as TextMarkProps;
+    ) as unknown as TextMarkProps;
 </script>
 
 <Mark
