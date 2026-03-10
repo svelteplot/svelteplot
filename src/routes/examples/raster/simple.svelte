@@ -1,6 +1,7 @@
 <script module>
     export const title = 'Simple raster';
-    export const description = '';
+    export const description =
+        'A minimal 10x10 raster rendered from a flat numeric array, with each cell value overlaid as text.';
 </script>
 
 <script lang="ts">
