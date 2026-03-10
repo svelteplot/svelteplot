@@ -126,8 +126,6 @@
             (options as any).y == null
     );
 
-    $inspect({ isSamplerMode, isDenseGridMode });
-
     const interpolateFn = $derived(resolveInterpolate(interpolate));
 
     function resolveInterpolate(interp: RasterMarkProps['interpolate']): InterpolateFunction {

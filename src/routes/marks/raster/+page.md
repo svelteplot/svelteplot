@@ -20,7 +20,6 @@ When `data` is a flat row-major array and both `width` and `height` are set (wit
 
 The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Eden)](https://en.wikipedia.org/wiki/Maungawhau_/_Mount_Eden) in Auckland, NZ. The data is a plain object with `width`, `height`, and a flat `values` array of elevation numbers in row-major order:
 
-
 ```svelte
 <script>
   import { Plot, Raster } from 'svelteplot';
@@ -40,7 +39,6 @@ The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Ed
 </Plot>
 ```
 
-
 ```svelte live
 <script lang="ts">
     import { Plot, Raster } from 'svelteplot';
@@ -56,7 +54,6 @@ The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Ed
         height={volcano.height} />
 </Plot>
 ```
-
 
 By default, the image is stretched to fill the plot using smooth interpolation. Set `imageRendering="pixelated"` to keep crisp pixel edges — useful when you want to show individual grid cells. You can also overlay other marks, such as `Text`, to label each cell:
 

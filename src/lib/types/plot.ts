@@ -148,7 +148,12 @@ export type PlotDefaults = {
     /**
      * default color scheme for type 'categorical'
      */
-    categoricalColorScheme: ColorScheme | string[] | ColorScheme | string[] | Record<string, string>;
+    categoricalColorScheme:
+        | ColorScheme
+        | string[]
+        | ColorScheme
+        | string[]
+        | Record<string, string>;
     /**
      * default color scheme for tyoe 'diverging'
      */
