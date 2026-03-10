@@ -291,6 +291,33 @@ describe('Line mark', () => {
         expect(lines[0]?.style.stroke).not.toBe(lines[1]?.style.stroke);
     });
 
+    it('segments lines by both z and stroke when both are provided', () => {
+        const { container } = render(LineTest, {
+            props: {
+                data: [
+                    { x: 0, y: 0, z: 'A', color: 'red' },
+                    { x: 1, y: 1, z: 'A', color: 'blue' }, // stroke changes within z='A'
+                    { x: 0, y: 2, z: 'B', color: 'red' },
+                    { x: 1, y: 3, z: 'B', color: 'red' } // stroke unchanged within z='B'
+                ],
+                x: 'x',
+                y: 'y',
+                z: 'z',
+                stroke: 'color'
+            }
+        });
+
+        const lines = container.querySelectorAll(
+            'g.lines > g > path'
+        ) as NodeListOf<SVGPathElement>;
+        // 3 segments: [A,red+connecting endpoint], [A,blue terminal], [B,red×2]
+        expect(lines).toHaveLength(3);
+        // First segment connects p1→p2 (red, extended to reach next sub-segment)
+        expect(lines[0]?.getAttribute('d')).toBe('M1,95L96,65');
+        // Last segment (B-red, 2 points) should be a proper line
+        expect(lines[2]?.getAttribute('d')).toBe('M1,35L96,5');
+    });
+
     it('does not connect points from different groups', () => {
         const { container } = render(LineTest, {
             props: {
