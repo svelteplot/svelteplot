@@ -87,6 +87,51 @@ describe('Raster mark', () => {
         expect(image).not.toBeNull();
     });
 
+    it('normalizes scatter interpolation coordinates to the plot area', () => {
+        const interpolate = vi.fn(
+            (_index: number[], width: number, height: number, _X: Float64Array, _Y: Float64Array) =>
+                new Array(width * height).fill(0)
+        );
+
+        render(RasterTest, {
+            props: {
+                plotArgs: {
+                    marginLeft: 20,
+                    marginTop: 10,
+                    marginRight: 0,
+                    marginBottom: 0,
+                    x: { domain: [0, 1] },
+                    y: { domain: [0, 1] }
+                },
+                rasterArgs: {
+                    data: [
+                        { x: 0, y: 1, v: 1 }, // top-left corner of data domain
+                        { x: 1, y: 0, v: 2 }, // bottom-right corner
+                        { x: 0.5, y: 0.5, v: 3 }
+                    ],
+                    x: 'x',
+                    y: 'y',
+                    fill: 'v',
+                    interpolate
+                }
+            }
+        });
+
+        expect(interpolate).toHaveBeenCalled();
+        const [, width, height, X, Y] = interpolate.mock.calls.at(-1)! as [
+            number[],
+            number,
+            number,
+            Float64Array,
+            Float64Array,
+            unknown[]
+        ];
+        expect(X[0]).toBeCloseTo(0, 6);
+        expect(Y[0]).toBeCloseTo(0, 6);
+        expect(X[1]).toBeCloseTo(width, 6);
+        expect(Y[1]).toBeCloseTo(height, 6);
+    });
+
     it('skips rendering when grid dimensions are zero', () => {
         const { container } = render(RasterTest, {
             props: {
