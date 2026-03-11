@@ -146,7 +146,16 @@
 
     /** Pixel-space bounds of the raster image. */
     function getBounds() {
-        return { bx1: 0, by1: 0, bx2: plot.facetWidth ?? 100, by2: plot.facetHeight ?? 100 };
+        const facetWidth = plot.facetWidth ?? 100;
+        const facetHeight = plot.facetHeight ?? 100;
+        const marginLeft = plot.options.marginLeft ?? 0;
+        const marginTop = plot.options.marginTop ?? 0;
+        return {
+            bx1: marginLeft,
+            by1: marginTop,
+            bx2: marginLeft + facetWidth,
+            by2: marginTop + facetHeight
+        };
     }
 
     /** Build the off-screen canvas and return it together with its bounds. */
@@ -196,8 +205,8 @@
             }
         } else if (isSamplerMode) {
             // Evaluate f(x,y) for every grid pixel
-            const xScale = scaleLinear().range([x1Prop!, x2Prop!]).domain([0, w]);
-            const yScale = scaleLinear().range([y1Prop!, y2Prop!]).domain([0, h]);
+            const xScale = scaleLinear().range([x1Prop!, x2Prop!]).domain([bx1, bx2]);
+            const yScale = scaleLinear().range([y1Prop!, y2Prop!]).domain([by1, by2]);
             const kx = dx / w;
             const ky = dy / h;
             if (typeof fill === 'function') {
