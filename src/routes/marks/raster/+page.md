@@ -123,8 +123,7 @@ The example below shows magnetic anomaly measurements from California survey CA5
         x="LONGITUDE"
         y="LATITUDE"
         fill="MAG_IGRF90"
-        {interpolate}
-        blur={5} />
+        {interpolate} />
 </Plot>
 ```
 
@@ -135,8 +134,7 @@ The example below shows magnetic anomaly measurements from California survey CA5
         x="LONGITUDE"
         y="LATITUDE"
         fill="MAG_IGRF90"
-        interpolate="random-walk"
-        blur={5} />
+        interpolate="random-walk" />
 </Plot>
 ```
 
@@ -146,8 +144,6 @@ Four interpolation strategies are available:
 - **`nearest`** — Voronoi nearest-neighbor: every pixel takes the value of the closest data point.
 - **`barycentric`** — Delaunay triangulation with barycentric interpolation inside triangles; smooth but can produce artifacts near the convex hull.
 - **`random-walk`** — walk-on-spheres algorithm; produces smooth, visually pleasing results similar to a [Laplacian field](https://en.wikipedia.org/wiki/Laplace%27s_equation). Recommended for most use cases.
-
-## Blur
 
 The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. It is especially effective with sparse scatter data to smooth out interpolation artifacts:
 
@@ -200,7 +196,9 @@ The `x1`, `y1`, `x2`, `y2` props define the data-space bounding box. The example
     }
 </script>
 
-<Plot color={{ scheme: 'turbo', domain: [0, 80] }}>
+<Plot
+    color={{ scheme: 'turbo', domain: [0, 80] }}
+    aspectRatio={1}>
     <Raster
         fill={mandelbrot}
         x1={-2}
@@ -211,51 +209,15 @@ The `x1`, `y1`, `x2`, `y2` props define the data-space bounding box. The example
 ```
 
 ```svelte
-<Plot color={{ scheme: 'turbo', domain: [0, 80] }}>
+<Plot
+    color={{ scheme: 'turbo', domain: [0, 80] }}
+    aspectRatio={1}>
     <Raster
         fill={mandelbrot}
         x1={-2}
         x2={1}
         y1={-1.164}
         y2={1.164} />
-</Plot>
-```
-
-By default the raster fills the entire plot at one pixel per screen pixel. You can increase `pixelSize` to reduce resolution and improve performance:
-
-```svelte live
-<script lang="ts">
-    import { Plot, Raster } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-
-    function mandelbrot(x: number, y: number) {
-        for (let n = 0, zr = 0, zi = 0; n < 80; ++n) {
-            [zr, zi] = [
-                zr * zr - zi * zi + x,
-                2 * zr * zi + y
-            ];
-            if (zr * zr + zi * zi > 4) return n;
-        }
-    }
-
-    let pixelSize = $state(2);
-</script>
-
-<Slider
-    label="pixelSize"
-    bind:value={pixelSize}
-    min={1}
-    max={10}
-    step={1} />
-
-<Plot color={{ scheme: 'turbo', domain: [0, 80] }}>
-    <Raster
-        fill={mandelbrot}
-        x1={-2}
-        x2={1}
-        y1={-1.164}
-        y2={1.164}
-        {pixelSize} />
 </Plot>
 ```
 
