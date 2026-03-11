@@ -20,7 +20,9 @@
     }
 </script>
 
-<Plot color={{ scheme: 'turbo', domain: [0, 100] }}>
+<Plot
+    color={{ scheme: 'turbo', domain: [0, 100] }}
+    aspectRatio={1}>
     <Raster
         fill={mandelbrot}
         x1={-2}
