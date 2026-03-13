@@ -304,11 +304,14 @@ export function autoScaleColor({
         SequentialScales[type as keyof typeof SequentialScales] ||
         DivergingScales[type as keyof typeof DivergingScales]
     ) {
+        const isDivergingType = DivergingScales.hasOwnProperty(type);
         // continuous color scale
         const scale = (SequentialScales[type as keyof typeof SequentialScales] ||
             DivergingScales[type as keyof typeof DivergingScales]) as any;
 
-        const scheme_ = scheme || plotDefaults.colorScheme;
+        const scheme_ =
+            scheme ||
+            (isDivergingType ? plotDefaults.divergingColorScheme : plotDefaults.colorScheme);
         if (interpolate) {
             // user-defined interpolation function [0, 1] -> color
             fn = scale(domain, interpolate);

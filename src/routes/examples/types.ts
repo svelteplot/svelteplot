@@ -282,6 +282,26 @@ export type UnemploymentRow = {
     rate: number;
 };
 
+export type CA55Row = {
+    SURVEY_AREA: string;
+    ['LINE_NUMB-SEG']: string;
+    ORDER_BY: number;
+    MAP_SHEET: number;
+    LONGITUDE: number;
+    LATITUDE: number;
+    GRID_EAST: number;
+    GRID_NORTH: number;
+    GROUND_ELEV: number;
+    MTC: number;
+    AOD: number;
+    MAG_BUL: number;
+    MAG_IGRF55: number;
+    MAG_IGRF90: number;
+    L1: number;
+    L2: number;
+    L3: number;
+};
+
 export type ExamplesData = {
     aapl: AaplRow[];
     simpsons: SimpsonsRow[];

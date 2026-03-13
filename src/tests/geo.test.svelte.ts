@@ -33,26 +33,27 @@ const point: GeoJSON.Point = {
 const projectionArgs = { projection: 'equirectangular' as const };
 
 describe('Geo', () => {
-    it('renders container g with geo class and aria-label', () => {
+    it('renders a single path with geo class and aria-label', () => {
         const { container } = render(GeoTest, {
             props: {
                 plotArgs: projectionArgs,
                 geoArgs: { data: [polygon] }
             }
         });
-        const g = container.querySelector('g.geo');
-        expect(g).not.toBeNull();
-        expect(g?.getAttribute('aria-label')).toBe('geo');
+        const path = container.querySelector('path.geo');
+        expect(path).not.toBeNull();
+        expect(path?.getAttribute('aria-label')).toBe('geo');
+        expect(container.querySelector('g.geo')).toBeNull();
     });
 
-    it('renders path elements for GeoJSON data', () => {
+    it('renders a path element for single GeoJSON data', () => {
         const { container } = render(GeoTest, {
             props: {
                 plotArgs: projectionArgs,
                 geoArgs: { data: [polygon] }
             }
         });
-        const paths = container.querySelectorAll('g.geo path');
+        const paths = container.querySelectorAll('path.geo');
         expect(paths.length).toBe(1);
     });
 
@@ -63,7 +64,7 @@ describe('Geo', () => {
                 geoArgs: { data: [polygon] }
             }
         });
-        const path = container.querySelector('g.geo path') as SVGPathElement;
+        const path = container.querySelector('path.geo') as SVGPathElement;
         expect(path).not.toBeNull();
         expect(path.style.fill).toBe('currentColor');
         expect(path.style.stroke).toBe('none');
@@ -76,19 +77,22 @@ describe('Geo', () => {
                 geoArgs: { data: [lineString] }
             }
         });
-        const path = container.querySelector('g.geo path') as SVGPathElement;
+        const path = container.querySelector('path.geo') as SVGPathElement;
         expect(path).not.toBeNull();
         expect(path.style.stroke).toBe('currentColor');
         expect(path.style.fill).toBe('none');
     });
 
-    it('renders multiple features from data array', () => {
+    it('wraps multiple features in a geo group', () => {
         const { container } = render(GeoTest, {
             props: {
                 plotArgs: projectionArgs,
                 geoArgs: { data: [polygon, lineString, point] }
             }
         });
+        const group = container.querySelector('g.geo');
+        expect(group).not.toBeNull();
+        expect(group?.getAttribute('aria-label')).toBe('geo');
         const paths = container.querySelectorAll('g.geo path');
         expect(paths.length).toBe(3);
     });
@@ -100,7 +104,7 @@ describe('Geo', () => {
                 geoArgs: { data: [polygon], fill: 'steelblue' }
             }
         });
-        const path = container.querySelector('g.geo path') as SVGPathElement;
+        const path = container.querySelector('path.geo') as SVGPathElement;
         expect(path.style.fill).toBe('steelblue');
     });
 
@@ -111,7 +115,7 @@ describe('Geo', () => {
                 geoArgs: { data: [lineString], stroke: 'red' }
             }
         });
-        const path = container.querySelector('g.geo path') as SVGPathElement;
+        const path = container.querySelector('path.geo') as SVGPathElement;
         expect(path.style.stroke).toBe('red');
     });
 
@@ -122,8 +126,8 @@ describe('Geo', () => {
                 geoArgs: { data: [polygon], class: 'my-geo' }
             }
         });
-        const g = container.querySelector('g.geo.my-geo');
-        expect(g).not.toBeNull();
+        const path = container.querySelector('path.geo.my-geo');
+        expect(path).not.toBeNull();
     });
 
     it('renders title element when title prop is set', () => {
@@ -133,7 +137,7 @@ describe('Geo', () => {
                 geoArgs: { data: [polygon], title: 'My polygon' }
             }
         });
-        const path = container.querySelector('g.geo path') as SVGPathElement;
+        const path = container.querySelector('path.geo') as SVGPathElement;
         expect(path).not.toBeNull();
         const title = path.querySelector('title');
         expect(title).not.toBeNull();

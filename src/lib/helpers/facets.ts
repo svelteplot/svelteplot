@@ -120,7 +120,7 @@ export function findFacetFromDOM(
 export function detectFacet(
     evt: MouseEvent,
     plot: PlotState
-): { fxValue: RawValue | boolean; fyValue: RawValue | boolean; offsetX: number; offsetY: number } {
+): { fxValue: RawValue; fyValue: RawValue; offsetX: number; offsetY: number } {
     const fxScale = plot.scales.fx;
     const fyScale = plot.scales.fy;
     const fxDomain = fxScale.domain;

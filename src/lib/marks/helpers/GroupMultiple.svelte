@@ -5,7 +5,12 @@
         children,
         class: className = null,
         ...groupProps
-    }: { children: Snippet; length?: number; class?: string | null } = $props();
+    }: {
+        children: Snippet;
+        length?: number;
+        class?: string | null;
+        [key: string]: unknown;
+    } = $props();
 </script>
 
 {#if length > 1 || className}

@@ -74,6 +74,7 @@
         colorScheme: 'turbo',
         unknown: '#cccccc99',
         sortOrdinalDomains: true,
+        divergingColorScheme: 'RdBu',
         categoricalColorScheme: 'observable10',
         pointScaleHeight: 20,
         bandScaleHeight: 30,
@@ -209,6 +210,27 @@
         (fixedWidth || width) - plotOptions.marginLeft - plotOptions.marginRight
     );
 
+    // Width used for aspectRatio/projection height computation only.
+    // Excludes reactive auto-margins to prevent a feedback loop:
+    //   height → plotHeight → y-tick density → y-label widths → autoMarginLeft → plotWidth → height
+    // Using explicit user-specified margins (0 when set to 'auto') keeps height stable
+    // while still updating when the container width or user-specified margins change.
+    const plotWidthForAspectRatio = $derived(
+        (fixedWidth || width) -
+            maybeMargin(
+                initialOptions.margin as number | 'auto' | PlotMargin | undefined,
+                'left',
+                DEFAULTS.margin,
+                { left: 0, right: 0, top: 0, bottom: 0 }
+            ) -
+            maybeMargin(
+                initialOptions.margin as number | 'auto' | PlotMargin | undefined,
+                'right',
+                DEFAULTS.margin,
+                { left: 0, right: 0, top: 0, bottom: 0 }
+            )
+    );
+
     // the facet and y domain counts are used for computing the automatic height
     const xFacetCount = $derived(Math.max(1, preScales.fx.domain.length));
     const yFacetCount = $derived(Math.max(1, preScales.fy.domain.length));
@@ -235,7 +257,8 @@
             : maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
               ? Math.round(
                     preScales.projection && (preScales.projection as any).aspectRatio
-                        ? ((plotWidth * (preScales.projection as any).aspectRatio) / xFacetCount) *
+                        ? ((plotWidthForAspectRatio * (preScales.projection as any).aspectRatio) /
+                              xFacetCount) *
                               yFacetCount +
                               plotOptions.marginTop +
                               plotOptions.marginBottom
@@ -244,7 +267,7 @@
                                 preScales.x,
                                 preScales.y,
                                 plotOptions.aspectRatio,
-                                plotWidth,
+                                plotWidthForAspectRatio,
                                 plotOptions.marginTop,
                                 plotOptions.marginBottom
                             )
@@ -396,6 +419,16 @@
             y.type === 'band' || y.type === 'point'
                 ? y.domain.length
                 : Math.abs((y.domain[1] as number) - (y.domain[0] as number));
+        // Guard against degenerate/empty domains (e.g. before marks have mounted).
+        // Returning NaN here would propagate through scale ranges → NaN pixel coords.
+        if (
+            !xDomainExtent ||
+            !yDomainExtent ||
+            !isFinite(xDomainExtent) ||
+            !isFinite(yDomainExtent)
+        ) {
+            return DEFAULTS.height + marginTop + marginBottom;
+        }
         return (
             ((plotWidth / xDomainExtent) * yDomainExtent) / aspectRatio + marginTop + marginBottom
         );

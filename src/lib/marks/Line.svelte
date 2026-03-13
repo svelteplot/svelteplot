@@ -94,28 +94,65 @@
     const args = $derived(sort(recordizeXY({ data, ...options })));
 
     /**
-     * Groups the data by the specified key
+     * Groups the data by the specified key (and optionally a secondary key).
+     * When a secondary key is provided, each primary group is further split by
+     * the secondary key, with each sub-segment extended to include the first point
+     * of the next sub-segment so consecutive segments share an endpoint (enabling
+     * multi-colored lines without gaps).
      */
-    function groupIndex(data: ScaledDataRecord[], groupByKey: ChannelAccessor<Datum> | null) {
-        if (!groupByKey) return [data];
-        let group: ScaledDataRecord[] = [];
-        const groups: ScaledDataRecord[][] = [group];
-        let lastGroupValue;
+    function groupIndex(
+        data: ScaledDataRecord[],
+        groupByKey: ChannelAccessor<Datum> | null,
+        secondaryKey: ChannelAccessor<Datum> | null = null
+    ) {
+        if (!groupByKey && !secondaryKey) return [data];
+
+        // Group by the primary key
+        const primaryGroups: ScaledDataRecord[][] = [];
+        let primaryGroup: ScaledDataRecord[] = [];
+        let lastPrimaryValue: unknown;
         for (const d of data) {
-            const groupValue = resolveProp(groupByKey, d.datum);
-            if (groupValue === lastGroupValue) {
-                group.push(d);
+            const primaryValue = resolveProp(groupByKey!, d.datum);
+            if (primaryValue === lastPrimaryValue) {
+                primaryGroup.push(d);
             } else {
-                // new group
-                group = [d];
-                groups.push(group);
-                lastGroupValue = groupValue;
+                primaryGroup = [d];
+                primaryGroups.push(primaryGroup);
+                lastPrimaryValue = primaryValue;
             }
         }
-        return groups;
+
+        if (!secondaryKey) return primaryGroups;
+
+        // Further split each primary group by the secondary key. Each sub-segment is
+        // extended to include the first point of the next sub-segment so that
+        // consecutive segments share an endpoint (no gaps in multi-colored lines).
+        const result: ScaledDataRecord[][] = [];
+        for (const pGroup of primaryGroups) {
+            if (pGroup.length === 0) continue;
+            let subGroup: ScaledDataRecord[] = [pGroup[0]];
+            let lastSecondaryValue = resolveProp(secondaryKey, pGroup[0].datum);
+            for (let i = 1; i < pGroup.length; i++) {
+                const d = pGroup[i];
+                const secondaryValue = resolveProp(secondaryKey, d.datum);
+                if (secondaryValue === lastSecondaryValue) {
+                    subGroup.push(d);
+                } else {
+                    subGroup.push(d); // extend to connect to next sub-segment
+                    result.push(subGroup);
+                    subGroup = [d]; // new sub-segment begins here
+                    lastSecondaryValue = secondaryValue;
+                }
+            }
+            result.push(subGroup);
+        }
+        return result;
     }
 
     const groupByKey = $derived(args.z || args.stroke) as ChannelAccessor<Datum> | null;
+    const secondaryKey = $derived(
+        args.z && args.stroke ? args.stroke : null
+    ) as ChannelAccessor<Datum> | null;
 
     const plot = usePlot();
 
@@ -155,7 +192,7 @@
     {...args}>
     {#snippet children({ mark, usedScales, scaledData })}
         {#if scaledData.length > 0}
-            {@const groupedLineData = groupIndex(scaledData, groupByKey)}
+            {@const groupedLineData = groupIndex(scaledData, groupByKey, secondaryKey)}
             {#if canvas}
                 <LineCanvas {groupedLineData} {mark} {usedScales} {linePath} {groupByKey} />
             {:else}

@@ -15,3 +15,4 @@ test-results
 /src/routes/demo
 /static/__vr
 svelte-errors-pr.log
+/vendor

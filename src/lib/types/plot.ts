@@ -145,7 +145,19 @@ export type PlotDefaults = {
      * default color scheme
      */
     colorScheme: ColorScheme;
-    categoricalColorScheme: ColorScheme | string[] | Record<string, string>;
+    /**
+     * default color scheme for type 'categorical'
+     */
+    categoricalColorScheme:
+        | ColorScheme
+        | string[]
+        | ColorScheme
+        | string[]
+        | Record<string, string>;
+    /**
+     * default color scheme for tyoe 'diverging'
+     */
+    divergingColorScheme: ColorScheme | string[];
     /**
      * fallback color to be used for null/NA
      */
@@ -464,6 +476,8 @@ export type PlotOptions = {
         | {
               type?: string;
               rotate?: [number, number] | [number, number, number];
+              center?: [number, number] | [number, number, number];
+              parallels?: [number, number] | [number, number, number];
               domain?: object;
               inset?: number;
               clip?: Clip;
