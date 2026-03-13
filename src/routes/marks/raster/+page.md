@@ -128,7 +128,6 @@ Sometimes your data does not come in a gridded format, but at irregularly distri
         center: [0, 56],
         parallels: [49, 77]
     }}
-    height={500}
     color={{
         scheme: 'burd',
         type: 'quantile',
@@ -145,10 +144,10 @@ The raster mark automatically interpolates a grid when `x` and `y` are provided.
 
 Four interpolation strategies are available:
 
-- **`none`** — each data point is mapped to its nearest pixel; no interpolation between points.
-- **`nearest`** — Voronoi nearest-neighbor: every pixel takes the value of the closest data point.
-- **`barycentric`** — Delaunay triangulation with barycentric interpolation inside triangles; smooth but can produce artifacts near the convex hull.
-- **`random-walk`** — walk-on-spheres algorithm; produces smooth, visually pleasing results similar to a [Laplacian field](https://en.wikipedia.org/wiki/Laplace%27s_equation). Recommended for most use cases.
+- **none** — each data point is mapped to its nearest pixel; no interpolation between points.
+- **nearest** — Voronoi nearest-neighbor: every pixel takes the value of the closest data point.
+- **barycentric** — Delaunay triangulation with barycentric interpolation inside triangles; smooth but can produce artifacts near the convex hull.
+- **random-walk** — walk-on-spheres algorithm; produces smooth, visually pleasing results similar to a [Laplacian field](https://en.wikipedia.org/wiki/Laplace%27s_equation). Recommended for most use cases.
 
 ```svelte live
 <script lang="ts">
@@ -199,7 +198,6 @@ Four interpolation strategies are available:
         center: [0, 56],
         parallels: [49, 77]
     }}
-    height={500}
     color={{
         scheme: 'burd',
         type: 'quantile'
@@ -220,7 +218,6 @@ Four interpolation strategies are available:
         type: 'conic-conformal',
         domain: land
     }}
-    height={500}
     color={{
         scheme: 'burd',
         type: 'quantile'
@@ -285,7 +282,6 @@ Clipping the raster to the land geometry removes those values outside the coastl
         center: [0, 56],
         parallels: [49, 77]
     }}
-    height={500}
     color={{
         scheme: 'burd',
         type: 'quantile'
@@ -377,7 +373,6 @@ The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. 
         center: [0, 56],
         parallels: [49, 77]
     }}
-    height={500}
     color={{
         scheme: 'burd',
         type: 'quantile'
