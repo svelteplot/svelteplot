@@ -476,6 +476,8 @@ export type PlotOptions = {
         | {
               type?: string;
               rotate?: [number, number] | [number, number, number];
+              center?: [number, number] | [number, number, number];
+              parallels?: [number, number] | [number, number, number];
               domain?: object;
               inset?: number;
               clip?: Clip;
