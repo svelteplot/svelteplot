@@ -217,18 +217,18 @@
     // while still updating when the container width or user-specified margins change.
     const plotWidthForAspectRatio = $derived(
         (fixedWidth || width) -
-        maybeMargin(
-            initialOptions.margin as number | 'auto' | PlotMargin | undefined,
-            'left',
-            DEFAULTS.margin,
-            { left: 0, right: 0, top: 0, bottom: 0 }
-        ) -
-        maybeMargin(
-            initialOptions.margin as number | 'auto' | PlotMargin | undefined,
-            'right',
-            DEFAULTS.margin,
-            { left: 0, right: 0, top: 0, bottom: 0 }
-        )
+            maybeMargin(
+                initialOptions.margin as number | 'auto' | PlotMargin | undefined,
+                'left',
+                DEFAULTS.margin,
+                { left: 0, right: 0, top: 0, bottom: 0 }
+            ) -
+            maybeMargin(
+                initialOptions.margin as number | 'auto' | PlotMargin | undefined,
+                'right',
+                DEFAULTS.margin,
+                { left: 0, right: 0, top: 0, bottom: 0 }
+            )
     );
 
     // the facet and y domain counts are used for computing the automatic height
@@ -257,9 +257,8 @@
             : maybeNumber(plotOptions.height) === null || plotOptions.height === 'auto'
               ? Math.round(
                     preScales.projection && (preScales.projection as any).aspectRatio
-                        ? ((plotWidthForAspectRatio *
-                                  (preScales.projection as any).aspectRatio) /
-                                  xFacetCount) *
+                        ? ((plotWidthForAspectRatio * (preScales.projection as any).aspectRatio) /
+                              xFacetCount) *
                               yFacetCount +
                               plotOptions.marginTop +
                               plotOptions.marginBottom
@@ -422,7 +421,12 @@
                 : Math.abs((y.domain[1] as number) - (y.domain[0] as number));
         // Guard against degenerate/empty domains (e.g. before marks have mounted).
         // Returning NaN here would propagate through scale ranges → NaN pixel coords.
-        if (!xDomainExtent || !yDomainExtent || !isFinite(xDomainExtent) || !isFinite(yDomainExtent)) {
+        if (
+            !xDomainExtent ||
+            !yDomainExtent ||
+            !isFinite(xDomainExtent) ||
+            !isFinite(yDomainExtent)
+        ) {
             return DEFAULTS.height + marginTop + marginBottom;
         }
         return (
