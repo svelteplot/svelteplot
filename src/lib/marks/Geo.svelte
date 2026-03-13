@@ -45,6 +45,7 @@
     import Anchor from './helpers/Anchor.svelte';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
+    import GroupMultiple from './helpers/GroupMultiple.svelte';
 
     const plot = usePlot();
 
@@ -85,6 +86,8 @@
             })
         )
     );
+
+    const classes = $derived(['geo', geoType && `geo-${geoType}`, className]);
 </script>
 
 <Mark
@@ -92,10 +95,10 @@
     channels={['fill', 'stroke', 'opacity', 'fillOpacity', 'strokeOpacity', 'r']}
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
-        <g
+        <GroupMultiple
             aria-label="geo"
-            class={['geo', geoType && `geo-${geoType}`, className]}
-            style="fill:currentColor">
+            class={scaledData.length > 1 ? classes : null}
+            length={(scaledData, length)}>
             {#if canvas}
                 <GeoCanvas data={scaledData} {path} {mark} {usedScales} />
             {:else}
@@ -116,7 +119,7 @@
                             <path
                                 d={path(geometry as any)}
                                 {style}
-                                class={[styleClass]}
+                                class={[styleClass, scaledData.length === 1 ? classes : null]}
                                 filter={resolveProp(args.svgFilter, d.datum, undefined) as
                                     | string
                                     | undefined}
@@ -131,6 +134,6 @@
                     {/if}
                 {/each}
             {/if}
-        </g>
+        </GroupMultiple>
     {/snippet}
 </Mark>
