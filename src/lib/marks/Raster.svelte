@@ -67,6 +67,7 @@
         interpolate?: 'none' | 'nearest' | 'barycentric' | 'random-walk' | InterpolateFunction;
         /** CSS image-rendering property (default `"auto"`) */
         imageRendering?: string;
+        clipPath?: string;
     }
 
     import type {
@@ -412,6 +413,7 @@
                 width={Math.abs(result.dx)}
                 height={Math.abs(result.dy)}
                 preserveAspectRatio="none"
+                clip-path={options.clipPath}
                 image-rendering={imageRendering}
                 href={result.canvas.toDataURL()} />
         {/if}
