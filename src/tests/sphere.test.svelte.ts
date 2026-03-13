@@ -12,7 +12,7 @@ describe('Sphere', () => {
                 plotArgs: projectionArgs
             }
         });
-        const g = container.querySelector('g.geo.geo-sphere');
+        const g = container.querySelector('path.geo.geo-sphere');
         expect(g).not.toBeNull();
         expect(g?.getAttribute('aria-label')).toBe('geo');
     });
@@ -23,7 +23,7 @@ describe('Sphere', () => {
                 plotArgs: projectionArgs
             }
         });
-        const paths = container.querySelectorAll('g.geo.geo-sphere path');
+        const paths = container.querySelectorAll('path.geo.geo-sphere');
         expect(paths.length).toBe(1);
     });
 
@@ -33,7 +33,7 @@ describe('Sphere', () => {
                 plotArgs: projectionArgs
             }
         });
-        const path = container.querySelector('g.geo.geo-sphere path') as SVGPathElement;
+        const path = container.querySelector('path.geo.geo-sphere') as SVGPathElement;
         const d = path.getAttribute('d');
         expect(d).not.toBeNull();
         expect(d).toMatch(/^M[\d.-]/);
@@ -45,7 +45,7 @@ describe('Sphere', () => {
                 plotArgs: projectionArgs
             }
         });
-        const path = container.querySelector('g.geo.geo-sphere path') as SVGPathElement;
+        const path = container.querySelector('path.geo.geo-sphere') as SVGPathElement;
         expect(path).not.toBeNull();
         expect(path.style.fill).toBe('currentColor');
         expect(path.style.stroke).toBe('none');
@@ -58,7 +58,7 @@ describe('Sphere', () => {
                 sphereArgs: { fill: 'lightblue' }
             }
         });
-        const path = container.querySelector('g.geo.geo-sphere path') as SVGPathElement;
+        const path = container.querySelector('path.geo.geo-sphere') as SVGPathElement;
         expect(path.style.fill).toBe('lightblue');
     });
 });

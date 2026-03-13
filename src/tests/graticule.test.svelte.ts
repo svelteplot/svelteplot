@@ -12,7 +12,7 @@ describe('Graticule', () => {
                 plotArgs: projectionArgs
             }
         });
-        const g = container.querySelector('g.geo.geo-graticule');
+        const g = container.querySelector('path.geo.geo-graticule');
         expect(g).not.toBeNull();
         expect(g?.getAttribute('aria-label')).toBe('geo');
     });
@@ -23,7 +23,7 @@ describe('Graticule', () => {
                 plotArgs: projectionArgs
             }
         });
-        const paths = container.querySelectorAll('g.geo.geo-graticule path');
+        const paths = container.querySelectorAll('path.geo.geo-graticule');
         expect(paths.length).toBe(1);
     });
 
@@ -33,7 +33,7 @@ describe('Graticule', () => {
                 plotArgs: projectionArgs
             }
         });
-        const path = container.querySelector('g.geo.geo-graticule path') as SVGPathElement;
+        const path = container.querySelector('path.geo.geo-graticule') as SVGPathElement;
         expect(path).not.toBeNull();
         expect(path.style.stroke).toBe('currentColor');
         expect(path.style.fill).toBe('none');
@@ -46,7 +46,7 @@ describe('Graticule', () => {
                 graticuleArgs: { stroke: 'gray' }
             }
         });
-        const path = container.querySelector('g.geo.geo-graticule path') as SVGPathElement;
+        const path = container.querySelector('path.geo.geo-graticule') as SVGPathElement;
         expect(path.style.stroke).toBe('gray');
     });
 });
