@@ -13,7 +13,7 @@ Jump to transforms: [bin](/api/transforms#bin), [binX](/api/transforms#binX), [b
 for binning in x and y dimension simultaneously
 
 ```ts
-bin<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinOptions): TransformArg<T, DataRecord>
+bin({ data, ...channels }: TransformArg<DataRecord>, options: BinOptions): TransformArg<DataRecord>
 ```
 
 ### BinOptions
@@ -93,7 +93,7 @@ export type ReducerPercentile =
 Bins on x. Also groups on y and the first channel of z, fill, or stroke, if any.
 
 ```ts
-binX<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinXOptions): TransformArg<T, DataRecord>
+binX({ data, ...channels }: TransformArg<DataRecord>, options: BinXOptions): TransformArg<DataRecord>
 ```
 
 ### BinXOptions
@@ -115,7 +115,7 @@ Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannel
 Bins on y. Also groups on y and the first channel of z, fill, or stroke, if any.
 
 ```ts
-binY<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: BinYOptions): TransformArg<T, DataRecord>
+binY({ data, ...channels }: TransformArg<DataRecord>, options: BinYOptions): TransformArg<DataRecord>
 ```
 
 ### BinYOptions
@@ -196,16 +196,18 @@ densityX<T>(args: TransformArg<T>, options: DensityOptions<T> & {
 ### Kernel
 
 ```ts
-type Kernel =
-    | 'uniform'
-    | 'triangular'
-    | 'epanechnikov'
-    | 'quartic'
-    | 'triweight'
-    | 'gaussian'
-    | 'cosine'
-    | ((u: number) => number);
+export type Kernel = KernelName | ((u: number) => number);
 ```
+
+### KernelName
+
+- `uniform`
+- `triangular`
+- `epanechnikov`
+- `quartic`
+- `triweight`
+- `gaussian`
+- `cosine`
 
 ## densityY
 
@@ -359,7 +361,7 @@ Channels:
 - z: the grouping variable (e.g., 'Id')
 
 ```ts
-normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis): ReturnType<typeof sort<T>>
+normalizeParallelX<T>(args: TransformArg<T>, basis: NormalizeBasis): TransformArg<T>
 ```
 
 ## normalizeParallelY
@@ -373,7 +375,7 @@ Channels:
 - z: the grouping variable (e.g., 'Id')
 
 ```ts
-normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis): ReturnType<typeof sort<T>>
+normalizeParallelY<T>(args: TransformArg<T>, basis: NormalizeBasis): TransformArg<T>
 ```
 
 ## group
@@ -382,7 +384,7 @@ groups the dataset by x and y channel and optionally reduces the group items
 to output channels fill, stroke, r, opacity, fillOpacity, or strokeOpacity
 
 ```ts
-group({ data, ...channels }: TransformArg<T, DataRecord>, options: GroupXOptions): void
+group({ data, ...channels }: TransformArg<DataRecord>, options: GroupXOptions): void
 ```
 
 ### GroupXOptions
@@ -419,7 +421,7 @@ groups the dataset by the x channel and optionally reduces the group items
 to output channels y, y1, y2, fill, stroke, r, opacity, fillOpacity, or strokeOpacity
 
 ```ts
-groupX(input: TransformArg<T, DataRecord>, options: GroupXOptions): void
+groupX(input: TransformArg<DataRecord>, options: GroupXOptions): void
 ```
 
 Options: [GroupXOptions](/api/transforms#GroupXOptions)
@@ -430,7 +432,7 @@ groups the dataset by the y channel and optionally reduces the group items
 to output channels x, x1, x2, fill, stroke, r, opacity, fillOpacity, or strokeOpacity
 
 ```ts
-groupY(input: TransformArg<T, DataRecord>, options: GroupYOptions): void
+groupY(input: TransformArg<DataRecord>, options: GroupYOptions): void
 ```
 
 ### GroupYOptions
@@ -455,7 +457,7 @@ to output channels x, x1, x2, y, y1, y2, fill, stroke, r, opacity, fillOpacity,
 or strokeOpacity
 
 ```ts
-groupZ(input: TransformArg<T, DataRecord>, options: GroupZOptions): void
+groupZ(input: TransformArg<DataRecord>, options: GroupZOptions): void
 ```
 
 ### GroupZOptions
@@ -487,7 +489,7 @@ intervalY<T>(args: TransformArg<T>): void
 adds random noise to one or more positional channels
 
 ```ts
-jitter<T, C extends TransformArg<T>>({ data, ...channels }: C, options: Partial<Record<PositionalScale, JitterOptions>>): TransformReturn<C, T>
+jitter<T>({ data, ...channels }: TransformArg<T>, options: Partial<Record<PositionalScale, JitterOptions>>): void
 ```
 
 ### JitterOptions
@@ -512,7 +514,7 @@ type JitterOptions = {
 adds random noise to the x channel values
 
 ```ts
-jitterX<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'x'>
+jitterX<T>(args: TransformArg<T>, options: JitterOptions): void
 ```
 
 Options: [JitterOptions](/api/transforms#JitterOptions)
@@ -522,7 +524,7 @@ Options: [JitterOptions](/api/transforms#JitterOptions)
 adds random noise to the y channel values
 
 ```ts
-jitterY<T>(args: TransformArg<T>, options: JitterOptions): TransformReturn<T, 'y'>
+jitterY<T>(args: TransformArg<T>, options: JitterOptions): void
 ```
 
 Options: [JitterOptions](/api/transforms#JitterOptions)
@@ -533,7 +535,7 @@ takes an array of raw values and returns data records in which the values
 are interpreted as the x channel and their index as the y channel
 
 ```ts
-recordizeX<T>({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
+recordizeX({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
 ```
 
 ## recordizeY
@@ -542,7 +544,7 @@ takes an array of raw values and returns data records in which the values
 are interpreted as the y channel and their index as the x channel
 
 ```ts
-recordizeY<T>({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
+recordizeY({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: unknown): TransformArgsRecord<DataRecord>
 ```
 
 ## renameChannels
@@ -550,7 +552,7 @@ recordizeY<T>({ data, ...channels }: TransformArgsRow<DataRow>, { withIndex }: u
 renames a channel without modifying the data
 
 ```ts
-renameChannels<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: RenameChannelsOptions): TransformArg<T, DataRecord>
+renameChannels<T extends DataRecord, C extends TransformLike<T>>({ data, ...channels }: C, options: RenameChannelsOptions): C
 ```
 
 ### RenameChannelsOptions
@@ -567,7 +569,7 @@ copies a channel's accessor to multiple target channels, then removes
 the source channel
 
 ```ts
-replaceChannels<T>({ data, ...channels }: TransformArg<T, DataRecord>, options: ReplaceChannelsOptions): TransformArg<T, DataRecord>
+replaceChannels<T extends DataRecord, C extends TransformLike<T>>({ data, ...channels }: C, options: ReplaceChannelsOptions): C
 ```
 
 ### ReplaceChannelsOptions
@@ -699,9 +701,9 @@ sorts the data according to the sort channel option; supports channel
 accessors, comparator functions, and `{channel, order}` objects
 
 ```ts
-sort<T>({ data, ...channels }: TransformArg<T>, options: {
+sort<T, C extends TransformLike<T> = TransformLike<T>>({ data, ...channels }: C, options: {
     reverse?: boolean;
-}): void
+}): C
 ```
 
 ## shuffle
@@ -709,9 +711,9 @@ sort<T>({ data, ...channels }: TransformArg<T>, options: {
 shuffles the data row order
 
 ```ts
-shuffle({ data, ...channels }: TransformArg<DataRow[]>, options: {
+shuffle({ data, ...channels }: TransformLike, options: {
     seed?: number;
-}): void
+}): TransformLike
 ```
 
 ## reverse
@@ -719,7 +721,7 @@ shuffle({ data, ...channels }: TransformArg<DataRow[]>, options: {
 reverses the data row order
 
 ```ts
-reverse({ data, ...channels }: TransformArg<DataRow[]>): void
+reverse({ data, ...channels }: TransformLike): TransformLike
 ```
 
 ## stackX
@@ -779,7 +781,7 @@ creates a mosaic layout with the outer (width) dimension along x and
 the inner (height) dimension along y
 
 ```ts
-stackMosaicX<T>(args: unknown, opts: unknown): void
+stackMosaicX<T>(args: Parameters<typeof stackMosaic<T>>[0], opts?: Parameters<typeof stackMosaic<T>>[2]): void
 ```
 
 ## stackMosaicY
@@ -788,7 +790,7 @@ creates a mosaic layout with the outer (height) dimension along y and
 the inner (width) dimension along x
 
 ```ts
-stackMosaicY<T>(args: unknown, opts: unknown): void
+stackMosaicY<T>(args: Parameters<typeof stackMosaic<T>>[0], opts?: Parameters<typeof stackMosaic<T>>[2]): void
 ```
 
 ## windowX
@@ -801,15 +803,21 @@ windowX(args: TransformArg<DataRecord>, options: WindowOptions): void
 
 ### WindowOptions
 
-| Prop       | Type                         | Description                                                                     |
-| ---------- | ---------------------------- | ------------------------------------------------------------------------------- |
-| `k`        | number                       | the window size (number of data points)                                         |
-| `interval` | string                       | a time interval string to use instead of a fixed window size                    |
-| `anchor`   | 'start' \| 'middle' \| 'end' | where to align the window relative to the current data point                    |
-| `reduce`   | ReducerName                  | the reducer function to apply within each window (e.g. "mean", "median", "sum") |
-| `strict`   | boolean                      | if true, return null when the window has fewer than k values                    |
+| Prop        | Type              | Description                                                                     |
+| ----------- | ----------------- | ------------------------------------------------------------------------------- |
+| `k`         | number            | the window size (number of data points)                                         |
+| `interval?` | string            | a time interval string to use instead of a fixed window size                    |
+| `anchor?`   | WindowAnchor      | where to align the window relative to the current data point                    |
+| `reduce?`   | ReducerName       | the reducer function to apply within each window (e.g. "mean", "median", "sum") |
+| `strict?`   | boolean \| number | if true, return null when the window has fewer than k values                    |
 
 Uses: [ReducerName](/api/transforms#ReducerName)
+
+### WindowAnchor
+
+- `start`
+- `middle`
+- `end`
 
 ## windowY
 
@@ -871,13 +879,15 @@ the name of a d3 curve interpolation method
 
 ### ConstantAccessor
 
-a value that is either a constant or a function that computes a per-datum value
-
 ```ts
 export type ConstantAccessor<
     K,
     T = Record<string | symbol, RawValue>
-> = K | ((d: T, index: number) => K) | null | undefined;
+> =
+    | K
+    | BivariantCallback<[d: T, index: number], K>
+    | null
+    | undefined;
 ```
 
 ### TransformArg

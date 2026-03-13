@@ -4,7 +4,7 @@ title: Marks API reference
 
 <div class="inline-toc">
 
-Jump to mark: [Area](/api/marks#Area), [AreaX](/api/marks#AreaX), [AreaY](/api/marks#AreaY), [Arrow](/api/marks#Arrow), [AxisX](/api/marks#AxisX), [AxisY](/api/marks#AxisY), [BarX](/api/marks#BarX), [BarY](/api/marks#BarY), [BollingerX](/api/marks#BollingerX), [BollingerY](/api/marks#BollingerY), [BoxX](/api/marks#BoxX), [BoxY](/api/marks#BoxY), [Brush](/api/marks#Brush), [BrushX](/api/marks#BrushX), [BrushY](/api/marks#BrushY), [Cell](/api/marks#Cell), [CellX](/api/marks#CellX), [CellY](/api/marks#CellY), [ColorLegend](/api/marks#ColorLegend), [DifferenceY](/api/marks#DifferenceY), [Dot](/api/marks#Dot), [DotX](/api/marks#DotX), [DotY](/api/marks#DotY), [Frame](/api/marks#Frame), [Geo](/api/marks#Geo), [Graticule](/api/marks#Graticule), [GridX](/api/marks#GridX), [GridY](/api/marks#GridY), [HTMLTooltip](/api/marks#HTMLTooltip), [Image](/api/marks#Image), [Line](/api/marks#Line), [LineX](/api/marks#LineX), [LineY](/api/marks#LineY), [Link](/api/marks#Link), [Pointer](/api/marks#Pointer), [Rect](/api/marks#Rect), [RectX](/api/marks#RectX), [RectY](/api/marks#RectY), [RegressionX](/api/marks#RegressionX), [RegressionY](/api/marks#RegressionY), [RuleX](/api/marks#RuleX), [RuleY](/api/marks#RuleY), [Sphere](/api/marks#Sphere), [Spike](/api/marks#Spike), [Text](/api/marks#Text), [TickX](/api/marks#TickX), [TickY](/api/marks#TickY), [Trail](/api/marks#Trail), [WaffleX](/api/marks#WaffleX), [WaffleY](/api/marks#WaffleY)
+Jump to mark: [Area](/api/marks#Area), [AreaX](/api/marks#AreaX), [AreaY](/api/marks#AreaY), [Arrow](/api/marks#Arrow), [AxisX](/api/marks#AxisX), [AxisY](/api/marks#AxisY), [BarX](/api/marks#BarX), [BarY](/api/marks#BarY), [BollingerX](/api/marks#BollingerX), [BollingerY](/api/marks#BollingerY), [BoxX](/api/marks#BoxX), [BoxY](/api/marks#BoxY), [BrushX](/api/marks#BrushX), [BrushY](/api/marks#BrushY), [Cell](/api/marks#Cell), [CellX](/api/marks#CellX), [CellY](/api/marks#CellY), [ColorLegend](/api/marks#ColorLegend), [DifferenceY](/api/marks#DifferenceY), [Dot](/api/marks#Dot), [DotX](/api/marks#DotX), [DotY](/api/marks#DotY), [Frame](/api/marks#Frame), [Geo](/api/marks#Geo), [Graticule](/api/marks#Graticule), [GridX](/api/marks#GridX), [GridY](/api/marks#GridY), [HTMLTooltip](/api/marks#HTMLTooltip), [Image](/api/marks#Image), [Line](/api/marks#Line), [LineX](/api/marks#LineX), [LineY](/api/marks#LineY), [Link](/api/marks#Link), [Pointer](/api/marks#Pointer), [Raster](/api/marks#Raster), [Rect](/api/marks#Rect), [RectX](/api/marks#RectX), [RectY](/api/marks#RectY), [RegressionX](/api/marks#RegressionX), [RegressionY](/api/marks#RegressionY), [RuleX](/api/marks#RuleX), [RuleY](/api/marks#RuleY), [Sphere](/api/marks#Sphere), [Spike](/api/marks#Spike), [Text](/api/marks#Text), [TickX](/api/marks#TickX), [TickY](/api/marks#TickY), [Trail](/api/marks#Trail), [WaffleX](/api/marks#WaffleX), [WaffleY](/api/marks#WaffleY)
 
 </div>
 
@@ -97,27 +97,27 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders a horizontal axis with labels and tick marks
 
-| Prop                    | Type                                                                                                        | Description                                                                                   |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `data?`                 | Datum[]                                                                                                     | custom tick values to display on the axis                                                     |
-| `automatic?`            | boolean                                                                                                     | whether this axis was automatically added by the Plot component                               |
-| `title?`                | string \| false \| null                                                                                     | the axis title label; set to false or null to hide                                            |
-| `anchor?`               | 'top' \| 'bottom'                                                                                           | which edge of the plot the axis appears on                                                    |
-| `interval?`             | string \| number                                                                                            | the interval between ticks, e.g. "day", "month", or a number                                  |
-| `facetAnchor?`          | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                                                | controls which facet edge displays this axis                                                  |
-| `labelAnchor?`          | 'auto' \| 'left' \| 'center' \| 'right'                                                                     | horizontal alignment of the axis title                                                        |
-| `tickSize?`             | number                                                                                                      | the length of tick marks in pixels                                                            |
-| `tickFontSize?`         | ConstantAccessor&lt;number, Datum&gt;                                                                       | font size for tick labels                                                                     |
-| `titleFontSize?`        | number                                                                                                      | font size for the axis title                                                                  |
-| `tickPadding?`          | number                                                                                                      | spacing between tick marks and tick labels in pixels                                          |
-| `tickFormat?`           | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue, i: number) =&gt; string) | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
-| `tickClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                                       | CSS class applied to each tick label                                                          |
-| `ticks?`                | number \| string \| Datum[]                                                                                 | ticks is a shorthand for defining data, tickCount or interval                                 |
-| `text?`                 | boolean \| null                                                                                             | set to false or null to disable tick labels                                                   |
-| `tickCount?`            | number                                                                                                      | approximate number of ticks to be generated                                                   |
-| `tickSpacing?`          | number                                                                                                      | approximate number of pixels between generated ticks                                          |
-| `textAnchor?`           | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                                            | text anchor for axis labels                                                                   |
-| `removeDuplicateTicks?` | boolean                                                                                                     | you can set this to true to remove duplicate tick labels                                      |
+| Prop                    | Type                                                                                   | Description                                                                                   |
+| ----------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `data?`                 | Datum[]                                                                                | custom tick values to display on the axis                                                     |
+| `automatic?`            | boolean                                                                                | whether this axis was automatically added by the Plot component                               |
+| `title?`                | string \| false \| null                                                                | the axis title label; set to false or null to hide                                            |
+| `anchor?`               | 'top' \| 'bottom'                                                                      | which edge of the plot the axis appears on                                                    |
+| `interval?`             | string \| number                                                                       | the interval between ticks, e.g. "day", "month", or a number                                  |
+| `facetAnchor?`          | 'auto' \| 'top-empty' \| 'bottom-empty' \| 'top' \| 'bottom'                           | controls which facet edge displays this axis                                                  |
+| `labelAnchor?`          | 'auto' \| 'left' \| 'center' \| 'right'                                                | horizontal alignment of the axis title                                                        |
+| `tickSize?`             | number                                                                                 | the length of tick marks in pixels                                                            |
+| `tickFontSize?`         | ConstantAccessor&lt;number, Datum&gt;                                                  | font size for tick labels                                                                     |
+| `titleFontSize?`        | number                                                                                 | font size for the axis title                                                                  |
+| `tickPadding?`          | number                                                                                 | spacing between tick marks and tick labels in pixels                                          |
+| `tickFormat?`           | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| TickFormatFunction | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
+| `tickClass?`            | ConstantAccessor&lt;string, Datum&gt;                                                  | CSS class applied to each tick label                                                          |
+| `ticks?`                | number \| string \| Datum[]                                                            | ticks is a shorthand for defining data, tickCount or interval                                 |
+| `text?`                 | boolean \| null                                                                        | set to false or null to disable tick labels                                                   |
+| `tickCount?`            | number                                                                                 | approximate number of ticks to be generated                                                   |
+| `tickSpacing?`          | number                                                                                 | approximate number of pixels between generated ticks                                          |
+| `textAnchor?`           | ConstantAccessor&lt;CSS.Property.TextAnchor \| 'auto', Datum&gt;                       | text anchor for axis labels                                                                   |
+| `removeDuplicateTicks?` | boolean                                                                                | you can set this to true to remove duplicate tick labels                                      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -125,27 +125,27 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
 Renders a vertical axis with labels and tick marks
 
-| Prop             | Type                                                                                             | Description                                                                                   |
-| ---------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| `data?`          | Datum[]                                                                                          | custom tick values to display on the axis                                                     |
-| `automatic?`     | boolean                                                                                          | whether this axis was automatically added by the Plot component                               |
-| `title?`         | string \| false \| null                                                                          | the axis title label; set to false or null to hide                                            |
-| `anchor?`        | 'left' \| 'right'                                                                                | which edge of the plot the axis appears on                                                    |
-| `facetAnchor?`   | 'auto' \| 'left' \| 'right' \| 'left-empty' \| 'right-empty'                                     | controls which facet edge displays this axis                                                  |
-| `lineAnchor?`    | 'top' \| 'center' \| 'bottom'                                                                    | vertical alignment of tick labels relative to the tick position                               |
-| `interval?`      | string \| number                                                                                 | the interval between ticks, e.g. "day", "month", or a number                                  |
-| `labelAnchor?`   | 'auto' \| 'left' \| 'center' \| 'right'                                                          | horizontal alignment of the axis title                                                        |
-| `textAnchor?`    | 'auto' \| 'start' \| 'middle' \| 'end'                                                           | text anchor for tick labels                                                                   |
-| `tickSize?`      | number                                                                                           | the length of tick marks in pixels                                                            |
-| `tickFontSize?`  | ConstantAccessor&lt;number, Datum&gt;                                                            | font size for tick labels                                                                     |
-| `titleFontSize?` | number                                                                                           | font size for the axis title                                                                  |
-| `tickPadding?`   | number                                                                                           | spacing between tick marks and tick labels in pixels                                          |
-| `tickFormat?`    | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| ((d: RawValue) =&gt; string) | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
-| `tickClass?`     | ConstantAccessor&lt;string, Datum&gt;                                                            | CSS class applied to each tick label                                                          |
-| `ticks?`         | number \| string \| Datum[]                                                                      | ticks is a shorthand for defining data, tickCount or interval                                 |
-| `text?`          | boolean \| null                                                                                  | set to false or null to disable tick labels                                                   |
-| `tickCount?`     | number                                                                                           | approximate number of ticks to be generated                                                   |
-| `tickSpacing?`   | number                                                                                           | approximate number of pixels between generated ticks                                          |
+| Prop             | Type                                                                                   | Description                                                                                   |
+| ---------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `data?`          | Datum[]                                                                                | custom tick values to display on the axis                                                     |
+| `automatic?`     | boolean                                                                                | whether this axis was automatically added by the Plot component                               |
+| `title?`         | string \| false \| null                                                                | the axis title label; set to false or null to hide                                            |
+| `anchor?`        | 'left' \| 'right'                                                                      | which edge of the plot the axis appears on                                                    |
+| `facetAnchor?`   | 'auto' \| 'left' \| 'right' \| 'left-empty' \| 'right-empty'                           | controls which facet edge displays this axis                                                  |
+| `lineAnchor?`    | 'top' \| 'center' \| 'bottom'                                                          | vertical alignment of tick labels relative to the tick position                               |
+| `interval?`      | string \| number                                                                       | the interval between ticks, e.g. "day", "month", or a number                                  |
+| `labelAnchor?`   | 'auto' \| 'left' \| 'center' \| 'right'                                                | horizontal alignment of the axis title                                                        |
+| `textAnchor?`    | 'auto' \| 'start' \| 'middle' \| 'end'                                                 | text anchor for tick labels                                                                   |
+| `tickSize?`      | number                                                                                 | the length of tick marks in pixels                                                            |
+| `tickFontSize?`  | ConstantAccessor&lt;number, Datum&gt;                                                  | font size for tick labels                                                                     |
+| `titleFontSize?` | number                                                                                 | font size for the axis title                                                                  |
+| `tickPadding?`   | number                                                                                 | spacing between tick marks and tick labels in pixels                                          |
+| `tickFormat?`    | 'auto' \| Intl.DateTimeFormatOptions \| Intl.NumberFormatOptions \| TickFormatFunction | formatter for tick labels; can be "auto", an Intl format options object, or a custom function |
+| `tickClass?`     | ConstantAccessor&lt;string, Datum&gt;                                                  | CSS class applied to each tick label                                                          |
+| `ticks?`         | number \| string \| Datum[]                                                            | ticks is a shorthand for defining data, tickCount or interval                                 |
+| `text?`          | boolean \| null                                                                        | set to false or null to disable tick labels                                                   |
+| `tickCount?`     | number                                                                                 | approximate number of ticks to be generated                                                   |
+| `tickSpacing?`   | number                                                                                 | approximate number of pixels between generated ticks                                          |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
@@ -237,29 +237,13 @@ Creates a vertical box plot for visualizing data distribution with quartiles and
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
 
-## Brush
-
-For creating a two-dimensional brush selection
-
-| Prop                 | Type                         | Description                                                                      |
-| -------------------- | ---------------------------- | -------------------------------------------------------------------------------- |
-| `brush`              | Brush                        | the brush state object (bindable); contains x1, x2, y1, y2, and enabled          |
-| `limitDimension?`    | false \| 'x' \| 'y'          | limit brushing to x or y dimension                                               |
-| `constrainToDomain?` | boolean                      | whether brush can move/resize outside domain                                     |
-| `resizeHandleSize?`  | number                       | size of the (invisible) drag resize area around the edges of the brush selection |
-| `onbrushstart?`      | (evt: BrushEvent) =&gt; void | called when the user starts dragging to create or move a brush                   |
-| `onbrushend?`        | (evt: BrushEvent) =&gt; void | called when the user finishes dragging the brush                                 |
-| `onbrush?`           | (evt: BrushEvent) =&gt; void | called continuously while the user is dragging the brush                         |
-
-Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps).
-
 ## BrushX
 
 For creating a brush that can be dragged horizontally
 
 _No props found._
 
-Inherited props from [Brush](/api/marks#Brush).
+Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 ## BrushY
 
@@ -267,7 +251,7 @@ For creating a brush that can be dragged vertically
 
 _No props found._
 
-Inherited props from [Brush](/api/marks#Brush).
+Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 ## Cell
 
@@ -374,19 +358,19 @@ Inherited props from [Dot](/api/marks#Dot).
 
 Renders a simple frame around the entire plot domain
 
-| Prop             | Type    | Description                                                      |
-| ---------------- | ------- | ---------------------------------------------------------------- |
-| `fill?`          | string  | the fill color of the frame                                      |
-| `stroke?`        | string  | the stroke color of the frame                                    |
-| `fillOpacity?`   | number  | the fill opacity of the frame                                    |
-| `strokeOpacity?` | number  | the stroke opacity of the frame                                  |
-| `opacity?`       | number  | the overall opacity of the frame                                 |
-| `automatic?`     | boolean | whether this frame was automatically added by the Plot component |
-| `inset?`         | number  | shorthand to inset the frame from all edges, in pixels           |
-| `insetLeft?`     | number  | inset the frame from the left edge, in pixels                    |
-| `insetRight?`    | number  | inset the frame from the right edge, in pixels                   |
-| `insetTop?`      | number  | inset the frame from the top edge, in pixels                     |
-| `insetBottom?`   | number  | inset the frame from the bottom edge, in pixels                  |
+| Prop             | Type              | Description                                                      |
+| ---------------- | ----------------- | ---------------------------------------------------------------- |
+| `fill?`          | string \| boolean | the fill color of the frame; true maps to 'currentColor'         |
+| `stroke?`        | string \| boolean | the stroke color of the frame; true maps to 'currentColor'       |
+| `fillOpacity?`   | number            | the fill opacity of the frame                                    |
+| `strokeOpacity?` | number            | the stroke opacity of the frame                                  |
+| `opacity?`       | number            | the overall opacity of the frame                                 |
+| `automatic?`     | boolean           | whether this frame was automatically added by the Plot component |
+| `inset?`         | number            | shorthand to inset the frame from all edges, in pixels           |
+| `insetLeft?`     | number            | inset the frame from the left edge, in pixels                    |
+| `insetRight?`    | number            | inset the frame from the right edge, in pixels                   |
+| `insetTop?`      | number            | inset the frame from the top edge, in pixels                     |
+| `insetBottom?`   | number            | inset the frame from the bottom edge, in pixels                  |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [BaseRectMarkProps](/api/marks#BaseRectMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -565,6 +549,31 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [MarkerOptions](
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
+## Raster
+
+Renders a raster image in one of three modes: **Dense grid mode** (`data` is an array, `width` and `height` are set, no `x`/`y` channels): the data is treated as a row-major grid of fill values. `fill` defaults to the identity function (each datum is its own value). **Function sampling mode** (`data` is omitted/null, `fill` and/or `fillOpacity` are `(x, y) => value` functions): the mark evaluates the function on a pixel grid, converting pixel coords to data coords via scale inversion, then maps results through the color scale. **Scatter interpolation mode** (`data` is an array with `x`/`y` channels): each datum contributes a position and fill value; the mark spatially interpolates over the grid using the chosen `interpolate` method.
+
+| Prop              | Type                                                                         | Description                                                                                                                                                                                                                             |
+| ----------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data?`           | Datum[] \| null                                                              | Input data. For **dense grid** mode supply a flat row-major array and<br>set `width`/`height`. Omit (or set null) for **function-sampling**<br>mode. For **scatter interpolation** supply an array of records with<br>`x`/`y` channels. |
+| `x?`              | ChannelAccessor&lt;Datum&gt;                                                 | x position channel (scatter interpolation mode)                                                                                                                                                                                         |
+| `y?`              | ChannelAccessor&lt;Datum&gt;                                                 | y position channel (scatter interpolation mode)                                                                                                                                                                                         |
+| `fill?`           | ChannelAccessor&lt;Datum&gt; \| ((x: number, y: number) =&gt; any)           | fill color channel, identity function for dense grid, or an<br>`(x, y) =&gt; value` function for function-sampling mode                                                                                                                 |
+| `fillOpacity?`    | ChannelAccessor&lt;Datum&gt; \| ((x: number, y: number) =&gt; number)        | fill opacity channel or an `(x, y) =&gt; number` function for<br>function-sampling mode                                                                                                                                                 |
+| `x1?`             | number                                                                       | left bound of the raster in data coordinates                                                                                                                                                                                            |
+| `y1?`             | number                                                                       | top bound of the raster in data coordinates                                                                                                                                                                                             |
+| `x2?`             | number                                                                       | right bound of the raster in data coordinates                                                                                                                                                                                           |
+| `y2?`             | number                                                                       | bottom bound of the raster in data coordinates                                                                                                                                                                                          |
+| `width?`          | number                                                                       | explicit pixel-grid width; required for dense grid mode, also used<br>to set the canvas resolution in other modes (overrides `pixelSize`)                                                                                               |
+| `height?`         | number                                                                       | explicit pixel-grid height; required for dense grid mode, also used<br>to set the canvas resolution in other modes (overrides `pixelSize`)                                                                                              |
+| `pixelSize?`      | number                                                                       | pixel size in screen pixels (default 1); ignored when `width`/`height` are set                                                                                                                                                          |
+| `blur?`           | number                                                                       | Gaussian blur radius in grid pixels (default 0)                                                                                                                                                                                         |
+| `interpolate?`    | 'none' \| 'nearest' \| 'barycentric' \| 'random-walk' \| InterpolateFunction | spatial interpolation for scatter mode:<br>`"none"` \| `"nearest"` \| `"barycentric"` \| `"random-walk"` or a<br>custom `(index, w, h, X, Y, V) =&gt; W` function                                                                       |
+| `imageRendering?` | string                                                                       | CSS image-rendering property (default `"auto"`)                                                                                                                                                                                         |
+| `clipPath?`       | string                                                                       |                                                                                                                                                                                                                                         |
+
+Inherited props: see the [shared section](/api/marks#Inherited-props) below.
+
 ## Rect
 
 For arbitrary rectangles, requires quantitative x and y scales
@@ -588,9 +597,10 @@ Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkPro
 
 Convenience wrapper for rectangles oriented along the x axis
 
-| Prop     | Type                                                   | Description                           |
-| -------- | ------------------------------------------------------ | ------------------------------------- |
-| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values |
+| Prop     | Type                                                   | Description                                              |
+| -------- | ------------------------------------------------------ | -------------------------------------------------------- |
+| `data?`  | Datum[]                                                | the input data array; each element becomes one rectangle |
+| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values                    |
 
 Inherited props from [Rect](/api/marks#Rect).
 
@@ -598,9 +608,10 @@ Inherited props from [Rect](/api/marks#Rect).
 
 Convenience wrapper for rectangles oriented along the x axis
 
-| Prop     | Type                                                   | Description                           |
-| -------- | ------------------------------------------------------ | ------------------------------------- |
-| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values |
+| Prop     | Type                                                   | Description                                              |
+| -------- | ------------------------------------------------------ | -------------------------------------------------------- |
+| `data?`  | Datum[]                                                | the input data array; each element becomes one rectangle |
+| `stack?` | Partial&lt;[StackOptions](/api/marks#StackOptions)&gt; | options for stacking rect data values                    |
 
 Inherited props from [Rect](/api/marks#Rect).
 
@@ -608,7 +619,11 @@ Inherited props from [Rect](/api/marks#Rect).
 
 Calculates and displays a regression line with x as the dependent variable
 
-_No props found._
+| Prop      | Type                                  | Description |
+| --------- | ------------------------------------- | ----------- |
+| `data?`   | Record&lt;string \| symbol, any&gt;[] |             |
+| `z?`      | ChannelAccessor                       |             |
+| `canvas?` | boolean                               |             |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -616,7 +631,11 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 Calculates and displays a regression line with y as the dependent variable
 
-_No props found._
+| Prop      | Type                                  | Description |
+| --------- | ------------------------------------- | ----------- |
+| `data?`   | Record&lt;string \| symbol, any&gt;[] |             |
+| `z?`      | ChannelAccessor                       |             |
+| `canvas?` | boolean                               |             |
 
 Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
@@ -681,31 +700,31 @@ Inherited props: see the [shared section](/api/marks#Inherited-props) below.
 
 Useful for adding SVG text labels to your plot.
 
-| Prop              | Type                                                                                                                                                        | Description                                                                                         |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `data?`           | Datum[]                                                                                                                                                     | the input data array; each element becomes one text label                                           |
-| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                                | the horizontal position channel                                                                     |
-| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                                | the vertical position channel                                                                       |
-| `r?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                                | optional radius channel, mainly for dodge/sort convenience in label swarms                          |
-| `children?`       | Snippet                                                                                                                                                     | a Snippet to render as the text content                                                             |
-| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                                         | the text content accessor                                                                           |
-| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                                       | the title attribute for the text element (shown as a browser tooltip)                               |
-| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                                      | the font family of the text                                                                         |
-| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                              | the font size of the text; can be a CSS string or number in pixels                                  |
-| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                                      | the font weight of the text (e.g. "bold", 700)                                                      |
-| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                                       | the font style of the text (e.g. "italic", "normal")                                                |
-| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                                     | the font variant of the text (e.g. "small-caps")                                                    |
-| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                                   | the letter spacing of the text                                                                      |
-| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                                     | the word spacing of the text                                                                        |
-| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                                   | the text transform (e.g. "uppercase", "lowercase")                                                  |
-| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                                  | the text decoration (e.g. "underline", "line-through")                                              |
-| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                                      | the horizontal text anchor; start, end, or middle                                                   |
-| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                                       | the line anchor for vertical position; top, bottom, or middle                                       |
-| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                                       | line height as multiplier of font size                                                              |
-| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle' \| string, Datum&gt; | the anchor position within the plot frame when x or y are not specified (e.g. "top-left", "middle") |
-| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                                       | rotate text by angle in degrees                                                                     |
-| `canvas?`         | false \| undefined \| true                                                                                                                                  | renders texts as canvas instead of SVG                                                              |
-| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                                       | if you want to apply class names to individual text elements. Only supported in SVG rendering.      |
+| Prop              | Type                                                                                                                                              | Description                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `data?`           | Datum[]                                                                                                                                           | the input data array; each element becomes one text label                                           |
+| `x?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      | the horizontal position channel                                                                     |
+| `y?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      | the vertical position channel                                                                       |
+| `r?`              | ChannelAccessor&lt;Datum&gt;                                                                                                                      | optional radius channel, mainly for dodge/sort convenience in label swarms                          |
+| `children?`       | Snippet                                                                                                                                           | a Snippet to render as the text content                                                             |
+| `text`            | ConstantAccessor&lt;string \| null \| false \| undefined, Datum&gt;                                                                               | the text content accessor                                                                           |
+| `title?`          | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | the title attribute for the text element (shown as a browser tooltip)                               |
+| `fontFamily?`     | ConstantAccessor&lt;CSS.Property.FontFamily, Datum&gt;                                                                                            | the font family of the text                                                                         |
+| `fontSize?`       | ConstantAccessor&lt;CSS.Property.FontSize \| number, Datum&gt;                                                                                    | the font size of the text; can be a CSS string or number in pixels                                  |
+| `fontWeight?`     | ConstantAccessor&lt;CSS.Property.FontWeight, Datum&gt;                                                                                            | the font weight of the text (e.g. "bold", 700)                                                      |
+| `fontStyle?`      | ConstantAccessor&lt;CSS.Property.FontStyle, Datum&gt;                                                                                             | the font style of the text (e.g. "italic", "normal")                                                |
+| `fontVariant?`    | ConstantAccessor&lt;CSS.Property.FontVariant, Datum&gt;                                                                                           | the font variant of the text (e.g. "small-caps")                                                    |
+| `letterSpacing?`  | ConstantAccessor&lt;CSS.Property.LetterSpacing, Datum&gt;                                                                                         | the letter spacing of the text                                                                      |
+| `wordSpacing?`    | ConstantAccessor&lt;CSS.Property.WordSpacing, Datum&gt;                                                                                           | the word spacing of the text                                                                        |
+| `textTransform?`  | ConstantAccessor&lt;CSS.Property.TextTransform, Datum&gt;                                                                                         | the text transform (e.g. "uppercase", "lowercase")                                                  |
+| `textDecoration?` | ConstantAccessor&lt;CSS.Property.TextDecoration, Datum&gt;                                                                                        | the text decoration (e.g. "underline", "line-through")                                              |
+| `textAnchor?`     | ConstantAccessor&lt;CSS.Property.TextAnchor, Datum&gt;                                                                                            | the horizontal text anchor; start, end, or middle                                                   |
+| `lineAnchor?`     | ConstantAccessor&lt;'bottom' \| 'top' \| 'middle'&gt;                                                                                             | the line anchor for vertical position; top, bottom, or middle                                       |
+| `lineHeight?`     | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | line height as multiplier of font size                                                              |
+| `frameAnchor?`    | ConstantAccessor&lt;'bottom' \| 'top' \| 'left' \| 'right' \| 'top-left' \| 'bottom-left' \| 'top-right' \| 'bottom-right' \| 'middle', Datum&gt; | the anchor position within the plot frame when x or y are not specified (e.g. "top-left", "middle") |
+| `rotate?`         | ConstantAccessor&lt;number, Datum&gt;                                                                                                             | rotate text by angle in degrees                                                                     |
+| `canvas?`         | false \| undefined \| true                                                                                                                        | renders texts as canvas instead of SVG                                                              |
+| `textClass?`      | ConstantAccessor&lt;string, Datum&gt;                                                                                                             | if you want to apply class names to individual text elements. Only supported in SVG rendering.      |
 
 Inherited props from [BaseMarkProps](/api/marks#BaseMarkProps), [LinkableMarkProps](/api/marks#LinkableMarkProps).
 
@@ -804,7 +823,7 @@ These props are shared by marks via the base type aliases.
 | `fill`             | ChannelAccessor&lt;T&gt;                                                                                                                                        | the fill color; can be a fixed CSS color string or a channel accessor bound to the color scale                                           |
 | `fillOpacity`      | ConstantAccessor&lt;number, T&gt;                                                                                                                               | the fill opacity; a number between 0 and 1                                                                                               |
 | `fontFamily`       | ConstantAccessor&lt;CSS.Property.FontFamily, T&gt;                                                                                                              | font family for text-capable marks                                                                                                       |
-| `fontSize`         | ConstantAccessor&lt;CSS.Property.FontSize \| number, T&gt;                                                                                                      | font size for text-capable marks                                                                                                         |
+| `fontSize`         | ConstantAccessor&lt;CSS.Property.FontSize&lt;number&gt;, T&gt;                                                                                                  | font size for text-capable marks                                                                                                         |
 | `fontStyle`        | ConstantAccessor&lt;CSS.Property.FontStyle, T&gt;                                                                                                               | font style for text-capable marks                                                                                                        |
 | `fontVariant`      | ConstantAccessor&lt;CSS.Property.FontVariant, T&gt;                                                                                                             | font variant for text-capable marks                                                                                                      |
 | `fontWeight`       | ConstantAccessor&lt;CSS.Property.FontWeight, T&gt;                                                                                                              | font weight for text-capable marks                                                                                                       |
@@ -863,6 +882,7 @@ These props are shared by marks via the base type aliases.
 | `class`            | string                                                                                                                                                          | if you want to give your mark element an extra CSS class                                                                                 |
 | `style`            | string                                                                                                                                                          | if you want to give your mark element an extra inline style                                                                              |
 | `cursor`           | ConstantAccessor&lt;CSS.Property.Cursor, T&gt;                                                                                                                  | the CSS cursor style when hovering over the mark (e.g. "pointer", "crosshair")                                                           |
+| `title`            | ConstantAccessor&lt;string, T&gt;                                                                                                                               | tooltip text shown in an SVG &lt;title&gt; element when provided                                                                         |
 
 ### MarkerOptions
 
@@ -876,13 +896,13 @@ These props are shared by marks via the base type aliases.
 
 ### LinkableMarkProps
 
-| Prop        | Type                                                                                | Description                                                                |
-| ----------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `href?`     | ConstantAccessor&lt;string, T&gt;                                                   | if set, the mark element will be wrapped in a &lt;a&gt; link element       |
-| `rel?`      | ConstantAccessor&lt;string, T&gt;                                                   | the relationship of the target object to the link object (e.g. "noopener") |
-| `type?`     | ConstantAccessor&lt;string, T&gt;                                                   | the link target mime type, e.g. "text/csv"                                 |
-| `target?`   | ConstantAccessor&lt;'\_self' \| '\_blank' \| '\_parent' \| '\_top' \| string, T&gt; | the target of the link, e.g. "\_blank" or "\_self"                         |
-| `download?` | ConstantAccessor&lt;boolean, T&gt;                                                  | if set to true, the link will be downloaded instead of navigating to it    |
+| Prop        | Type                                                                                                   | Description                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `href?`     | ConstantAccessor&lt;string, T&gt;                                                                      | if set, the mark element will be wrapped in a &lt;a&gt; link element       |
+| `rel?`      | ConstantAccessor&lt;string, T&gt;                                                                      | the relationship of the target object to the link object (e.g. "noopener") |
+| `type?`     | ConstantAccessor&lt;string, T&gt;                                                                      | the link target mime type, e.g. "text/csv"                                 |
+| `target?`   | ConstantAccessor&lt;'\_self' \| '\_blank' \| '\_parent' \| '\_top' \| (string &amp; {'{'}{'}'}), T&gt; | the target of the link, e.g. "\_blank" or "\_self"                         |
+| `download?` | ConstantAccessor&lt;string, T&gt;                                                                      | if set to true, the link will be downloaded instead of navigating to it    |
 
 ### BaseRectMarkProps
 
