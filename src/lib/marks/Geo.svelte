@@ -97,8 +97,8 @@
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple
             aria-label="geo"
-            class={scaledData.length > 1 ? classes : null}
-            length={(scaledData, length)}>
+            class={scaledData.length > 1 ? classes.filter(Boolean).join(' ') : null}
+            length={scaledData.length}>
             {#if canvas}
                 <GeoCanvas data={scaledData} {path} {mark} {usedScales} />
             {:else}

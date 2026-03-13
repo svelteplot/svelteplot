@@ -28,9 +28,11 @@
         )
     );
     const provinces = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.provinces
+        (
+            topojson.feature(
+                canadaTopo,
+                canadaTopo.objects.provinces
+            ) as unknown as GeoJSON.FeatureCollection
         ).features
     );
 </script>
@@ -55,7 +57,7 @@
         </clipPath>
     </defs>
     <Raster
-        data={weather.filter((d) => d.Tx != null)}
+        data={weather.filter((d: any) => d.Tx != null)}
         x="Long"
         clipPath="url(#usa)"
         y="Lat"
@@ -70,11 +72,11 @@
         opacity={0.5} />
     <Text
         data={provinces}
-        text={(d) => d.properties.postal}
+        text={(d: any) => d.properties.postal}
         fill="white"
         stroke="black"
         strokeWidth={2}
         strokeOpacity={0.25}
-        x={(d) => d.properties.cx}
-        y={(d) => d.properties.cy} />
+        x={(d: any) => d.properties.cx}
+        y={(d: any) => d.properties.cy} />
 </Plot>

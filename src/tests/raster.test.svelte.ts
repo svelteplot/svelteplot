@@ -118,13 +118,12 @@ describe('Raster mark', () => {
         });
 
         expect(interpolate).toHaveBeenCalled();
-        const [, width, height, X, Y] = interpolate.mock.calls.at(-1)! as [
+        const [, width, height, X, Y] = interpolate.mock.calls.at(-1)! as unknown as [
             number[],
             number,
             number,
             Float64Array,
-            Float64Array,
-            unknown[]
+            Float64Array
         ];
         expect(X[0]).toBeCloseTo(0, 6);
         expect(Y[0]).toBeCloseTo(0, 6);

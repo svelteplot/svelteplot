@@ -18,8 +18,8 @@ The **raster mark** renders data as an [SVG image](https://developer.mozilla.org
 
 When `data` is a flat row-major array and both `width` and `height` are set (without `x`/`y` channels), the mark treats each element as a fill value at the corresponding grid position. Row 0 maps to the bottom of the plot (y = 0) so that data coordinates match the usual y-up convention.
 
-:::tip
-Many examples on this page are based on the [Observable Plot raster mark documentation](https://observablehq.com/plot/marks/raster).
+:::info
+Some examples on this page are based on the [Observable Plot raster mark documentation](https://observablehq.com/plot/marks/raster).
 :::
 
 The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Eden)](https://en.wikipedia.org/wiki/Maungawhau_/_Mount_Eden) in Auckland, NZ. The data is a plain object with `width`, `height`, and a flat `values` array of elevation numbers in row-major order:
@@ -138,7 +138,7 @@ Sometimes your data does not come in a gridded format, but at irregularly distri
 </Plot>
 ```
 
-[see example](/examples/dot/weather)
+[Example](/examples/dot/weather)
 
 The raster mark automatically interpolates a grid when `x` and `y` are provided.
 
@@ -327,6 +327,10 @@ Clipping the raster to the land geometry removes those values outside the coastl
         opacity={0.5} />
 </Plot>
 ```
+
+:::caution
+For real weather analysis, temperature is often interpolated with more sophisticated methods that [account for elevation](https://www.vis4.net/blog/2023/12/spatiotemporal-data-analysis-pitfalls/#pitfall-4-choosing-the-wrong-interpolation-method), since air temperature is strongly correlated with altitude between stations.
+:::
 
 The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. With sparse station data it smooths out interpolation artifacts and creates a more continuous field:
 

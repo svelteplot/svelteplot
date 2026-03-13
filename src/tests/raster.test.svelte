@@ -3,9 +3,9 @@
     import type { ComponentProps } from 'svelte';
 
     let {
-        plotArgs,
+        plotArgs = {},
         rasterArgs
-    }: { plotArgs: ComponentProps<typeof Plot>; rasterArgs: ComponentProps<typeof Raster> } =
+    }: { plotArgs?: ComponentProps<typeof Plot>; rasterArgs: ComponentProps<typeof Raster> } =
         $props();
 </script>
 
