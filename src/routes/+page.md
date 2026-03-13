@@ -50,6 +50,9 @@ examples:
     - line/penguins-cdf
     - line/parallel-y-hl
     - link/spherical-link
+    - raster/volcano
+    - raster/sampled
+    - raster/weather
     - rect/binned
     - rect/marimekko
     - rect/marimekko-faceted

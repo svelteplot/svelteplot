@@ -18,6 +18,10 @@ The **raster mark** renders data as an [SVG image](https://developer.mozilla.org
 
 When `data` is a flat row-major array and both `width` and `height` are set (without `x`/`y` channels), the mark treats each element as a fill value at the corresponding grid position. Row 0 maps to the bottom of the plot (y = 0) so that data coordinates match the usual y-up convention.
 
+:::tip
+Many examples on this page are based on the [Observable Plot raster mark documentation](https://observablehq.com/plot/marks/raster).
+:::
+
 The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Eden)](https://en.wikipedia.org/wiki/Maungawhau_/_Mount_Eden) in Auckland, NZ. The data is a plain object with `width`, `height`, and a flat `values` array of elevation numbers in row-major order:
 
 ```svelte
@@ -94,49 +98,50 @@ You can also supply a `fill` accessor to extract a numeric value from each eleme
 
 ## Scatter interpolation
 
-When `data` has `x` and `y` channels, the raster mark spatially interpolates the scattered point values over the pixel grid. This is useful for irregularly sampled field data such as survey measurements.
-
-The example below shows magnetic anomaly measurements from California survey CA55, interpolated over a geographic grid:
+Sometimes your data does not come in a gridded format, but at irregularly distributed x/y positions. This example uses weather station measurements across Canada. To show where the original observations were taken, start with the raw points:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster } from 'svelteplot';
-    import { RadioInput } from '$shared/ui';
+    import { Plot, Dot, Geo } from 'svelteplot';
     import { page } from '$app/state';
+    import * as topojson from 'topojson-client';
 
-    const { ca55 } = $derived(page.data.data);
-    let interpolate = $state('random-walk');
+    const { weather, canadaTopo } = $derived(
+        page.data.data
+    );
+    const weatherData = $derived(
+        weather.filter((d) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
 </script>
 
-<RadioInput
-    bind:value={interpolate}
-    options={[
-        'none',
-        'nearest',
-        'barycentric',
-        'random-walk'
-    ]} />
-
-<Plot color={{ type: 'diverging', legend: true }}>
-    <Raster
-        data={ca55}
-        x="LONGITUDE"
-        y="LATITUDE"
-        fill="MAG_IGRF90"
-        {interpolate} />
+<Plot
+    projection={{
+        type: 'conic-conformal',
+        domain: land,
+        rotate: [96, 0],
+        center: [0, 56],
+        parallels: [49, 77]
+    }}
+    height={500}
+    color={{
+        scheme: 'burd',
+        type: 'quantile',
+        legend: true
+    }}>
+    <Dot data={weatherData} x="Long" y="Lat" fill="Tx" />
+    <Geo data={[land]} stroke="currentColor" fill={null} />
 </Plot>
 ```
 
-```svelte
-<Plot color={{ type: 'diverging', legend: true }}>
-    <Raster
-        data={ca55}
-        x="LONGITUDE"
-        y="LATITUDE"
-        fill="MAG_IGRF90"
-        interpolate="random-walk" />
-</Plot>
-```
+[see example](/examples/dot/weather)
+
+The raster mark automatically interpolates a grid when `x` and `y` are provided.
 
 Four interpolation strategies are available:
 
@@ -145,35 +150,260 @@ Four interpolation strategies are available:
 - **`barycentric`** — Delaunay triangulation with barycentric interpolation inside triangles; smooth but can produce artifacts near the convex hull.
 - **`random-walk`** — walk-on-spheres algorithm; produces smooth, visually pleasing results similar to a [Laplacian field](https://en.wikipedia.org/wiki/Laplace%27s_equation). Recommended for most use cases.
 
-The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. It is especially effective with sparse scatter data to smooth out interpolation artifacts:
+```svelte live
+<script lang="ts">
+    import { Plot, Raster, Geo } from 'svelteplot';
+    import { page } from '$app/state';
+    import { Select } from '$shared/ui';
+    import * as topojson from 'topojson-client';
+
+    const { weather, canadaTopo } = $derived(
+        page.data.data
+    );
+    const INTERPOLATIONS = [
+        'none',
+        'nearest',
+        'barycentric',
+        'random-walk'
+    ];
+    const weatherData = $derived(
+        weather.filter((d) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
+    const innerBorders = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.innerborders
+        )
+    );
+    let interpolate = $state('random-walk');
+</script>
+
+<div style="margin-bottom:1em">
+    <Select
+        label="interpolate"
+        options={INTERPOLATIONS}
+        bind:value={interpolate} />
+</div>
+
+<Plot
+    projection={{
+        type: 'conic-conformal',
+        domain: land,
+        rotate: [96, 0],
+        center: [0, 56],
+        parallels: [49, 77]
+    }}
+    height={500}
+    color={{
+        scheme: 'burd',
+        type: 'quantile'
+    }}>
+    <Raster
+        data={weatherData}
+        x="Long"
+        y="Lat"
+        fill="Tx"
+        {interpolate} />
+    <Geo data={[land]} stroke="currentColor" fill={null} />
+</Plot>
+```
+
+```svelte
+<Plot
+    projection={{
+        type: 'conic-conformal',
+        domain: land
+    }}
+    height={500}
+    color={{
+        scheme: 'burd',
+        type: 'quantile'
+    }}>
+    <Raster
+        data={weatherData}
+        x="Long"
+        y="Lat"
+        fill="Tx"
+        interpolate="random-walk" />
+    <!-- outline -->
+    <Geo data={[land]} stroke="currentColor" fill={null} />
+</Plot>
+```
+
+Clipping the raster to the land geometry removes those values outside the coastline while keeping the same interpolation:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+    import { Plot, Raster, Geo } from 'svelteplot';
     import { page } from '$app/state';
+    import { Select } from '$shared/ui';
+    import * as topojson from 'topojson-client';
 
-    const { ca55 } = $derived(page.data.data);
-    let blur = $state(5);
+    const { weather, canadaTopo } = $derived(
+        page.data.data
+    );
+    const INTERPOLATIONS = [
+        'none',
+        'nearest',
+        'barycentric',
+        'random-walk'
+    ];
+    const weatherData = $derived(
+        weather.filter((d) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
+    const innerBorders = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.innerborders
+        )
+    );
+    let interpolate = $state('random-walk');
+</script>
+
+<Select
+    label="interpolate"
+    options={INTERPOLATIONS}
+    bind:value={interpolate} />
+
+<Plot
+    projection={{
+        type: 'conic-conformal',
+        domain: land,
+        rotate: [96, 0],
+        center: [0, 56],
+        parallels: [49, 77]
+    }}
+    height={500}
+    color={{
+        scheme: 'burd',
+        type: 'quantile'
+    }}>
+    <defs>
+        <clipPath id="canada-land">
+            <Geo data={[land]} />
+        </clipPath>
+    </defs>
+    <Raster
+        data={weatherData}
+        x="Long"
+        y="Lat"
+        fill="Tx"
+        {interpolate}
+        clipPath="url(#canada-land)" />
+    <Geo data={[land]} stroke="currentColor" fill={null} />
+    <Geo
+        data={[innerBorders]}
+        stroke="white"
+        opacity={0.5} />
+</Plot>
+```
+
+```svelte
+<Plot /* ... */>
+    <defs>
+        <clipPath id="canada-land">
+            <Geo data={[land]} />
+        </clipPath>
+    </defs>
+    <Raster
+        data={weatherData}
+        x="Long"
+        y="Lat"
+        fill="Tx"
+        interpolate="random-walk"
+        clipPath="url(#canada-land)" />
+    <Geo data={[land]} stroke="currentColor" fill={null} />
+    <Geo
+        data={[innerBorders]}
+        stroke="white"
+        opacity={0.5} />
+</Plot>
+```
+
+The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. With sparse station data it smooths out interpolation artifacts and creates a more continuous field:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Raster, Geo } from 'svelteplot';
+    import { page } from '$app/state';
+    import { Slider } from '$shared/ui';
+    import * as topojson from 'topojson-client';
+
+    const { weather, canadaTopo } = $derived(
+        page.data.data
+    );
+    const weatherData = $derived(
+        weather.filter((d) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
+    const innerBorders = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.innerborders
+        )
+    );
+    let blur = $state(2);
 </script>
 
 <Slider
     label="blur"
     bind:value={blur}
     min={0}
-    max={20}
+    max={10}
     step={1} />
 
-<Plot color={{ type: 'diverging', legend: true }}>
+<Plot
+    projection={{
+        type: 'conic-conformal',
+        domain: land,
+        rotate: [96, 0],
+        center: [0, 56],
+        parallels: [49, 77]
+    }}
+    height={500}
+    color={{
+        scheme: 'burd',
+        type: 'quantile'
+    }}>
+    <defs>
+        <clipPath id="canada-land-blur">
+            <Geo data={[land]} />
+        </clipPath>
+    </defs>
     <Raster
-        data={ca55}
-        x="LONGITUDE"
-        y="LATITUDE"
-        fill="MAG_IGRF90"
+        data={weatherData}
+        x="Long"
+        y="Lat"
+        fill="Tx"
         interpolate="random-walk"
-        {blur} />
+        {blur}
+        clipPath="url(#canada-land-blur)" />
+    <Geo data={[land]} stroke="currentColor" fill={null} />
+    <Geo
+        data={[innerBorders]}
+        stroke="white"
+        opacity={0.5} />
 </Plot>
 ```
+
+[Example](/examples/raster/geo-raster)
 
 ## Function sampling
 
