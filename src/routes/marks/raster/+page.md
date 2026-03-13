@@ -402,7 +402,7 @@ The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. 
 </Plot>
 ```
 
-[Example](/examples/raster/geo-raster)
+[Example](/examples/raster/weather)
 
 ## Function sampling
 
