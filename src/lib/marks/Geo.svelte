@@ -97,7 +97,7 @@
     {#snippet children({ mark, scaledData, usedScales })}
         <GroupMultiple
             aria-label="geo"
-            class={scaledData.length > 1 ? classes.filter(Boolean).join(' ') : null}
+            class={classes.filter(Boolean).join(' ')}
             length={scaledData.length}>
             {#if canvas}
                 <GeoCanvas data={scaledData} {path} {mark} {usedScales} />
@@ -119,7 +119,7 @@
                             <path
                                 d={path(geometry as any)}
                                 {style}
-                                class={[styleClass, scaledData.length === 1 ? classes : null]}
+                                class={styleClass}
                                 filter={resolveProp(args.svgFilter, d.datum, undefined) as
                                     | string
                                     | undefined}

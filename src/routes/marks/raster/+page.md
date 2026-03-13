@@ -413,6 +413,7 @@ The `x1`, `y1`, `x2`, `y2` props define the data-space bounding box. The example
 ```svelte live
 <script lang="ts">
     import { Plot, Raster } from 'svelteplot';
+    import { Slider } from '$shared/ui';
 
     function mandelbrot(x: number, y: number) {
         for (let n = 0, zr = 0, zi = 0; n < 80; ++n) {
@@ -423,12 +424,22 @@ The `x1`, `y1`, `x2`, `y2` props define the data-space bounding box. The example
             if (zr * zr + zi * zi > 4) return n;
         }
     }
+
+    let pixelSize = $state(1);
 </script>
 
+<Slider
+    label="pixelSize"
+    bind:value={pixelSize}
+    min={1}
+    max={10}
+    step={1} />
 <Plot
     color={{ scheme: 'turbo', domain: [0, 80] }}
     aspectRatio={1}>
     <Raster
+        {pixelSize}
+        imageRendering="pixelated"
         fill={mandelbrot}
         x1={-2}
         x2={1}
