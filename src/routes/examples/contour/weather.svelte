@@ -15,10 +15,20 @@
 
     const { weather, canadaTopo } = $props();
 
-    const weatherData = $derived(weather.filter((d: any) => d.Tx != null));
-    const land = $derived(topojson.feature(canadaTopo, canadaTopo.objects.land));
+    const weatherData = $derived(
+        weather.filter((d: any) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
     const innerBorders = $derived(
-        topojson.feature(canadaTopo, canadaTopo.objects.innerborders)
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.innerborders
+        )
     );
 </script>
 
@@ -30,7 +40,11 @@
         center: [0, 56],
         parallels: [49, 77]
     }}
-    color={{ scheme: 'burd', type: 'diverging', legend: true }}>
+    color={{
+        scheme: 'burd',
+        type: 'diverging',
+        legend: true
+    }}>
     <defs>
         <clipPath id="canada-land-weather">
             <Geo data={[land]} />
@@ -47,5 +61,9 @@
         blur={1}
         clipPath="url(#canada-land-weather)" />
     <Geo data={[land]} stroke="currentColor" fill={null} />
-    <Geo data={[innerBorders]} stroke="currentColor" strokeOpacity={0.3} fill={null} />
+    <Geo
+        data={[innerBorders]}
+        stroke="currentColor"
+        strokeOpacity={0.3}
+        fill={null} />
 </Plot>

@@ -12,7 +12,11 @@
     import { Plot, Contour } from 'svelteplot';
 
     const { volcano } = $props() as {
-        volcano: { width: number; height: number; values: number[] };
+        volcano: {
+            width: number;
+            height: number;
+            values: number[];
+        };
     };
 </script>
 

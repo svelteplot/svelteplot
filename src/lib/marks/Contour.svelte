@@ -507,7 +507,7 @@
         {@const contourPaths = computeContours(scaledData)}
         {#if contourPaths}
             <g clip-path={clipPath} class={className || null} aria-label="contour">
-                {#each contourPaths as contourGeom}
+                {#each contourPaths as contourGeom (contourGeom.value)}
                     <path d={path(contourGeom as any)} style={contourStyle(contourGeom.value)} />
                 {/each}
             </g>

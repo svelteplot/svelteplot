@@ -16,10 +16,20 @@
 
     const { weather, canadaTopo } = $props();
 
-    const weatherData = $derived(weather.filter((d: any) => d.Tx != null));
-    const land = $derived(topojson.feature(canadaTopo, canadaTopo.objects.land));
+    const weatherData = $derived(
+        weather.filter((d: any) => d.Tx != null)
+    );
+    const land = $derived(
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.land
+        )
+    );
     const innerBorders = $derived(
-        topojson.feature(canadaTopo, canadaTopo.objects.innerborders)
+        topojson.feature(
+            canadaTopo,
+            canadaTopo.objects.innerborders
+        )
     );
 
     const n = 9;
@@ -27,8 +37,13 @@
         const sorted = weatherData
             .map((d: any) => d.Tx as number)
             .sort((a: number, b: number) => a - b);
-        const quantiles = Array.from({ length: n }, (_, i) =>
-            quantileSorted(sorted, (i + 1) / (n + 1)) as number
+        const quantiles = Array.from(
+            { length: n },
+            (_, i) =>
+                quantileSorted(
+                    sorted,
+                    (i + 1) / (n + 1)
+                ) as number
         );
         return [sorted[0] - 1e-6, ...quantiles] as number[];
     });
@@ -43,7 +58,12 @@
         center: [0, 56],
         parallels: [49, 77]
     }}
-    color={{ scheme: 'burd', type: 'threshold', domain: colorDomain, legend: true }}>
+    color={{
+        scheme: 'burd',
+        type: 'threshold',
+        domain: colorDomain,
+        legend: true
+    }}>
     <defs>
         <clipPath id="canada-land-quantile">
             <Geo data={[land]} />
@@ -61,5 +81,9 @@
         clipPath="url(#canada-land-quantile)"
         {thresholds} />
     <Geo data={[land]} stroke="currentColor" fill={null} />
-    <Geo data={[innerBorders]} stroke="currentColor" strokeOpacity={0.3} fill={null} />
+    <Geo
+        data={[innerBorders]}
+        stroke="currentColor"
+        strokeOpacity={0.3}
+        fill={null} />
 </Plot>

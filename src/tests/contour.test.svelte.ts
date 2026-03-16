@@ -58,10 +58,14 @@ describe('Contour mark — dense grid mode', () => {
 
     it('renders fewer paths with a higher thresholds count', () => {
         const { container: c2 } = render(ContourTest, {
-            props: { contourArgs: { data: linearGrid, width: GRID_W, height: GRID_H, thresholds: 2 } }
+            props: {
+                contourArgs: { data: linearGrid, width: GRID_W, height: GRID_H, thresholds: 2 }
+            }
         });
         const { container: c10 } = render(ContourTest, {
-            props: { contourArgs: { data: linearGrid, width: GRID_W, height: GRID_H, thresholds: 10 } }
+            props: {
+                contourArgs: { data: linearGrid, width: GRID_W, height: GRID_H, thresholds: 10 }
+            }
         });
         expect(paths(c2).length).toBeLessThan(paths(c10).length);
     });
@@ -231,9 +235,8 @@ describe('Contour mark — scatter interpolation mode', () => {
     });
 
     it('calls the custom interpolate function with normalised grid coordinates', () => {
-        const interpolate = vi.fn(
-            (_index: number[], width: number, height: number) =>
-                new Array(width * height).fill(0.5)
+        const interpolate = vi.fn((_index: number[], width: number, height: number) =>
+            new Array(width * height).fill(0.5)
         );
 
         render(ContourTest, {
