@@ -141,6 +141,11 @@
     import { X, Y, RAW_VALUE } from '../transforms/recordize.js';
     import { scaleLinear } from 'd3-scale';
     import { isColorOrNull } from '../helpers/typeChecks.js';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
+
+    const DEFAULTS = {
+        ...getPlotDefaults().contour
+    };
 
     let markProps: ContourMarkProps = $props();
 
@@ -169,7 +174,7 @@
         clipPath,
         class: className = '',
         ...options
-    }: ContourMarkProps = $derived({ ...markProps });
+    }: ContourMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     /**
      * Returns true when a fill/stroke value should be treated as a data
