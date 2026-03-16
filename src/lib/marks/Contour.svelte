@@ -118,7 +118,7 @@
         ScaledDataRecord,
         MarkType
     } from '../types/index.js';
-    import { blur2, ticks, nice, thresholdSturges } from 'd3-array';
+    import { blur2, ticks, nice, range, thresholdSturges } from 'd3-array';
     import { contours } from 'd3-contour';
     import { geoPath } from 'd3-geo';
     import Mark from '../Mark.svelte';
@@ -364,32 +364,19 @@
         }
         if (!isFinite(vMin) || !isFinite(vMax) || vMin === vMax) return [];
 
-        // Resolve interval shorthand into a thresholds-compatible object
-        let t: ContourMarkProps['thresholds'] = thresholdSpec;
-        if (t == null && intervalSpec != null) {
+        // Interval takes precedence when thresholds is not set
+        if (thresholdSpec == null && intervalSpec != null) {
             if (typeof intervalSpec === 'number') {
                 const step = intervalSpec;
-                t = {
-                    floor: (x: number) => Math.floor(x / step) * step,
-                    range: (a: number, b: number) => {
-                        const result: number[] = [];
-                        let v = Math.ceil(a / step) * step;
-                        while (v < b) {
-                            result.push(v);
-                            v += step;
-                        }
-                        return result;
-                    }
-                };
-            } else {
-                t = intervalSpec;
+                return range(Math.floor(vMin / step) * step, vMax, step);
             }
+            return intervalSpec.range(intervalSpec.floor(vMin), vMax);
         }
 
         // Default to Sturges' formula (returns a count, handled below)
-        const tSpec: any = t ?? thresholdSturges;
+        const tSpec: any = thresholdSpec ?? thresholdSturges;
 
-        // Interval object with floor/range
+        // thresholds can itself be a d3-compatible interval object
         if (typeof tSpec === 'object' && tSpec !== null && 'range' in tSpec) {
             return tSpec.range(tSpec.floor(vMin), vMax);
         }
