@@ -94,14 +94,22 @@
         /**
          * Fill color for contour polygons.  Use `"value"` to map each
          * threshold level through the plot's color scale.  Default `"none"`.
+         *
+         * **Shorthand**: if `value` is omitted and `fill` is a field name or
+         * accessor function (not a CSS color), it is automatically promoted to
+         * the `value` channel and `fill` is set to `"value"`.
          */
-        fill?: string;
+        fill?: string | ChannelAccessor<Datum>;
         /**
          * Stroke color for contour lines.  Use `"value"` to map each
          * threshold level through the plot's color scale.  Default
          * `"currentColor"`.
+         *
+         * **Shorthand**: if `value` is omitted and `stroke` is a field name or
+         * accessor function (not a CSS color), it is automatically promoted to
+         * the `value` channel and `stroke` is set to `"value"`.
          */
-        stroke?: string;
+        stroke?: string | ChannelAccessor<Datum>;
         strokeWidth?: number;
         strokeOpacity?: number;
         fillOpacity?: number;
@@ -132,12 +140,13 @@
     } from '../helpers/rasterInterpolate.js';
     import { X, Y, RAW_VALUE } from '../transforms/recordize.js';
     import { scaleLinear } from 'd3-scale';
+    import { isColorOrNull } from '../helpers/typeChecks.js';
 
     let markProps: ContourMarkProps = $props();
 
     const {
         data,
-        value,
+        value: rawValue,
         x1: x1Prop,
         y1: y1Prop,
         x2: x2Prop,
@@ -150,8 +159,8 @@
         thresholds,
         interval,
         interpolate,
-        fill = 'none',
-        stroke,
+        fill: rawFill = 'none',
+        stroke: rawStroke,
         strokeWidth,
         strokeOpacity,
         fillOpacity,
@@ -161,6 +170,54 @@
         class: className = '',
         ...options
     }: ContourMarkProps = $derived({ ...markProps });
+
+    /**
+     * Returns true when a fill/stroke value should be treated as a data
+     * accessor (field name or function) rather than a constant color.
+     * Strings that are CSS colors, SVG paint keywords, or SveltePlot's own
+     * `"value"` keyword are constants; everything else is an accessor.
+     */
+    function isContourAccessor(v: string | ChannelAccessor<Datum> | undefined): boolean {
+        if (v == null) return false;
+        if (typeof v === 'function') return true;
+        if (typeof v !== 'string') return true;
+        const lower = v.toLowerCase();
+        // SVG paint / SveltePlot keywords that are never data field names
+        if (lower === 'none' || lower === 'value' || lower === 'inherit') return false;
+        return !isColorOrNull(v);
+    }
+
+    /**
+     * Apply Observable Plot's shorthand: when `value` is omitted and `fill`
+     * or `stroke` is a data accessor (field name or function — not a CSS
+     * color), promote it to the `value` channel and replace with `"value"`.
+     * Throws if both `fill` and `stroke` are accessors (ambiguous).
+     */
+    const { fill, stroke, value } = $derived.by(() => {
+        if (rawValue !== undefined) {
+            return {
+                fill: rawFill as string,
+                stroke: rawStroke as string | undefined,
+                value: rawValue
+            };
+        }
+        const fillIsAccessor = isContourAccessor(rawFill);
+        const strokeIsAccessor = isContourAccessor(rawStroke);
+        if (fillIsAccessor && strokeIsAccessor) {
+            throw new Error('ambiguous contour value: both fill and stroke are data accessors');
+        }
+        if (fillIsAccessor) {
+            return { fill: 'value', stroke: rawStroke as string | undefined, value: rawFill };
+        }
+        if (strokeIsAccessor) {
+            return { fill: rawFill as string, stroke: 'value', value: rawStroke };
+        }
+        return {
+            fill: rawFill as string,
+            stroke: rawStroke as string | undefined,
+            value: rawValue
+        };
+    });
 
     const plot = usePlot();
 

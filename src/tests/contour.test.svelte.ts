@@ -179,6 +179,74 @@ describe('Contour mark — dense grid mode', () => {
     });
 });
 
+describe('Contour mark — fill/stroke shorthand promotion', () => {
+    it('promotes fill field name to value when value is omitted', () => {
+        const grid = linearGrid.map((v, i) => ({ val: v, i }));
+        const { container } = render(ContourTest, {
+            props: {
+                contourArgs: {
+                    data: grid,
+                    x: 'i',
+                    y: 'i',
+                    fill: 'val',
+                    thresholds: [0.5]
+                }
+            }
+        });
+        // fill="val" should be promoted to value="val", fill="value"
+        expect(paths(container).length).toBeGreaterThan(0);
+    });
+
+    it('promotes fill function to value when value is omitted', () => {
+        const { container } = render(ContourTest, {
+            props: {
+                contourArgs: {
+                    data: linearGrid,
+                    width: GRID_W,
+                    height: GRID_H,
+                    fill: (d: number) => d,
+                    thresholds: [0.5]
+                }
+            }
+        });
+        expect(paths(container).length).toBeGreaterThan(0);
+    });
+
+    it('does not promote fill when value is explicitly set', () => {
+        const { container } = render(ContourTest, {
+            props: {
+                contourArgs: {
+                    data: linearGrid,
+                    width: GRID_W,
+                    height: GRID_H,
+                    fill: 'steelblue',
+                    value: (d: number) => d,
+                    thresholds: [0.5]
+                }
+            }
+        });
+        // fill should stay as constant steelblue (not promoted)
+        const p = paths(container)[0];
+        expect(p?.getAttribute('style')).toMatch(/fill:\s*steelblue/);
+    });
+
+    it('does not promote CSS color strings', () => {
+        const { container } = render(ContourTest, {
+            props: {
+                contourArgs: {
+                    data: linearGrid,
+                    width: GRID_W,
+                    height: GRID_H,
+                    fill: 'steelblue',
+                    thresholds: [0.5]
+                }
+            }
+        });
+        const p = paths(container)[0];
+        expect(p?.getAttribute('style')).toMatch(/fill:\s*steelblue/);
+    });
+});
+
 describe('Contour mark — function sampling mode', () => {
     it('renders path elements', () => {
         const { container } = render(ContourTest, {
