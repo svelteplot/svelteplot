@@ -243,6 +243,8 @@ Omit `data` and pass `value` as an `(x, y) => number` function with explicit dom
 </Plot>
 ```
 
+[Example](/examples/contour/sampled)
+
 ## Smooth and blur
 
 `smooth` (default `true`) enables linear interpolation along contour edges, producing smooth curves. Set it to `false` for a blocky, stepped appearance. `blur` applies a Gaussian blur to the value grid before contouring, which suppresses noise and merges closely-spaced levels:

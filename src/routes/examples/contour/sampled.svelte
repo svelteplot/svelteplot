@@ -16,11 +16,10 @@
     }}
     aspectRatio={1}>
     <Contour
-        value={(x: number, y: number) =>
+        fill={(x: number, y: number) =>
             Math.sin(x) * Math.cos(y)}
         x1={0}
         x2={6 * Math.PI}
         y1={0}
-        y2={4 * Math.PI}
-        fill="value" />
+        y2={4 * Math.PI} />
 </Plot>
