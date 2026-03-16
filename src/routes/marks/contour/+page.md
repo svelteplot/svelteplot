@@ -94,9 +94,9 @@ Set `stroke="value"` to color each isoline by its threshold level using the plot
 </Plot>
 ```
 
-[Example](/examples/contour/)
+[Example](/examples/contour/volcano)
 
-Set `fill="value"` and for a choropleth-style heatmap:
+Set `fill="value"` for a choropleth-style heatmap:
 
 ```svelte
 <Plot color={{ scheme: 'turbo' }}>
@@ -209,7 +209,7 @@ When data comes from [irregularly distributed point observations](/examples/dot/
 
 [Example](/examples/contour/weather)
 
-The same four interpolation strategies available in the [Raster mark](./raster#scatter-interpolation) apply here: `nearest`, `barycentric`, and `random-walk`.
+The same four interpolation strategies available in the [Raster mark](./raster#scatter-interpolation) apply here: `none`, `nearest`, `barycentric`, and `random-walk`.
 
 ## Function sampling mode
 
@@ -363,11 +363,7 @@ Use `interval` for evenly-spaced steps:
 <Contour interval={10} />
 ```
 
-You can pass explicit levels as `thresholds` array:
-
-```svelte
-<Contour thresholds={[100, 110, 120, 130, 140]} />
-```
+You can also pass an explicit array of threshold values:
 
 ```svelte live
 <script lang="ts">
@@ -382,14 +378,16 @@ You can pass explicit levels as `thresholds` array:
         data={volcano.values}
         width={volcano.width}
         height={volcano.height}
-        interval={10}
+        thresholds={[
+            90, 100, 110, 120, 130, 140, 150, 160, 170, 180
+        ]}
         stroke="value" />
 </Plot>
 ```
 
 ## Quantile thresholds
 
-Linear thresholds don't align with a quantile color scale — the contour bands will have unequal data density and the colors won't map cleanly onto them. Pass a function to `thresholds` to compute quantile boundaries instead, so each filled band covers the same proportion of the value distribution. This works especially well for data with a skewed distribution, such as temperature across a continent:
+With evenly-spaced thresholds, contour bands cover equal data ranges but unequal numbers of observations, so a sequential color scale may devote most of its ramp to a sparse region. Passing a precomputed quantile array to `thresholds` ensures each band covers the same proportion of the value distribution. This works especially well for skewed data such as temperature across a continent:
 
 ```svelte live
 <script lang="ts">
@@ -418,7 +416,7 @@ Linear thresholds don't align with a quantile color scale — the contour bands 
         )
     );
 
-    let n = $state(7); // produces 10 equal-population bands
+    let n = $state(7); // produces n+2 equal-population bands
     // Pre-compute quantile breakpoints. A floor threshold just below the
     // data minimum is prepended so that d3-contour generates a polygon for
     // the coldest region too (without it, areas below the first threshold
