@@ -14,6 +14,7 @@ export { default as Brush } from './Brush.svelte';
 export { default as BrushX } from './BrushX.svelte';
 export { default as BrushY } from './BrushY.svelte';
 export { default as Cell } from './Cell.svelte';
+export { default as Contour } from './Contour.svelte';
 export { default as CellX } from './CellX.svelte';
 export { default as CellY } from './CellY.svelte';
 export { default as CustomMark } from './CustomMark.svelte';

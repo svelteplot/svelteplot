@@ -59,6 +59,7 @@ export default {
                 { title: 'Cell', to: '/marks/cell' },
                 { title: 'Custom', to: '/marks/custom' },
                 { title: 'Difference', to: '/marks/difference' },
+                { title: 'Contour', to: '/marks/contour' },
                 { title: 'Dot', to: '/marks/dot' },
                 { title: 'Frame', to: '/marks/frame' },
                 { title: 'Geo', to: '/marks/geo' },

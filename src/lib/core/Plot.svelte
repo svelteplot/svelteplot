@@ -210,11 +210,8 @@
         (fixedWidth || width) - plotOptions.marginLeft - plotOptions.marginRight
     );
 
-    // Width used for aspectRatio/projection height computation only.
-    // Excludes reactive auto-margins to prevent a feedback loop:
-    //   height → plotHeight → y-tick density → y-label widths → autoMarginLeft → plotWidth → height
-    // Using explicit user-specified margins (0 when set to 'auto') keeps height stable
-    // while still updating when the container width or user-specified margins change.
+    // Width used for geo-projection aspect-ratio height computation only.
+    // Excludes reactive auto-margins to prevent a feedback loop in projection mode.
     const plotWidthForAspectRatio = $derived(
         (fixedWidth || width) -
             maybeMargin(
@@ -267,7 +264,7 @@
                                 preScales.x,
                                 preScales.y,
                                 plotOptions.aspectRatio,
-                                plotWidthForAspectRatio,
+                                plotWidth,
                                 plotOptions.marginTop,
                                 plotOptions.marginBottom
                             )
