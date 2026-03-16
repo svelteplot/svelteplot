@@ -180,6 +180,18 @@
 
     const interpolateFn = $derived(resolveInterpolate(interpolate));
 
+    /** When a fill is active, stroke defaults to none; otherwise currentColor. */
+    const effectiveStroke = $derived(stroke ?? (fill !== 'none' ? 'none' : 'currentColor'));
+
+    /**
+     * True when at least one of fill/stroke is the special `"value"` keyword,
+     * meaning threshold levels must be mapped through the plot's color scale.
+     * Only then should scalar field values be injected into the shared color
+     * scale domain — injecting them unconditionally would corrupt categorical
+     * or other numeric color encodings on sibling marks.
+     */
+    const markUsesColorScale = $derived(fill === 'value' || effectiveStroke === 'value');
+
     /**
      * Coarse 20×20 sample of the value function in data-space.
      * Used only to give `<Mark>` representative values for color-scale
@@ -189,7 +201,7 @@
      * current render state.
      */
     const samplerSampleValues = $derived.by((): number[] | null => {
-        if (!isSamplerMode || typeof value !== 'function') return null;
+        if (!markUsesColorScale || !isSamplerMode || typeof value !== 'function') return null;
         if (x1Prop == null || x2Prop == null || y1Prop == null || y2Prop == null) return null;
         const SAMPLES = 20;
         const dx = x2Prop - x1Prop;
@@ -410,9 +422,6 @@
         return prop ?? 'none';
     }
 
-    /** When a fill is active, stroke defaults to none; otherwise currentColor. */
-    const effectiveStroke = $derived(stroke ?? (fill !== 'none' ? 'none' : 'currentColor'));
-
     /** Build the inline style string for a single contour path. */
     function contourStyle(threshold: number): string {
         const parts: string[] = [];
@@ -436,7 +445,7 @@
             ? (data as any[]).map((d, i) => ({
                   [X]: i % widthProp!,
                   [Y]: Math.floor(i / widthProp!),
-                  [RAW_VALUE]: resolveValue(d)
+                  ...(markUsesColorScale ? { [RAW_VALUE]: resolveValue(d) } : {})
               }))
             : null
     );
@@ -457,7 +466,7 @@
             { [X]: x1, [Y]: y1 },
             { [X]: x2, [Y]: y2 }
         ];
-        if (samples) {
+        if (markUsesColorScale && samples) {
             for (const v of samples) {
                 records.push({ [X]: x1, [Y]: y1, [RAW_VALUE]: v });
             }
@@ -465,13 +474,26 @@
         return records as DataRecord[];
     });
 
-    // Always include 'fill' so the color scale domain is built from scalar field
-    // values in all three modes. The actual fill/stroke style is resolved
-    // per-path in the template.
-    const markChannels = ['x', 'y', 'fill'] as const;
+    // Scatter mode needs the fill channel as the delivery mechanism for scalar
+    // values into computeContours (via scaledData[].resolved.fill) regardless
+    // of whether threshold-based coloring is active. Dense-grid and sampler
+    // modes read values directly from data/function, so the fill channel is
+    // only needed there when color scale registration is required.
+    const isScatterMode = $derived(!isSamplerMode && !isDenseGridMode && data != null);
+
+    const markChannels = $derived(
+        isScatterMode || markUsesColorScale ? (['x', 'y', 'fill'] as const) : (['x', 'y'] as const)
+    );
 
     const markFill = $derived(
-        isDenseGridMode || isSamplerMode ? (RAW_VALUE as any) : (value as any)
+        isScatterMode || markUsesColorScale
+            ? isDenseGridMode || isSamplerMode
+                ? (RAW_VALUE as any)
+                : // scatter mode: bypass color scale when "value" keyword isn't used
+                  markUsesColorScale
+                  ? (value as any)
+                  : ({ value: value as any, scale: false } as any)
+            : undefined
     );
 
     const markX = $derived(isDenseGridMode || isSamplerMode ? (X as any) : undefined);
