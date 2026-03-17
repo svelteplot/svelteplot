@@ -31,6 +31,7 @@ examples:
     - contour/volcano
     - contour/weather
     - contour/interactive
+    - contour/faceted
     - contour/sampled
     - custom/histogram-topline
     - difference/anomaly-baseline

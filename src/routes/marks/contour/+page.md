@@ -2,6 +2,10 @@
 title: Contour mark
 ---
 
+:::info
+added in 0.13.0
+:::
+
 [API Reference](/api/marks#Contour)
 
 ```svelte live
