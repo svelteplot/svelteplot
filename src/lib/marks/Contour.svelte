@@ -28,9 +28,9 @@
          * `x`/`y` channels.
          */
         data?: Datum[] | null;
-        /** x position channel (scatter / dense-grid mode) */
+        /** x position channel (scatter mode) */
         x?: ChannelAccessor<Datum>;
-        /** y position channel (scatter / dense-grid mode) */
+        /** y position channel (scatter mode) */
         y?: ChannelAccessor<Datum>;
         /**
          * Scalar field accessor, identity function for dense grid, or an
@@ -117,6 +117,10 @@
         strokeMiterlimit?: number;
         clipPath?: string;
         class?: string;
+        /** the horizontal facet channel */
+        fx?: ChannelAccessor<Datum>;
+        /** the vertical facet channel */
+        fy?: ChannelAccessor<Datum>;
     }
 
     import type {
@@ -124,7 +128,8 @@
         DataRecord,
         ChannelAccessor,
         ScaledDataRecord,
-        MarkType
+        MarkType,
+        RawValue
     } from '../types/index.js';
     import { blur2, ticks, nice, range, thresholdSturges } from 'd3-array';
     import { contours } from 'd3-contour';
@@ -138,10 +143,22 @@
         interpolatorRandomWalk,
         type InterpolateFunction
     } from '../helpers/rasterInterpolate.js';
-    import { X, Y, RAW_VALUE } from '../transforms/recordize.js';
+    import { RAW_VALUE } from '../transforms/recordize.js';
+    import { ORIGINAL_NAME_KEYS } from '../constants.js';
     import { scaleLinear } from 'd3-scale';
     import { isColorOrNull } from '../helpers/typeChecks.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
+
+    // Per-band fake-datum symbols — used to attach the contour geometry,
+    // extent, and pre-resolved facet values to the synthetic records passed
+    // to <Mark> for scale-domain registration and facet filtering.
+    const GEOM = Symbol('contour_geom');
+    const FX_VAL = Symbol('contour_fx');
+    const FY_VAL = Symbol('contour_fy');
+    const X1_VAL = Symbol('contour_x1');
+    const X2_VAL = Symbol('contour_x2');
+    const Y1_VAL = Symbol('contour_y1');
+    const Y2_VAL = Symbol('contour_y2');
 
     const DEFAULTS = {
         ...getPlotDefaults().contour
@@ -152,6 +169,10 @@
     const {
         data,
         value: rawValue,
+        x: xAcc,
+        y: yAcc,
+        fx: fxAcc,
+        fy: fyAcc,
         x1: x1Prop,
         y1: y1Prop,
         x2: x2Prop,
@@ -179,24 +200,19 @@
     /**
      * Returns true when a fill/stroke value should be treated as a data
      * accessor (field name or function) rather than a constant color.
-     * Strings that are CSS colors, SVG paint keywords, or SveltePlot's own
-     * `"value"` keyword are constants; everything else is an accessor.
      */
     function isContourAccessor(v: string | ChannelAccessor<Datum> | undefined): boolean {
         if (v == null) return false;
         if (typeof v === 'function') return true;
         if (typeof v !== 'string') return true;
         const lower = v.toLowerCase();
-        // SVG paint / SveltePlot keywords that are never data field names
         if (lower === 'none' || lower === 'value' || lower === 'inherit') return false;
         return !isColorOrNull(v);
     }
 
     /**
      * Apply Observable Plot's shorthand: when `value` is omitted and `fill`
-     * or `stroke` is a data accessor (field name or function — not a CSS
-     * color), promote it to the `value` channel and replace with `"value"`.
-     * Throws if both `fill` and `stroke` are accessors (ambiguous).
+     * or `stroke` is a data accessor, promote it to the `value` channel.
      */
     const { fill, stroke, value } = $derived.by(() => {
         if (rawValue !== undefined) {
@@ -229,15 +245,9 @@
     /** No data: value is an (x,y) function */
     const isSamplerMode = $derived(data == null);
 
-    /**
-     * Dense grid: data is a flat array, width+height are given, no x/y channels.
-     */
+    /** Dense grid: data is a flat array, width+height given, no x/y channels. */
     const isDenseGridMode = $derived(
-        data != null &&
-            widthProp != null &&
-            heightProp != null &&
-            (options as any).x == null &&
-            (options as any).y == null
+        data != null && widthProp != null && heightProp != null && xAcc == null && yAcc == null
     );
 
     const interpolateFn = $derived(resolveInterpolate(interpolate));
@@ -246,45 +256,13 @@
     const effectiveStroke = $derived(stroke ?? (fill !== 'none' ? 'none' : 'currentColor'));
 
     /**
-     * True when at least one of fill/stroke is the special `"value"` keyword,
-     * meaning threshold levels must be mapped through the plot's color scale.
-     * Only then should scalar field values be injected into the shared color
-     * scale domain — injecting them unconditionally would corrupt categorical
-     * or other numeric color encodings on sibling marks.
+     * True when fill or stroke uses the `"value"` keyword, meaning threshold
+     * levels must be mapped through the plot's color scale.
      */
     const markUsesColorScale = $derived(fill === 'value' || effectiveStroke === 'value');
 
-    /**
-     * Coarse 20×20 sample of the value function in data-space.
-     * Used only to give `<Mark>` representative values for color-scale
-     * domain/type detection.  The full-resolution grid is (re-)computed on
-     * every render inside `computeContours`, so impure functions (closures
-     * over reactive state, `performance.now()`, etc.) always reflect the
-     * current render state.
-     */
-    const samplerSampleValues = $derived.by((): number[] | null => {
-        if (!markUsesColorScale || !isSamplerMode || typeof value !== 'function') return null;
-        if (x1Prop == null || x2Prop == null || y1Prop == null || y2Prop == null) return null;
-        const SAMPLES = 20;
-        const dx = x2Prop - x1Prop;
-        const dy = y2Prop - y1Prop;
-        const fn = value as (x: number, y: number) => number;
-        const out: number[] = [];
-        for (let yi = 0; yi < SAMPLES; yi++) {
-            for (let xi = 0; xi < SAMPLES; xi++) {
-                const v = fn(
-                    x1Prop + ((xi + 0.5) / SAMPLES) * dx,
-                    y1Prop + ((yi + 0.5) / SAMPLES) * dy
-                );
-                if (isFinite(v)) out.push(v);
-            }
-        }
-        return out.length > 0 ? out : null;
-    });
-
     function resolveInterpolate(interp: ContourMarkProps['interpolate']): InterpolateFunction {
         if (typeof interp === 'function') return interp;
-        // Default to nearest for scatter mode
         const resolved = interp ?? (isSamplerMode || isDenseGridMode ? 'none' : 'nearest');
         switch (String(resolved).toLowerCase()) {
             case 'none':
@@ -299,7 +277,7 @@
         throw new Error(`invalid interpolate: ${interp}`);
     }
 
-    /** Pixel-space bounds of the plot area. */
+    /** Pixel-space bounds of the current facet (or full plot if not faceted). */
     function getBounds() {
         const facetWidth = plot.facetWidth ?? 100;
         const facetHeight = plot.facetHeight ?? 100;
@@ -313,7 +291,7 @@
         };
     }
 
-    /** Resolve a value accessor on a single datum. */
+    /** Resolve the scalar value from a single datum. */
     function resolveValue(datum: any): number | null {
         if (value == null) return typeof datum === 'number' ? datum : null;
         if (typeof value === 'string') return datum[value] ?? null;
@@ -324,15 +302,36 @@
     type ContourGeometry = {
         type: 'MultiPolygon';
         coordinates: number[][][][];
+        /** threshold value that produced this band */
         value: number;
+        /** pre-resolved fx channel value for facet filtering (undefined when not faceted) */
+        fxVal?: RawValue;
+        /** pre-resolved fy channel value for facet filtering (undefined when not faceted) */
+        fyVal?: RawValue;
     };
 
     /**
-     * Compute the scalar-field grid and run marching squares.
-     * Returns an array of GeoJSON MultiPolygon objects in SVG pixel coordinates,
-     * each carrying the threshold `value` that produced it.
+     * Resolve a channel accessor against a single raw datum.
+     * Works for string field names and function accessors.
      */
-    function computeContours(scaledData: ScaledDataRecord[]): ContourGeometry[] | null {
+    function resolveAcc(acc: ChannelAccessor<any> | undefined, d: any): any {
+        if (acc == null) return undefined;
+        if (typeof acc === 'function') return (acc as (d: any) => any)(d);
+        return (d as any)[acc as string];
+    }
+
+    /**
+     * Compute contour bands from a scalar field.
+     *
+     * @param scatterData  Scatter-mode point array (uses `data` prop if omitted).
+     * @param fxVal        Pre-resolved fx facet value to tag onto each geometry.
+     * @param fyVal        Pre-resolved fy facet value to tag onto each geometry.
+     */
+    function computeContours(
+        scatterData?: any[] | null,
+        fxVal?: RawValue,
+        fyVal?: RawValue
+    ): ContourGeometry[] | null {
         const { bx1, by1, bx2, by2 } = getBounds();
         const dx = bx2 - bx1;
         const dy = by2 - by1;
@@ -345,7 +344,6 @@
         let V: number[] | null = null;
 
         if (isDenseGridMode) {
-            // Dense grid: each datum is a value; flip rows (y-up → screen y-down)
             const Vraw = (data as any[]).map((d) => resolveValue(d) ?? NaN);
             V = new Array(n);
             for (let row = 0; row < h; ++row) {
@@ -355,7 +353,6 @@
                 }
             }
         } else if (isSamplerMode) {
-            // Sampler mode: evaluate (x, y) => number on the full pixel grid
             if (typeof value !== 'function') return null;
             const xScale = scaleLinear().range([x1Prop!, x2Prop!]).domain([bx1, bx2]);
             const yScale = scaleLinear().range([y1Prop!, y2Prop!]).domain([by1, by2]);
@@ -371,16 +368,34 @@
                     );
                 }
             }
-        } else if (scaledData.length > 0) {
-            // Scatter interpolation mode
-            const validData = scaledData.filter((d) => d.valid && d.x != null && d.y != null);
+        } else {
+            // Scatter interpolation — use the provided subset or the full dataset.
+            const pts = scatterData ?? (data as any[] | null);
+            if (!pts || pts.length === 0) return null;
+
+            const xFn = plot.scales.x?.fn;
+            const yFn = plot.scales.y?.fn;
+            if (!xFn || !yFn) return null;
+
+            type ScatterPt = { px: number; py: number; v: number | null };
+            const validData: ScatterPt[] = [];
+            for (const d of pts) {
+                const xv = resolveAcc(xAcc, d);
+                const yv = resolveAcc(yAcc, d);
+                if (xv == null || yv == null) continue;
+                const px = xFn(xv) as number;
+                const py = yFn(yv) as number;
+                if (!Number.isFinite(px) || !Number.isFinite(py)) continue;
+                validData.push({ px, py, v: resolveValue(d) });
+            }
             if (validData.length === 0) return null;
+
             const kx = w / dx;
             const ky = h / dy;
             const index = validData.map((_, i) => i);
-            const IX = new Float64Array(validData.map((d) => ((d.x as number) - bx1) * kx));
-            const IY = new Float64Array(validData.map((d) => ((d.y as number) - by1) * ky));
-            const rawValues = validData.map((d) => d.resolved?.fill);
+            const IX = new Float64Array(validData.map((d) => (d.px - bx1) * kx));
+            const IY = new Float64Array(validData.map((d) => (d.py - by1) * ky));
+            const rawValues = validData.map((d) => d.v);
             if (rawValues.some((v) => v != null)) {
                 V = Array.from(interpolateFn(index, w, h, IX, IY, rawValues));
             }
@@ -391,7 +406,7 @@
         // --- Optional Gaussian blur ---
         if (blur > 0) blur2({ data: V, width: w, height: h }, blur);
 
-        // --- Compute thresholds ---
+        // --- Compute thresholds from the actual grid ---
         const T = computeThresholds(V, w, h, thresholds, interval);
         if (T.length === 0) return null;
 
@@ -400,7 +415,7 @@
         const ky = h / dy;
         const contourFn = contours().size([w, h]).smooth(smooth);
 
-        const contourData: ContourGeometry[] = T.map((t) => {
+        return T.map((t) => {
             const geom = contourFn.contour(V!, t) as ContourGeometry;
 
             // Rescale from grid coordinates to SVG pixel coordinates
@@ -413,10 +428,12 @@
                 }
             }
 
+            // Tag with facet identity so the Mark can filter per panel
+            if (fxVal !== undefined) geom.fxVal = fxVal;
+            if (fyVal !== undefined) geom.fyVal = fyVal;
+
             return geom;
         });
-
-        return contourData;
     }
 
     /** Compute an array of threshold tick values from the V grid. */
@@ -427,7 +444,6 @@
         thresholdSpec: ContourMarkProps['thresholds'],
         intervalSpec: ContourMarkProps['interval']
     ): number[] {
-        // Compute finite extent
         let vMin = Infinity,
             vMax = -Infinity;
         for (const v of V) {
@@ -438,7 +454,6 @@
         }
         if (!isFinite(vMin) || !isFinite(vMax) || vMin === vMax) return [];
 
-        // Interval takes precedence when thresholds is not set
         if (thresholdSpec == null && intervalSpec != null) {
             if (typeof intervalSpec === 'number') {
                 const step = intervalSpec;
@@ -447,18 +462,14 @@
             return intervalSpec.range(intervalSpec.floor(vMin), vMax);
         }
 
-        // Default to Sturges' formula (returns a count, handled below)
         const tSpec: any = thresholdSpec ?? thresholdSturges;
 
-        // thresholds can itself be a d3-compatible interval object
         if (typeof tSpec === 'object' && tSpec !== null && 'range' in tSpec) {
             return tSpec.range(tSpec.floor(vMin), vMax);
         }
 
-        // Already an array
         if (Array.isArray(tSpec)) return tSpec;
 
-        // Function form — may return a count (number) or an array of thresholds
         let resolved: any = tSpec;
         if (typeof tSpec === 'function') {
             const finiteV = V.filter(isFinite);
@@ -467,7 +478,6 @@
 
         if (Array.isArray(resolved)) return resolved;
 
-        // Count form: approximately `resolved` nicely-spaced levels
         const count = resolved as number;
         const [nMin, nMax] = nice(vMin, vMax, count) as [number, number];
         const tz = ticks(nMin, nMax, count);
@@ -499,89 +509,175 @@
 
     const path = geoPath();
 
+    /**
+     * All contour bands across every facet group, computed from the full
+     * dataset at root level.
+     *
+     * - Non-faceted / dense-grid / sampler: single call to `computeContours`.
+     * - Faceted scatter: data is grouped by (fx, fy) value combinations and
+     *   `computeContours` is called once per group; each geometry is tagged with
+     *   its `fxVal`/`fyVal` so that <Mark> can filter per panel.
+     */
+    const contourResult = $derived.by((): ContourGeometry[] | null => {
+        const isScatterFaceted =
+            !isDenseGridMode && !isSamplerMode && (fxAcc != null || fyAcc != null);
+
+        if (!isScatterFaceted) {
+            return computeContours();
+        }
+
+        // Group scatter data by (fxVal, fyVal)
+        if (!data || !(data as any[]).length) return null;
+        const groups = new Map<string, { fxVal: RawValue; fyVal: RawValue; items: any[] }>();
+        for (const d of data as any[]) {
+            const fxVal = resolveAcc(fxAcc, d);
+            const fyVal = resolveAcc(fyAcc, d);
+            const key = `${fxVal}\0${fyVal}`;
+            if (!groups.has(key)) groups.set(key, { fxVal, fyVal, items: [] });
+            groups.get(key)!.items.push(d);
+        }
+
+        const allBands: ContourGeometry[] = [];
+        for (const { fxVal, fyVal, items } of groups.values()) {
+            const bands = computeContours(items, fxVal, fyVal);
+            if (bands) allBands.push(...bands);
+        }
+        return allBands.length > 0 ? allBands : null;
+    });
+
     // --- Mark registration data ---
 
-    /** For dense grid mode: synthetic records with symbol-keyed x/y/value. */
-    const denseMarkData = $derived(
-        isDenseGridMode
-            ? (data as any[]).map((d, i) => ({
-                  [X]: i % widthProp!,
-                  [Y]: Math.floor(i / widthProp!),
-                  ...(markUsesColorScale ? { [RAW_VALUE]: resolveValue(d) } : {})
-              }))
-            : null
-    );
-
     /**
-     * For sampler mode: corner records to establish x/y scale domains, plus
-     * the coarse sample values for color-scale domain registration.
+     * Data-space extent of the mark, stored as x1/x2/y1/y2 values that are
+     * attached to every per-band fake datum so <Mark> can register the x/y
+     * scale domains without needing separate corner records.
      */
-    const samplerMarkData = $derived.by(() => {
-        if (!isSamplerMode) return null;
-        const x1 = x1Prop,
-            x2 = x2Prop,
-            y1 = y1Prop,
-            y2 = y2Prop;
-        if (x1 == null || x2 == null || y1 == null || y2 == null) return null;
-        const samples = samplerSampleValues;
-        const records: any[] = [
-            { [X]: x1, [Y]: y1 },
-            { [X]: x2, [Y]: y2 }
-        ];
-        if (markUsesColorScale && samples) {
-            for (const v of samples) {
-                records.push({ [X]: x1, [Y]: y1, [RAW_VALUE]: v });
+    const extent = $derived.by(() => {
+        if (isDenseGridMode) {
+            return { x1: 0, x2: widthProp! - 1, y1: 0, y2: heightProp! - 1 };
+        }
+        if (isSamplerMode) {
+            if (x1Prop != null && x2Prop != null && y1Prop != null && y2Prop != null) {
+                return { x1: x1Prop, x2: x2Prop, y1: y1Prop, y2: y2Prop };
+            }
+            return null;
+        }
+        // Scatter: compute from the full dataset (global extent across all facets)
+        if (!data) return null;
+        let xMin = Infinity,
+            xMax = -Infinity,
+            yMin = Infinity,
+            yMax = -Infinity;
+        for (const d of data as any[]) {
+            const xv = resolveAcc(xAcc, d);
+            const yv = resolveAcc(yAcc, d);
+            if (typeof xv === 'number' && isFinite(xv)) {
+                if (xv < xMin) xMin = xv;
+                if (xv > xMax) xMax = xv;
+            }
+            if (typeof yv === 'number' && isFinite(yv)) {
+                if (yv < yMin) yMin = yv;
+                if (yv > yMax) yMax = yv;
             }
         }
+        return isFinite(xMin) ? { x1: xMin, x2: xMax, y1: yMin, y2: yMax } : null;
+    });
+
+    /**
+     * Unified mark data:
+     *
+     * For scatter mode, one extent-only record is always included so that the
+     * x/y scale domain is bootstrapped before `contourResult` is available
+     * (scatter contours depend on `plot.scales.x/y.fn`, which needs this record
+     * to exist first; dense/sampler modes don't have this circular dependency
+     * since they compute V without needing x/y scales).
+     *
+     * Each per-band fake datum carries:
+     * - [X1_VAL]..[Y2_VAL]  data-space extent → x/y scale domain registration
+     * - [RAW_VALUE]          threshold → color scale domain registration
+     * - [FX_VAL]/[FY_VAL]   pre-resolved facet values → Mark facet filtering
+     * - [GEOM]               geometry reference → rendered by children snippet
+     */
+    const markData = $derived.by((): DataRecord[] => {
+        const ext = extent;
+        const records: any[] = [];
+
+        // Scatter mode: always include a bootstrap extent record so x/y scales
+        // are initialized independently of contourResult.
+        if (!isDenseGridMode && !isSamplerMode && ext && !contourResult) {
+            records.push({
+                [X1_VAL]: ext.x1,
+                [X2_VAL]: ext.x2,
+                [Y1_VAL]: ext.y1,
+                [Y2_VAL]: ext.y2
+            });
+        }
+
+        if (contourResult) {
+            for (const geom of contourResult) {
+                records.push({
+                    [X1_VAL]: ext?.x1,
+                    [X2_VAL]: ext?.x2,
+                    [Y1_VAL]: ext?.y1,
+                    [Y2_VAL]: ext?.y2,
+                    [RAW_VALUE]: geom.value,
+                    [FX_VAL]: geom.fxVal,
+                    [FY_VAL]: geom.fyVal,
+                    [GEOM]: geom
+                });
+            }
+        }
+
         return records as DataRecord[];
     });
 
-    // Scatter mode needs the fill channel as the delivery mechanism for scalar
-    // values into computeContours (via scaledData[].resolved.fill) regardless
-    // of whether threshold-based coloring is active. Dense-grid and sampler
-    // modes read values directly from data/function, so the fill channel is
-    // only needed there when color scale registration is required.
-    const isScatterMode = $derived(!isSamplerMode && !isDenseGridMode && data != null);
-
     const markChannels = $derived(
-        isScatterMode || markUsesColorScale ? (['x', 'y', 'fill'] as const) : (['x', 'y'] as const)
+        markUsesColorScale
+            ? (['x1', 'x2', 'y1', 'y2', 'fill'] as const)
+            : (['x1', 'x2', 'y1', 'y2'] as const)
     );
 
-    const markFill = $derived(
-        isScatterMode || markUsesColorScale
-            ? isDenseGridMode || isSamplerMode
-                ? (RAW_VALUE as any)
-                : // scatter mode: bypass color scale when "value" keyword isn't used
-                  markUsesColorScale
-                  ? (value as any)
-                  : ({ value: value as any, scale: false } as any)
-            : undefined
-    );
+    const markFill = $derived(markUsesColorScale ? (RAW_VALUE as any) : undefined);
 
-    const markX = $derived(isDenseGridMode || isSamplerMode ? (X as any) : undefined);
-    const markY = $derived(isDenseGridMode || isSamplerMode ? (Y as any) : undefined);
+    // Custom fx/fy accessors that read the pre-resolved facet values stored on
+    // the fake datums.  These replace the user's original accessors (which
+    // pointed to fields on the raw scatter data) so that <Mark>'s facet
+    // filtering operates on the band records rather than the raw datums.
+    const markFx = $derived(fxAcc != null ? FX_VAL : undefined);
+    const markFy = $derived(fyAcc != null ? FY_VAL : undefined);
+
+    // Preserve the original field-name string accessors as ORIGINAL_NAME_KEYS
+    // options so the scale system can derive axis auto-titles (e.g. "LONGITUDE"
+    // → x-axis title).  Only string accessors carry a meaningful field name.
+    const markOriginalNames = $derived({
+        ...(typeof xAcc === 'string' && { [ORIGINAL_NAME_KEYS.x]: xAcc }),
+        ...(typeof yAcc === 'string' && { [ORIGINAL_NAME_KEYS.y]: yAcc }),
+        ...(markUsesColorScale && typeof value === 'string' && { [ORIGINAL_NAME_KEYS.fill]: value })
+    });
 </script>
 
 <Mark
     type={'contour' as MarkType}
-    data={isDenseGridMode
-        ? (denseMarkData as DataRecord[])
-        : isSamplerMode
-          ? ((samplerMarkData ?? []) as DataRecord[])
-          : ((data ?? []) as DataRecord[])}
+    data={markData}
     channels={markChannels as any}
-    x={markX}
-    y={markY}
+    x1={X1_VAL as any}
+    x2={X2_VAL as any}
+    y1={Y1_VAL as any}
+    y2={Y2_VAL as any}
     fill={markFill}
+    fx={markFx}
+    fy={markFy}
+    {...markOriginalNames}
     {...options}>
-    {#snippet children({ scaledData })}
-        {@const contourPaths = computeContours(scaledData)}
-        {#if contourPaths}
-            <g clip-path={clipPath} class={className || null} aria-label="contour">
-                {#each contourPaths as contourGeom (contourGeom.value)}
-                    <path d={path(contourGeom as any)} style={contourStyle(contourGeom.value)} />
-                {/each}
-            </g>
-        {/if}
+    {#snippet children({ scaledData }: { scaledData: ScaledDataRecord[] })}
+        <g clip-path={clipPath} class={className || null} aria-label="contour">
+            {#each scaledData as d}
+                {#if d.datum[GEOM]}
+                    <path
+                        d={path(d.datum[GEOM] as any)}
+                        style={contourStyle(d.datum[RAW_VALUE] as number)} />
+                {/if}
+            {/each}
+        </g>
     {/snippet}
 </Mark>

@@ -23,9 +23,9 @@
         fill="MAG_IGRF90"
         blur={2}
         stroke="none" />
-    <Dot
+    <!-- <Dot
         data={ca55}
         x="LONGITUDE"
         y="LATITUDE"
-        fill="MAG_IGRF90" />
+        fill="MAG_IGRF90" /> -->
 </Plot>

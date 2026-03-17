@@ -298,6 +298,16 @@ export function createScale(
                 ) {
                     propNames.add(mark.options[ORIGINAL_NAME_KEYS[name]]);
                 }
+                // marks that use a Symbol as fill accessor (e.g. Contour) pass the
+                // original field name via ORIGINAL_NAME_KEYS.fill so the color scale
+                // can still derive an autoTitle
+                if (
+                    name === 'color' &&
+                    mark.options[ORIGINAL_NAME_KEYS.fill] &&
+                    !(mark.options[ORIGINAL_NAME_KEYS.fill] as string).startsWith('__')
+                ) {
+                    propNames.add(mark.options[ORIGINAL_NAME_KEYS.fill] as string);
+                }
             } else {
                 // also skip marks without data to prevent exceptions
                 // (skip.get(channel) as Set<symbol>).add(mark.id);
@@ -389,6 +399,9 @@ export function createScale(
     const fn = normalizeScaleFn(rawFn);
     const range = fn.range();
 
+    if (name === 'color') {
+        console.log({ propNames });
+    }
     return {
         type,
         domain,
