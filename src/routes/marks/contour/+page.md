@@ -128,7 +128,37 @@ Set `fill="value"` for a choropleth-style heatmap:
 
 ## Scatter interpolation
 
-When data comes from [irregularly distributed point observations](/examples/dot/weather) rather than a grid, the contour mark can spatially interpolate the values before running marching squares. This example uses temperature measurements from Canadian weather stations:
+When data comes from [irregularly distributed point observations](/examples/dot/weather) rather than a grid, the contour mark can spatially interpolate the values before running marching squares. This example uses measurements from the [CA55 aeromagnetic survey](https://www.bgs.ac.uk/datasets/regional-geophysics-of-southwest-england/) over SW England:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Contour, Dot } from 'svelteplot';
+    import { page } from '$app/state';
+
+    const { ca55 } = $derived(page.data.data);
+</script>
+
+<Plot color={{ type: 'diverging', legend: true }}>
+    <Contour
+        data={ca55}
+        x="LONGITUDE"
+        y="LATITUDE"
+        fill="MAG_IGRF90"
+        blur={2}
+        stroke="none" />
+    <Dot
+        data={ca55}
+        x="LONGITUDE"
+        y="LATITUDE"
+        fill="MAG_IGRF90" />
+</Plot>
+```
+
+[Example](/examples/contour/interpolated)
+
+This is the same dataset used in the [interpolated raster](/examples/raster/interpolated) example — compare the two to see how contour bands make the field structure more explicit than a continuous raster. Note the `fill="MAG_IGRF90"` shorthand: since `MAG_IGRF90` is not a CSS color, it is automatically promoted to the `value` channel.
+
+The next example uses temperature measurements from Canadian weather stations:
 
 ```svelte live
 <script lang="ts">

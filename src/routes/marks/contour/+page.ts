@@ -6,7 +6,8 @@ export const load: PageLoad = async ({ fetch }) => {
         data: {
             volcano: await loadJSON(fetch, 'volcano'),
             canadaTopo: await loadJSON(fetch, 'canada'),
-            weather: await loadCSV(fetch, 'us-weather')
+            weather: await loadCSV(fetch, 'us-weather'),
+            ca55: await loadCSV(fetch, 'ca55')
         }
     };
 };
