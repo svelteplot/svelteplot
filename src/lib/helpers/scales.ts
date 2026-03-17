@@ -399,9 +399,6 @@ export function createScale(
     const fn = normalizeScaleFn(rawFn);
     const range = fn.range();
 
-    if (name === 'color') {
-        console.log({ propNames });
-    }
     return {
         type,
         domain,

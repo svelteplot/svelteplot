@@ -131,6 +131,7 @@
         MarkType,
         RawValue
     } from '../types/index.js';
+    import { SvelteMap } from 'svelte/reactivity';
     import { blur2, ticks, nice, range, thresholdSturges } from 'd3-array';
     import { contours } from 'd3-contour';
     import { geoPath } from 'd3-geo';
@@ -354,8 +355,12 @@
             }
         } else if (isSamplerMode) {
             if (typeof value !== 'function') return null;
-            const xScale = scaleLinear().range([x1Prop!, x2Prop!]).domain([bx1, bx2]);
-            const yScale = scaleLinear().range([y1Prop!, y2Prop!]).domain([by1, by2]);
+            const xScale = scaleLinear()
+                .range([x1Prop as number, x2Prop as number])
+                .domain([bx1, bx2]);
+            const yScale = scaleLinear()
+                .range([y1Prop as number, y2Prop as number])
+                .domain([by1, by2]);
             const kx = dx / w;
             const ky = dy / h;
             V = new Array(n);
@@ -528,7 +533,7 @@
 
         // Group scatter data by (fxVal, fyVal)
         if (!data || !(data as any[]).length) return null;
-        const groups = new Map<string, { fxVal: RawValue; fyVal: RawValue; items: any[] }>();
+        const groups = new SvelteMap<string, { fxVal: RawValue; fyVal: RawValue; items: any[] }>();
         for (const d of data as any[]) {
             const fxVal = resolveAcc(fxAcc, d);
             const fyVal = resolveAcc(fyAcc, d);
@@ -558,7 +563,12 @@
         }
         if (isSamplerMode) {
             if (x1Prop != null && x2Prop != null && y1Prop != null && y2Prop != null) {
-                return { x1: x1Prop, x2: x2Prop, y1: y1Prop, y2: y2Prop };
+                return {
+                    x1: x1Prop as number,
+                    x2: x2Prop as number,
+                    y1: y1Prop as number,
+                    y2: y2Prop as number
+                };
             }
             return null;
         }
@@ -646,32 +656,32 @@
     const markFx = $derived(fxAcc != null ? FX_VAL : undefined);
     const markFy = $derived(fyAcc != null ? FY_VAL : undefined);
 
-    // Preserve the original field-name string accessors as ORIGINAL_NAME_KEYS
-    // options so the scale system can derive axis auto-titles (e.g. "LONGITUDE"
-    // → x-axis title).  Only string accessors carry a meaningful field name.
-    const markOriginalNames = $derived({
+    // Channel overrides passed to <Mark> as a spread so TypeScript's excess-property
+    // check doesn't fire (explicit named props on a component trigger that check,
+    // but spreading a typed variable does not).
+    const markChannelProps = $derived({
+        x1: X1_VAL as ContourMarkProps['x1'],
+        x2: X2_VAL as ContourMarkProps['x1'],
+        y1: Y1_VAL as ContourMarkProps['y1'],
+        y2: Y2_VAL as ContourMarkProps['y1'],
+        fill: markFill as ContourMarkProps['fill'],
+        fx: markFx as ContourMarkProps['fx'],
+        fy: markFy as ContourMarkProps['fy'],
         ...(typeof xAcc === 'string' && { [ORIGINAL_NAME_KEYS.x]: xAcc }),
         ...(typeof yAcc === 'string' && { [ORIGINAL_NAME_KEYS.y]: yAcc }),
         ...(markUsesColorScale && typeof value === 'string' && { [ORIGINAL_NAME_KEYS.fill]: value })
-    });
+    } satisfies Partial<ContourMarkProps>);
 </script>
 
 <Mark
     type={'contour' as MarkType}
     data={markData}
     channels={markChannels as any}
-    x1={X1_VAL as any}
-    x2={X2_VAL as any}
-    y1={Y1_VAL as any}
-    y2={Y2_VAL as any}
-    fill={markFill}
-    fx={markFx}
-    fy={markFy}
-    {...markOriginalNames}
-    {...options}>
+    {...options}
+    {...markChannelProps}>
     {#snippet children({ scaledData }: { scaledData: ScaledDataRecord[] })}
         <g clip-path={clipPath} class={className || null} aria-label="contour">
-            {#each scaledData as d}
+            {#each scaledData as d, i (i)}
                 {#if d.datum[GEOM]}
                     <path
                         d={path(d.datum[GEOM] as any)}
