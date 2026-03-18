@@ -19,7 +19,7 @@
 
     const DEFAULTS = getPlotDefaults();
 
-    const legendTitle = $derived(plot.options.color.label);
+    const legendTitle = $derived(plot.options.color.label ?? plot.scales.color?.autoTitle);
     const scaleType = $derived(plot.scales.color.type);
     const tickFormat = $derived(
         typeof plot.options.color?.tickFormat === 'function'
@@ -158,12 +158,12 @@
 <style>
     .color-legend {
         text-align: left;
-        font-size: 12px;
+        font-size: 11px;
         display: inline-block;
         margin-right: 2em;
     }
     .title {
-        font-weight: 500;
+        opacity: 0.8;
     }
     .item {
         margin: 0 1em 0.5ex 0;

@@ -28,6 +28,11 @@ examples:
     - box/box-y-facet
     - brush/overview-detail
     - cell/temperatures-threshold
+    - contour/volcano
+    - contour/weather
+    - contour/interactive
+    - contour/faceted
+    - contour/sampled
     - custom/histogram-topline
     - difference/anomaly-baseline
     - difference/apple-yoy

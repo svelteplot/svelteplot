@@ -32,6 +32,7 @@ import type {
     BrushX,
     BrushY,
     Cell,
+    Contour,
     DifferenceY,
     Dot,
     Frame,
@@ -43,6 +44,7 @@ import type {
     Line,
     Link,
     Pointer,
+    Raster,
     Rect,
     RectX,
     RectY,
@@ -270,6 +272,10 @@ export type PlotDefaults = {
      */
     cell: Partial<Omit<ComponentProps<typeof Cell>, IgnoreDefaults>>;
     /**
+     * default props for contour marks
+     */
+    contour: Partial<Omit<ComponentProps<typeof Contour>, IgnoreDefaults>>;
+    /**
      * default props for dot marks
      */
     dot: Partial<Omit<ComponentProps<typeof Dot>, IgnoreDefaults>>;
@@ -323,6 +329,10 @@ export type PlotDefaults = {
      * default props for pointer marks
      */
     pointer: Partial<Omit<ComponentProps<typeof Pointer>, IgnoreDefaults>>;
+    /**
+     * default props for raster marks
+     */
+    raster: Partial<Omit<ComponentProps<typeof Raster>, IgnoreDefaults>>;
     /**
      * default props for rect marks, applied to rect and rectX marks
      */

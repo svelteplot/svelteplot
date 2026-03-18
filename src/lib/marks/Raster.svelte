@@ -90,6 +90,11 @@
     } from '../helpers/rasterInterpolate.js';
     import { X, Y, RAW_VALUE } from '../transforms/recordize.js';
     import { scaleLinear } from 'd3-scale';
+    import { getPlotDefaults } from '../hooks/plotDefaults.js';
+
+    const DEFAULTS = {
+        ...getPlotDefaults().raster
+    };
 
     let markProps: RasterMarkProps = $props();
 
@@ -108,7 +113,7 @@
         interpolate,
         imageRendering = 'auto',
         ...options
-    }: RasterMarkProps = $derived({ ...markProps });
+    }: RasterMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
     const plot = usePlot();
 
