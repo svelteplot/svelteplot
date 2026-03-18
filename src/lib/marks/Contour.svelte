@@ -660,10 +660,10 @@
     // check doesn't fire (explicit named props on a component trigger that check,
     // but spreading a typed variable does not).
     const markChannelProps = $derived({
-        x1: X1_VAL as ContourMarkProps['x1'],
-        x2: X2_VAL as ContourMarkProps['x1'],
-        y1: Y1_VAL as ContourMarkProps['y1'],
-        y2: Y2_VAL as ContourMarkProps['y1'],
+        x1: X1_VAL as unknown as ContourMarkProps['x1'],
+        x2: X2_VAL as unknown as ContourMarkProps['x1'],
+        y1: Y1_VAL as unknown as ContourMarkProps['y1'],
+        y2: Y2_VAL as unknown as ContourMarkProps['y1'],
         fill: markFill as ContourMarkProps['fill'],
         fx: markFx as ContourMarkProps['fx'],
         fy: markFy as ContourMarkProps['fy'],
