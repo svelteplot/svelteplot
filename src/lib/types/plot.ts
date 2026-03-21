@@ -33,6 +33,7 @@ import type {
     BrushY,
     Cell,
     Contour,
+    Density,
     DifferenceY,
     Dot,
     Frame,
@@ -275,6 +276,10 @@ export type PlotDefaults = {
      * default props for contour marks
      */
     contour: Partial<Omit<ComponentProps<typeof Contour>, IgnoreDefaults>>;
+    /**
+     * default props for density marks
+     */
+    density: Partial<Omit<ComponentProps<typeof Density>, IgnoreDefaults>>;
     /**
      * default props for dot marks
      */
