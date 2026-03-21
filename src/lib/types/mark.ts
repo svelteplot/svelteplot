@@ -16,6 +16,7 @@ export type MarkType =
     | 'barY'
     | 'cell'
     | 'custom'
+    | 'density'
     | 'dot'
     | 'vector'
     | 'frame'

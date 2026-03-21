@@ -19,6 +19,7 @@ export { default as CellX } from './CellX.svelte';
 export { default as CellY } from './CellY.svelte';
 export { default as CustomMark } from './CustomMark.svelte';
 export { default as CustomMarkHTML } from './CustomMarkHTML.svelte';
+export { default as Density } from './Density.svelte';
 export { default as DifferenceY } from './DifferenceY.svelte';
 export { default as Dot } from './Dot.svelte';
 export { default as DotX } from './DotX.svelte';
