@@ -59,10 +59,10 @@
         strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
     <Text
-        data={nodeData}
+        data={nodeData.filter((d: any) => d.height === 0)}
         x="x"
         y="y"
-        text={(d: any) => (d.height === 0 ? d.name : null)}
+        text="name"
         dx={6}
         fontSize={9} />
 </Plot>

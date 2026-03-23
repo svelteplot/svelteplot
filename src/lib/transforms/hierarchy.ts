@@ -32,11 +32,21 @@ export function buildHierarchy(
     data: Record<string, unknown>[],
     options: StratifyOptions = {}
 ): HierarchyNode<any> {
-    const { path, id, parentId } = options;
+    const { path, delimiter = '/', id, parentId } = options;
     const strat: any = stratify();
 
     if (path != null) {
-        strat.path(typeof path === 'string' ? (d: any) => d[path] : path);
+        const pathFn = typeof path === 'string' ? (d: any) => d[path] : path;
+        // d3-stratify().path() always uses '/' as the delimiter, so we need
+        // to replace custom delimiters before passing to d3
+        strat.path(
+            delimiter !== '/'
+                ? (d: any) => {
+                        const p = pathFn(d);
+                        return p == null ? p : String(p).replaceAll(delimiter, '/');
+                    }
+                : pathFn
+        );
     } else {
         strat.id(id != null ? (typeof id === 'string' ? (d: any) => d[id] : id) : (d: any) => d.id);
         strat.parentId(

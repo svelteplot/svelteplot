@@ -60,9 +60,26 @@ export interface TreeLinkRecord {
     [key: symbol]: any;
 }
 
-// ── Internal layout ──
+// ── Layout ──
 
-function _computeTree(data: Record<string, unknown>[], options: TreeOptions = {}) {
+/**
+ * Run a tree or cluster layout on flat data.
+ *
+ * Returns the d3 hierarchy root with x/y coordinates assigned.
+ * Results are cached by (data, options) reference — calling with
+ * the same arguments returns the same result without recomputation.
+ *
+ * Use `treeNode`/`treeLink` for TransformArg-compatible wrappers
+ * that feed directly into svelteplot marks.
+ *
+ * @example
+ * ```ts
+ * const { root } = treeLayout(flat, { path: 'name', delimiter: '/' });
+ * root.descendants(); // all nodes with x/y
+ * root.links();       // all parent→child links
+ * ```
+ */
+export function treeLayout(data: Record<string, unknown>[], options: TreeOptions = {}) {
     return cachedLayout(data, options, () => {
         const { layout = 'tree', size = [1, 1], separation } = options;
         const hierarchy = buildHierarchy(data, options);
@@ -98,7 +115,7 @@ export function treeNode(options: TreeOptions = {}) {
         data: T[];
         [key: string]: unknown;
     }): { data: TreeNodeRecord[]; x: string; y: string; [key: string]: unknown } => {
-        const { root } = _computeTree(args.data, options);
+        const { root } = treeLayout(args.data, options);
 
         const nodes: TreeNodeRecord[] = root.descendants().map((node: HierarchyPointNode<any>) => ({
             ...node.data,
@@ -141,7 +158,7 @@ export function treeLink(options: TreeOptions = {}) {
         y2: string;
         [key: string]: unknown;
     } => {
-        const { root } = _computeTree(args.data, options);
+        const { root } = treeLayout(args.data, options);
 
         const links: TreeLinkRecord[] = root.links().map((link: HierarchyPointLink<any>) => ({
             ...link.target.data,

@@ -26,15 +26,22 @@ export { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
 export { windowX, windowY } from './window.js';
 export { type StratifyOptions } from './hierarchy.js';
 export {
+    treeLayout,
     treeNode,
     treeLink,
     type TreeOptions,
     type TreeNodeRecord,
     type TreeLinkRecord
 } from './tree.js';
-export { treemapNode, type TreemapOptions, type TreemapNodeRecord } from './treemap.js';
-export { packNode, type PackOptions, type PackNodeRecord } from './pack.js';
 export {
+    treemapLayout,
+    treemapNode,
+    type TreemapOptions,
+    type TreemapNodeRecord
+} from './treemap.js';
+export { packLayout, packNode, type PackOptions, type PackNodeRecord } from './pack.js';
+export {
+    partitionLayout,
     partitionNode,
     partitionLink,
     type PartitionOptions,

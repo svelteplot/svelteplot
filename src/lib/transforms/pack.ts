@@ -40,9 +40,17 @@ export interface PackNodeRecord {
     [key: symbol]: any;
 }
 
-// ── Internal layout ──
+// ── Layout ──
 
-function _computePack(data: Record<string, unknown>[], options: PackOptions = {}) {
+/**
+ * Run a circle-packing layout on flat data.
+ *
+ * Returns the d3 hierarchy root with circular bounds (x, y, r)
+ * assigned. Results are cached by (data, options) reference.
+ *
+ * Use `packNode` for the TransformArg-compatible wrapper.
+ */
+export function packLayout(data: Record<string, unknown>[], options: PackOptions = {}) {
     return cachedLayout(data, options, () => {
         const { size = [1, 1], padding, value: valueProp = 'value' } = options;
 
@@ -53,7 +61,9 @@ function _computePack(data: Record<string, unknown>[], options: PackOptions = {}
         hierarchy.sum(valueAccessor);
 
         const layout = d3Pack<any>().size(size);
-        if (padding != null) layout.padding(padding);
+        // Normalize padding as a fraction of layout size
+        const scale = Math.min(size[0], size[1]);
+        if (padding != null) layout.padding(padding * scale);
 
         return { root: layout(hierarchy) as HierarchyCircularNode<any> };
     });
@@ -77,7 +87,7 @@ export function packNode(options: PackOptions = {}) {
         data: T[];
         [key: string]: unknown;
     }): { data: PackNodeRecord[]; x: string; y: string; r: string; [key: string]: unknown } => {
-        const { root } = _computePack(args.data, options);
+        const { root } = packLayout(args.data, options);
 
         const nodes: PackNodeRecord[] = root
             .descendants()

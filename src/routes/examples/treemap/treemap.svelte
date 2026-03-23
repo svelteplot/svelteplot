@@ -18,7 +18,7 @@
         delimiter: '.',
         value: 'value',
         size: [1, 1] as [number, number],
-        padding: 1
+        padding: 0.01
     };
     const nodes = $derived(
         treemapNode(opts)({ data: flare })
@@ -40,13 +40,10 @@
         strokeWidth={1}
         stroke="white" />
     <Text
-        data={leaves.data}
+        data={leaves.data.filter((d: any) => d.x1 - d.x0 > 0.05)}
         x={(d) => (d.x0 + d.x1) / 2}
         y={(d) => (d.y0 + d.y1) / 2}
-        text={(d) =>
-            d.x1 - d.x0 > 0.05
-                ? d.id.split('.').pop()
-                : null}
+        text={(d) => d.id.split('.').pop()}
         fontSize={8}
         textAnchor="middle" />
 </Plot>

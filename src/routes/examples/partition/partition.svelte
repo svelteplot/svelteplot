@@ -18,7 +18,7 @@
         delimiter: '.',
         value: 'value',
         size: [1, 1] as [number, number],
-        padding: 1
+        padding: 0.005
     };
     const nodes = $derived(
         partitionNode(opts)({ data: flare })

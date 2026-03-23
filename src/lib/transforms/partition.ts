@@ -59,9 +59,17 @@ export interface PartitionLinkRecord {
     [key: symbol]: any;
 }
 
-// ── Internal layout ──
+// ── Layout ──
 
-function _computePartition(data: Record<string, unknown>[], options: PartitionOptions = {}) {
+/**
+ * Run a partition (icicle) layout on flat data.
+ *
+ * Returns the d3 hierarchy root with rectangular bounds (x0/y0/x1/y1)
+ * assigned. Results are cached by (data, options) reference.
+ *
+ * Use `partitionNode` for the TransformArg-compatible wrapper.
+ */
+export function partitionLayout(data: Record<string, unknown>[], options: PartitionOptions = {}) {
     return cachedLayout(data, options, () => {
         const { size = [1, 1], padding, round = false, value: valueProp = 'value' } = options;
 
@@ -72,7 +80,9 @@ function _computePartition(data: Record<string, unknown>[], options: PartitionOp
         hierarchy.sum(valueAccessor);
 
         const layout = d3Partition<any>().size(size).round(round);
-        if (padding != null) layout.padding(padding);
+        // Normalize padding as a fraction of layout size
+        const scale = Math.min(size[0], size[1]);
+        if (padding != null) layout.padding(padding * scale);
 
         return { root: layout(hierarchy) as HierarchyRectangularNode<any> };
     });
@@ -109,7 +119,7 @@ export function partitionNode(options: PartitionOptions = {}) {
         y2: string;
         [key: string]: unknown;
     } => {
-        const { root } = _computePartition(args.data, options);
+        const { root } = partitionLayout(args.data, options);
 
         const nodes: PartitionNodeRecord[] = root
             .descendants()
@@ -156,7 +166,7 @@ export function partitionLink(options: PartitionOptions = {}) {
         y2: string;
         [key: string]: unknown;
     } => {
-        const { root } = _computePartition(args.data, options);
+        const { root } = partitionLayout(args.data, options);
 
         const links: PartitionLinkRecord[] = (root.links() as HierarchyRectangularLink<any>[]).map(
             (link) => {

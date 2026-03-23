@@ -13,24 +13,31 @@
 
     let { flare }: { flare: any[] } = $props();
 
+    const plotHeight = 500;
+    const inset = 2;
+    // Pack layout uses [0,1] coordinates; scale r to match the
+    // pixel dimensions of the plot area so circles size correctly.
+    const pixelSize = plotHeight - 2 * inset;
+
     const opts = {
         path: 'id',
         delimiter: '.',
         value: 'value',
-        size: [500, 500] as [number, number],
-        padding: 2
+        size: [1, 1] as [number, number],
+        padding: 0.005
     };
     const nodes = $derived(packNode(opts)({ data: flare }));
 </script>
 
 <Plot
-    x={{ axis: false }}
-    y={{ axis: false }}
+    x={{ axis: false, domain: [0, 1] }}
+    y={{ axis: false, domain: [0, 1] }}
     aspectRatio={1}
-    inset={2}
-    height={500}>
+    inset={inset}
+    height={plotHeight}>
     <Dot
         {...nodes}
+        r={{ value: (d: any) => d.r * pixelSize, scale: null }}
         fill="depth"
         fillOpacity={0.6}
         stroke="depth" />

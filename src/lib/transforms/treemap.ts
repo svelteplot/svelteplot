@@ -83,9 +83,17 @@ function _resolveTile(tile: TreemapTile = 'squarify', ratio?: number) {
     }
 }
 
-// ── Internal layout ──
+// ── Layout ──
 
-function _computeTreemap(data: Record<string, unknown>[], options: TreemapOptions = {}) {
+/**
+ * Run a treemap layout on flat data.
+ *
+ * Returns the d3 hierarchy root with rectangular bounds (x0/y0/x1/y1)
+ * assigned. Results are cached by (data, options) reference.
+ *
+ * Use `treemapNode` for the TransformArg-compatible wrapper.
+ */
+export function treemapLayout(data: Record<string, unknown>[], options: TreemapOptions = {}) {
     return cachedLayout(data, options, () => {
         const {
             size = [1, 1],
@@ -106,9 +114,12 @@ function _computeTreemap(data: Record<string, unknown>[], options: TreemapOption
         hierarchy.sum(valueAccessor);
 
         const layout = d3Treemap<any>().size(size).round(round);
-        if (padding != null) layout.padding(padding);
-        if (paddingOuter != null) layout.paddingOuter(paddingOuter);
-        if (paddingTop != null) layout.paddingTop(paddingTop);
+        // Normalize padding as a fraction of layout size so padding: 0.01
+        // always means 1% regardless of whether size is [1,1] or [500,500]
+        const scale = Math.min(size[0], size[1]);
+        if (padding != null) layout.padding(padding * scale);
+        if (paddingOuter != null) layout.paddingOuter(paddingOuter * scale);
+        if (paddingTop != null) layout.paddingTop(paddingTop * scale);
         layout.tile(_resolveTile(tile, ratio));
 
         return { root: layout(hierarchy) as HierarchyRectangularNode<any> };
@@ -141,7 +152,7 @@ export function treemapNode(options: TreemapOptions = {}) {
         y2: string;
         [key: string]: unknown;
     } => {
-        const { root } = _computeTreemap(args.data, options);
+        const { root } = treemapLayout(args.data, options);
 
         const nodes: TreemapNodeRecord[] = root
             .descendants()
