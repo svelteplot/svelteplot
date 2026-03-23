@@ -24,3 +24,20 @@ export { shiftX, shiftY } from './shift.js';
 export { sort, shuffle, reverse } from './sort.js';
 export { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
 export { windowX, windowY } from './window.js';
+export {
+    forceLayout,
+    forceNode,
+    forceLink,
+    type ForceNode,
+    type ForceLayoutLink,
+    type ForceLayoutLinkRecord,
+    type ForceResult,
+    type ForceLayoutOptions,
+    type ChargeForceDef,
+    type CenterForceDef,
+    type LinkForceDef,
+    type CollideForceDef,
+    type XForceDef,
+    type YForceDef,
+    type RadialForceDef
+} from './force.js';
