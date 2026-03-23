@@ -24,3 +24,20 @@ export { shiftX, shiftY } from './shift.js';
 export { sort, shuffle, reverse } from './sort.js';
 export { stackX, stackY, stackMosaicX, stackMosaicY } from './stack.js';
 export { windowX, windowY } from './window.js';
+export { type StratifyOptions } from './hierarchy.js';
+export {
+    treeNode,
+    treeLink,
+    type TreeOptions,
+    type TreeNodeRecord,
+    type TreeLinkRecord
+} from './tree.js';
+export { treemapNode, type TreemapOptions, type TreemapNodeRecord } from './treemap.js';
+export { packNode, type PackOptions, type PackNodeRecord } from './pack.js';
+export {
+    partitionNode,
+    partitionLink,
+    type PartitionOptions,
+    type PartitionNodeRecord,
+    type PartitionLinkRecord
+} from './partition.js';
