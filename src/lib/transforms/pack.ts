@@ -36,7 +36,8 @@ export interface PackNodeRecord {
     depth: number;
     height: number;
     value: number;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 // ── Internal layout ──

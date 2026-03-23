@@ -12,23 +12,47 @@ The treemap transform computes a [treemap](https://d3js.org/d3-hierarchy/treemap
     import { page } from '$app/state';
     let { flare } = $derived(page.data.data);
 
-    const opts = { path: 'id', delimiter: '.', value: 'value', size: [1, 1] };
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        value: 'value',
+        size: [1, 1]
+    };
     const nodes = treemapNode(opts)({ data: flare });
-    const leaves = { ...nodes, data: nodes.data.filter((d) => d.height === 0) };
+    const leaves = {
+        ...nodes,
+        data: nodes.data.filter((d) => d.height === 0)
+    };
 </script>
 
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} inset={2}>
-    <Rect {...leaves} fill="depth" strokeWidth={1} stroke="white" />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    inset={2}>
+    <Rect
+        {...leaves}
+        fill="depth"
+        strokeWidth={1}
+        stroke="white" />
 </Plot>
 ```
 
 ```svelte
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} inset={2}>
-    <Rect {...leaves} fill="depth" strokeWidth={1} stroke="white" />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    inset={2}>
+    <Rect
+        {...leaves}
+        fill="depth"
+        strokeWidth={1}
+        stroke="white" />
 </Plot>
 ```
 
-## treemapNode(*options*)
+## treemapNode(_options_)
 
 Returns a transform factory function. Call the returned function with `{ data }` to get positioned output:
 
@@ -41,28 +65,36 @@ Data can be structured in two ways:
 **Path-based** — each row has a delimited path string:
 
 ```ts
-const opts = { path: 'name', delimiter: '/', value: 'size' };
+const opts = {
+    path: 'name',
+    delimiter: '/',
+    value: 'size'
+};
 ```
 
 **id/parentId** — each row has explicit parent references:
 
 ```ts
-const opts = { id: 'id', parentId: 'parentId', value: 'size' };
+const opts = {
+    id: 'id',
+    parentId: 'parentId',
+    value: 'size'
+};
 ```
 
 ## Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| **path** | — | Path accessor for stratify |
-| **delimiter** | `"/"` | Path delimiter |
-| **id** | `"id"` | Id accessor (alternative to path) |
-| **parentId** | `"parentId"` | Parent-id accessor |
-| **value** | `"value"` | Value accessor for sizing rectangles |
-| **size** | `[1, 1]` | Layout size [width, height] |
-| **padding** | `0` | Inner padding between siblings |
-| **paddingOuter** | `0` | Outer padding around the treemap |
-| **paddingTop** | `0` | Padding between parent and children |
-| **tile** | `"squarify"` | Tiling algorithm: `"squarify"`, `"binary"`, `"dice"`, `"slice"`, `"sliceDice"` |
-| **ratio** | golden ratio | Target aspect ratio for squarify tiling |
-| **round** | `false` | Round coordinates to integers |
+| Option           | Default      | Description                                                                    |
+| ---------------- | ------------ | ------------------------------------------------------------------------------ |
+| **path**         | —            | Path accessor for stratify                                                     |
+| **delimiter**    | `"/"`        | Path delimiter                                                                 |
+| **id**           | `"id"`       | Id accessor (alternative to path)                                              |
+| **parentId**     | `"parentId"` | Parent-id accessor                                                             |
+| **value**        | `"value"`    | Value accessor for sizing rectangles                                           |
+| **size**         | `[1, 1]`     | Layout size [width, height]                                                    |
+| **padding**      | `0`          | Inner padding between siblings                                                 |
+| **paddingOuter** | `0`          | Outer padding around the treemap                                               |
+| **paddingTop**   | `0`          | Padding between parent and children                                            |
+| **tile**         | `"squarify"` | Tiling algorithm: `"squarify"`, `"binary"`, `"dice"`, `"slice"`, `"sliceDice"` |
+| **ratio**        | golden ratio | Target aspect ratio for squarify tiling                                        |
+| **round**        | `false`      | Round coordinates to integers                                                  |

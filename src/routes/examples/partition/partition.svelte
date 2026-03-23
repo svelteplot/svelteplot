@@ -13,8 +13,16 @@
 
     let { flare }: { flare: any[] } = $props();
 
-    const opts = { path: 'id', delimiter: '.', value: 'value', size: [1, 1], padding: 1 };
-    const nodes = partitionNode(opts)({ data: flare });
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        value: 'value',
+        size: [1, 1] as [number, number],
+        padding: 1
+    };
+    const nodes = $derived(
+        partitionNode(opts)({ data: flare })
+    );
 </script>
 
 <Plot
@@ -22,5 +30,9 @@
     y={{ axis: false }}
     inset={2}
     height={500}>
-    <Rect {...nodes} fill="depth" strokeWidth={0.5} stroke="white" />
+    <Rect
+        {...nodes}
+        fill="depth"
+        strokeWidth={0.5}
+        stroke="white" />
 </Plot>

@@ -44,7 +44,8 @@ export interface TreeNodeRecord {
     y: number;
     depth: number;
     height: number;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 /** A tree link record with source/target endpoint coordinates. */
@@ -55,7 +56,8 @@ export interface TreeLinkRecord {
     y2: number;
     source: any;
     target: any;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 // ── Internal layout ──

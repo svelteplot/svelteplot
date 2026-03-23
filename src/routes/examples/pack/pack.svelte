@@ -13,8 +13,14 @@
 
     let { flare }: { flare: any[] } = $props();
 
-    const opts = { path: 'id', delimiter: '.', value: 'value', size: [500, 500], padding: 2 };
-    const nodes = packNode(opts)({ data: flare });
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        value: 'value',
+        size: [500, 500] as [number, number],
+        padding: 2
+    };
+    const nodes = $derived(packNode(opts)({ data: flare }));
 </script>
 
 <Plot
@@ -23,5 +29,9 @@
     aspectRatio={1}
     inset={2}
     height={500}>
-    <Dot {...nodes} fill="depth" fillOpacity={0.6} stroke="depth" />
+    <Dot
+        {...nodes}
+        fill="depth"
+        fillOpacity={0.6}
+        stroke="depth" />
 </Plot>

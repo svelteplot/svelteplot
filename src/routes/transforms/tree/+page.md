@@ -7,7 +7,10 @@ The tree transforms compute [tree](https://d3js.org/d3-hierarchy/tree) or [clust
 ```svelte live
 <script>
     import { Plot, Dot, Link, Text } from 'svelteplot';
-    import { treeNode, treeLink } from 'svelteplot/transforms';
+    import {
+        treeNode,
+        treeLink
+    } from 'svelteplot/transforms';
 
     import { page } from '$app/state';
     let { flare } = $derived(page.data.data);
@@ -17,22 +20,62 @@ The tree transforms compute [tree](https://d3js.org/d3-hierarchy/tree) or [clust
     const linkData = treeLink(opts)({ data: flare }).data;
 </script>
 
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginRight={120} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-x" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginRight={120}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-x"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
-    <Text data={nodeData} x="x" y="y" text={(d) => d.height === 0 ? d.id.split('.').pop() : null} dx={6} fontSize={9} />
+    <Text
+        data={nodeData}
+        x="x"
+        y="y"
+        text={(d) =>
+            d.height === 0 ? d.id.split('.').pop() : null}
+        dx={6}
+        fontSize={9} />
 </Plot>
 ```
 
 ```svelte
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginRight={120} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-x" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginRight={120}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-x"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
-    <Text data={nodeData} x="x" y="y" text={(d) => d.height === 0 ? d.id.split('.').pop() : null} dx={6} fontSize={9} />
+    <Text
+        data={nodeData}
+        x="x"
+        y="y"
+        text={(d) =>
+            d.height === 0 ? d.id.split('.').pop() : null}
+        dx={6}
+        fontSize={9} />
 </Plot>
 ```
 
-## treeNode(*options*) / treeLink(*options*)
+## treeNode(_options_) / treeLink(_options_)
 
 Both return transform factory functions. Call the returned function with `{ data }` to get positioned output:
 
@@ -61,16 +104,16 @@ const opts = { id: 'id', parentId: 'parentId' };
 
 ## Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| **path** | — | Path accessor for stratify |
-| **delimiter** | `"/"` | Path delimiter |
-| **id** | `"id"` | Id accessor (alternative to path) |
-| **parentId** | `"parentId"` | Parent-id accessor |
-| **layout** | `"tree"` | `"tree"` or `"cluster"` |
-| **size** | `[1, 1]` | Layout size [width, height] |
-| **separation** | — | Node separation function |
-| **horizontal** | `false` | Swap x/y for horizontal layout |
+| Option         | Default      | Description                       |
+| -------------- | ------------ | --------------------------------- |
+| **path**       | —            | Path accessor for stratify        |
+| **delimiter**  | `"/"`        | Path delimiter                    |
+| **id**         | `"id"`       | Id accessor (alternative to path) |
+| **parentId**   | `"parentId"` | Parent-id accessor                |
+| **layout**     | `"tree"`     | `"tree"` or `"cluster"`           |
+| **size**       | `[1, 1]`     | Layout size [width, height]       |
+| **separation** | —            | Node separation function          |
+| **horizontal** | `false`      | Swap x/y for horizontal layout    |
 
 ## Cluster layout
 
@@ -79,25 +122,58 @@ Set `layout: 'cluster'` to align all leaf nodes at the same depth.
 ```svelte live
 <script>
     import { Plot, Dot, Link } from 'svelteplot';
-    import { treeNode, treeLink } from 'svelteplot/transforms';
+    import {
+        treeNode,
+        treeLink
+    } from 'svelteplot/transforms';
 
     import { page } from '$app/state';
     let { flare } = $derived(page.data.data);
 
-    const opts = { path: 'id', delimiter: '.', layout: 'cluster' };
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        layout: 'cluster'
+    };
     const nodeData = treeNode(opts)({ data: flare }).data;
     const linkData = treeLink(opts)({ data: flare }).data;
 </script>
 
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginRight={120} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-x" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginRight={120}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-x"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
 </Plot>
 ```
 
 ```svelte
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginRight={120} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-x" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginRight={120}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-x"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
 </Plot>
 ```
@@ -109,25 +185,60 @@ Set `horizontal: true` to swap x and y, rendering nodes left-to-right. Use `curv
 ```svelte live
 <script>
     import { Plot, Dot, Link } from 'svelteplot';
-    import { treeNode, treeLink } from 'svelteplot/transforms';
+    import {
+        treeNode,
+        treeLink
+    } from 'svelteplot/transforms';
 
     import { page } from '$app/state';
     let { flare } = $derived(page.data.data);
 
-    const opts = { path: 'id', delimiter: '.', horizontal: true };
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        horizontal: true
+    };
     const nodeData = treeNode(opts)({ data: flare }).data;
     const linkData = treeLink(opts)({ data: flare }).data;
 </script>
 
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginLeft={10} marginRight={140} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-y" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginLeft={10}
+    marginRight={140}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-y"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
 </Plot>
 ```
 
 ```svelte
-<Plot x={{ axis: false }} y={{ axis: false }} height={400} marginLeft={10} marginRight={140} inset={10}>
-    <Link data={linkData} x1="x1" y1="y1" x2="x2" y2="y2" curve="bump-y" stroke="currentColor" strokeOpacity={0.5} />
+<Plot
+    x={{ axis: false }}
+    y={{ axis: false }}
+    height={400}
+    marginLeft={10}
+    marginRight={140}
+    inset={10}>
+    <Link
+        data={linkData}
+        x1="x1"
+        y1="y1"
+        x2="x2"
+        y2="y2"
+        curve="bump-y"
+        stroke="currentColor"
+        strokeOpacity={0.5} />
     <Dot data={nodeData} x="x" y="y" fill="depth" r={3} />
 </Plot>
 ```

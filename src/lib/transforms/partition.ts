@@ -43,7 +43,8 @@ export interface PartitionNodeRecord {
     depth: number;
     height: number;
     value: number;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 /** A partition link record with source/target endpoint coordinates. */
@@ -54,7 +55,8 @@ export interface PartitionLinkRecord {
     y2: number;
     source: any;
     target: any;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 // ── Internal layout ──
@@ -156,26 +158,26 @@ export function partitionLink(options: PartitionOptions = {}) {
     } => {
         const { root } = _computePartition(args.data, options);
 
-        const links: PartitionLinkRecord[] = (
-            root.links() as HierarchyRectangularLink<any>[]
-        ).map((link) => {
-            const s = link.source;
-            const t = link.target;
-            // Link from center of parent to center of child
-            const sx = (s.x0 + s.x1) / 2;
-            const sy = (s.y0 + s.y1) / 2;
-            const tx = (t.x0 + t.x1) / 2;
-            const ty = (t.y0 + t.y1) / 2;
-            return {
-                ...t.data,
-                source: s.data,
-                target: t.data,
-                x1: horizontal ? sy : sx,
-                y1: horizontal ? sx : sy,
-                x2: horizontal ? ty : tx,
-                y2: horizontal ? tx : ty
-            };
-        });
+        const links: PartitionLinkRecord[] = (root.links() as HierarchyRectangularLink<any>[]).map(
+            (link) => {
+                const s = link.source;
+                const t = link.target;
+                // Link from center of parent to center of child
+                const sx = (s.x0 + s.x1) / 2;
+                const sy = (s.y0 + s.y1) / 2;
+                const tx = (t.x0 + t.x1) / 2;
+                const ty = (t.y0 + t.y1) / 2;
+                return {
+                    ...t.data,
+                    source: s.data,
+                    target: t.data,
+                    x1: horizontal ? sy : sx,
+                    y1: horizontal ? sx : sy,
+                    x2: horizontal ? ty : tx,
+                    y2: horizontal ? tx : ty
+                };
+            }
+        );
 
         return { ...args, data: links, x1: 'x1', y1: 'y1', x2: 'x2', y2: 'y2' };
     };

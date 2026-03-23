@@ -13,9 +13,20 @@
 
     let { flare }: { flare: any[] } = $props();
 
-    const opts = { path: 'id', delimiter: '.', value: 'value', size: [1, 1], padding: 1 };
-    const nodes = treemapNode(opts)({ data: flare });
-    const leaves = { ...nodes, data: nodes.data.filter((d: any) => d.height === 0) };
+    const opts = {
+        path: 'id',
+        delimiter: '.',
+        value: 'value',
+        size: [1, 1] as [number, number],
+        padding: 1
+    };
+    const nodes = $derived(
+        treemapNode(opts)({ data: flare })
+    );
+    const leaves = $derived({
+        ...nodes,
+        data: nodes.data.filter((d: any) => d.height === 0)
+    });
 </script>
 
 <Plot
@@ -23,12 +34,19 @@
     y={{ axis: false }}
     inset={2}
     height={500}>
-    <Rect {...leaves} fill="depth" strokeWidth={1} stroke="white" />
+    <Rect
+        {...leaves}
+        fill="depth"
+        strokeWidth={1}
+        stroke="white" />
     <Text
         data={leaves.data}
         x={(d) => (d.x0 + d.x1) / 2}
         y={(d) => (d.y0 + d.y1) / 2}
-        text={(d) => (d.x1 - d.x0) > 0.05 ? d.id.split('.').pop() : null}
+        text={(d) =>
+            d.x1 - d.x0 > 0.05
+                ? d.id.split('.').pop()
+                : null}
         fontSize={8}
         textAnchor="middle" />
 </Plot>

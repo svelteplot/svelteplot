@@ -58,7 +58,8 @@ export interface TreemapNodeRecord {
     depth: number;
     height: number;
     value: number;
-    [key: string]: unknown;
+    [key: string]: any;
+    [key: symbol]: any;
 }
 
 // ── Tile strategy resolution ──
