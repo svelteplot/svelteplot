@@ -22,7 +22,8 @@
         title?: ConstantAccessor<string, Datum>;
         /** the SVG preserveAspectRatio attribute for the image (e.g. "xMidYMid meet") */
         preserveAspectRatio?: string;
-        // canvas?: boolean;
+        /** if true, renders using Canvas instead of SVG */
+        canvas?: boolean;
         /** CSS class name(s) to apply to individual image elements */
         imageClass?: ConstantAccessor<string, Datum>;
     }
@@ -39,6 +40,7 @@
     import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
     import { sort } from 'svelteplot/transforms';
     import Anchor from './helpers/Anchor.svelte';
+    import ImageCanvas from './helpers/ImageCanvas.svelte';
     import Mark from 'svelteplot/Mark.svelte';
 
     let markProps: ImageMarkProps = $props();
@@ -51,6 +53,7 @@
 
     const {
         data = [{} as Datum],
+        canvas = false,
         width,
         height,
         src,
@@ -71,31 +74,38 @@
     channels={['x', 'y', 'r', 'fill', 'opacity', 'stroke', 'fillOpacity', 'strokeOpacity']}
     {...args}
     type="image">
-    {#snippet children({ scaledData })}
-        {#each scaledData as record, i (i)}
-            {#if record.valid}
-                {@const w =
-                    record.r !== undefined
-                        ? record.r * 2
-                        : Number(resolveProp(width, record.datum, 20) ?? 20)}
-                {@const h =
-                    record.r !== undefined
-                        ? record.r * 2
-                        : Number(resolveProp(height || width, record.datum, 20) ?? 20)}
-                <Anchor {options} datum={record.datum}>
-                    <image
-                        class={resolveProp(imageClass, record.datum, null)}
-                        href={resolveProp(src, record.datum, '')}
-                        x={record.x! - w * 0.5}
-                        y={record.y! - h * 0.5}
-                        {preserveAspectRatio}
-                        clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
-                        width={w}
-                        height={h}
-                        >{#if title}<title>{resolveProp(title, record.datum, '')}</title
-                            >{/if}</image>
-                </Anchor>
-            {/if}
-        {/each}
+    {#snippet children({ scaledData, usedScales })}
+        {#if canvas}
+            <ImageCanvas
+                data={scaledData}
+                options={{ ...options, src, width, height }}
+                {usedScales} />
+        {:else}
+            {#each scaledData as record, i (i)}
+                {#if record.valid}
+                    {@const w =
+                        record.r !== undefined
+                            ? record.r * 2
+                            : Number(resolveProp(width, record.datum, 20) ?? 20)}
+                    {@const h =
+                        record.r !== undefined
+                            ? record.r * 2
+                            : Number(resolveProp(height || width, record.datum, 20) ?? 20)}
+                    <Anchor {options} datum={record.datum}>
+                        <image
+                            class={resolveProp(imageClass, record.datum, null)}
+                            href={resolveProp(src, record.datum, '')}
+                            x={record.x! - w * 0.5}
+                            y={record.y! - h * 0.5}
+                            {preserveAspectRatio}
+                            clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
+                            width={w}
+                            height={h}
+                            >{#if title}<title>{resolveProp(title, record.datum, '')}</title
+                                >{/if}</image>
+                    </Anchor>
+                {/if}
+            {/each}
+        {/if}
     {/snippet}
 </Mark>

@@ -45,6 +45,8 @@
         textStartOffset?: ConstantAccessor<string, Datum>;
         /** the stroke width for the text label rendered along the link */
         textStrokeWidth?: ConstantAccessor<number, Datum>;
+        /** if true, renders using Canvas instead of SVG */
+        canvas?: boolean;
     }
     import type {
         DataRecord,
@@ -65,6 +67,7 @@
     import { maybeCurve } from '../helpers/curves.js';
     import { geoPath } from 'd3-geo';
     import { pick } from 'es-toolkit';
+    import LinkCanvas from './helpers/LinkCanvas.svelte';
     import { sort } from 'svelteplot/transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
@@ -81,6 +84,7 @@
         tension = 0,
         bend,
         text,
+        canvas,
         class: className = '',
         ...options
     }: LinkMarkProps = $derived({
@@ -102,6 +106,13 @@
     );
 
     const sphericalLine = $derived(plot.scales.projection && curve === 'auto');
+
+    const curveFactory = $derived(
+        maybeCurve(
+            curve === 'auto' ? 'linear' : curve,
+            bend === true ? 0.6 : bend === false ? 0 : (bend ?? tension ?? 0)
+        )
+    );
 
     const linePath: (d: ScaledDataRecord, reversed?: boolean) => string | null = $derived.by(() => {
         const fn: D3Line<[number, number]> = line<[number, number]>()
@@ -168,56 +179,63 @@
     channels={['x1', 'y1', 'x2', 'y2', 'opacity', 'stroke', 'strokeOpacity']}
     {...args}>
     {#snippet children({ mark, scaledData, usedScales })}
-        <g class={['link', className]} data-use-x={usedScales.x ? 1 : 0}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid || true}
-                    {@const [style, styleClass] = resolveStyles(
-                        plot,
-                        d,
-                        { strokeWidth: 1.6, ...args },
-                        'stroke',
-                        usedScales
-                    )}
-                    {@const [textStyle, textStyleClass] = resolveStyles(
-                        plot,
-                        d,
-                        {
-                            textAnchor: 'middle',
-                            ...pick(args, ['fontSize', 'fontWeight', 'fontStyle']),
-                            fill: options.textFill || args.stroke,
-                            stroke: options.textStroke,
-                            strokeWidth: options.textStrokeWidth
-                        },
-                        'fill',
-                        usedScales
-                    )}
+        {#if canvas}
+            <LinkCanvas data={scaledData} options={args} {usedScales} {curveFactory} />
+        {:else}
+            <g class={['link', className]} data-use-x={usedScales.x ? 1 : 0}>
+                {#each scaledData as d, i (i)}
+                    {#if d.valid || true}
+                        {@const [style, styleClass] = resolveStyles(
+                            plot,
+                            d,
+                            { strokeWidth: 1.6, ...args },
+                            'stroke',
+                            usedScales
+                        )}
+                        {@const [textStyle, textStyleClass] = resolveStyles(
+                            plot,
+                            d,
+                            {
+                                textAnchor: 'middle',
+                                ...pick(args, ['fontSize', 'fontWeight', 'fontStyle']),
+                                fill: options.textFill || args.stroke,
+                                stroke: options.textStroke,
+                                strokeWidth: options.textStrokeWidth
+                            },
+                            'fill',
+                            usedScales
+                        )}
 
-                    <MarkerPath
-                        mark={{ ...mark, options: args }}
-                        transform=""
-                        scales={plot.scales}
-                        markerStart={options.markerStart as boolean | MarkerShape | undefined}
-                        markerEnd={options.markerEnd as boolean | MarkerShape | undefined}
-                        marker={options.marker as boolean | MarkerShape | undefined}
-                        markerScale={options.markerScale}
-                        class={styleClass ?? undefined}
-                        strokeWidth={options.strokeWidth as ConstantAccessor<number>}
-                        datum={d.datum as DataRecord}
-                        color={d.stroke ?? 'currentColor'}
-                        d={(sphericalLine ? sphericalLinePath(d) : linePath(d)) ?? ''}
-                        dInv={(sphericalLine ? sphericalLinePath(d, true) : linePath(d, true)) ??
-                            undefined}
-                        style={style ?? ''}
-                        text={text ? ((resolveProp(text, d.datum as Datum) as string) ?? '') : ''}
-                        startOffset={(resolveProp(
-                            options.textStartOffset,
-                            d.datum as Datum,
-                            '50%'
-                        ) as string) ?? '50%'}
-                        textStyle={textStyle ?? ''}
-                        {textStyleClass} />
-                {/if}
-            {/each}
-        </g>
+                        <MarkerPath
+                            mark={{ ...mark, options: args }}
+                            transform=""
+                            scales={plot.scales}
+                            markerStart={options.markerStart as boolean | MarkerShape | undefined}
+                            markerEnd={options.markerEnd as boolean | MarkerShape | undefined}
+                            marker={options.marker as boolean | MarkerShape | undefined}
+                            markerScale={options.markerScale}
+                            class={styleClass ?? undefined}
+                            strokeWidth={options.strokeWidth as ConstantAccessor<number>}
+                            datum={d.datum as DataRecord}
+                            color={d.stroke ?? 'currentColor'}
+                            d={(sphericalLine ? sphericalLinePath(d) : linePath(d)) ?? ''}
+                            dInv={(sphericalLine
+                                ? sphericalLinePath(d, true)
+                                : linePath(d, true)) ?? undefined}
+                            style={style ?? ''}
+                            text={text
+                                ? ((resolveProp(text, d.datum as Datum) as string) ?? '')
+                                : ''}
+                            startOffset={(resolveProp(
+                                options.textStartOffset,
+                                d.datum as Datum,
+                                '50%'
+                            ) as string) ?? '50%'}
+                            textStyle={textStyle ?? ''}
+                            {textStyleClass} />
+                    {/if}
+                {/each}
+            </g>
+        {/if}
     {/snippet}
 </Mark>

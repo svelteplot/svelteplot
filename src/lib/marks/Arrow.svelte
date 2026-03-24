@@ -43,6 +43,8 @@
         inset?: ConstantAccessor<number, Datum>;
         /** controls the sweep direction of the arrow arc; 1 or -1 */
         sweep?: SweepOption;
+        /** if true, renders using Canvas instead of SVG */
+        canvas?: boolean;
     }
     import type {
         DataRecord,
@@ -62,6 +64,7 @@
     } from '../helpers/arrowPath.js';
     import { replaceChannels } from '../transforms/rename.js';
     import { addEventHandlers } from './helpers/events.js';
+    import ArrowCanvas from './helpers/ArrowCanvas.svelte';
     import GroupMultiple from './helpers/GroupMultiple.svelte';
     import { sort } from '../transforms/sort.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
@@ -79,6 +82,7 @@
 
     const {
         data = [{} as Datum],
+        canvas = false,
         class: className = '',
         ...options
     }: ArrowMarkProps = $derived({
@@ -106,66 +110,73 @@
     {#snippet children({ usedScales, scaledData })}
         {@const sweep = maybeSweep(args.sweep) as SweepFunc}
         <GroupMultiple class="arrow" length={scaledData.length}>
-            {#each scaledData as d, i (i)}
-                {#if d.valid}
-                    {@const datum = d.datum as unknown as Datum}
-                    {@const inset = resolveProp(args.inset, datum, 0)}
-                    {@const insetStart = resolveProp(args.insetStart, datum)}
-                    {@const insetEnd = resolveProp(args.insetEnd, datum)}
-                    {@const headAngle = (resolveProp(args.headAngle, datum, 60) ?? 60) as number}
-                    {@const headLength = (resolveProp(args.headLength, datum, 8) ?? 8) as number}
-                    {@const bendVal =
-                        args.bend === true
-                            ? 22.5
-                            : (resolveProp(
-                                  args.bend as ConstantAccessor<number, Datum>,
-                                  datum,
-                                  0
-                              ) ?? 0)}
-                    {@const strokeWidth = (resolveProp(args.strokeWidth, datum, 1) ?? 1) as number}
-                    {@const arrPath = arrowPath(
-                        d.x1 ?? 0,
-                        d.y1 ?? 0,
-                        d.x2 ?? 0,
-                        d.y2 ?? 0,
-                        maybeNumber(coalesce(insetStart, inset)) ?? 0,
-                        maybeNumber(coalesce(insetEnd, inset)) ?? 0,
-                        headAngle,
-                        headLength,
-                        bendVal,
-                        strokeWidth,
-                        sweep
-                    )}
-                    {@const [style, styleClass] = resolveStyles(
-                        plot,
-                        d,
-                        {
-                            strokeLinecap: 'round',
-                            strokeLinejoin: 'round',
-                            ...args,
-                            strokeWidth: strokeWidth ?? 1.6
-                        },
-                        'stroke',
-                        usedScales
-                    )}
-                    <g
-                        class={[className]}
-                        {@attach addEventHandlers({
+            {#if canvas}
+                <ArrowCanvas data={scaledData} options={args as any} {usedScales} />
+            {:else}
+                {#each scaledData as d, i (i)}
+                    {#if d.valid}
+                        {@const datum = d.datum as unknown as Datum}
+                        {@const inset = resolveProp(args.inset, datum, 0)}
+                        {@const insetStart = resolveProp(args.insetStart, datum)}
+                        {@const insetEnd = resolveProp(args.insetEnd, datum)}
+                        {@const headAngle = (resolveProp(args.headAngle, datum, 60) ??
+                            60) as number}
+                        {@const headLength = (resolveProp(args.headLength, datum, 8) ??
+                            8) as number}
+                        {@const bendVal =
+                            args.bend === true
+                                ? 22.5
+                                : (resolveProp(
+                                      args.bend as ConstantAccessor<number, Datum>,
+                                      datum,
+                                      0
+                                  ) ?? 0)}
+                        {@const strokeWidth = (resolveProp(args.strokeWidth, datum, 1) ??
+                            1) as number}
+                        {@const arrPath = arrowPath(
+                            d.x1 ?? 0,
+                            d.y1 ?? 0,
+                            d.x2 ?? 0,
+                            d.y2 ?? 0,
+                            maybeNumber(coalesce(insetStart, inset)) ?? 0,
+                            maybeNumber(coalesce(insetEnd, inset)) ?? 0,
+                            headAngle,
+                            headLength,
+                            bendVal,
+                            strokeWidth,
+                            sweep
+                        )}
+                        {@const [style, styleClass] = resolveStyles(
                             plot,
-                            options: options as any,
-                            datum: d?.datum
-                        })}>
-                        {#if options.onmouseenter || options.onclick}
-                            <!-- add invisible path in bg for easier mouse access -->
-                            <path
-                                d={arrPath}
-                                style="fill:none;stroke-width: {(strokeWidth || 1) +
-                                    10}; stroke: red; stroke-opacity:0" />
-                        {/if}
-                        <path class={[styleClass]} d={arrPath} {style} />
-                    </g>
-                {/if}
-            {/each}
+                            d,
+                            {
+                                strokeLinecap: 'round',
+                                strokeLinejoin: 'round',
+                                ...args,
+                                strokeWidth: strokeWidth ?? 1.6
+                            },
+                            'stroke',
+                            usedScales
+                        )}
+                        <g
+                            class={[className]}
+                            {@attach addEventHandlers({
+                                plot,
+                                options: options as any,
+                                datum: d?.datum
+                            })}>
+                            {#if options.onmouseenter || options.onclick}
+                                <!-- add invisible path in bg for easier mouse access -->
+                                <path
+                                    d={arrPath}
+                                    style="fill:none;stroke-width: {(strokeWidth || 1) +
+                                        10}; stroke: red; stroke-opacity:0" />
+                            {/if}
+                            <path class={[styleClass]} d={arrPath} {style} />
+                        </g>
+                    {/if}
+                {/each}
+            {/if}
         </GroupMultiple>
     {/snippet}
 </Mark>

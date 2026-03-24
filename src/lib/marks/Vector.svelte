@@ -3,10 +3,7 @@
     The vector mark lets you place shapes (like arrows) on your plot.
 -->
 <script lang="ts" module>
-    type D3Path = ReturnType<typeof import('d3-path').path>;
-    export type ShapeRenderer = {
-        draw(context: D3Path, l: number, r: number): void;
-    };
+    export type { ShapeRenderer } from '../helpers/vectorShapes.js';
 </script>
 
 <script lang="ts" generics="Datum = DataRecord | GeoJSON.GeoJsonObject">
@@ -45,25 +42,23 @@
     } from '../types/index.js';
 
     import { getContext, type Snippet } from 'svelte';
-    import { pathRound as path } from 'd3-path';
 
     import { resolveChannel, resolveProp, resolveStyles } from '../helpers/resolve.js';
     import { sort } from '../index.js';
     import Mark from '../Mark.svelte';
-    //import DotCanvas from './helpers/DotCanvas.svelte';
+    import VectorCanvas from './helpers/VectorCanvas.svelte';
     import { isValid } from '../helpers/index.js';
     import { addEventHandlers } from './helpers/events.js';
     import { indexData } from 'svelteplot/transforms/recordize.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
-    const defaultRadius = 3;
-
-    // The size of the arrowhead is proportional to its length, but we still allow
-    // the relative size of the head to be controlled via the mark's width option;
-    // doubling the default radius will produce an arrowhead that is twice as big.
-    // That said, we'll probably want a arrow with a fixed head size, too.
-    const wingRatio = defaultRadius * 5;
+    import {
+        defaultRadius,
+        maybeShape,
+        shapePath,
+        type ShapeRenderer
+    } from '../helpers/vectorShapes.js';
 
     let markProps: VectorMarkProps = $props();
     const DEFAULTS = {
@@ -82,72 +77,6 @@
     });
 
     const plot = usePlot();
-
-    const shapeArrow: ShapeRenderer = {
-        draw(context: D3Path, l: number, r: number) {
-            const wing = (l * r) / wingRatio;
-            context.moveTo(0, 0);
-            context.lineTo(0, -l);
-            context.moveTo(-wing, wing - l);
-            context.lineTo(0, -l);
-            context.lineTo(wing, wing - l);
-        }
-    };
-
-    const shapeSpike: ShapeRenderer = {
-        draw(context: D3Path, l: number, r: number) {
-            context.moveTo(-r, 0);
-            context.lineTo(0, -l);
-            context.lineTo(r, 0);
-        }
-    };
-
-    const shapeArrowFilled: ShapeRenderer = {
-        draw(context: D3Path, l: number, r: number) {
-            // const wing = (l * r) / wingRatio;
-            const headLength = Math.max(3, l * 0.3);
-            const headSpike = headLength * 0.2;
-            const headWidth = Math.max(2, l * 0.3);
-            const tailWidth = Math.max(2, l * 0.3) * 0.3;
-
-            context.moveTo(0, 0);
-
-            context.lineTo(tailWidth * 0.5, -l + headLength - headSpike);
-            context.lineTo(headWidth * 0.5, -l + headLength);
-            context.lineTo(0, -l);
-            context.lineTo(-headWidth * 0.5, -l + headLength);
-            context.lineTo(-tailWidth * 0.5, -l + headLength - headSpike);
-
-            context.closePath();
-        }
-    };
-
-    const shapes = new Map([
-        ['arrow', shapeArrow],
-        ['arrow-filled', shapeArrowFilled],
-        ['spike', shapeSpike]
-    ]);
-
-    function isShapeObject(value: any): value is ShapeRenderer {
-        return value && typeof value.draw === 'function';
-    }
-
-    function maybeShape(shape: 'arrow' | 'spike' | 'arrow-filled' | ShapeRenderer) {
-        if (isShapeObject(shape)) return shape;
-        const value = shapes.get(`${shape}`.toLowerCase());
-        if (value) return value;
-        throw new Error(`invalid shape: ${shape}`);
-    }
-
-    function shapePath(
-        shape: 'arrow' | 'spike' | 'arrow-filled' | ShapeRenderer,
-        l: number,
-        r: number
-    ) {
-        const context = path();
-        maybeShape(shape).draw(context, l, r);
-        return context.toString();
-    }
 
     const args = $derived(
         sort({
@@ -177,8 +106,10 @@
     {#snippet children({ scaledData, usedScales })}
         <g class="vector" data-l={usedScales.length}>
             {#if canvas}
-                <text x="30" y="30" style="color:red"
-                    >implement canvas rendering for vector mark</text>
+                <VectorCanvas
+                    data={scaledData}
+                    options={{ ...args, shape, anchor } as any}
+                    {usedScales} />
             {:else}
                 {#each scaledData as d, i (i)}
                     {#if d.valid && isValid(d.r)}
