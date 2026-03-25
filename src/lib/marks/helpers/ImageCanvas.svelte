@@ -22,6 +22,7 @@ Helper component for rendering Image marks in canvas
     } from 'svelteplot/types/index.js';
     import { resolveProp } from '../../helpers/resolve.js';
     import type { Attachment } from 'svelte/attachments';
+    import { SvelteMap } from 'svelte/reactivity';
     import { devicePixelRatio } from 'svelte/reactivity/window';
     import CanvasLayer from './CanvasLayer.svelte';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
@@ -31,7 +32,7 @@ Helper component for rendering Image marks in canvas
     let { data, options, usedScales }: ImageCanvasProps = $props();
 
     // Cache loaded images by URL to avoid redundant fetches
-    const imageCache = new Map<string, HTMLImageElement>();
+    const imageCache = new SvelteMap<string, HTMLImageElement>();
 
     // Reactive counter: incremented when an image finishes loading,
     // which triggers the $effect to re-run and repaint the canvas.
