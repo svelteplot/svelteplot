@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+    import { SvelteMap } from 'svelte/reactivity';
     import { Plot, Dot } from 'svelteplot';
     import { forceLayout } from 'svelteplot/transforms';
     let {
@@ -15,7 +16,7 @@
     }: { graph: { nodes: any[]; links: any[] } } = $props();
 
     const layout = $derived.by(() => {
-        const degree = new Map<string, number>();
+        const degree = new SvelteMap<string, number>();
         for (const l of graph.links) {
             degree.set(
                 l.source,

@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+    import { SvelteMap } from 'svelte/reactivity';
     import {
         Plot,
         Arrow,
@@ -28,7 +29,7 @@
 
     // Pre-compute adjacency set for O(1) hover lookups
     const neighbors = $derived.by(() => {
-        const m = new Map<string, Set<string>>();
+        const m = new SvelteMap<string, Set<string>>();
         for (const n of nodes) m.set(n.id, new Set());
         for (const l of links) {
             m.get(l.source.id)!.add(l.target.id);
