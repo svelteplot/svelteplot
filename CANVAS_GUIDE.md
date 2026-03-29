@@ -133,6 +133,7 @@ Helper component for rendering [MarkName] marks in canvas
 **Style resolution:** Use `resolveScaledStyleProps()` to get computed styles, then `resolveColor()` to handle `currentColor`, CSS variables, and SVG gradients. Canvas doesn't inherit CSS, so every color must be explicitly resolved.
 
 **Default color prop:** The last argument to `resolveScaledStyleProps` determines the default color channel:
+
 - `'stroke'` for line-like marks (Arrow, Link, Rule, Line, Tick)
 - `'fill'` for area-like marks (Dot, Rect, Area, Geo)
 - Some marks use both (Vector) — resolve fill and stroke separately
@@ -150,7 +151,10 @@ Helper component for rendering [MarkName] marks in canvas
 ```svelte
 {#snippet children({ scaledData, usedScales })}
     {#if canvas}
-        <MyMarkCanvas data={scaledData} options={args} {usedScales} />
+        <MyMarkCanvas
+            data={scaledData}
+            options={args}
+            {usedScales} />
     {:else}
         <!-- existing SVG rendering -->
     {/if}
@@ -176,7 +180,10 @@ For marks using d3-shape generators (line, area), set the canvas context:
 ```js
 const fn = line().curve(curveFactory).context(context);
 context.beginPath();
-fn([[x1, y1], [x2, y2]]);
+fn([
+    [x1, y1],
+    [x2, y2]
+]);
 context.stroke();
 fn.context(null); // reset after loop
 ```
@@ -200,6 +207,7 @@ If the SVG mark and canvas helper need the same geometry logic, extract it to a 
 ## What canvas can't do
 
 These SVG-only features should be skipped in canvas mode:
+
 - Per-element event handlers (`onclick`, `onmouseenter`)
 - SVG `<marker>` elements (arrowheads on Link marks)
 - `<textPath>` (text along a curve)
@@ -211,17 +219,17 @@ Interactive features like tooltips still work via the `<Pointer>` component, whi
 
 ## Existing canvas helpers
 
-| Helper | Mark(s) | Technique | Default color |
-|--------|---------|-----------|---------------|
-| DotCanvas | Dot | d3-symbol via `context` | fill |
-| LineCanvas | Line, LineX, LineY | d3-line with `.context()` | stroke |
-| AreaCanvas | Area, AreaX, AreaY | d3-area with `.context()` | fill |
-| RectCanvas | Rect, BarX, BarY, Cell, RectX, RectY | `fillRect` / `strokeRect` | fill |
-| RuleCanvas | RuleX, RuleY | `moveTo` / `lineTo` | stroke |
-| TickCanvas | TickX, TickY | `moveTo` / `lineTo` | stroke |
-| TextCanvas | Text | `fillText` / `strokeText` | fill |
-| TrailCanvas | Trail | width-varying path | fill |
-| GeoCanvas | Geo | d3-geoPath with `.context()` | fill |
-| ArrowCanvas | Arrow | `Path2D(arrowPath())` | stroke |
-| LinkCanvas | Link | d3-line with `.context()` | stroke |
-| VectorCanvas | Vector | `Path2D(shapePath())` + transforms | varies |
+| Helper       | Mark(s)                              | Technique                          | Default color |
+| ------------ | ------------------------------------ | ---------------------------------- | ------------- |
+| DotCanvas    | Dot                                  | d3-symbol via `context`            | fill          |
+| LineCanvas   | Line, LineX, LineY                   | d3-line with `.context()`          | stroke        |
+| AreaCanvas   | Area, AreaX, AreaY                   | d3-area with `.context()`          | fill          |
+| RectCanvas   | Rect, BarX, BarY, Cell, RectX, RectY | `fillRect` / `strokeRect`          | fill          |
+| RuleCanvas   | RuleX, RuleY                         | `moveTo` / `lineTo`                | stroke        |
+| TickCanvas   | TickX, TickY                         | `moveTo` / `lineTo`                | stroke        |
+| TextCanvas   | Text                                 | `fillText` / `strokeText`          | fill          |
+| TrailCanvas  | Trail                                | width-varying path                 | fill          |
+| GeoCanvas    | Geo                                  | d3-geoPath with `.context()`       | fill          |
+| ArrowCanvas  | Arrow                                | `Path2D(arrowPath())`              | stroke        |
+| LinkCanvas   | Link                                 | d3-line with `.context()`          | stroke        |
+| VectorCanvas | Vector                               | `Path2D(shapePath())` + transforms | varies        |

@@ -368,3 +368,7 @@ Event handlers can be attached to arrows for interactive visualizations:
         {headAngle} />
 </Plot>
 ```
+
+:::tip
+When rendering a large number of arrows (e.g. in network graphs or flow visualizations), consider enabling **canvas rendering** by adding `canvas` to the `<Arrow>` mark. Canvas rendering bypasses the SVG DOM and is significantly faster for thousands of elements.
+:::
