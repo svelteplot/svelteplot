@@ -3,6 +3,7 @@
 
     export const description = `Based on an example from <a href="https://observablehq.com/@observablehq/plot-wind-map">Observable Plot</a> that is based on a <a href="https://github.com/gicentre/litvis/blob/main/examples/windVectors.md">LitVis example</a>.`;
     export const data = { wind: '/data/wind.csv' };
+    export const sortKey = 30;
 </script>
 
 <script lang="ts">

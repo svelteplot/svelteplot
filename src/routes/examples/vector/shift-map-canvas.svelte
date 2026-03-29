@@ -1,12 +1,12 @@
 <script module lang="ts">
-    export const title = 'Shift map';
+    export const title = 'Shift map (canvas)';
     export const description =
         'Uses projected county centroids and vector arrows to show the direction and magnitude of 2020 election shifts.';
     export const data = {
         us: '/data/us-counties-10m.json',
         election: '/data/election.csv'
     };
-    export const sortKey = 10;
+    export const sortKey = 11;
 </script>
 
 <script lang="ts">

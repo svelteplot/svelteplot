@@ -1,11 +1,11 @@
 <script module>
-    export const title = 'Spike map';
+    export const title = 'Spike map (canvas)';
     // export const transforms = ['geoCentroid'];
     export const data = {
         us: '/data/us-counties-10m.json',
         election: '/data/election.csv'
     };
-    export const sortKey = 20;
+    export const sortKey = 21;
 </script>
 
 <script lang="ts">
