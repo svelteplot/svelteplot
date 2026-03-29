@@ -64,6 +64,7 @@
         {...geoCentroid({
             data: counties
         }) as any}
+        canvas
         stroke="var(--svp-green)"
         length={(d) => (d as any).properties?.votes ?? 0} />
 </Plot>
