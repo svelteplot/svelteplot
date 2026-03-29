@@ -428,7 +428,8 @@ When visualizing dense vector fields with many data points, consider enabling **
     data={wind}
     x="longitude"
     y="latitude"
-    rotate={({ u, v }) => (Math.atan2(u, v) * 180) / Math.PI}
+    rotate={({ u, v }) =>
+        (Math.atan2(u, v) * 180) / Math.PI}
     length={({ u, v }) => Math.hypot(u, v)}
     stroke={({ u, v }) => Math.hypot(u, v)}
     canvas />
