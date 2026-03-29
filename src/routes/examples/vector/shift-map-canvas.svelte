@@ -79,6 +79,7 @@
         strokeWidth={0.5} />
     <Vector
         {...centroids}
+        canvas
         length={(d: any) =>
             Math.abs(
                 (d.properties?.margin2020 ?? 0) *
