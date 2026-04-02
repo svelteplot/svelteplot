@@ -206,6 +206,8 @@
                     {@const moveDown =
                         (tickSize + tickPadding + (tickRotate !== 0 ? tickFontSize_ * 0.35 : 0)) *
                         (anchor === 'bottom' ? 1 : -1)}
+                    {@const tickBaseline =
+                        tickRotate !== 0 ? 'central' : anchor === 'bottom' ? 'hanging' : 'auto'}
                     {@const [textStyle, textClass] = resolveStyles(
                         plot,
                         toScaledDatum(tick),
@@ -230,22 +232,18 @@
                     )}
                     <text
                         bind:this={tickTextElements[t]}
-                        transform="translate(0, {moveDown})  rotate({tickRotate})"
+                        transform="translate(0, {moveDown}) rotate({tickRotate})"
                         style={textStyle}
                         class={textClass}
                         x={0}
                         y={0}
-                        dominant-baseline={tickRotate !== 0
-                            ? 'central'
-                            : anchor === 'bottom'
-                              ? 'hanging'
-                              : 'auto'}>
+                        dominant-baseline={tickBaseline}>
                         {#if ticks.length > 0 || t === 0 || t === ticks.length - 1}
                             {#if textLines.length === 1}
                                 {textLines[0]}
                             {:else}
                                 {#each textLines as line, i (i)}
-                                    <tspan x="0" dy={i ? 12 : 0}
+                                    <tspan x="0" dy={i ? 12 : 0} dominant-baseline={tickBaseline}
                                         >{!prevTextLines ||
                                         prevTextLines[i] !== line ||
                                         options.removeDuplicateTicks === false
