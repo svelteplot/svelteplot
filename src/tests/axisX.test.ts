@@ -337,6 +337,9 @@ describe('AxisX mark', () => {
 
         const ticks = container.querySelectorAll('g.axis-x > g.tick') as NodeListOf<SVGGElement>;
         expect(ticks.length).toBe(4);
+        expect(ticks[0].querySelector('text tspan')?.getAttribute('dominant-baseline')).toBe(
+            'hanging'
+        );
         const tspans = Array.from(ticks).map((t) =>
             Array.from(t.querySelectorAll('text tspan')).map((ts) => ts?.textContent)
         );
