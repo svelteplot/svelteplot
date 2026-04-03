@@ -87,3 +87,7 @@ Here’s an example using dodgeY to create a beeswarm of presidential portraits 
 - imageClass — class name applied to the image element (string or accessor)
 - href — wraps each image in an <a> link if provided; supports target, rel, type, download, and data-sveltekit-\* attributes
 - Common mark props — supports styling and events from BaseMarkProps (e.g., fill, stroke, opacity, dx, dy, pointer handlers)
+
+:::tip
+The Image mark supports **canvas rendering** via the `canvas` prop, which can improve performance when displaying many images.
+:::

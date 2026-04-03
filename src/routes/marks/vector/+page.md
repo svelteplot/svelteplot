@@ -63,6 +63,7 @@ Here's an example where all arrows point towards the mouse cursor:
     <Vector
         {data}
         x="x"
+        canvas
         y="y"
         length={(d) =>
             Math.sqrt(
@@ -387,4 +388,49 @@ The **Spike** mark is a [convenience wrapper](https://github.com/svelteplot/svel
         stroke="green"
         length={(d) => d.properties.votes} />
 </Plot>
+```
+
+## Canvas rendering
+
+:::tip
+When visualizing dense vector fields with many data points, consider enabling **canvas rendering** by adding the `canvas` prop. Canvas rendering bypasses the SVG DOM and is significantly faster for thousands of elements.
+:::
+
+```svelte live
+<script>
+    import { Plot, Vector } from 'svelteplot';
+    import { page } from '$app/state';
+    let { wind } = $derived(page.data.data);
+</script>
+
+<Plot
+    inset={10}
+    aspectRatio={1}
+    color={{
+        label: 'Speed (m/s)',
+        zero: true,
+        legend: true
+    }}>
+    <Vector
+        data={wind}
+        x="longitude"
+        y="latitude"
+        rotate={({ u, v }) =>
+            (Math.atan2(u, v) * 180) / Math.PI}
+        length={({ u, v }) => Math.hypot(u, v)}
+        stroke={({ u, v }) => Math.hypot(u, v)}
+        canvas />
+</Plot>
+```
+
+```svelte
+<Vector
+    data={wind}
+    x="longitude"
+    y="latitude"
+    rotate={({ u, v }) =>
+        (Math.atan2(u, v) * 180) / Math.PI}
+    length={({ u, v }) => Math.hypot(u, v)}
+    stroke={({ u, v }) => Math.hypot(u, v)}
+    canvas />
 ```

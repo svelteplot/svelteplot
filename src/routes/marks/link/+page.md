@@ -112,3 +112,7 @@ Link support spherical projections:
     <Sphere stroke="currentColor" />
 </Plot>
 ```
+
+:::tip
+When rendering a large number of links, consider enabling **canvas rendering** by adding `canvas` to the `<Link>` mark. Canvas rendering bypasses the SVG DOM and is significantly faster for thousands of elements.
+:::
