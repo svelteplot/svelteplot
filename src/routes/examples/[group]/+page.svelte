@@ -83,17 +83,25 @@
     const type: 'mark' | 'transform' = $derived(
         pagesByTransform[group] ? 'transform' : 'mark'
     );
-    const docsHref = $derived(`/${type}s/${group}`);
+    const docsHref = $derived(
+        `/${type}s/${clearName(group)}`
+    );
+
+    function clearName(group: string) {
+        return group.replace('densityX', 'density');
+    }
 </script>
 
 {#if subPages.length}
     <a href={resolve('/examples')}>Examples</a>
 
-    <h1>{page.params.group}</h1>
+    <h1>{clearName(page.params.group)}</h1>
     <p>
         Examples showing the use of the
         <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-        <a href={docsHref}>{page.params.group} {type}</a>.
+        <a href={docsHref}
+            >{clearName(page.params.group)} {type}</a
+        >.
     </p>
     {#if indexMod}
         <indexMod.default />

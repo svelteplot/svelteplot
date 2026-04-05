@@ -11,6 +11,10 @@
     import { resolve } from '$app/paths';
     import ExamplesPagePreview from '$shared/docs/ExamplesPagePreview.svelte';
 
+    function clearName(group: string) {
+        return group.replace('densityX', 'density');
+    }
+
     const pages = import.meta.glob('./**/*.svelte', {
         eager: true
     }) as Record<
@@ -73,7 +77,7 @@
     {#each Object.keys(pagesByTransform).sort( (a, b) => a.localeCompare(b) ) as group (group)}
         <li>
             <a href={resolve(`/examples/${group}`)}
-                >{group}</a>
+                >{clearName(group)}</a>
         </li>
     {/each}
 </ul>
