@@ -269,13 +269,20 @@
         }
 
         // Anchor the color scale at zero so the first density band is
-        // distinguishable from the background.
+        // distinguishable from the background.  One anchor per facet group so
+        // no record ever has an undefined fx/fy value, which would otherwise
+        // introduce a spurious null facet panel.
         if (markUsesColorScale) {
-            allGeoms.push({
-                type: 'MultiPolygon',
-                coordinates: [],
-                value: 0
-            });
+            for (const { fxVal, fyVal } of groupEntries) {
+                const anchor: DensityGeometry = {
+                    type: 'MultiPolygon',
+                    coordinates: [],
+                    value: 0
+                };
+                if (isFaceted && fxVal !== undefined) anchor.fxVal = fxVal;
+                if (isFaceted && fyVal !== undefined) anchor.fyVal = fyVal;
+                allGeoms.push(anchor);
+            }
         }
 
         return allGeoms.length > 0 ? allGeoms : null;
@@ -323,15 +330,38 @@
         const ext = extent;
         const records: any[] = [];
 
-        // Bootstrap extent record so x/y scales are available for density
-        // computation on the first render pass.
+        // Bootstrap extent record(s) so x/y scales are available for density
+        // computation on the first render pass.  When faceted, emit one record
+        // per unique (fxVal, fyVal) combination so no record carries an
+        // undefined fx/fy value (which would create a spurious null facet).
         if (ext && !densityResult) {
-            records.push({
-                [X1_VAL]: ext.x1,
-                [X2_VAL]: ext.x2,
-                [Y1_VAL]: ext.y1,
-                [Y2_VAL]: ext.y2
-            });
+            const isFaceted = fxAcc != null || fyAcc != null;
+            if (isFaceted && data?.length) {
+                const seen = new Set<string>();
+                for (const d of data as any[]) {
+                    const fxVal = resolveAcc(fxAcc, d);
+                    const fyVal = resolveAcc(fyAcc, d);
+                    const key = `${fxVal}\0${fyVal}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        records.push({
+                            [X1_VAL]: ext.x1,
+                            [X2_VAL]: ext.x2,
+                            [Y1_VAL]: ext.y1,
+                            [Y2_VAL]: ext.y2,
+                            [FX_VAL]: fxVal,
+                            [FY_VAL]: fyVal
+                        });
+                    }
+                }
+            } else {
+                records.push({
+                    [X1_VAL]: ext.x1,
+                    [X2_VAL]: ext.x2,
+                    [Y1_VAL]: ext.y1,
+                    [Y2_VAL]: ext.y2
+                });
+            }
         }
 
         if (densityResult) {

@@ -11,27 +11,32 @@
 <script lang="ts">
     import { Plot, Density, Dot } from 'svelteplot';
     import type { PenguinsRow } from '../types';
+    import { useDark } from '$shared/ui';
+
+    const ds = useDark();
 
     const { penguins } = $props<{
         penguins: PenguinsRow[];
     }>();
 </script>
 
-<Plot color={{ scheme: 'blues', legend: true }}>
+<Plot
+    inset={20}
+    frame
+    color={{ scheme: ds.isDark ? 'viridis' : 'blues' }}>
     <Density
         data={penguins}
         x="culmen_length_mm"
         y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
+        stroke="density"
         thresholds={8}
-        fy="species" />
+        fx="species" />
     <Dot
         data={penguins}
         x="culmen_length_mm"
         y="culmen_depth_mm"
-        fill="species"
-        r={2}
+        r={1}
+        fill={ds.isDark ? 'white' : 'black'}
         opacity={0.6}
-        fy="species" />
+        fx="species" />
 </Plot>

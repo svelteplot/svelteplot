@@ -5,16 +5,11 @@
     };
     export const description =
         'Density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type.';
-    export const transforms = ['density'];
+    export const transforms = ['densityX'];
 </script>
 
 <script lang="ts">
-    import {
-        Plot,
-        densityX,
-        Line,
-        AreaY
-    } from 'svelteplot';
+    import { Plot, densityX, Line } from 'svelteplot';
     import type { Iris2Row } from '../types';
     import RuleY from 'svelteplot/marks/RuleY.svelte';
 

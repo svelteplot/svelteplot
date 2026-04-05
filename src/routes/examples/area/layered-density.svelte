@@ -5,7 +5,7 @@
     };
     export const description =
         'Layered density plot of the measurements in the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris flower dataset</a>, showing density estimates for each measurement type stacked on top of each other.';
-    export const transforms = ['density'];
+    export const transforms = ['densityX'];
     export const sortKey = 113;
 </script>
 
