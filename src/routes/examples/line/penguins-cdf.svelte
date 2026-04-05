@@ -3,7 +3,7 @@
     export const data = { penguins: '/data/penguins.csv' };
     export const description =
         '<a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">Cumulative distribution</a> of body mass in the Palmer penguins dataset, one curve per species.';
-    export const transforms = ['density'];
+    export const transforms = ['densityX'];
 </script>
 
 <script lang="ts">

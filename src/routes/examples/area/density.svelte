@@ -5,7 +5,7 @@
     };
     export const description =
         'Density plot of the weights of Olympians, faceted by sex';
-    export const transforms = ['density'];
+    export const transforms = ['densityX'];
     export const sortKey = 110;
 </script>
 

@@ -19,8 +19,12 @@
 
     const DEFAULTS = getPlotDefaults();
 
-    const legendTitle = $derived(plot.options.color.label ?? plot.scales.color?.autoTitle);
     const scaleType = $derived(plot.scales.color.type);
+    const legendTitle = $derived(
+        scaleType === 'categorical'
+            ? (plot.options.color.label ?? '')
+            : (plot.options.color.label ?? plot.scales.color?.autoTitle)
+    );
     const tickFormat = $derived(
         typeof plot.options.color?.tickFormat === 'function'
             ? plot.options.color.tickFormat
