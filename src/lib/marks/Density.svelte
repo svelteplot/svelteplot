@@ -311,7 +311,12 @@
                 if (yv > yMax) yMax = yv;
             }
         }
-        return isFinite(xMin) ? { x1: xMin, x2: xMax, y1: yMin, y2: yMax } : null;
+        return Number.isFinite(xMin) &&
+            Number.isFinite(xMax) &&
+            Number.isFinite(yMin) &&
+            Number.isFinite(yMax)
+            ? { x1: xMin, x2: xMax, y1: yMin, y2: yMax }
+            : null;
     });
 
     /**

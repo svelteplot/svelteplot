@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/svelte';
 import DensityTest from './density.test.svelte';
+import DensitySharedScaleTest from './densitySharedScale.test.svelte';
 
 // Small synthetic dataset: two clusters
 const cluster1 = Array.from({ length: 20 }, (_, i) => ({
@@ -216,5 +217,19 @@ describe('Density mark', () => {
             .map((p) => p.getAttribute('d'))
             .join('');
         expect(d1).not.toBe(d2);
+    });
+
+    it('does not poison the shared y scale when y extent is entirely invalid', () => {
+        const { container } = render(DensitySharedScaleTest);
+
+        const points = container.querySelectorAll('circle.shared-scale-point');
+        expect(points).toHaveLength(2);
+
+        for (const point of points) {
+            const y = Number(point.getAttribute('data-y'));
+            expect(Number.isFinite(y)).toBe(true);
+            expect(y).toBeGreaterThanOrEqual(0);
+            expect(y).toBeLessThanOrEqual(200);
+        }
     });
 });
