@@ -3,14 +3,7 @@
 </script>
 
 <Plot width={200} height={200} axes={false}>
-    <Density
-        data={[
-            { x: 0, y: null },
-            { x: 1, y: Number.NaN },
-            { x: 2 }
-        ]}
-        x="x"
-        y="y" />
+    <Density data={[{ x: 0, y: null }, { x: 1, y: Number.NaN }, { x: 2 }]} x="x" y="y" />
 
     <CustomMark
         data={[
