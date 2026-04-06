@@ -68,7 +68,7 @@
         MarkType,
         RawValue
     } from '../types/index.js';
-    import { SvelteMap } from 'svelte/reactivity';
+    import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { contourDensity } from 'd3-contour';
     import { geoPath } from 'd3-geo';
     import Mark from '../Mark.svelte';
@@ -337,7 +337,7 @@
         if (ext && !densityResult) {
             const isFaceted = fxAcc != null || fyAcc != null;
             if (isFaceted && data?.length) {
-                const seen = new Set<string>();
+                const seen = new SvelteSet<string>();
                 for (const d of data as any[]) {
                     const fxVal = resolveAcc(fxAcc, d);
                     const fyVal = resolveAcc(fyAcc, d);
