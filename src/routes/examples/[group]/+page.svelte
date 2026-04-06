@@ -87,8 +87,8 @@
         `/${type}s/${clearName(group)}`
     );
 
-    function clearName(group: string) {
-        return group.replace('densityX', 'density');
+    function clearName(group: string | undefined) {
+        return (group || '').replace('densityX', 'density');
     }
 </script>
 

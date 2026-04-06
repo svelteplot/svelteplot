@@ -11,8 +11,8 @@
     import { resolve } from '$app/paths';
     import ExamplesPagePreview from '$shared/docs/ExamplesPagePreview.svelte';
 
-    function clearName(group: string) {
-        return group.replace('densityX', 'density');
+    function clearName(group: string | undefined) {
+        return (group || '').replace('densityX', 'density');
     }
 
     const pages = import.meta.glob('./**/*.svelte', {
