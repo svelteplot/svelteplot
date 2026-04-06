@@ -20,6 +20,9 @@ importers:
       d3-delaunay:
         specifier: ^6.0.4
         version: 6.0.4
+      d3-force:
+        specifier: ^3.0.0
+        version: 3.0.0
       d3-format:
         specifier: ^3.1.2
         version: 3.1.2
@@ -120,6 +123,9 @@ importers:
       '@types/d3-dsv':
         specifier: ^3.0.7
         version: 3.0.7
+      '@types/d3-force':
+        specifier: ^3.0.10
+        version: 3.0.10
       '@types/d3-geo':
         specifier: ^3.1.0
         version: 3.1.0
@@ -174,9 +180,6 @@ importers:
       d3-fetch:
         specifier: ^3.0.1
         version: 3.0.1
-      d3-force:
-        specifier: ^3.0.0
-        version: 3.0.0
       eslint:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
@@ -2216,6 +2219,9 @@ packages:
 
   '@types/d3-dsv@3.0.7':
     resolution: {integrity: sha512-n6QBF9/+XASqcKK6waudgL0pf/S5XHPPI8APyMLLUHd8NqouBGLsU8MgtO7NINGtPBtk9Kko/W4ea0oAspwh9g==}
+
+  '@types/d3-force@3.0.10':
+    resolution: {integrity: sha512-ZYeSaCF3p73RdOKcjj+swRlZfnYpK1EbaDiYICEEp5Q6sUiqFaFQ9qgoshp5CzIyyb/yD09kD9o2zEltCexlgw==}
 
   '@types/d3-geo@3.1.0':
     resolution: {integrity: sha512-856sckF0oP/diXtS4jNsiQw/UuK5fQG8l/a9VVLeSouf1/PPbBE1i1W852zVwKwYCBkFJJB7nCFTbk6UMEXBOQ==}
@@ -7728,6 +7734,8 @@ snapshots:
   '@types/d3-delaunay@6.0.4': {}
 
   '@types/d3-dsv@3.0.7': {}
+
+  '@types/d3-force@3.0.10': {}
 
   '@types/d3-geo@3.1.0':
     dependencies:
