@@ -92,10 +92,14 @@ export default {
                 { title: 'Jitter', to: '/transforms/jitter' },
                 { title: 'Map', to: '/transforms/map' },
                 { title: 'Normalize', to: '/transforms/normalize' },
+                { title: 'Pack', to: '/transforms/pack' },
+                { title: 'Partition', to: '/transforms/partition' },
                 { title: 'Select', to: '/transforms/select' },
                 { title: 'Shift', to: '/transforms/shift' },
                 { title: 'Sort', to: '/transforms/sort' },
                 { title: 'Stack', to: '/transforms/stack' },
+                { title: 'Tree', to: '/transforms/tree' },
+                { title: 'Treemap', to: '/transforms/treemap' },
                 { title: 'Window', to: '/transforms/window' }
             ]
         },
