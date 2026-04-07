@@ -295,26 +295,26 @@
      */
     const extent = $derived.by(() => {
         if (!data?.length) return null;
-        let xMin = Infinity,
-            xMax = -Infinity,
-            yMin = Infinity,
-            yMax = -Infinity;
+        let xMin: number | Date = Infinity,
+            xMax: number | Date = -Infinity,
+            yMin: number | Date = Infinity,
+            yMax: number | Date = -Infinity;
         for (const d of data as any[]) {
             const xv = resolveAcc(xAcc, d);
             const yv = resolveAcc(yAcc, d);
-            if (typeof xv === 'number' && isFinite(xv)) {
+            if ((typeof xv === 'number' && isFinite(xv)) || xv instanceof Date) {
                 if (xv < xMin) xMin = xv;
                 if (xv > xMax) xMax = xv;
             }
-            if (typeof yv === 'number' && isFinite(yv)) {
+            if ((typeof yv === 'number' && isFinite(yv)) || yv instanceof Date) {
                 if (yv < yMin) yMin = yv;
                 if (yv > yMax) yMax = yv;
             }
         }
-        return Number.isFinite(xMin) &&
-            Number.isFinite(xMax) &&
-            Number.isFinite(yMin) &&
-            Number.isFinite(yMax)
+        return (Number.isFinite(xMin as number) || xMin instanceof Date) &&
+            (Number.isFinite(xMax as number) || xMax instanceof Date) &&
+            (Number.isFinite(yMin as number) || yMin instanceof Date) &&
+            (Number.isFinite(yMax as number) || yMax instanceof Date)
             ? { x1: xMin, x2: xMax, y1: yMin, y2: yMax }
             : null;
     });
