@@ -295,28 +295,45 @@
      */
     const extent = $derived.by(() => {
         if (!data?.length) return null;
-        let xMin: number | Date = Infinity,
-            xMax: number | Date = -Infinity,
-            yMin: number | Date = Infinity,
-            yMax: number | Date = -Infinity;
+        let xMin = Infinity,
+            xMax = -Infinity,
+            yMin = Infinity,
+            yMax = -Infinity;
+        let xUsesDate = false,
+            yUsesDate = false;
         for (const d of data as any[]) {
             const xv = resolveAcc(xAcc, d);
             const yv = resolveAcc(yAcc, d);
-            if ((typeof xv === 'number' && isFinite(xv)) || xv instanceof Date) {
+            if (xv instanceof Date) {
+                xUsesDate = true;
+                const ms = xv.getTime();
+                if (isFinite(ms)) {
+                    if (ms < xMin) xMin = ms;
+                    if (ms > xMax) xMax = ms;
+                }
+            } else if (typeof xv === 'number' && isFinite(xv)) {
                 if (xv < xMin) xMin = xv;
                 if (xv > xMax) xMax = xv;
             }
-            if ((typeof yv === 'number' && isFinite(yv)) || yv instanceof Date) {
+            if (yv instanceof Date) {
+                yUsesDate = true;
+                const ms = yv.getTime();
+                if (isFinite(ms)) {
+                    if (ms < yMin) yMin = ms;
+                    if (ms > yMax) yMax = ms;
+                }
+            } else if (typeof yv === 'number' && isFinite(yv)) {
                 if (yv < yMin) yMin = yv;
                 if (yv > yMax) yMax = yv;
             }
         }
-        return (Number.isFinite(xMin as number) || xMin instanceof Date) &&
-            (Number.isFinite(xMax as number) || xMax instanceof Date) &&
-            (Number.isFinite(yMin as number) || yMin instanceof Date) &&
-            (Number.isFinite(yMax as number) || yMax instanceof Date)
-            ? { x1: xMin, x2: xMax, y1: yMin, y2: yMax }
-            : null;
+        if (!isFinite(xMin) || !isFinite(xMax) || !isFinite(yMin) || !isFinite(yMax)) return null;
+        return {
+            x1: xUsesDate ? new Date(xMin) : xMin,
+            x2: xUsesDate ? new Date(xMax) : xMax,
+            y1: yUsesDate ? new Date(yMin) : yMin,
+            y2: yUsesDate ? new Date(yMax) : yMax
+        };
     });
 
     /**
@@ -334,7 +351,7 @@
     const markData = $derived.by((): DataRecord[] => {
         const ext = extent;
         const records: any[] = [];
-
+        console.log({ extent });
         // Bootstrap extent record(s) so x/y scales are available for density
         // computation on the first render pass.  When faceted, emit one record
         // per unique (fxVal, fyVal) combination so no record carries an

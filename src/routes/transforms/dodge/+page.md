@@ -88,7 +88,6 @@ If you use the r channel to specify the radius of each dot, the dodge transform 
     const { countries_2020: countries } = $derived(
         page.data.data
     );
-    $inspect(countries);
 </script>
 
 <Plot
