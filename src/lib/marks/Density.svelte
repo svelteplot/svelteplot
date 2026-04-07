@@ -55,6 +55,8 @@
         strokeMiterlimit?: number;
         clipPath?: string;
         class?: string;
+        /** Render using a canvas element instead of SVG paths. */
+        canvas?: boolean;
         /** the horizontal facet channel */
         fx?: ChannelAccessor<Datum>;
         /** the vertical facet channel */
@@ -68,6 +70,7 @@
         MarkType,
         RawValue
     } from '../types/index.js';
+    import DensityCanvas from './helpers/DensityCanvas.svelte';
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { contourDensity } from 'd3-contour';
     import { geoPath } from 'd3-geo';
@@ -117,6 +120,7 @@
         strokeMiterlimit = 1,
         clipPath,
         class: className = '',
+        canvas = false,
         fx: fxAcc,
         fy: fyAcc,
         ...options
@@ -351,7 +355,6 @@
     const markData = $derived.by((): DataRecord[] => {
         const ext = extent;
         const records: any[] = [];
-        console.log({ extent });
         // Bootstrap extent record(s) so x/y scales are available for density
         // computation on the first render pass.  When faceted, emit one record
         // per unique (fxVal, fyVal) combination so no record carries an
@@ -459,13 +462,27 @@
     {...markChannelProps}>
     {#snippet children({ scaledData }: { scaledData: ScaledDataRecord[] })}
         <g clip-path={clipPath} class={className || null} aria-label="density">
-            {#each scaledData as d, i (i)}
-                {#if d.datum[GEOM] && (d.datum[GEOM] as DensityGeometry).coordinates.length > 0}
-                    <path
-                        d={path(d.datum[GEOM] as any)}
-                        style={densityStyle(d.datum[RAW_VALUE] as number)} />
-                {/if}
-            {/each}
+            {#if canvas}
+                <DensityCanvas
+                    {scaledData}
+                    {path}
+                    geomKey={GEOM}
+                    {fill}
+                    stroke={effectiveStroke}
+                    {strokeWidth}
+                    {strokeOpacity}
+                    {fillOpacity}
+                    {opacity}
+                    {strokeMiterlimit} />
+            {:else}
+                {#each scaledData as d, i (i)}
+                    {#if d.datum[GEOM] && (d.datum[GEOM] as DensityGeometry).coordinates.length > 0}
+                        <path
+                            d={path(d.datum[GEOM] as any)}
+                            style={densityStyle(d.datum[RAW_VALUE] as number)} />
+                    {/if}
+                {/each}
+            {/if}
         </g>
     {/snippet}
 </Mark>

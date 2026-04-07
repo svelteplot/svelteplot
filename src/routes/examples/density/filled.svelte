@@ -30,6 +30,7 @@
         x="culmen_length_mm"
         y="culmen_depth_mm"
         fill="density"
+        canvas
         stroke="none"
         thresholds={10} />
     <Dot
