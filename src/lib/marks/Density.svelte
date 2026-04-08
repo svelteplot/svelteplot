@@ -161,7 +161,12 @@
         if (typeof v === 'function') return true;
         if (typeof v !== 'string') return false;
         const lower = v.toLowerCase();
-        if (lower === 'none' || lower === 'density' || lower === 'inherit' || lower === 'currentcolor')
+        if (
+            lower === 'none' ||
+            lower === 'density' ||
+            lower === 'inherit' ||
+            lower === 'currentcolor'
+        )
             return false;
         return !isColorOrNull(v);
     }
@@ -183,7 +188,7 @@
     const isZGrouped = $derived(zGroupAcc != null);
 
     // Resolved static fill/stroke strings (after extracting accessor info)
-    const fill = $derived<string>(fillIsAccessor ? 'none' : (rawFill as string) ?? 'none');
+    const fill = $derived<string>(fillIsAccessor ? 'none' : ((rawFill as string) ?? 'none'));
 
     const fillDensity = $derived(/^density$/i.test(fill ?? ''));
 
