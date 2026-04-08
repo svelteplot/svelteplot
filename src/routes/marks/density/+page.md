@@ -71,6 +71,35 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
 
 [Example](/examples/density/basic)
 
+You can create separate densities by grouping via stroke or `z` channel:
+
+```svelte live
+<script lang="ts">
+    import { Plot, Density } from 'svelteplot';
+    import { page } from '$app/state';
+
+    const { penguins } = $derived(page.data.data);
+</script>
+
+<Plot>
+    <Density
+        data={penguins}
+        stroke="species"
+        x="culmen_length_mm"
+        y="culmen_depth_mm" />
+</Plot>
+```
+
+```svelte
+<Plot>
+    <Density
+        data={penguins}
+        stroke="species"
+        x="culmen_length_mm"
+        y="culmen_depth_mm" />
+</Plot>
+```
+
 Set `fill="density"` to fill each contour band by its estimated density using the plot's color scale. Pair with `stroke="none"` to suppress the isoline strokes:
 
 ```svelte
@@ -131,6 +160,8 @@ Use `stroke="density"` to color each isoline by its density level:
         thresholds={15} />
 </Plot>
 ```
+
+[Example](/examples/density/colored-isolines)
 
 ## Bandwidth
 
