@@ -244,6 +244,30 @@ describe('Density mark', () => {
         expect(fills).toEqual(new Set(['none']));
     });
 
+    it('defaults stroke to none when fill is a data accessor', () => {
+        // When fill="fieldName" the static fill prop is forced to "none" so per-path
+        // colors flow via d.fill in scaledData. The stroke default must still treat
+        // fill as "active" and fall back to "none", not "currentColor".
+        const { container } = render(DensityTest, {
+            props: {
+                plotArgs: {},
+                densityArgs: {
+                    data: testData,
+                    x: 'x',
+                    y: 'y',
+                    fill: 'group',
+                    thresholds: 5
+                }
+            }
+        });
+        const paths = container.querySelectorAll(
+            'g[aria-label="density"] > path'
+        ) as NodeListOf<SVGPathElement>;
+        expect(paths.length).toBeGreaterThan(0);
+        const strokes = new Set(Array.from(paths).map((p) => p.style.stroke));
+        expect(strokes).toEqual(new Set(['none']));
+    });
+
     it('handles descriptor-form ChannelAccessor for stroke without throwing', () => {
         // { value, scale } descriptor must be treated as a data accessor, not a CSS color.
         // Previously isDensityAccessor returned false for objects, casting the descriptor

@@ -198,11 +198,14 @@
     /**
      * When fill is active (not "none" or "density"), stroke defaults to "none";
      * otherwise it defaults to "currentColor".
+     * fillIsAccessor also counts as "fill active" even though the static fill
+     * prop is forced to "none" for GeoPathGroup — per-path fills flow via d.fill.
      */
     const effectiveStroke = $derived<string>(
         strokeIsAccessor
             ? 'currentColor'
-            : ((rawStroke as string | undefined) ?? (fill !== 'none' ? 'none' : 'currentColor'))
+            : ((rawStroke as string | undefined) ??
+                  (fill !== 'none' || fillIsAccessor ? 'none' : 'currentColor'))
     );
 
     const strokeDensity = $derived(/^density$/i.test(effectiveStroke ?? ''));
