@@ -26,7 +26,9 @@
         className,
         ariaLabel,
         canvas = false,
-        plot
+        plot,
+        usePerPathFill = false,
+        usePerPathStroke = false
     }: {
         scaledData: ScaledDataRecord[];
         /** d3 geoPath renderer (must NOT have a canvas context set). */
@@ -52,6 +54,17 @@
         /** Render using a canvas element instead of SVG paths. */
         canvas?: boolean;
         plot: PlotState;
+        /**
+         * When true, per-path fill color is read from `d.fill` in scaledData
+         * (z-group coloring).  Must be set explicitly; avoids accidental fill
+         * when fill channel is only registered for color-scale domain purposes.
+         */
+        usePerPathFill?: boolean;
+        /**
+         * When true, per-path stroke color is read from `d.stroke` in scaledData
+         * (z-group coloring).
+         */
+        usePerPathStroke?: boolean;
     } = $props();
 
     /** Resolve a fill/stroke prop that may be the colorKeyword. */
@@ -65,9 +78,12 @@
     /** Build the inline style string for a single contour/density path. */
     function buildStyle(d: ScaledDataRecord, value: number): string {
         const parts: string[] = [];
-        // Per-path colors from the color scale (z-grouping) take priority over static props.
-        parts.push(`fill:${(d.fill as string | undefined) ?? resolveColor(fill, value)}`);
-        parts.push(`stroke:${(d.stroke as string | undefined) ?? resolveColor(stroke, value)}`);
+        parts.push(
+            `fill:${usePerPathFill && d.fill ? (d.fill as string) : resolveColor(fill, value)}`
+        );
+        parts.push(
+            `stroke:${usePerPathStroke && d.stroke ? (d.stroke as string) : resolveColor(stroke, value)}`
+        );
         if (strokeWidth != null) parts.push(`stroke-width:${strokeWidth}`);
         if (strokeOpacity != null) parts.push(`stroke-opacity:${strokeOpacity}`);
         if (fillOpacity != null) parts.push(`fill-opacity:${fillOpacity}`);
@@ -89,7 +105,9 @@
         {strokeOpacity}
         {fillOpacity}
         {opacity}
-        {strokeMiterlimit} />
+        {strokeMiterlimit}
+        {usePerPathFill}
+        {usePerPathStroke} />
 {:else}
     <g clip-path={clipPath} class={className || null} aria-label={ariaLabel}>
         {#each scaledData as d, i (i)}

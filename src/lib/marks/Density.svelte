@@ -547,6 +547,8 @@
             className={className || undefined}
             ariaLabel="density"
             {canvas}
-            {plot} />
+            {plot}
+            usePerPathFill={fillIsAccessor}
+            usePerPathStroke={strokeIsAccessor} />
     {/snippet}
 </Mark>
