@@ -63,10 +63,11 @@
     }
 
     /** Build the inline style string for a single contour/density path. */
-    function buildStyle(value: number): string {
+    function buildStyle(d: ScaledDataRecord, value: number): string {
         const parts: string[] = [];
-        parts.push(`fill:${resolveColor(fill, value)}`);
-        parts.push(`stroke:${resolveColor(stroke, value)}`);
+        // Per-path colors from the color scale (z-grouping) take priority over static props.
+        parts.push(`fill:${(d.fill as string | undefined) ?? resolveColor(fill, value)}`);
+        parts.push(`stroke:${(d.stroke as string | undefined) ?? resolveColor(stroke, value)}`);
         if (strokeWidth != null) parts.push(`stroke-width:${strokeWidth}`);
         if (strokeOpacity != null) parts.push(`stroke-opacity:${strokeOpacity}`);
         if (fillOpacity != null) parts.push(`fill-opacity:${fillOpacity}`);
@@ -96,7 +97,7 @@
             {#if geom?.coordinates?.length}
                 <path
                     d={path(geom)}
-                    style={buildStyle((d.datum[RAW_VALUE as any] as number) ?? 0)} />
+                    style={buildStyle(d, (d.datum[RAW_VALUE as any] as number) ?? 0)} />
             {/if}
         {/each}
     </g>

@@ -86,8 +86,13 @@
                 if (!geom?.coordinates?.length) continue;
 
                 const thresholdValue = (d.datum[RAW_VALUE as any] as number) ?? 0;
-                const fillColor = resolveCanvasColor(resolveColorProp(fill, thresholdValue));
-                const strokeColor = resolveCanvasColor(resolveColorProp(stroke, thresholdValue));
+                // Per-path colors from the color scale (z-grouping) take priority.
+                const fillColor = resolveCanvasColor(
+                    (d.fill as string | undefined) ?? resolveColorProp(fill, thresholdValue)
+                );
+                const strokeColor = resolveCanvasColor(
+                    (d.stroke as string | undefined) ?? resolveColorProp(stroke, thresholdValue)
+                );
 
                 context.beginPath();
                 path(geom);

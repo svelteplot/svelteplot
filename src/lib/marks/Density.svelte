@@ -12,6 +12,12 @@
     density through the plot's color scale.  Defaults: `fill="none"`,
     `stroke="currentColor"`.
 
+    Grouping: when a `z` channel is specified (or when `fill`/`stroke` is a
+    field name or function rather than a CSS color), the mark computes a
+    separate density estimate per group and renders each group independently.
+    Using `fill` or `stroke` as a data accessor also maps the group value
+    through the plot's color scale.
+
     Supports faceting via `fx`/`fy`.
 -->
 <script lang="ts" generics="Datum extends DataRecord">
@@ -24,6 +30,13 @@
         y?: ChannelAccessor<Datum>;
         /** Optional weight channel; defaults to 1 for each point. */
         weight?: ChannelAccessor<Datum>;
+        /**
+         * Grouping channel.  When specified the mark computes a separate
+         * density estimate per unique z value and renders the groups
+         * independently.  Unlike `fill`/`stroke` as accessors, `z` does not
+         * automatically add a color channel.
+         */
+        z?: ChannelAccessor<Datum>;
         /**
          * Gaussian kernel bandwidth in screen pixels (default 20).
          * Larger values produce smoother, more blurred density estimates.
@@ -40,14 +53,22 @@
         /**
          * Fill color for density bands.  Use `"density"` to map each band's
          * estimated density through the plot's color scale.  Default `"none"`.
+         *
+         * When a field name or accessor function is provided (instead of a CSS
+         * color), the mark groups by the fill channel and maps group values
+         * through the plot's fill color scale.
          */
-        fill?: string;
+        fill?: ChannelAccessor<Datum> | string;
         /**
          * Stroke color for density isolines.  Use `"density"` to map each
          * isoline's estimated density through the plot's color scale.
          * Default `"currentColor"` when fill is `"none"`, otherwise `"none"`.
+         *
+         * When a field name or accessor function is provided (instead of a CSS
+         * color), the mark groups by the stroke channel and maps group values
+         * through the plot's stroke color scale.
          */
-        stroke?: string;
+        stroke?: ChannelAccessor<Datum> | string;
         strokeWidth?: number;
         strokeOpacity?: number;
         fillOpacity?: number;
@@ -79,6 +100,7 @@
     import { RAW_VALUE } from '../transforms/recordize.js';
     import { ORIGINAL_NAME_KEYS } from '../constants.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
+    import { isColorOrNull } from '../helpers/typeChecks.js';
 
     // Per-band fake-datum symbols — used to attach the density geometry,
     // extent, and pre-resolved facet values to the synthetic records passed
@@ -86,6 +108,7 @@
     const GEOM = Symbol('density_geom');
     const FX_VAL = Symbol('density_fx');
     const FY_VAL = Symbol('density_fy');
+    const Z_VAL = Symbol('density_z');
     const X1_VAL = Symbol('density_x1');
     const X2_VAL = Symbol('density_x2');
     const Y1_VAL = Symbol('density_y1');
@@ -108,10 +131,11 @@
         data,
         x: xAcc,
         y: yAcc,
+        z: zAcc,
         weight: weightAcc,
         bandwidth = 20,
         thresholds: thresholdSpec = 20,
-        fill = 'none',
+        fill: rawFill = 'none',
         stroke: rawStroke,
         strokeWidth,
         strokeOpacity,
@@ -128,13 +152,50 @@
 
     const plot = usePlot();
 
+    /**
+     * Returns true when a fill/stroke value should be treated as a data
+     * accessor (field name or function) rather than a constant color.
+     */
+    function isDensityAccessor(v: ChannelAccessor<Datum> | string | undefined): boolean {
+        if (v == null) return false;
+        if (typeof v === 'function') return true;
+        if (typeof v !== 'string') return false;
+        const lower = v.toLowerCase();
+        if (lower === 'none' || lower === 'density' || lower === 'inherit' || lower === 'currentcolor')
+            return false;
+        return !isColorOrNull(v);
+    }
+
+    // Whether fill/stroke are data accessors (trigger z-grouping + color scale)
+    const fillIsAccessor = $derived(isDensityAccessor(rawFill));
+    const strokeIsAccessor = $derived(isDensityAccessor(rawStroke));
+
+    // Effective grouping accessor: explicit z > fill (if accessor) > stroke (if accessor)
+    const zGroupAcc = $derived<ChannelAccessor<Datum> | null>(
+        zAcc != null
+            ? zAcc
+            : fillIsAccessor
+              ? (rawFill as ChannelAccessor<Datum>)
+              : strokeIsAccessor
+                ? (rawStroke as ChannelAccessor<Datum>)
+                : null
+    );
+    const isZGrouped = $derived(zGroupAcc != null);
+
+    // Resolved static fill/stroke strings (after extracting accessor info)
+    const fill = $derived<string>(fillIsAccessor ? 'none' : (rawFill as string) ?? 'none');
+
     const fillDensity = $derived(/^density$/i.test(fill ?? ''));
 
     /**
      * When fill is active (not "none" or "density"), stroke defaults to "none";
      * otherwise it defaults to "currentColor".
      */
-    const effectiveStroke = $derived(rawStroke ?? (fill !== 'none' ? 'none' : 'currentColor'));
+    const effectiveStroke = $derived<string>(
+        strokeIsAccessor
+            ? 'currentColor'
+            : ((rawStroke as string | undefined) ?? (fill !== 'none' ? 'none' : 'currentColor'))
+    );
 
     const strokeDensity = $derived(/^density$/i.test(effectiveStroke ?? ''));
 
@@ -145,7 +206,7 @@
     const markUsesColorScale = $derived(fillDensity || strokeDensity);
 
     /** Resolve a channel accessor against a single datum. */
-    function resolveAcc(acc: ChannelAccessor<any> | undefined, d: any): any {
+    function resolveAcc(acc: ChannelAccessor<any> | undefined | null, d: any): any {
         if (acc == null) return undefined;
         if (typeof acc === 'function') return (acc as (d: any) => any)(d);
         return (d as any)[acc as string];
@@ -174,6 +235,8 @@
         fxVal?: RawValue;
         /** pre-resolved fy channel value for facet filtering */
         fyVal?: RawValue;
+        /** pre-resolved z group value for per-group coloring */
+        zVal?: RawValue;
     };
 
     /**
@@ -183,7 +246,8 @@
      * Phase 2: derive thresholds from global max (for consistent color scale).
      * Phase 3: compute contour geometries at those thresholds.
      *
-     * Geometries are tagged with fxVal/fyVal so <Mark> can filter per panel.
+     * Geometries are tagged with fxVal/fyVal/zVal so <Mark> can filter per
+     * panel and apply per-group colors.
      */
     const densityResult = $derived.by((): DensityGeometry[] | null => {
         const xFn = plot.scales.x?.fn;
@@ -193,13 +257,17 @@
         const { bx1, by1, w, h } = getBounds();
         const isFaceted = fxAcc != null || fyAcc != null;
 
-        // Group data by (fxVal, fyVal) — a single group when not faceted.
-        const groups = new SvelteMap<string, { fxVal: RawValue; fyVal: RawValue; items: any[] }>();
+        // Group data by (fxVal, fyVal, zVal) — a single group when not faceted/z-grouped.
+        const groups = new SvelteMap<
+            string,
+            { fxVal: RawValue; fyVal: RawValue; zVal: RawValue; items: any[] }
+        >();
         for (const d of data as any[]) {
-            const fxVal = isFaceted ? resolveAcc(fxAcc, d) : undefined;
-            const fyVal = isFaceted ? resolveAcc(fyAcc, d) : undefined;
-            const key = `${fxVal}\0${fyVal}`;
-            if (!groups.has(key)) groups.set(key, { fxVal, fyVal, items: [] });
+            const fxVal = fxAcc != null ? resolveAcc(fxAcc, d) : undefined;
+            const fyVal = fyAcc != null ? resolveAcc(fyAcc, d) : undefined;
+            const zVal = isZGrouped ? resolveAcc(zGroupAcc, d) : undefined;
+            const key = `${fxVal}\0${fyVal}\0${zVal}`;
+            if (!groups.has(key)) groups.set(key, { fxVal, fyVal, zVal, items: [] });
             groups.get(key)!.items.push(d);
         }
 
@@ -207,6 +275,7 @@
         type GroupEntry = {
             fxVal: RawValue;
             fyVal: RawValue;
+            zVal: RawValue;
             /** function returned by kde.contours(data); call it with a threshold */
             contourFn: (t: number) => DensityGeometry;
             maxVal: number;
@@ -214,7 +283,7 @@
         const groupEntries: GroupEntry[] = [];
         let globalMax = 0;
 
-        for (const { fxVal, fyVal, items } of groups.values()) {
+        for (const { fxVal, fyVal, zVal, items } of groups.values()) {
             if (!items.length) continue;
 
             const kde = contourDensity<any>()
@@ -231,7 +300,7 @@
             };
             const maxVal = contourFn.max;
             if (maxVal > globalMax) globalMax = maxVal;
-            groupEntries.push({ fxVal, fyVal, contourFn, maxVal });
+            groupEntries.push({ fxVal, fyVal, zVal, contourFn, maxVal });
         }
 
         if (!groupEntries.length || globalMax === 0) return null;
@@ -250,7 +319,7 @@
         // Phase 3: compute contour geometries for each group at each threshold.
         const allGeoms: DensityGeometry[] = [];
 
-        for (const { fxVal, fyVal, contourFn } of groupEntries) {
+        for (const { fxVal, fyVal, zVal, contourFn } of groupEntries) {
             for (const t of T) {
                 // contourFn expects actual density values; t is k-scaled.
                 const geom = contourFn(t / k);
@@ -268,6 +337,7 @@
                 geom.value = t; // k-scaled, used for color mapping
                 if (isFaceted && fxVal !== undefined) geom.fxVal = fxVal;
                 if (isFaceted && fyVal !== undefined) geom.fyVal = fyVal;
+                if (isZGrouped && zVal !== undefined) geom.zVal = zVal;
                 allGeoms.push(geom);
             }
         }
@@ -277,7 +347,7 @@
         // no record ever has an undefined fx/fy value, which would otherwise
         // introduce a spurious null facet panel.
         if (markUsesColorScale) {
-            for (const { fxVal, fyVal } of groupEntries) {
+            for (const { fxVal, fyVal, zVal } of groupEntries) {
                 const anchor: DensityGeometry = {
                     type: 'MultiPolygon',
                     coordinates: [],
@@ -285,6 +355,7 @@
                 };
                 if (isFaceted && fxVal !== undefined) anchor.fxVal = fxVal;
                 if (isFaceted && fyVal !== undefined) anchor.fyVal = fyVal;
+                if (isZGrouped && zVal !== undefined) anchor.zVal = zVal;
                 allGeoms.push(anchor);
             }
         }
@@ -348,7 +419,8 @@
      * computed (scatter-style circular dependency with x/y scales).  Each
      * per-band fake datum carries:
      *   [X1_VAL]..[Y2_VAL]  data-space extent → x/y scale domain
-     *   [RAW_VALUE]          k-scaled density  → color scale domain
+     *   [RAW_VALUE]          k-scaled density  → color scale domain (density mode)
+     *   [Z_VAL]              z group value     → fill/stroke scale domain (z-group mode)
      *   [FX_VAL]/[FY_VAL]   facet values      → Mark facet filtering
      *   [GEOM]               geometry          → rendered by children snippet
      */
@@ -356,17 +428,18 @@
         const ext = extent;
         const records: any[] = [];
         // Bootstrap extent record(s) so x/y scales are available for density
-        // computation on the first render pass.  When faceted, emit one record
-        // per unique (fxVal, fyVal) combination so no record carries an
-        // undefined fx/fy value (which would create a spurious null facet).
+        // computation on the first render pass.  When faceted or z-grouped, emit
+        // one record per unique (fxVal, fyVal, zVal) combination so no record
+        // carries an undefined fx/fy value (which would create a spurious null facet).
         if (ext && !densityResult) {
             const isFaceted = fxAcc != null || fyAcc != null;
-            if (isFaceted && data?.length) {
+            if ((isFaceted || isZGrouped) && data?.length) {
                 const seen = new SvelteSet<string>();
                 for (const d of data as any[]) {
-                    const fxVal = resolveAcc(fxAcc, d);
-                    const fyVal = resolveAcc(fyAcc, d);
-                    const key = `${fxVal}\0${fyVal}`;
+                    const fxVal = fxAcc != null ? resolveAcc(fxAcc, d) : undefined;
+                    const fyVal = fyAcc != null ? resolveAcc(fyAcc, d) : undefined;
+                    const zVal = isZGrouped ? resolveAcc(zGroupAcc, d) : undefined;
+                    const key = `${fxVal}\0${fyVal}\0${zVal}`;
                     if (!seen.has(key)) {
                         seen.add(key);
                         records.push({
@@ -375,7 +448,8 @@
                             [Y1_VAL]: ext.y1,
                             [Y2_VAL]: ext.y2,
                             [FX_VAL]: fxVal,
-                            [FY_VAL]: fyVal
+                            [FY_VAL]: fyVal,
+                            [Z_VAL]: zVal
                         });
                     }
                 }
@@ -399,6 +473,7 @@
                     [RAW_VALUE]: geom.value,
                     [FX_VAL]: geom.fxVal,
                     [FY_VAL]: geom.fyVal,
+                    [Z_VAL]: geom.zVal,
                     [GEOM]: geom
                 });
             }
@@ -407,13 +482,24 @@
         return records as DataRecord[];
     });
 
-    const markChannels = $derived(
-        markUsesColorScale
-            ? (['x1', 'x2', 'y1', 'y2', 'fill'] as const)
-            : (['x1', 'x2', 'y1', 'y2'] as const)
+    const markChannels = $derived.by(() => {
+        const base = ['x1', 'x2', 'y1', 'y2'] as const;
+        if (markUsesColorScale || fillIsAccessor) return [...base, 'fill'] as const;
+        if (strokeIsAccessor) return [...base, 'stroke'] as const;
+        return base;
+    });
+
+    // fill channel accessor:
+    //   density color scale (fill or stroke="density") → RAW_VALUE (registers domain)
+    //   fill accessor (z-grouping)                    → Z_VAL
+    //   else                                          → undefined
+    const markFill = $derived(
+        markUsesColorScale ? (RAW_VALUE as any) : fillIsAccessor ? (Z_VAL as any) : undefined
     );
 
-    const markFill = $derived(markUsesColorScale ? (RAW_VALUE as any) : undefined);
+    // stroke channel accessor: only set when stroke is a z-group accessor
+    const markStroke = $derived(strokeIsAccessor ? (Z_VAL as any) : undefined);
+
     const markFx = $derived(fxAcc != null ? FX_VAL : undefined);
     const markFy = $derived(fyAcc != null ? FY_VAL : undefined);
 
@@ -423,11 +509,16 @@
         y1: Y1_VAL as any,
         y2: Y2_VAL as any,
         fill: markFill as any,
+        stroke: markStroke as any,
         fx: markFx as any,
         fy: markFy as any,
         ...(typeof xAcc === 'string' && { [ORIGINAL_NAME_KEYS.x]: xAcc }),
         ...(typeof yAcc === 'string' && { [ORIGINAL_NAME_KEYS.y]: yAcc }),
-        ...(markUsesColorScale && { [ORIGINAL_NAME_KEYS.fill]: 'Density' })
+        ...(markUsesColorScale && { [ORIGINAL_NAME_KEYS.fill]: 'Density' }),
+        ...(fillIsAccessor &&
+            typeof rawFill === 'string' && { [ORIGINAL_NAME_KEYS.fill]: rawFill }),
+        ...(strokeIsAccessor &&
+            typeof rawStroke === 'string' && { [ORIGINAL_NAME_KEYS.stroke]: rawStroke })
     });
 
     const path = geoPath();
