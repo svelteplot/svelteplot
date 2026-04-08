@@ -184,7 +184,7 @@
         {:else}
             <g class={['link', className]} data-use-x={usedScales.x ? 1 : 0}>
                 {#each scaledData as d, i (i)}
-                    {#if d.valid || true}
+                    {#if d.valid}
                         {@const [style, styleClass] = resolveStyles(
                             plot,
                             d,
