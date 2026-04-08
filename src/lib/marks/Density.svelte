@@ -159,6 +159,9 @@
     function isDensityAccessor(v: ChannelAccessor<Datum> | string | undefined): boolean {
         if (v == null) return false;
         if (typeof v === 'function') return true;
+        // Descriptor form { value, scale } — recurse into the inner value.
+        if (typeof v === 'object' && 'value' in (v as object))
+            return isDensityAccessor((v as { value: any }).value);
         if (typeof v !== 'string') return false;
         const lower = v.toLowerCase();
         if (
@@ -214,6 +217,9 @@
     function resolveAcc(acc: ChannelAccessor<any> | undefined | null, d: any): any {
         if (acc == null) return undefined;
         if (typeof acc === 'function') return (acc as (d: any) => any)(d);
+        // Descriptor form { value, scale } — resolve the inner value.
+        if (typeof acc === 'object' && 'value' in (acc as object))
+            return resolveAcc((acc as { value: any }).value, d);
         return (d as any)[acc as string];
     }
 
