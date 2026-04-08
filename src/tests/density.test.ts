@@ -219,6 +219,51 @@ describe('Density mark', () => {
         expect(d1).not.toBe(d2);
     });
 
+    it('groups by stroke field name and produces per-group stroke colors', () => {
+        const { container } = render(DensityTest, {
+            props: {
+                plotArgs: {},
+                densityArgs: {
+                    data: testData,
+                    x: 'x',
+                    y: 'y',
+                    stroke: 'group',
+                    thresholds: 5
+                }
+            }
+        });
+        const paths = container.querySelectorAll(
+            'g[aria-label="density"] > path'
+        ) as NodeListOf<SVGPathElement>;
+        expect(paths.length).toBeGreaterThan(0);
+        // With two groups the paths should use at least two distinct stroke colors
+        const strokes = new Set(Array.from(paths).map((p) => p.style.stroke));
+        expect(strokes.size).toBeGreaterThanOrEqual(2);
+        // None of the paths should have fill set to a non-none color (stroke-only grouping)
+        const fills = new Set(Array.from(paths).map((p) => p.style.fill));
+        expect(fills).toEqual(new Set(['none']));
+    });
+
+    it('handles descriptor-form ChannelAccessor for stroke without throwing', () => {
+        // { value, scale } descriptor must be treated as a data accessor, not a CSS color.
+        // Previously isDensityAccessor returned false for objects, casting the descriptor
+        // to string and causing a runtime error in toLowerCase().
+        expect(() =>
+            render(DensityTest, {
+                props: {
+                    plotArgs: {},
+                    densityArgs: {
+                        data: testData,
+                        x: 'x',
+                        y: 'y',
+                        stroke: { value: 'group', scale: false } as any,
+                        thresholds: 5
+                    }
+                }
+            })
+        ).not.toThrow();
+    });
+
     it('does not poison the shared y scale when y extent is entirely invalid', () => {
         const { container } = render(DensitySharedScaleTest);
 
