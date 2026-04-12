@@ -33,7 +33,7 @@
     );
 </script>
 
-<Mark type="regression">
+<Mark type="regression" {data} fx={options.fx} fy={options.fy}>
     {#each groups as group, i (i)}
         <Regression data={group as any} dependent="y" {...options as any} />
     {/each}

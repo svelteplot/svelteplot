@@ -3,6 +3,8 @@ import { render } from '@testing-library/svelte';
 // @ts-ignore - tsc in lint:types does not see default export for .svelte test component
 // @ts-ignore - svelte-check errors on .svelte imports, tsc does not
 import RegressionYTest from './regressionY.test.svelte';
+// @ts-ignore
+import RegressionYFacetTest from './regressionY.facet.test.svelte';
 
 const linearData = [
     { x: 1, y: 2 },
@@ -182,6 +184,62 @@ describe('RegressionY mark', () => {
 
         const paths = groups[0].querySelectorAll('g.lines path');
         expect(paths.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('preserves time scale when x channel contains Date values', () => {
+        const start = new Date('2024-01-01');
+        const timeData = Array.from({ length: 5 }, (_, i) => ({
+            x: new Date(start.getTime() + i * 30 * 24 * 60 * 60 * 1000),
+            y: i * 2 + Math.random()
+        }));
+
+        const { container } = render(RegressionYTest, {
+            props: {
+                data: timeData,
+                x: 'x',
+                y: 'y'
+            }
+        });
+
+        // Regression line should render — if scale type wrongly becomes 'linear', Date values
+        // fail to map and the path is empty or missing.
+        const paths = container.querySelectorAll('g[class*="regression-x"] g.lines path');
+        expect(paths.length).toBeGreaterThanOrEqual(1);
+        const d = paths[0].getAttribute('d');
+        expect(d).toBeTruthy();
+        expect(d).toMatch(/^M/);
+        // The path should contain multiple numeric segments (not NaN/undefined positions).
+        expect(d).not.toContain('NaN');
+    });
+
+    it('activates fx faceting when fx channel is set', () => {
+        const facetedData = [
+            { x: 1, y: 2, cat: 'A' },
+            { x: 2, y: 4, cat: 'A' },
+            { x: 3, y: 6, cat: 'A' },
+            { x: 1, y: 10, cat: 'B' },
+            { x: 2, y: 8, cat: 'B' },
+            { x: 3, y: 6, cat: 'B' }
+        ];
+
+        const { container } = render(RegressionYFacetTest, {
+            props: {
+                data: facetedData,
+                x: 'x',
+                y: 'y',
+                fx: 'cat'
+            }
+        });
+
+        // With fx faceting active, there should be two facet groups
+        const facets = container.querySelectorAll('g.facet');
+        expect(facets.length).toBe(2);
+
+        // Each facet should contain a regression line
+        for (const facet of facets) {
+            const paths = facet.querySelectorAll('g[class*="regression-x"] g.lines path');
+            expect(paths.length).toBeGreaterThanOrEqual(1);
+        }
     });
 
     it('handles empty data', () => {

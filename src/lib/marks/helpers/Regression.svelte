@@ -43,7 +43,6 @@
         regressionLoess
     } from '../../regression/index.js';
     import { resolveChannel } from '../../helpers/resolve.js';
-    import { isTemporalScale } from '../../helpers/typeChecks.js';
     import { confidenceInterval } from '../../helpers/math.js';
     import callWithProps from '../../helpers/callWithProps.js';
     import type { DataRecord, FacetContext, RawValue } from 'svelteplot/types/index.js';
@@ -93,8 +92,12 @@
     }
 
     // Convert generated points back to Date for time scales so downstream marks render correctly.
-    function toOutputX(value: number, scaleType: string): RawValue {
-        return isTemporalScale(scaleType) ? new Date(value) : value;
+    // Takes a boolean instead of the scale type to avoid a circular dependency: if we used
+    // plot.scales[independent].type, the Line mark would register numeric __x values during the
+    // first render pass (before the scale type is resolved), causing scale inference to see a mix
+    // of Dates and numbers and fall back to 'linear' permanently.
+    function toOutputX(value: number, isTemporal: boolean): RawValue {
+        return isTemporal ? new Date(value) : value;
     }
 
     function makeTicks(domain: [number, number], count = 40): number[] {
@@ -128,6 +131,13 @@
     const independent: 'x' | 'y' = $derived(dependent === 'x' ? 'y' : 'x');
 
     const regressionFn = $derived(maybeRegression(type));
+
+    // Detect temporality from the raw data rather than from the computed scale type to avoid a
+    // circular dependency that would cause the scale type to be permanently inferred as 'linear'.
+    const independentIsDate = $derived(
+        filteredData.length > 0 &&
+            resolveChannel(independent, filteredData[0], options as any) instanceof Date
+    );
 
     // Build a clean numeric input set for regression fitting, dropping invalid rows early.
     const regressionInput = $derived(
@@ -193,18 +203,18 @@
         // Prefer batch prediction when supported, then per-point predict, then raw curve output.
         if (typeof regression.predictMany === 'function') {
             return regression.predictMany(regrPoints).map((__y, i) => ({
-                __x: toOutputX(regrPoints[i], plot.scales[independent].type),
+                __x: toOutputX(regrPoints[i], independentIsDate),
                 __y
             }));
         }
         if (typeof regression.predict === 'function') {
             return regrPoints.map((point) => ({
-                __x: toOutputX(point, plot.scales[independent].type),
+                __x: toOutputX(point, independentIsDate),
                 __y: regression.predict!(point)
             }));
         }
         return regression.map(([__x, __y]) => ({
-            __x: toOutputX(__x, plot.scales[independent].type),
+            __x: toOutputX(__x, independentIsDate),
             __y
         }));
     });
@@ -230,7 +240,7 @@
         return regrPoints.map((x) => {
             const { x: __x, left, right } = confBandGen(x);
             return {
-                __x: toOutputX(__x, plot.scales[independent].type),
+                __x: toOutputX(__x, independentIsDate),
                 __y1: left,
                 __y2: right
             };
