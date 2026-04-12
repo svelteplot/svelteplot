@@ -134,9 +134,12 @@
 
     // Detect temporality from the raw data rather than from the computed scale type to avoid a
     // circular dependency that would cause the scale type to be permanently inferred as 'linear'.
+    // Scan for the first row that resolves to a non-null independent value — checking only
+    // filteredData[0] would give false negatives when the leading row has a missing/null value.
     const independentIsDate = $derived(
-        filteredData.length > 0 &&
-            resolveChannel(independent, filteredData[0], options as any) instanceof Date
+        filteredData.some(
+            (d) => resolveChannel(independent, d, options as any) instanceof Date
+        )
     );
 
     // Build a clean numeric input set for regression fitting, dropping invalid rows early.

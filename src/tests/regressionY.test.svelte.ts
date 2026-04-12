@@ -212,6 +212,32 @@ describe('RegressionY mark', () => {
         expect(d).not.toContain('NaN');
     });
 
+    it('preserves time scale when first row has null x value', () => {
+        const start = new Date('2024-01-01');
+        const timeDataWithLeadingNull = [
+            { x: null, y: null }, // leading invalid row
+            ...Array.from({ length: 5 }, (_, i) => ({
+                x: new Date(start.getTime() + i * 30 * 24 * 60 * 60 * 1000),
+                y: i * 2 + 1
+            }))
+        ];
+
+        const { container } = render(RegressionYTest, {
+            props: {
+                data: timeDataWithLeadingNull,
+                x: 'x',
+                y: 'y'
+            }
+        });
+
+        const paths = container.querySelectorAll('g[class*="regression-x"] g.lines path');
+        expect(paths.length).toBeGreaterThanOrEqual(1);
+        const d = paths[0].getAttribute('d');
+        expect(d).toBeTruthy();
+        expect(d).toMatch(/^M/);
+        expect(d).not.toContain('NaN');
+    });
+
     it('activates fx faceting when fx channel is set', () => {
         const facetedData = [
             { x: 1, y: 2, cat: 'A' },
