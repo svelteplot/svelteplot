@@ -89,6 +89,7 @@ export default {
                 { title: 'Density', to: '/transforms/density' },
                 { title: 'Dodge', to: '/transforms/dodge' },
                 { title: 'Filter', to: '/transforms/filter' },
+                { title: 'Force', to: '/transforms/force' },
                 { title: 'Group', to: '/transforms/group' },
                 { title: 'Interval', to: '/transforms/interval' },
                 { title: 'Jitter', to: '/transforms/jitter' },
