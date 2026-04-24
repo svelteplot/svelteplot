@@ -16,7 +16,7 @@ Unlike other transforms, the dodge transform is applied _after_ the positions ha
 
 ```svelte live
 <script>
-    import { Plot, DotX, RuleY } from '$lib';
+    import { Plot, DotX, RuleY } from 'svelteplot';
     import { page } from '$app/state';
 
     const { cars } = $derived(page.data.data);
@@ -51,7 +51,7 @@ Compare this to a conventional histogram using a rect mark.
 
 ```svelte live
 <script>
-    import { Plot, RectY, RuleY, binX } from '$lib';
+    import { Plot, RectY, RuleY, binX } from 'svelteplot';
     import { page } from '$app/state';
 
     const { cars } = $derived(page.data.data);
@@ -82,7 +82,7 @@ If you use the r channel to specify the radius of each dot, the dodge transform 
 
 ```svelte live
 <script>
-    import { Plot, Dot } from '$lib';
+    import { Plot, Dot } from 'svelteplot';
     import { page } from '$app/state';
 
     const { countries_2020: countries } = $derived(
@@ -112,7 +112,7 @@ This also works with other positional marks, such as texts:
 
 ```svelte live
 <script>
-    import { Plot, Dot, Text } from '$lib';
+    import { Plot, Dot, Text } from 'svelteplot';
     import { page } from '$app/state';
 
     const { countries_2020: countries } = $derived(

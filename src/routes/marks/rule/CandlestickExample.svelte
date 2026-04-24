@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Plot, RuleX } from '$lib/index.js';
+    import { Plot, RuleX } from 'svelteplot';
     import { getContext } from 'svelte';
     import Code from '../../Code.svelte';
 

@@ -39,7 +39,7 @@ Like most other marks, rules also accept data for displaying multiple lines at o
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -62,7 +62,7 @@ Rules can be used for barcode plots:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleX } from '$lib/index.js';
+    import { Plot, RuleX } from 'svelteplot';
     import { range } from 'd3-array';
     import { randomNormal, randomLcg } from 'd3-random';
 
@@ -110,7 +110,7 @@ Or candlestick ([demo](https://svelte.dev/playground/f2b2ada0c65d403c92777250c14
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleX } from '$lib/index.js';
+    import { Plot, RuleX } from 'svelteplot';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -146,7 +146,7 @@ You can combine the rule marks with the group transform to show the mean, median
         RuleY,
         groupZ,
         Dot
-    } from '$lib/index.js';
+    } from 'svelteplot';
 
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);

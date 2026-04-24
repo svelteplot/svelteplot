@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Plot, RuleX, RuleY } from '$lib/index.js';
-    import AxisX from '$lib/marks/AxisX.svelte';
-    import GridX from '$lib/marks/GridX.svelte';
-    import GridY from '$lib/marks/GridY.svelte';
+    import { Plot, RuleX, RuleY } from 'svelteplot';
+    import AxisX from 'svelteplot/marks/AxisX.svelte';
+    import GridX from 'svelteplot/marks/GridX.svelte';
+    import GridY from 'svelteplot/marks/GridY.svelte';
     import { range } from 'd3-array';
 
     const ticks = range(0, 3.01, 0.5).map((d) => d * Math.PI);

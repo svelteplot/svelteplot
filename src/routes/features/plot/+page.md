@@ -394,7 +394,7 @@ SveltePlot provides a lot of convenience features with the unfortunate side-effe
 
 ```svelte live
 <script>
-    import Plot from '$lib/core/Plot.svelte';
+    import Plot from 'svelteplot/core/Plot.svelte';
     import { Line } from 'svelteplot';
     import { page } from '$app/state';
     const { aapl } = $derived(page.data.data);

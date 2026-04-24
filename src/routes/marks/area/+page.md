@@ -14,7 +14,7 @@ The **area mark** draws the region between a baseline (x1, y1) and a topline (x2
 
 ```svelte live
 <script lang="ts">
-    import { Plot, AreaY } from '$lib/index';
+    import { Plot, AreaY } from 'svelteplot';
     import { page } from '$app/state';
     const { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';
@@ -43,7 +43,7 @@ If you supply `undefined` values, the area mark will create gaps in the visualiz
 
 ```svelte live
 <script lang="ts">
-    import { Plot, AreaY } from '$lib/index';
+    import { Plot, AreaY } from 'svelteplot';
     import { page } from '$app/state';
     const { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';
@@ -82,7 +82,7 @@ In order to interpolate across undefined values you need to filter them, e.g. us
 
 ```svelte live
 <script lang="ts">
-    import { Plot, AreaY } from '$lib/index';
+    import { Plot, AreaY } from 'svelteplot';
     import { page } from '$app/state';
     const { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';
@@ -141,7 +141,7 @@ If you need a different baseline you can pass <b>y1</b> and <b>y2</b> channels i
 
 ```svelte live
 <script>
-    import { Plot, AreaY } from '$lib/index';
+    import { Plot, AreaY } from 'svelteplot';
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';
@@ -287,7 +287,7 @@ You can use the **offset** option to create a streamgraph:
 
 ```svelte live
 <script>
-    import { Plot, AreaY } from '$lib/index.js';
+    import { Plot, AreaY } from 'svelteplot';
     import { Select } from '$shared/ui';
     import { page } from '$app/stores';
     import { getContext } from 'svelte';
@@ -387,7 +387,7 @@ Required channels for horizontal area charts:
         AreaY,
         Line,
         RuleY
-    } from '$lib/index.js';
+    } from 'svelteplot';
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';
@@ -445,7 +445,7 @@ The example below demonstrates how to use the Area mark to create a custom area 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Area, Line } from '$lib/index.js';
+    import { Plot, Area, Line } from 'svelteplot';
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
     import { getContext } from 'svelte';

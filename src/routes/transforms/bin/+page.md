@@ -91,7 +91,7 @@ Alternatively, you can also map to the _r_ channel.
 ```svelte live
 <script>
     import { Plot, DotX, binX } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 
@@ -117,7 +117,7 @@ Alternatively, you can also map to the _r_ channel.
 ```svelte live
 <script>
     import { Plot, DotX, binX } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 </script>
@@ -546,7 +546,7 @@ You can also map to _r_ as output channel:
 ```svelte live
 <script>
     import { Plot, Dot, bin } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 
@@ -590,7 +590,7 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
 ```svelte live
 <script>
     import { Plot, Rect, bin } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
     import { getContext } from 'svelte';

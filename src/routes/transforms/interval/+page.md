@@ -35,7 +35,7 @@ In contrast, a [rectY](/marks/rect) mark with the interval option and the day in
 ```svelte live
 <script lang="ts">
     import { Plot, RectY, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -76,7 +76,7 @@ The meaning of the interval mark option depends on the associated mark, such as 
 ```svelte live
 <script lang="ts">
     import { Plot, BarY, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);

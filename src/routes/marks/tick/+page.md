@@ -12,7 +12,7 @@ The tickX mark shows a vertical bar for each x position. Based on an example fro
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleX, TickX } from '$lib/index.js';
+    import { Plot, RuleX, TickX } from 'svelteplot';
     import { page } from '$app/state';
     let { stateage } = $derived(page.data.data);
 </script>
@@ -38,7 +38,7 @@ Shows a horizontal bar for each x position.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleY, TickY } from '$lib/index.js';
+    import { Plot, RuleY, TickY } from 'svelteplot';
     import { Slider } from '$shared/ui';
     import { page } from '$app/state';
     let { stateage } = $derived(page.data.data);
@@ -79,7 +79,7 @@ Same idea but with facet:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleY, TickY } from '$lib/index.js';
+    import { Plot, RuleY, TickY } from 'svelteplot';
 
     import { page } from '$app/state';
     const { stateage } = $derived(page.data.data);

@@ -12,7 +12,7 @@
         Line,
         GridX,
         GridY
-    } from '$lib/index.js';
+    } from 'svelteplot';
 
     const { aapl } = $props();
 </script>

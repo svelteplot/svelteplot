@@ -8,7 +8,7 @@ Since the filter transform only affects the mark’s index and not the channel v
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarY, filter } from '$lib/index';
+    import { Plot, BarY, filter } from 'svelteplot';
     import { page } from '$app/state';
     const { alphabet } = $derived(page.data.data);
     import { getContext } from 'svelte';

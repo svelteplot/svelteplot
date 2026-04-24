@@ -345,7 +345,7 @@ This scatterplot suffers from overplotting: many dots are drawn in the same spot
 ```svelte --live
 <script>
     import { Plot, Rect, bin } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 
@@ -384,7 +384,7 @@ We can use the [binX transform](/transforms/bin) to compute a weight distributio
         DotX,
         binX
     } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 </script>
@@ -431,7 +431,7 @@ Or we can use the built-in [faceting](/features/facets) to look at the distribut
         DotX,
         binX
     } from 'svelteplot';
-    import Mark from '$lib/Mark.svelte';
+    import Mark from 'svelteplot/Mark.svelte';
     import { page } from '$app/state';
     let { olympians } = $derived(page.data.data);
 </script>

@@ -13,7 +13,7 @@ You can use SveltePlot inside any platform that supports Svelte 5, such as [Stac
 
 ```svelte live
 <script>
-    import { Plot, RectY, binX } from '$lib/index';
+    import { Plot, RectY, binX } from 'svelteplot';
     import { randomNormal } from 'd3-random';
 
     const randomNumbers = new Array(10000)
@@ -72,7 +72,7 @@ pnpm add svelteplot
 
 ```svelte live
 <script>
-    import { Plot, BarX } from '$lib/index';
+    import { Plot, BarX } from 'svelteplot';
 </script>
 
 <Plot grid testid="four-bars" y={['A', 'B', 'C', 'D']}>

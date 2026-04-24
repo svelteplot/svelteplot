@@ -39,7 +39,7 @@ If the **x** and **y** options are not defined, the line mark assumes that the d
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -243,7 +243,7 @@ BLS Demo:
 ```svelte live
 <script lang="ts">
     import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
 
     import { page } from '$app/state';
     let { bls } = $derived(page.data.data);
@@ -339,7 +339,7 @@ The [LineY constructor](/marks/line#LineY) provides default channel definitions 
 ```svelte live
 <script lang="ts">
     import { Plot, LineY } from 'svelteplot';
-    import type { Datasets } from '$lib/types/index.js';
+    import type { Datasets } from 'svelteplot/types/index.js';
     import { randomNormal } from 'd3-random';
     import { range, cumsum } from 'd3-array';
 </script>
@@ -534,7 +534,7 @@ You can set the line interpolation using the **interpolation** option.
 
 ```svelte live
 <script>
-    import { Plot, LineY, Dot } from '$lib/index.js';
+    import { Plot, LineY, Dot } from 'svelteplot';
     import Slider from '$shared/ui/Slider.svelte';
     import Select from '$shared/ui/Select.svelte';
 

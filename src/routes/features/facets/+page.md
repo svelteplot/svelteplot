@@ -6,7 +6,7 @@ Facets are a way to split a plot into multiple panels.
 
 ```svelte live
 <script>
-    import { Plot, Dot, AxisX } from '$lib/index';
+    import { Plot, Dot, AxisX } from 'svelteplot';
     import { page } from '$app/state';
     const { penguins } = $derived(page.data.data);
 </script>
@@ -91,7 +91,7 @@ Apply top-level facet options automatically:
 
 ```svelte --live
 <script>
-    import { Plot, Dot, Frame } from '$lib/index';
+    import { Plot, Dot, Frame } from 'svelteplot';
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
 </script>
@@ -124,7 +124,7 @@ Bar chart facets
 
 ```svelte live
 <script>
-    import { Plot, BarY } from '$lib/index';
+    import { Plot, BarY } from 'svelteplot';
     const resultsLong = [
         { party: 'Union', year: 2025, percent: 30 },
         { party: 'Union', year: 2021, percent: 22 },

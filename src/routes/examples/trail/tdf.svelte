@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-    import { Plot, Line, Trail } from '$lib/index.js';
+    import { Plot, Line, Trail } from 'svelteplot';
 
     let { tdf } = $props();
 </script>

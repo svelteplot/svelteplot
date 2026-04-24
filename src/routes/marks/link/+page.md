@@ -8,7 +8,7 @@ For connecting two points with a line.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Link, Dot, Text } from '$lib/index.js';
+    import { Plot, Link, Dot, Text } from 'svelteplot';
     import { page } from '$app/state';
     let { metros } = $derived(page.data.data);
 
@@ -71,7 +71,7 @@ Link support spherical projections:
         Link,
         Dot,
         Text
-    } from '$lib/index.js';
+    } from 'svelteplot';
     import { page } from '$app/state';
     import * as topojson from 'topojson-client';
 

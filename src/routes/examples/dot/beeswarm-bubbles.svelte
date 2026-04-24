@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-    import { Plot, Dot } from '$lib';
+    import { Plot, Dot } from 'svelteplot';
 
     const { countries } = $props();
 </script>

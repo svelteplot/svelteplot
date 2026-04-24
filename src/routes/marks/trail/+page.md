@@ -14,7 +14,7 @@ In the example below we use the line width to represent elevation along the 12th
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, Trail } from '$lib/index.js';
+    import { Plot, Line, Trail } from 'svelteplot';
     import { page } from '$app/state';
 
     let { tdf } = $derived(page.data.data);
@@ -56,7 +56,7 @@ By default, the trail width (bound to the `r` channel) is scaled using a square-
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Trail } from '$lib/index.js';
+    import { Plot, Trail } from 'svelteplot';
     import { RadioInput } from '$shared/ui';
     import { page } from '$app/state';
 

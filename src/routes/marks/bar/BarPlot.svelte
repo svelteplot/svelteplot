@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Plot, BarY, RuleY } from '$lib/index.js';
+    import { Plot, BarY, RuleY } from 'svelteplot';
 
     import { page } from '$app/stores';
     let { alphabet } = $derived($page.data.data);

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Plot, Line, Pointer, Text, RectY, RuleY, Dot, selectLast } from '$lib/index.js';
+    import { Plot, Line, Pointer, Text, RectY, RuleY, Dot, selectLast } from 'svelteplot';
     import { range } from 'd3-array';
     import { page } from '$app/stores';
 

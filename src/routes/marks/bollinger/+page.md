@@ -64,7 +64,7 @@ For more flexibility you can also use the bollingerX and bollingerY as transform
         Line,
         Area,
         bollingerY
-    } from '$lib/index';
+    } from 'svelteplot';
     import { Slider } from '$shared/ui';
 
     import { page } from '$app/state';

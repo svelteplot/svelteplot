@@ -6,7 +6,7 @@ The Grid mark renders the faint grid lines in the background of your plots (the 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from '$lib/index.js';
+    import { Plot, Line } from 'svelteplot';
 
     import { page } from '$app/state';
     let { aapl } = $derived(page.data.data);
@@ -37,7 +37,7 @@ with the axes marks.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, GridX, GridY } from '$lib/index.js';
+    import { Plot, GridX, GridY } from 'svelteplot';
 </script>
 
 <Plot

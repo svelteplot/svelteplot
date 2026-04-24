@@ -71,7 +71,7 @@ You can use the explicit frame and grid marks to create ggplot style charts:
         Line,
         GridX,
         GridY
-    } from '$lib/index.js';
+    } from 'svelteplot';
     import { page } from '$app/state';
     const { aapl } = $derived(page.data.data);
 </script>

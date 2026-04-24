@@ -17,7 +17,7 @@ Metro dataset:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Arrow, Dot, Text } from '$lib/index.js';
+    import { Plot, Arrow, Dot, Text } from 'svelteplot';
     import { page } from '$app/state';
     let { metros } = $derived(page.data.data);
 
@@ -120,7 +120,7 @@ Works as well with a point scale:
         Text,
         AxisY,
         GridY
-    } from '$lib/index.js';
+    } from 'svelteplot';
     import { page } from '$app/state';
     let { metros } = $derived(page.data.data);
 </script>
@@ -166,7 +166,7 @@ Another thing you can use the arrow mark for is drawing network diagrams:
         Dot,
         Pointer,
         Text
-    } from '$lib/index.js';
+    } from 'svelteplot';
     import { json } from 'd3-fetch';
     import {
         forceSimulation,
@@ -310,7 +310,7 @@ Event handlers can be attached to arrows for interactive visualizations:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Arrow, Dot } from '$lib/index.js';
+    import { Plot, Arrow, Dot } from 'svelteplot';
 
     import Slider from '$shared/ui/Slider.svelte';
     import Select from '$shared/ui/Select.svelte';

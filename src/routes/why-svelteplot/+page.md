@@ -255,8 +255,8 @@ Here's an example where we're binding a live-updated dataset to a [Line mark](/m
         AreaY,
         Dot,
         Text
-    } from '$lib/index.js';
-    import { noise } from '$lib/helpers/noise.js';
+    } from 'svelteplot';
+    import { noise } from 'svelteplot/helpers/noise.js';
 
     let rand: number[] = $state([]);
     let maxLen = $state(200);
