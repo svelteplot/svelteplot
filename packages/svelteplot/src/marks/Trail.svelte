@@ -38,11 +38,11 @@
         RawValue,
         ScaledDataRecord,
         CurveName
-    } from 'svelteplot/types';
+    } from 'svelteplot/types/index.js';
     import Mark from '../Mark.svelte';
     import { path as d3Path } from 'd3-path';
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
-    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
     import { sort } from 'svelteplot/transforms';
     import trailPath, { type TrailSample } from './helpers/trail.js';
     import TrailCanvas from './helpers/TrailCanvas.svelte';

@@ -9,14 +9,14 @@
         ChannelAccessor,
         LinkableMarkProps,
         BorderRadius
-    } from 'svelteplot/types';
+    } from 'svelteplot/types/index.js';
     import { wafflePolygon, type WaffleOptions } from './helpers/waffle';
-    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
     import { intervalX, recordizeX, sort, stackX } from 'svelteplot/transforms';
-    import type { StackOptions } from 'svelteplot/transforms/stack';
+    import type { StackOptions } from 'svelteplot/transforms/stack.js';
     import Mark from '../Mark.svelte';
-    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve';
-    import { roundedRect } from 'svelteplot/helpers/roundedRect';
+    import { resolveProp, resolveStyles } from 'svelteplot/helpers/resolve.js';
+    import { roundedRect } from 'svelteplot/helpers/roundedRect.js';
     import { usePlot } from 'svelteplot/hooks/usePlot.svelte.js';
 
     interface WaffleXMarkProps

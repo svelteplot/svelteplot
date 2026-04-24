@@ -16,7 +16,7 @@
 
 <script lang="ts">
     import { getContext } from 'svelte';
-    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults';
+    import { getPlotDefaults } from 'svelteplot/hooks/plotDefaults.js';
 
     type MarkerProps = {
         id: string;
