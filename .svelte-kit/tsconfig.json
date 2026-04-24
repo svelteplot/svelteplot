@@ -2,22 +2,22 @@
 	"compilerOptions": {
 		"paths": {
 			"svelteplot": [
-				"../src/lib"
+				"../packages/svelteplot/src/lib"
 			],
 			"svelteplot/*": [
-				"../src/lib/*"
-			],
-			"$lib": [
-				"../src/lib"
-			],
-			"$lib/*": [
-				"../src/lib/*"
+				"../packages/svelteplot/src/lib/*"
 			],
 			"$shared": [
 				"../src/shared"
 			],
 			"$shared/*": [
 				"../src/shared/*"
+			],
+			"$lib": [
+				"../src/lib"
+			],
+			"$lib/*": [
+				"../src/lib/*"
 			],
 			"$app/types": [
 				"./types/index.d.ts"

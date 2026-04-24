@@ -15,9 +15,7 @@ export default defineConfig({
               }
             : undefined),
         alias: {
-            svelteplot: path.resolve(__dirname, './src/lib/index.js'),
-            $lib: path.resolve(__dirname, './src/lib'),
-            '$lib/*': path.resolve(__dirname, './src/lib') + '/*',
+            svelteplot: path.resolve(__dirname, './packages/svelteplot/src/lib/index.js'),
             $theme: path.resolve(__dirname, './src/theme'),
             '$theme/*': path.resolve(__dirname, './src/theme') + '/*'
         }
@@ -77,12 +75,6 @@ export default defineConfig({
             // addInspect: true
         })
     ],
-
-    test: {
-        include: ['src/**/*.{test,spec}.{js,ts,svelte.ts}'],
-        environment: 'jsdom',
-        setupFiles: ['/src/tests/setup.ts']
-    },
 
     css: {
         preprocessorOptions: {
