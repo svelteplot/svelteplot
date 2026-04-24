@@ -76,8 +76,32 @@ const collectImportSpecifiers = (code) => {
     );
 };
 
-const resolveRelativeSpecifierOnDisk = async (specifier, importerFilePath) => {
+const resolveRelativeSpecifierOnDisk = async (specifier, importerFilePath, absoluteRoot) => {
     const { base, suffix } = splitSpecifier(specifier);
+
+    if (base.startsWith('svelteplot/')) {
+        const subpath = base.slice('svelteplot/'.length);
+        const importerDir = path.dirname(importerFilePath);
+        const targetBase = path.resolve(absoluteRoot, subpath);
+
+        let resolvedTarget = null;
+        if (hasExtension(subpath)) {
+            if (await pathExists(targetBase)) resolvedTarget = targetBase;
+        } else {
+            const fileCandidate = await pathExists(`${targetBase}.js`);
+            if (fileCandidate?.isFile()) {
+                resolvedTarget = `${targetBase}.js`;
+            } else {
+                const indexCandidate = await pathExists(path.join(targetBase, 'index.js'));
+                if (indexCandidate?.isFile()) resolvedTarget = path.join(targetBase, 'index.js');
+            }
+        }
+
+        if (!resolvedTarget) return null;
+        let rel = path.relative(importerDir, resolvedTarget);
+        if (!rel.startsWith('.')) rel = `./${rel}`;
+        return rel + suffix;
+    }
 
     if (!base.startsWith('.') || hasExtension(base)) return null;
 
@@ -137,7 +161,7 @@ export async function fullySpecifyImportsInDirectory(rootDir = 'dist') {
 
         const replacements = [];
         for (const match of matches) {
-            const replacement = await resolveRelativeSpecifierOnDisk(match.specifier, filePath);
+            const replacement = await resolveRelativeSpecifierOnDisk(match.specifier, filePath, absoluteRoot);
             if (replacement && replacement !== match.specifier) {
                 replacements.push({
                     start: match.start,
