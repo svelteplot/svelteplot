@@ -141,12 +141,7 @@ You can combine the rule marks with the group transform to show the mean, median
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        RuleY,
-        groupZ,
-        Dot
-    } from 'svelteplot';
+    import { Plot, RuleY, groupZ, Dot } from 'svelteplot';
 
     import { page } from '$app/state';
     let { penguins } = $derived(page.data.data);
