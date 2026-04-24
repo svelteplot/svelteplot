@@ -61,6 +61,7 @@ jobs:
               run: pnpm install
 
             - name: Generate preview version
+              working-directory: packages/svelteplot
               run: |
                   pr_number=${{ github.event.pull_request.number }}
 
@@ -70,43 +71,44 @@ jobs:
                   if [ -n "$existing_versions" ]; then
                     # Get the highest existing prerelease version
                     latest_version=$(echo "$existing_versions" | sort -V | tail -n 1)
-                    
+
                     echo "Found latest existing prerelease version: $latest_version"
-                    
+
                     # Extract base version (before the `-pr-N.x` part)
                     base_version=$(echo "$latest_version" | sed -E "s/-pr-${pr_number}\.[0-9]+//")
-                    
+
                     # Extract current prerelease number (the `.x` part)
                     prerelease_num=$(echo "$latest_version" | sed -E "s/.*-pr-${pr_number}\.([0-9]+)$/\1/")
-                    
+
                     # Increment prerelease number
                     next_prerelease=$((prerelease_num + 1))
-                    
+
                     next_version="${base_version}-pr-${pr_number}.${next_prerelease}"
-                    
+
                     echo "Bumping to next prerelease version: $next_version"
-                    
+
                     npm version "$next_version" --no-git-tag-version
                   else
                     # No existing prerelease, start fresh from current base version
                     base_version=$(node -p "require('./package.json').version")
                     next_version="${base_version}-pr-${pr_number}.0"
-                    
+
                     echo "Starting fresh prerelease version: $next_version"
-                    
+
                     npm version "$next_version" --no-git-tag-version
                   fi
 
                   echo "Generated version: $(node -p "require('./package.json').version")"
 
             - name: Publish to npm
+              working-directory: packages/svelteplot
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH }}
               run: npm publish --tag pr-${{ github.event.pull_request.number }} --access public
 
             # Save version for use in PR comment
             - name: Save version
-              run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+              run: echo "PACKAGE_VERSION=$(node -p "require('./packages/svelteplot/package.json').version")" >> $GITHUB_ENV
 
             - name: Comment on PR
               uses: peter-evans/create-or-update-comment@v3
