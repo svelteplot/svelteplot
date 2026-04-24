@@ -15,7 +15,7 @@ export default defineConfig({
               }
             : undefined),
         alias: {
-            svelteplot: path.resolve(__dirname, './packages/svelteplot/src/lib/index.js'),
+            svelteplot: path.resolve(__dirname, './packages/svelteplot/src/index.js'),
             $theme: path.resolve(__dirname, './src/theme'),
             '$theme/*': path.resolve(__dirname, './src/theme') + '/*'
         }

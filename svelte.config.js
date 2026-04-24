@@ -23,7 +23,7 @@ const config = {
             strict: false
         }),
         alias: {
-            svelteplot: path.resolve(__dirname, './packages/svelteplot/src/lib'),
+            svelteplot: path.resolve(__dirname, './packages/svelteplot/src'),
             $shared: path.resolve(__dirname, './src/shared')
         }
     }

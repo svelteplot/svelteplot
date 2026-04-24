@@ -12,20 +12,20 @@ export default defineConfig({
         alias: [
             {
                 find: /^svelteplot\/(.+)$/,
-                replacement: path.resolve(__dirname, './src/lib/$1')
+                replacement: path.resolve(__dirname, './src/$1')
             },
             {
                 find: 'svelteplot',
-                replacement: path.resolve(__dirname, './src/lib/index.js')
+                replacement: path.resolve(__dirname, './src/index.js')
             }
         ]
     },
     test: {
         include: [
-            'src/tests/**/*.{test,spec}.{js,ts,svelte.ts}',
-            'src/lib/**/*.{test,spec}.{js,ts,svelte.ts}'
+            'tests/**/*.{test,spec}.{js,ts,svelte.ts}',
+            'src/**/*.{test,spec}.{js,ts,svelte.ts}'
         ],
         environment: 'jsdom',
-        setupFiles: ['./src/tests/setup.ts']
+        setupFiles: ['./tests/setup.ts']
     }
 });

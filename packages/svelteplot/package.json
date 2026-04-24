@@ -55,7 +55,7 @@
         "!dist/**/*.spec.*"
     ],
     "scripts": {
-        "prepack": "npx svelte-package && node scripts/fix-js-imports.js dist",
+        "prepack": "npx svelte-package --input src && node scripts/fix-js-imports.js dist",
         "test": "vitest run",
         "test:watch": "vitest"
     },
