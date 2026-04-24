@@ -76,6 +76,12 @@ export default defineConfig({
         })
     ],
 
+    server: {
+        fs: {
+            allow: ['.', 'packages/svelteplot/src']
+        }
+    },
+
     css: {
         preprocessorOptions: {
             scss: {
