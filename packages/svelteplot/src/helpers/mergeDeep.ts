@@ -10,7 +10,10 @@ export default function mergeDeep<T extends ObjectType>(
 ): T {
     for (const source of sources) {
         if (isObject(target) && isObject(source)) {
-            for (const key in source) {
+            for (const key of Object.keys(source)) {
+                if (key === '__proto__' || key === 'prototype' || key === 'constructor') {
+                    continue;
+                }
                 if (isObject(source[key])) {
                     if (!target[key]) {
                         Object.assign(target, { [key]: {} });
