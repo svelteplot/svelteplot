@@ -63,8 +63,7 @@ function render_markdown(body: string): string {
     return marked(cleaned) as string;
 }
 
-// Build ordered exercise list once at module init
-const BASE = '/src/content/tutorial/02-svelteplot';
+const TUTORIAL_ROOT = '/src/content/tutorial';
 
 function sorted_keys(obj: Record<string, string>, prefix: string) {
     return Object.keys(obj)
@@ -79,52 +78,65 @@ interface RawExercise {
     mdPath: string;
     assetPrefix: string;
     chapterAssetPrefix: string;
+    groupAssetPrefix: string;
 }
 
 function build_exercise_list(): RawExercise[] {
     const list: RawExercise[] = [];
 
-    // Chapter dirs: 01-loading-data, 02-creating-a-plot, …
-    const chapterPaths = sorted_keys(mds, BASE + '/').reduce((acc, p) => {
-        const rel = p.slice(BASE.length + 1);
+    // Find all group dirs (e.g. 01-basics, 02-marks) — dirs that contain chapter subdirs
+    const groups = sorted_keys(mds, TUTORIAL_ROOT + '/').reduce((acc, p) => {
+        const rel = p.slice(TUTORIAL_ROOT.length + 1);
         const parts = rel.split('/');
-        if (parts.length >= 3 && parts[0] !== '+assets' && parts[1] !== '+assets') {
-            const chapter = parts[0];
-            if (!acc.includes(chapter)) acc.push(chapter);
+        if (parts.length >= 4 && parts[0] !== '+assets') {
+            if (!acc.includes(parts[0])) acc.push(parts[0]);
         }
         return acc;
     }, [] as string[]);
 
-    for (const chapter of chapterPaths) {
-        const chapterBase = `${BASE}/${chapter}`;
-        const chapterMeta = mds[`${chapterBase}/index.md`] ?? '';
-        const { meta: cm } = parse_front_matter(chapterMeta);
-        const chapterTitle = cm.title ?? chapter;
+    for (const group of groups) {
+        const groupBase = `${TUTORIAL_ROOT}/${group}`;
 
-        // Exercise dirs within chapter
-        const exPaths = sorted_keys(mds, chapterBase + '/').reduce((acc, p) => {
-            const rel = p.slice(chapterBase.length + 1);
+        // Chapter dirs within group
+        const chapters = sorted_keys(mds, groupBase + '/').reduce((acc, p) => {
+            const rel = p.slice(groupBase.length + 1);
             const parts = rel.split('/');
-            if (parts.length >= 2 && parts[0] !== '+assets' && parts[0] !== 'index.md') {
-                const ex = parts[0];
-                if (!acc.includes(ex)) acc.push(ex);
+            if (parts.length >= 3 && parts[0] !== '+assets' && parts[1] !== '+assets') {
+                if (!acc.includes(parts[0])) acc.push(parts[0]);
             }
             return acc;
         }, [] as string[]);
 
-        for (const ex of exPaths) {
-            const mdPath = `${chapterBase}/${ex}/index.md`;
-            if (!mds[mdPath]) continue;
+        for (const chapter of chapters) {
+            const chapterBase = `${groupBase}/${chapter}`;
+            const chapterMeta = mds[`${chapterBase}/index.md`] ?? '';
+            const { meta: cm } = parse_front_matter(chapterMeta);
+            const chapterTitle = cm.title ?? chapter;
 
-            const { meta } = parse_front_matter(mds[mdPath]);
-            list.push({
-                slug: `${chapter}/${ex}`,
-                title: meta.title ?? ex,
-                chapter: chapterTitle,
-                mdPath,
-                assetPrefix: `${chapterBase}/${ex}/+assets/`,
-                chapterAssetPrefix: `${chapterBase}/+assets/`
-            });
+            // Exercise dirs within chapter
+            const exercises = sorted_keys(mds, chapterBase + '/').reduce((acc, p) => {
+                const rel = p.slice(chapterBase.length + 1);
+                const parts = rel.split('/');
+                if (parts.length >= 2 && parts[0] !== '+assets' && parts[0] !== 'index.md') {
+                    if (!acc.includes(parts[0])) acc.push(parts[0]);
+                }
+                return acc;
+            }, [] as string[]);
+
+            for (const ex of exercises) {
+                const mdPath = `${chapterBase}/${ex}/index.md`;
+                if (!mds[mdPath]) continue;
+                const { meta } = parse_front_matter(mds[mdPath]);
+                list.push({
+                    slug: `${chapter}/${ex}`,
+                    title: meta.title ?? ex,
+                    chapter: chapterTitle,
+                    mdPath,
+                    assetPrefix: `${chapterBase}/${ex}/+assets/`,
+                    chapterAssetPrefix: `${chapterBase}/+assets/`,
+                    groupAssetPrefix: `${groupBase}/+assets/`
+                });
+            }
         }
     }
 
@@ -133,8 +145,6 @@ function build_exercise_list(): RawExercise[] {
 
 const exercise_list = build_exercise_list();
 const exercise_map = new Map(exercise_list.map((e, i) => [e.slug, { ...e, index: i }]));
-
-const SHARED_ASSET_PREFIX = `${BASE}/+assets/`;
 
 export function get_exercise_stubs(): ExerciseStub[] {
     return exercise_list.map(({ slug, title, chapter }) => ({ slug, title, chapter }));
@@ -148,7 +158,7 @@ export function load_exercise(slug: string): Exercise | null {
     const index = entry.index;
 
     // Merge shared assets → chapter assets → exercise app-a
-    const shared = get_files(SHARED_ASSET_PREFIX);
+    const shared = get_files(entry.groupAssetPrefix);
     const chapter_shared = get_files(entry.chapterAssetPrefix);
     const app_a_raw = get_files(`${entry.assetPrefix}app-a/`);
     const app_b_raw = get_files(`${entry.assetPrefix}app-b/`);
