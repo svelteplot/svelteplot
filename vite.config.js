@@ -14,11 +14,72 @@ export default defineConfig({
                   conditions: ['browser']
               }
             : undefined),
-        alias: {
-            svelteplot: path.resolve(__dirname, './packages/svelteplot/src/index.js'),
-            $theme: path.resolve(__dirname, './src/theme'),
-            '$theme/*': path.resolve(__dirname, './src/theme') + '/*'
-        }
+        alias: [
+            // svelteplot library
+            {
+                find: 'svelteplot',
+                replacement: path.resolve(__dirname, './packages/svelteplot/src/index.js')
+            },
+            // @sveltejs/repl subpath exports
+            {
+                find: '@sveltejs/repl/bundler',
+                replacement: path.resolve(__dirname, './packages/repl/src/lib/Bundler.svelte.ts')
+            },
+            {
+                find: '@sveltejs/repl/editor',
+                replacement: path.resolve(__dirname, './packages/repl/src/lib/Editor/Editor.svelte')
+            },
+            {
+                find: '@sveltejs/repl/viewer',
+                replacement: path.resolve(
+                    __dirname,
+                    './packages/repl/src/lib/Output/Viewer.svelte'
+                )
+            },
+            {
+                find: '@sveltejs/repl/workspace',
+                replacement: path.resolve(__dirname, './packages/repl/src/lib/Workspace.svelte.ts')
+            },
+            {
+                find: '@sveltejs/repl/console',
+                replacement: path.resolve(
+                    __dirname,
+                    './packages/repl/src/lib/Output/console/index.ts'
+                )
+            },
+            { find: '@sveltejs/repl', replacement: path.resolve(__dirname, './packages/repl/src/lib/index.ts') },
+            // site-kit shim (components used inside the repl package)
+            {
+                find: '@sveltejs/site-kit/components',
+                replacement: path.resolve(
+                    __dirname,
+                    './packages/repl/src/lib/site-kit/components/index.ts'
+                )
+            },
+            {
+                find: '@sveltejs/site-kit/codemirror',
+                replacement: path.resolve(
+                    __dirname,
+                    './packages/repl/src/lib/site-kit/codemirror/index.js'
+                )
+            },
+            {
+                find: '@sveltejs/site-kit/polyfills',
+                replacement: path.resolve(
+                    __dirname,
+                    './packages/repl/src/lib/site-kit/polyfills/index.ts'
+                )
+            },
+            // docs app aliases
+            {
+                find: '$theme',
+                replacement: path.resolve(__dirname, './src/theme')
+            },
+            {
+                find: /^\$theme\/(.+)$/,
+                replacement: path.resolve(__dirname, './src/theme') + '/$1'
+            }
+        ]
     },
     plugins: [
         enhancedImages(),
@@ -78,7 +139,7 @@ export default defineConfig({
 
     server: {
         fs: {
-            allow: ['.', 'packages/svelteplot/src']
+            allow: ['.', 'packages/svelteplot/src', 'packages/repl/src']
         }
     },
 

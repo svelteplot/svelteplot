@@ -1,0 +1,68 @@
+{
+    "name": "@sveltejs/repl",
+    "version": "0.6.0",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./src/lib/public.d.ts",
+            "svelte": "./src/lib/index.ts",
+            "default": "./src/lib/index.ts"
+        },
+        "./bundler": {
+            "default": "./src/lib/Bundler.svelte.ts"
+        },
+        "./editor": {
+            "svelte": "./src/lib/Editor/Editor.svelte",
+            "default": "./src/lib/Editor/Editor.svelte"
+        },
+        "./viewer": {
+            "svelte": "./src/lib/Output/Viewer.svelte",
+            "default": "./src/lib/Output/Viewer.svelte"
+        },
+        "./workspace": {
+            "svelte": "./src/lib/Workspace.svelte.ts",
+            "default": "./src/lib/Workspace.svelte.ts"
+        },
+        "./console": {
+            "svelte": "./src/lib/Output/console/index.ts",
+            "default": "./src/lib/Output/console/index.ts"
+        }
+    },
+    "peerDependencies": {
+        "svelte": "^5.0.0"
+    },
+    "dependencies": {
+        "@codemirror/autocomplete": "^6.20.0",
+        "@codemirror/commands": "^6.10.2",
+        "@codemirror/lang-css": "^6.3.1",
+        "@codemirror/lang-html": "^6.4.11",
+        "@codemirror/lang-javascript": "^6.2.4",
+        "@codemirror/lang-json": "^6.0.2",
+        "@codemirror/lang-markdown": "^6.5.0",
+        "@codemirror/language": "^6.12.1",
+        "@codemirror/lint": "^6.9.4",
+        "@codemirror/state": "^6.5.4",
+        "@codemirror/view": "^6.39.15",
+        "@jridgewell/sourcemap-codec": "^1.5.5",
+        "@lezer/common": "^1.5.1",
+        "@lezer/highlight": "^1.2.3",
+        "@replit/codemirror-lang-svelte": "^6.0.0",
+        "@replit/codemirror-vim": "^6.3.0",
+        "@rich_harris/svelte-split-pane": "^3.0.0",
+        "@rollup/browser": "^4.59.0",
+        "@sveltejs/acorn-typescript": "^1.0.9",
+        "@sveltejs/svelte-json-tree": "^2.2.1",
+        "acorn": "^8.16.0",
+        "codemirror": "^6.0.2",
+        "d3-dsv": "^3.0.1",
+        "esm-env": "^1.2.2",
+        "esrap": "^2.2.5",
+        "locate-character": "^3.0.0",
+        "magic-string": "^0.30.21",
+        "marked": "^17.0.3",
+        "resolve.exports": "^2.0.3",
+        "tailwindcss": "^4.2.1",
+        "tarparser": "^0.0.5",
+        "zimmerframe": "^1.1.4"
+    }
+}

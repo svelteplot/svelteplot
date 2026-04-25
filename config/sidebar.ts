@@ -15,6 +15,10 @@ export default {
                 {
                     title: 'Examples',
                     to: '/examples'
+                },
+                {
+                    title: 'Tutorial',
+                    to: '/tutorial'
                 }
             ]
         },
