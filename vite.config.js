@@ -142,6 +142,14 @@ export default defineConfig({
         }
     },
 
+    optimizeDeps: {
+        // tailwindcss v4 uses a Rust/WASM backend; excluding it prevents Vite
+        // from pre-bundling it (and misplacing the .wasm file). The repl only
+        // loads tailwindcss dynamically inside init_tailwind(), which is never
+        // called when tailwind mode is disabled.
+        exclude: ['tailwindcss']
+    },
+
     css: {
         preprocessorOptions: {
             scss: {
