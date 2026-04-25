@@ -1,21 +1,19 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import { sidebar } from '../../theme/components/layout';
+    import { onDestroy } from 'svelte';
+
     let { children }: { children: Snippet } = $props();
+
+    $sidebar = false;
+    onDestroy(() => { $sidebar = true; });
 </script>
 
-<!-- Full-width tutorial layout: keep the global navbar but no docs sidebar -->
 <div class="tutorial-shell">
     {@render children()}
 </div>
 
 <style>
-    /* Override SveltePress layout to be full-width with no sidebar */
-    :global(.tutorial-shell ~ aside),
-    :global(.tutorial-shell ~ nav),
-    :global(aside.sidebar) {
-        display: none !important;
-    }
-
     .tutorial-shell {
         /* sk-* CSS tokens used by the REPL components — mapped to svelteplot.dev colors */
         --sk-bg-1: #ffffff;
