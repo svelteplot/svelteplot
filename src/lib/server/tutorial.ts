@@ -88,7 +88,7 @@ function build_exercise_list(): RawExercise[] {
     const chapterPaths = sorted_keys(mds, BASE + '/').reduce((acc, p) => {
         const rel = p.slice(BASE.length + 1);
         const parts = rel.split('/');
-        if (parts.length >= 3 && parts[1] !== '+assets' && parts[2] !== 'index.md') {
+        if (parts.length >= 3 && parts[0] !== '+assets' && parts[1] !== '+assets') {
             const chapter = parts[0];
             if (!acc.includes(chapter)) acc.push(chapter);
         }
