@@ -24,7 +24,6 @@ const config = {
         }),
         alias: {
             svelteplot: path.resolve(__dirname, './packages/svelteplot/src'),
-            '@sveltejs/repl': path.resolve(__dirname, './packages/repl/src/lib/index.ts'),
             '@sveltejs/repl/bundler': path.resolve(__dirname, './packages/repl/src/lib/Bundler.svelte.ts'),
             '@sveltejs/repl/editor': path.resolve(__dirname, './packages/repl/src/lib/Editor/Editor.svelte'),
             '@sveltejs/repl/viewer': path.resolve(__dirname, './packages/repl/src/lib/Output/Viewer.svelte'),

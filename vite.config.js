@@ -47,7 +47,6 @@ export default defineConfig({
                     './packages/repl/src/lib/Output/console/index.ts'
                 )
             },
-            { find: '@sveltejs/repl', replacement: path.resolve(__dirname, './packages/repl/src/lib/index.ts') },
             // site-kit shim (components used inside the repl package)
             {
                 find: '@sveltejs/site-kit/components',
