@@ -143,11 +143,11 @@ export default defineConfig({
     },
 
     optimizeDeps: {
-        // tailwindcss v4 uses a Rust/WASM backend; excluding it prevents Vite
-        // from pre-bundling it (and misplacing the .wasm file). The repl only
-        // loads tailwindcss dynamically inside init_tailwind(), which is never
-        // called when tailwind mode is disabled.
-        exclude: ['tailwindcss']
+        // These packages use `new URL("*.wasm", import.meta.url)` to load
+        // WebAssembly. Vite's dep optimizer copies only the JS, leaving the
+        // .wasm file behind, so the browser gets a 404. Excluding them keeps
+        // import.meta.url pointing at the real node_modules location.
+        exclude: ['@rollup/browser', 'tailwindcss']
     },
 
     css: {
