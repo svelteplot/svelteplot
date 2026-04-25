@@ -10,7 +10,19 @@
 
     let { data }: PageProps = $props();
 
-    const text_exts = new Set(['.svelte', '.ts', '.js', '.json', '.css', '.html', '.md', '.csv', '.txt', '.svg', '.env']);
+    const text_exts = new Set([
+        '.svelte',
+        '.ts',
+        '.js',
+        '.json',
+        '.css',
+        '.html',
+        '.md',
+        '.csv',
+        '.txt',
+        '.svg',
+        '.env'
+    ]);
 
     function make_items(files: Record<string, string>): Item[] {
         return Object.entries(files).map(([name, contents]) => {
@@ -52,14 +64,18 @@
         svelte_version,
         onupdate(file) {
             bundler?.bundle(
-                workspace.files.filter((f): f is File => f.type === 'file' && f.name.startsWith('/src/lib/')).map((f) => ({ ...f, name: f.name.slice(9) })),
+                workspace.files
+                    .filter((f): f is File => f.type === 'file' && f.name.startsWith('/src/lib/'))
+                    .map((f) => ({ ...f, name: f.name.slice(9) })),
                 { runes: true, svelte_version }
             );
             solved = is_solved(workspace.files, data.exercise.b);
         },
         onreset(items) {
             bundler?.bundle(
-                items.filter((f): f is File => f.type === 'file' && f.name.startsWith('/src/lib/')).map((f) => ({ ...f, name: f.name.slice(9) })),
+                items
+                    .filter((f): f is File => f.type === 'file' && f.name.startsWith('/src/lib/'))
+                    .map((f) => ({ ...f, name: f.name.slice(9) })),
                 { runes: true, svelte_version }
             );
             solved = false;
@@ -67,7 +83,11 @@
     });
 
     afterNavigate(() => {
-        workspace.reset(make_items(data.exercise.a), { tailwind: false }, '/' + data.exercise.focus);
+        workspace.reset(
+            make_items(data.exercise.a),
+            { tailwind: false },
+            '/' + data.exercise.focus
+        );
         solved = false;
     });
 
@@ -95,7 +115,8 @@
 
                 <div class="prose-footer">
                     {#if data.exercise.prev}
-                        <a href="/tutorial/{data.exercise.prev.slug}" class="nav-link prev">← {data.exercise.prev.title}</a>
+                        <a href="/tutorial/{data.exercise.prev.slug}" class="nav-link prev"
+                            >← {data.exercise.prev.title}</a>
                     {:else}
                         <span></span>
                     {/if}
@@ -109,7 +130,8 @@
                     {/if}
 
                     {#if data.exercise.next}
-                        <a href="/tutorial/{data.exercise.next.slug}" class="nav-link next">{data.exercise.next.title} →</a>
+                        <a href="/tutorial/{data.exercise.next.slug}" class="nav-link next"
+                            >{data.exercise.next.title} →</a>
                     {:else}
                         <span></span>
                     {/if}
@@ -128,13 +150,7 @@
                 {#snippet b()}
                     <div class="output-pane">
                         {#if browser && bundler}
-                            <Viewer
-                                relaxed
-                                {bundler}
-                                status={null}
-                                error={null}
-                                theme="light"
-                            />
+                            <Viewer relaxed {bundler} status={null} error={null} theme="light" />
                         {/if}
                     </div>
                 {/snippet}
@@ -222,8 +238,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .nav-link:hover { text-decoration: underline; }
-    .nav-link.next { text-align: right; }
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+    .nav-link.next {
+        text-align: right;
+    }
 
     .solve-btn {
         padding: 0.3rem 0.9rem;
@@ -235,7 +255,9 @@
         font-size: 0.8rem;
         white-space: nowrap;
     }
-    .solve-btn:hover { opacity: 0.85; }
+    .solve-btn:hover {
+        opacity: 0.85;
+    }
 
     .editor-pane {
         position: relative;
