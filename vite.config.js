@@ -139,6 +139,10 @@ export default defineConfig({
         }
     },
 
+    worker: {
+        format: 'es'
+    },
+
     optimizeDeps: {
         // These packages use `new URL("*.wasm", import.meta.url)` to load
         // WebAssembly. Vite's dep optimizer copies only the JS, leaving the

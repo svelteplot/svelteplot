@@ -3,7 +3,7 @@
   import { Plot, Dot } from 'svelteplot';
 
   const scheme = {
-    CDUCSU: 'black',
+    CDUCSU: 'light-dark(black, white)',
     AfD: 'deepskyblue'
   };
 </script>

@@ -23,7 +23,7 @@ Then we can add a plot by adding these three lines to the markup:
 By the way, the `RuleY` mark can also receive data and a `y` channel. Then it will add multiple horizontal rules. You can try this, for fun:
 
 ```svelte
--<RuleY y={0} />
+<RuleY y={0} />
 +<RuleY
 +  {data}
 +  y="Close"

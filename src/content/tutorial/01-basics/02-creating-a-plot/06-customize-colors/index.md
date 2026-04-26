@@ -24,3 +24,13 @@ Then pass it to the `color` option:
 ```
 
 Any party not listed in the scheme will still get an automatic color.
+
+Tip: we can use a different color on dark mode using CSS `light-dark` colrs:
+
+```js
+const scheme = {
+-  CDUCSU: 'black',
++  CDUCSU: 'light-dark(black, white)',
+  AfD: 'deepskyblue'
+}
+```

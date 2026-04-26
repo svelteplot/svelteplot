@@ -1,11 +1,12 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { sidebar } from '../../theme/components/layout';
+    import { anchors, sidebar } from '../../theme/components/layout';
     import { onDestroy, onMount } from 'svelte';
 
     let { children }: { children: Snippet } = $props();
 
     $sidebar = false;
+    $anchors = [];
     onMount(() => {
         document.body.style.overflow = 'hidden';
     });
