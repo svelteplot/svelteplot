@@ -14,29 +14,29 @@ For one-dimensional kernel density estimates, see the [densityX](/transforms/den
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import { useDark } from '$shared/ui';
+  import { Plot, Density, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  import { useDark } from '$shared/ui';
 
-    const ds = useDark();
+  const ds = useDark();
 
-    const { penguins } = $derived(page.data.data);
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot color={{ scheme: ds.isDark ? 'viridis' : 'blues' }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        thresholds={10} />
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="currentColor"
-        r={1.5}
-        opacity={0.4} />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    thresholds={10} />
+  <Dot
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="currentColor"
+    r={1.5}
+    opacity={0.4} />
 </Plot>
 ```
 
@@ -46,26 +46,26 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
 
 ```svelte
 <Plot>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm" />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm" />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Density } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm" />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm" />
 </Plot>
 ```
 
@@ -75,28 +75,28 @@ You can create separate densities by grouping via stroke or `z` channel:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Density } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <Density
-        data={penguins}
-        stroke="species"
-        x="culmen_length_mm"
-        y="culmen_depth_mm" />
+  <Density
+    data={penguins}
+    stroke="species"
+    x="culmen_length_mm"
+    y="culmen_depth_mm" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Density
-        data={penguins}
-        stroke="species"
-        x="culmen_length_mm"
-        y="culmen_depth_mm" />
+  <Density
+    data={penguins}
+    stroke="species"
+    x="culmen_length_mm"
+    y="culmen_depth_mm" />
 </Plot>
 ```
 
@@ -104,38 +104,38 @@ Set `fill="density"` to fill each contour band by its estimated density using th
 
 ```svelte
 <Plot color={{ scheme: 'blues' }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
-        thresholds={10} />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    stroke="none"
+    thresholds={10} />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { page } from '$app/state';
-    import { useDark } from '$shared/ui';
+  import { Plot, Density } from 'svelteplot';
+  import { page } from '$app/state';
+  import { useDark } from '$shared/ui';
 
-    const ds = useDark();
-    const { penguins } = $derived(page.data.data);
+  const ds = useDark();
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    color={{
-        scheme: ds.isDark ? 'viridis' : 'blues',
-        legend: true
-    }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
-        thresholds={10} />
+  color={{
+    scheme: ds.isDark ? 'viridis' : 'blues',
+    legend: true
+  }}>
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    stroke="none"
+    thresholds={10} />
 </Plot>
 ```
 
@@ -145,19 +145,19 @@ Use `stroke="density"` to color each isoline by its density level:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Density } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot color={{ scheme: 'viridis', legend: true }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="density"
-        thresholds={15} />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    stroke="density"
+    thresholds={15} />
 </Plot>
 ```
 
@@ -169,29 +169,29 @@ The `bandwidth` option (default 20) controls the Gaussian kernel's standard devi
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Density } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
-    let bandwidth = $state(20);
+  const { penguins } = $derived(page.data.data);
+  let bandwidth = $state(20);
 </script>
 
 <Slider
-    label="bandwidth"
-    bind:value={bandwidth}
-    min={5}
-    max={60} />
+  label="bandwidth"
+  bind:value={bandwidth}
+  min={5}
+  max={60} />
 
 <Plot color={{ scheme: 'blues' }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
-        thresholds={10}
-        {bandwidth} />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    stroke="none"
+    thresholds={10}
+    {bandwidth} />
 </Plot>
 ```
 
@@ -204,26 +204,26 @@ Control the number and placement of density levels with `thresholds`:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Density } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
-    let thresholds = $state(10);
+  const { penguins } = $derived(page.data.data);
+  let thresholds = $state(10);
 </script>
 
 <Slider
-    label="thresholds"
-    bind:value={thresholds}
-    min={2}
-    max={30} />
+  label="thresholds"
+  bind:value={thresholds}
+  min={2}
+  max={30} />
 
 <Plot>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        {thresholds} />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    {thresholds} />
 </Plot>
 ```
 
@@ -233,40 +233,40 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
 
 ```svelte
 <Plot frame color={{ scheme: 'blues' }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
-        fy="species" />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    stroke="none"
+    fy="species" />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density, Dot } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Density, Dot } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { penguins } = $derived(page.data.data);
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot inset={10} frame color={{ scheme: 'blues' }}>
-    <Density
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="density"
-        stroke="none"
-        thresholds={8}
-        fx="species" />
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        r={1.5}
-        symbol="plus"
-        fx="species" />
+  <Density
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="density"
+    stroke="none"
+    thresholds={8}
+    fx="species" />
+  <Dot
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    r={1.5}
+    symbol="plus"
+    fx="species" />
 </Plot>
 ```
 
@@ -278,38 +278,38 @@ Use `weight` to give different data points different contributions to the densit
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Density, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Slider } from '$shared/ui';
+  import { Plot, Density, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Slider } from '$shared/ui';
 
-    let skew = $state(0);
+  let skew = $state(0);
 
-    const { penguins } = $derived(page.data.data);
-    // Use body mass as weight
-    const data = $derived(
-        penguins.filter((d: any) => d.body_mass_g != null)
-    );
+  const { penguins } = $derived(page.data.data);
+  // Use body mass as weight
+  const data = $derived(
+    penguins.filter((d: any) => d.body_mass_g != null)
+  );
 </script>
 
 <Slider
-    bind:value={skew}
-    min={-1}
-    max={1}
-    step={0.01}
-    label="Skew (-F/+M)" />
+  bind:value={skew}
+  min={-1}
+  max={1}
+  step={0.01}
+  label="Skew (-F/+M)" />
 <Plot color={{ legend: true }}>
-    <Density
-        {data}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        weight={(d) =>
-            d.sex === 'FEMALE' ? 1 - skew : 1 + skew}
-        thresholds={10} />
-    <Dot
-        {data}
-        fill="sex"
-        r={2}
-        x="culmen_length_mm"
-        y="culmen_depth_mm" />
+  <Density
+    {data}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    weight={(d) =>
+      d.sex === 'FEMALE' ? 1 - skew : 1 + skew}
+    thresholds={10} />
+  <Dot
+    {data}
+    fill="sex"
+    r={2}
+    x="culmen_length_mm"
+    y="culmen_depth_mm" />
 </Plot>
 ```

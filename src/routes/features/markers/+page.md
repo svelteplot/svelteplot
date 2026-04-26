@@ -6,65 +6,65 @@ Markers can be used with the [line](/marks/line) and [link](/marks/link) marks. 
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import Select from '$shared/ui/Select.svelte';
-    import Slider from '$shared/ui/Slider.svelte';
+  import { Plot, Line } from 'svelteplot';
+  import Select from '$shared/ui/Select.svelte';
+  import Slider from '$shared/ui/Slider.svelte';
 
-    let marker = $state('circle-stroke');
-    let strokeWidth = $state(1.5);
-    let markerScale = $state(1);
+  let marker = $state('circle-stroke');
+  let strokeWidth = $state(1.5);
+  let markerScale = $state(1);
 
-    const options = [
-        'dot',
-        'circle',
-        'circle-stroke',
-        'arrow',
-        'arrow-reverse',
-        'tick',
-        'tick-x',
-        'tick-y'
-    ];
+  const options = [
+    'dot',
+    'circle',
+    'circle-stroke',
+    'arrow',
+    'arrow-reverse',
+    'tick',
+    'tick-x',
+    'tick-y'
+  ];
 
-    import { page } from '$app/state';
-    let { crimea } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { crimea } = $derived(page.data.data);
 </script>
 
 <Select label="Marker:" bind:value={marker} {options} />
 <Slider
-    label="Marker scale"
-    bind:value={markerScale}
-    min={0.2}
-    max={2}
-    step={0.05} />
+  label="Marker scale"
+  bind:value={markerScale}
+  min={0.2}
+  max={2}
+  step={0.05} />
 <br />
 <Slider
-    label="Stroke width"
-    bind:value={strokeWidth}
-    min={1}
-    max={5}
-    step={0.1} />
+  label="Stroke width"
+  bind:value={strokeWidth}
+  min={1}
+  max={5}
+  step={0.1} />
 <Plot inset={10} grid>
-    <Line
-        data={crimea}
-        x="date"
-        y="deaths"
-        stroke="cause"
-        {strokeWidth}
-        {markerScale}
-        {marker} />
+  <Line
+    data={crimea}
+    x="date"
+    y="deaths"
+    stroke="cause"
+    {strokeWidth}
+    {markerScale}
+    {marker} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Line
-        data={crimea}
-        x="date"
-        y="deaths"
-        stroke="cause"
-        strokeWidth={1.5}
-        markerScale={0.75}
-        marker="dot" />
+  <Line
+    data={crimea}
+    x="date"
+    y="deaths"
+    stroke="cause"
+    strokeWidth={1.5}
+    markerScale={0.75}
+    marker="dot" />
 </Plot>
 ```
 
@@ -95,43 +95,43 @@ Note that for the interpolation methods `basis`, `bundle`, and `step`, the marke
 
 ```svelte live
 <script lang="ts">
-    import { Plot, LineY, Dot } from 'svelteplot';
-    import Slider from '$shared/ui/Slider.svelte';
-    import Select from '$shared/ui/Select.svelte';
-    import type { CurveName } from 'svelteplot/types/index.js';
+  import { Plot, LineY, Dot } from 'svelteplot';
+  import Slider from '$shared/ui/Slider.svelte';
+  import Select from '$shared/ui/Select.svelte';
+  import type { CurveName } from 'svelteplot/types/index.js';
 
-    // curve demo
-    const numbers = [
-        0.25, 0.09, 0.58, 0.22, 0.38, 0.03, 0.45, 0.12,
-        0.87, 0.99, 0.85, 0.5, 0.64, 0.86, 0.6, 0.09, 0.14,
-        0.95, 0.92, 0.89
-    ];
+  // curve demo
+  const numbers = [
+    0.25, 0.09, 0.58, 0.22, 0.38, 0.03, 0.45, 0.12, 0.87,
+    0.99, 0.85, 0.5, 0.64, 0.86, 0.6, 0.09, 0.14, 0.95,
+    0.92, 0.89
+  ];
 </script>
 
 <Plot height={250} grid>
-    <LineY
-        data={numbers}
-        curve="basis"
-        marker="circle-stroke" />
-    <!-- TODO: use DotY here -->
-    <Dot
-        data={numbers.map((d, i) => ({
-            value: d,
-            index: i
-        }))}
-        symbol="plus"
-        y="value"
-        x="index" />
+  <LineY
+    data={numbers}
+    curve="basis"
+    marker="circle-stroke" />
+  <!-- TODO: use DotY here -->
+  <Dot
+    data={numbers.map((d, i) => ({
+      value: d,
+      index: i
+    }))}
+    symbol="plus"
+    y="value"
+    x="index" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <LineY
-        data={numbers}
-        curve="basis"
-        marker="circle-stroke" />
-    <DotY data={numbers} symbol="plus" />
+  <LineY
+    data={numbers}
+    curve="basis"
+    marker="circle-stroke" />
+  <DotY data={numbers} symbol="plus" />
 </Plot>
 ```
 
@@ -143,47 +143,47 @@ You can also specify a custom marker icon using the `marker` snippet:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, Line } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid height={300}>
-    <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
-        {#snippet marker(id, color)}
-            <marker
-                {id}
-                fill="none"
-                stroke={color}
-                markerWidth="6"
-                markerHeight="10"
-                viewBox="-4 -10 8 10"
-                orient="auto">
-                <path d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
-            </marker>
-        {/snippet}
-    </Line>
+  <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
+    {#snippet marker(id, color)}
+      <marker
+        {id}
+        fill="none"
+        stroke={color}
+        markerWidth="6"
+        markerHeight="10"
+        viewBox="-4 -10 8 10"
+        orient="auto">
+        <path d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
+      </marker>
+    {/snippet}
+  </Line>
 </Plot>
 ```
 
 ```svelte
 <Plot grid height={300}>
-    <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
-        {#snippet marker(id, color)}
-            <marker
-                {id}
-                fill="none"
-                stroke={color}
-                markerWidth="6"
-                markerHeight="6"
-                viewBox="-4 -8 8 8"
-                orient="auto">
-                <path d="M0,-8L0,0M-3,-6 L0,0 L3,-6" />
-            </marker>
-        {/snippet}
-    </Line>
+  <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
+    {#snippet marker(id, color)}
+      <marker
+        {id}
+        fill="none"
+        stroke={color}
+        markerWidth="6"
+        markerHeight="6"
+        viewBox="-4 -8 8 8"
+        orient="auto">
+        <path d="M0,-8L0,0M-3,-6 L0,0 L3,-6" />
+      </marker>
+    {/snippet}
+  </Line>
 </Plot>
 ```
 
@@ -193,61 +193,56 @@ And since the marker snippets contain regular Svelte code, you can do whatever y
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import { fly, fade } from 'svelte/transition';
+  import { Plot, Line } from 'svelteplot';
+  import { fly, fade } from 'svelte/transition';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    let shown = $state(false);
+  let shown = $state(false);
 
-    $effect(() => {
-        const t = setInterval(() => {
-            shown = !shown;
-        }, 1000);
-        return () => clearInterval(t);
-    });
+  $effect(() => {
+    const t = setInterval(() => {
+      shown = !shown;
+    }, 1000);
+    return () => clearInterval(t);
+  });
 </script>
 
 <Plot grid height={300}>
-    <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
-        {#snippet marker(id, color)}
-            <marker
-                {id}
-                fill="none"
-                stroke={color}
-                markerWidth="6"
-                markerHeight="10"
-                viewBox="-4 -10 8 10"
-                orient="auto">
-                {#if shown}
-                    <path
-                        in:fly={{ duration: 1000, y: -10 }}
-                        out:fade
-                        d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
-                {/if}
-            </marker>
-        {/snippet}
-    </Line>
+  <Line data={aapl.slice(-40)} x="Date" y="Adj Close">
+    {#snippet marker(id, color)}
+      <marker
+        {id}
+        fill="none"
+        stroke={color}
+        markerWidth="6"
+        markerHeight="10"
+        viewBox="-4 -10 8 10"
+        orient="auto">
+        {#if shown}
+          <path
+            in:fly={{ duration: 1000, y: -10 }}
+            out:fade
+            d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
+        {/if}
+      </marker>
+    {/snippet}
+  </Line>
 </Plot>
 ```
 
 ```svelte
 <!-- <Plot><Line> -->
 {#snippet marker(id, color)}
-    <marker
-        {id}
-        fill="none"
-        stroke={color}
-        ...
-        orient="auto">
-        {#if shown}
-            <path
-                in:fly={{ duration: 1000, y: -10 }}
-                out:fade
-                d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
-        {/if}
-    </marker>
+  <marker {id} fill="none" stroke={color} ... orient="auto">
+    {#if shown}
+      <path
+        in:fly={{ duration: 1000, y: -10 }}
+        out:fade
+        d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
+    {/if}
+  </marker>
 {/snippet}
 <!-- </Line></Plot> -->
 ```

@@ -150,14 +150,14 @@ Helper component for rendering [MarkName] marks in canvas
 
 ```svelte
 {#snippet children({ scaledData, usedScales })}
-    {#if canvas}
-        <MyMarkCanvas
-            data={scaledData}
-            options={args}
-            {usedScales} />
-    {:else}
-        <!-- existing SVG rendering -->
-    {/if}
+  {#if canvas}
+    <MyMarkCanvas
+      data={scaledData}
+      options={args}
+      {usedScales} />
+  {:else}
+    <!-- existing SVG rendering -->
+  {/if}
 {/snippet}
 ```
 
@@ -181,8 +181,8 @@ For marks using d3-shape generators (line, area), set the canvas context:
 const fn = line().curve(curveFactory).context(context);
 context.beginPath();
 fn([
-    [x1, y1],
-    [x2, y2]
+  [x1, y1],
+  [x2, y2]
 ]);
 context.stroke();
 fn.context(null); // reset after loop

@@ -12,35 +12,35 @@ For example, here is a histogram showing the distribution of weights of Olympic 
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Rect,
-        RectY,
-        RuleY,
-        binX,
-        stackY
-    } from 'svelteplot';
+  import {
+    Plot,
+    Rect,
+    RectY,
+    RuleY,
+    binX,
+    stackY
+  } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot height={300}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight' },
+      { y: 'count' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={300}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight' },
+      { y: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -50,39 +50,39 @@ The [binX](#binX) transform takes **x** as input and outputs **x1** and **x2** r
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Rect,
-        RectY,
-        RuleY,
-        binX,
-        stackY
-    } from 'svelteplot';
-    import { useDark } from '$shared/ui';
-    import { getContext } from 'svelte';
+  import {
+    Plot,
+    Rect,
+    RectY,
+    RuleY,
+    binX,
+    stackY
+  } from 'svelteplot';
+  import { useDark } from '$shared/ui';
+  import { getContext } from 'svelte';
 
-    const ds = useDark();
+  const ds = useDark();
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight', fy: 'sex' },
-            { fill: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight', fy: 'sex' },
+      { fill: 'count' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot color={{ scheme: isDark ? 'turbo' : 'YlGnBu' }}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight', fy: 'sex' },
-            { fill: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight', fy: 'sex' },
+      { fill: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -90,63 +90,63 @@ Alternatively, you can also map to the _r_ channel.
 
 ```svelte live
 <script>
-    import { Plot, DotX, binX } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { Plot, DotX, binX } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 
-    let args = $derived(
-        binX(
-            {
-                data: olympians,
-                x: 'weight',
-                sort: { channel: 'r' }
-            },
-            { r: 'count' }
-        )
-    );
+  let args = $derived(
+    binX(
+      {
+        data: olympians,
+        x: 'weight',
+        sort: { channel: 'r' }
+      },
+      { r: 'count' }
+    )
+  );
 </script>
 
 {#if olympians}
-    <Plot testid="olympians-binned">
-        <DotX {...args} />
-    </Plot>
+  <Plot testid="olympians-binned">
+    <DotX {...args} />
+  </Plot>
 {/if}
 ```
 
 ```svelte live
 <script>
-    import { Plot, DotX, binX } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { Plot, DotX, binX } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot testid="olympians-binned" y={{ grid: true }}>
-    <DotX
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fy: 'sex',
-                sort: { channel: 'r' }
-            },
-            { r: 'count' }
-        )} />
+  <DotX
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fy: 'sex',
+        sort: { channel: 'r' }
+      },
+      { r: 'count' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <DotX
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fy: 'sex'
-            },
-            { r: 'count' }
-        )} />
+  <DotX
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fy: 'sex'
+      },
+      { r: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -154,40 +154,40 @@ You can also bin and group at the same time:
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Rect,
-        RectY,
-        RuleY,
-        binX,
-        stackY
-    } from 'svelteplot';
+  import {
+    Plot,
+    Rect,
+    RectY,
+    RuleY,
+    binX,
+    stackY
+  } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot
-    height={300}
-    grid
-    marginLeft={40}
-    color={{ legend: true }}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight', fill: 'sex' },
-            { y: 'count' }
-        )} />
-    <RuleY data={[0]} />
+  height={300}
+  grid
+  marginLeft={40}
+  color={{ legend: true }}>
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight', fill: 'sex' },
+      { y: 'count' }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={300}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight', fill: 'sex' },
-            { y: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight', fill: 'sex' },
+      { y: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -195,56 +195,56 @@ You can opt-out of the implicit stackY transform by having binX generate **y1** 
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Rect,
-        RectY,
-        RuleY,
-        binX,
-        stackY
-    } from 'svelteplot';
-    import { useDark } from '$shared/ui';
-    import { getContext } from 'svelte';
+  import {
+    Plot,
+    Rect,
+    RectY,
+    RuleY,
+    binX,
+    stackY
+  } from 'svelteplot';
+  import { useDark } from '$shared/ui';
+  import { getContext } from 'svelte';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
-    const ds = useDark();
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
+  const ds = useDark();
 </script>
 
 <Plot
-    height={300}
-    grid
-    marginLeft={40}
-    color={{ legend: true }}>
-    <RectY
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex',
-                y1: 0
-            },
-            { y2: 'count' }
-        )}
-        blend={ds.isDark ? 'screen' : 'multiply'} />
-    <RuleY data={[0]} />
+  height={300}
+  grid
+  marginLeft={40}
+  color={{ legend: true }}>
+  <RectY
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex',
+        y1: 0
+      },
+      { y2: 'count' }
+    )}
+    blend={ds.isDark ? 'screen' : 'multiply'} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={300}>
-    <RectY
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex',
-                y1: 0
-            },
-            { y2: 'count' }
-        )}
-        blend={isDark ? 'screen' : 'multiply'} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex',
+        y1: 0
+      },
+      { y2: 'count' }
+    )}
+    blend={isDark ? 'screen' : 'multiply'} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -264,42 +264,42 @@ By default, the binX transform will set the _insetRight_ channel to 1, but you c
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Rect,
-        RectY,
-        RuleY,
-        binX,
-        stackY
-    } from 'svelteplot';
+  import {
+    Plot,
+    Rect,
+    RectY,
+    RuleY,
+    binX,
+    stackY
+  } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot height={200}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count' }
-        )}
-        insetLeft={0}
-        insetRight="0" />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight' },
+      { y: 'count' }
+    )}
+    insetLeft={0}
+    insetRight="0" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={200}>
-    <RectY
-        {...binX(
-            { data: penguins, x: 'culmen_length_mm' },
-            { y: 'count' },
-            { thresholds: [0, 35, 40, 41, 45, 53, 80] }
-        )}
-        insetLeft="0"
-        insetRight="0" />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: penguins, x: 'culmen_length_mm' },
+      { y: 'count' },
+      { thresholds: [0, 35, 40, 41, 45, 53, 80] }
+    )}
+    insetLeft="0"
+    insetRight="0" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -317,28 +317,28 @@ You can define _thresholds_ as a number
 
 ```svelte live
 <script>
-    import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import Slider from '$shared/ui/Slider.svelte';
+  import { Plot, RectY, RuleY, binX } from 'svelteplot';
+  import Slider from '$shared/ui/Slider.svelte';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 
-    let thresholds = $state(20);
+  let thresholds = $state(20);
 </script>
 
 <Slider
-    min={10}
-    max={100}
-    step={10}
-    label="thresholds"
-    bind:value={thresholds} />
+  min={10}
+  max={100}
+  step={10}
+  label="thresholds"
+  bind:value={thresholds} />
 <Plot grid marginLeft={50} height={200}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count', thresholds }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight' },
+      { y: 'count', thresholds }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -346,28 +346,28 @@ You can also define an _interval_. For numeric scales intervals are defined as n
 
 ```svelte live
 <script>
-    import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import Slider from '$shared/ui/Slider.svelte';
+  import { Plot, RectY, RuleY, binX } from 'svelteplot';
+  import Slider from '$shared/ui/Slider.svelte';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 
-    let interval = $state(10);
+  let interval = $state(10);
 </script>
 
 <Slider
-    min={1}
-    max={40}
-    step={1}
-    label="interval"
-    bind:value={interval} />
+  min={1}
+  max={40}
+  step={1}
+  label="interval"
+  bind:value={interval} />
 <Plot grid marginLeft={50} height={200}>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight' },
-            { y: 'count', interval }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight' },
+      { y: 'count', interval }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -375,37 +375,37 @@ Or as arbitrary bin bounds, passed as array of values via **thresholds**:
 
 ```svelte live
 <script>
-    import { Plot, RectY, RuleY, binX } from 'svelteplot';
+  import { Plot, RectY, RuleY, binX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot height={200}>
-    <RectY
-        {...binX(
-            { data: penguins, x: 'culmen_length_mm' },
-            {
-                y: 'count',
-                thresholds: [0, 35, 40, 41, 45, 53, 80]
-            }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: penguins, x: 'culmen_length_mm' },
+      {
+        y: 'count',
+        thresholds: [0, 35, 40, 41, 45, 53, 80]
+      }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={200}>
-    <RectY
-        {...binX(
-            {
-                data: penguins,
-                x: 'culmen_length_mm',
-                y: 'count'
-            },
-            { thresholds: [0, 35, 40, 41, 45, 53, 80] }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      {
+        data: penguins,
+        x: 'culmen_length_mm',
+        y: 'count'
+      },
+      { thresholds: [0, 35, 40, 41, 45, 53, 80] }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -413,40 +413,40 @@ If you want to compute statistics for each bin other than `count`, you also need
 
 ```svelte live
 <script>
-    import { Plot, Dot, binX } from 'svelteplot';
+  import { Plot, Dot, binX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot height={300} grid color={{ legend: true }}>
-    <Dot
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex',
-                y: 'height'
-            },
-            { y: 'median' }
-        )} />
+  <Dot
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex',
+        y: 'height'
+      },
+      { y: 'median' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid color={{ legend: true }}>
-    <Dot
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex',
-                y: 'height'
-            },
-            {
-                y: 'mean'
-            }
-        )} />
+  <Dot
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex',
+        y: 'height'
+      },
+      {
+        y: 'mean'
+      }
+    )} />
 </Plot>
 ```
 
@@ -454,90 +454,90 @@ Here's an example where we use the bin transform to compute weekly aggregates fr
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RectY,
-        RuleX,
-        binX
-    } from 'svelteplot';
-    import { Select } from '$shared/ui';
+  import {
+    Plot,
+    Line,
+    RectY,
+    RuleX,
+    binX
+  } from 'svelteplot';
+  import { Select } from '$shared/ui';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    let interval = $state('week');
-    const INTERVALS = [
-        '2 days',
-        '4 days',
-        'week',
-        '2 weeks',
-        '3 weeks',
-        'month',
-        '2 months',
-        '3 months'
-    ];
+  let interval = $state('week');
+  const INTERVALS = [
+    '2 days',
+    '4 days',
+    'week',
+    '2 weeks',
+    '3 weeks',
+    'month',
+    '2 months',
+    '3 months'
+  ];
 </script>
 
 <Select
-    bind:value={interval}
-    options={INTERVALS}
-    label="Interval: " />
+  bind:value={interval}
+  options={INTERVALS}
+  label="Interval: " />
 <Plot grid>
-    <RuleX
-        {...binX(
-            {
-                data: aapl.slice(-500),
-                x: 'Date',
-                y1: 'High',
-                y2: 'Low'
-            },
-            { y1: 'max', y2: 'min', interval: interval }
-        )}
-        opacity="0.6" />
-    <RectY
-        {...binX(
-            {
-                data: aapl.slice(-500),
-                x: 'Date',
-                y1: 'Open',
-                y2: 'Close'
-            },
-            { y1: 'first', y2: 'last', interval: interval }
-        )}
-        fill={(d) =>
-            d.__y1 > d.__y2
-                ? 'var(--svp-red)'
-                : 'var(--svp-green)'} />
+  <RuleX
+    {...binX(
+      {
+        data: aapl.slice(-500),
+        x: 'Date',
+        y1: 'High',
+        y2: 'Low'
+      },
+      { y1: 'max', y2: 'min', interval: interval }
+    )}
+    opacity="0.6" />
+  <RectY
+    {...binX(
+      {
+        data: aapl.slice(-500),
+        x: 'Date',
+        y1: 'Open',
+        y2: 'Close'
+      },
+      { y1: 'first', y2: 'last', interval: interval }
+    )}
+    fill={(d) =>
+      d.__y1 > d.__y2
+        ? 'var(--svp-red)'
+        : 'var(--svp-green)'} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <!-- rules from max(High) to min(Low) -->
-    <RuleX
-        {...binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'High',
-                y2: 'Low'
-            },
-            { interval: 'week', y1: 'max', y2: 'min' }
-        )}
-        opacity="0.5" />
-    <!-- rects from first(Open) to last(Close) -->
-    <RectY
-        {...binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'Open',
-                y2: 'Close'
-            },
-            { interval: 'week', y1: 'first', y2: 'last' }
-        )}
-        fill={(d) => (d.__y1 > d.__y2 ? 'red' : 'green')} />
+  <!-- rules from max(High) to min(Low) -->
+  <RuleX
+    {...binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'High',
+        y2: 'Low'
+      },
+      { interval: 'week', y1: 'max', y2: 'min' }
+    )}
+    opacity="0.5" />
+  <!-- rects from first(Open) to last(Close) -->
+  <RectY
+    {...binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'Open',
+        y2: 'Close'
+      },
+      { interval: 'week', y1: 'first', y2: 'last' }
+    )}
+    fill={(d) => (d.__y1 > d.__y2 ? 'red' : 'green')} />
 </Plot>
 ```
 
@@ -545,30 +545,30 @@ You can also map to _r_ as output channel:
 
 ```svelte live
 <script>
-    import { Plot, Dot, bin } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { Plot, Dot, bin } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 
-    let args = $derived(
-        bin(
-            {
-                data: olympians,
-                x: 'weight',
-                y: 'height',
-                sort: { channel: 'r' }
-            },
-            { r: 'count' }
-        )
-    );
+  let args = $derived(
+    bin(
+      {
+        data: olympians,
+        x: 'weight',
+        y: 'height',
+        sort: { channel: 'r' }
+      },
+      { r: 'count' }
+    )
+  );
 </script>
 
 {#if olympians}
-    <Plot
-        testid="olympians-binned"
-        color={{ scheme: 'OrRd' }}>
-        <Dot {...args} opacity={0.75} />
-    </Plot>
+  <Plot
+    testid="olympians-binned"
+    color={{ scheme: 'OrRd' }}>
+    <Dot {...args} opacity={0.75} />
+  </Plot>
 {/if}
 ```
 
@@ -580,8 +580,8 @@ For two-dimensional binning.
 
 ```js
 let { data, ...channels } = bin(
-    { data, ...input },
-    { ...options, ...output }
+  { data, ...input },
+  { ...options, ...output }
 );
 ```
 
@@ -589,28 +589,27 @@ Requires _input_ channels _x_ and _y_. Valid output channels for `bin()` are _fi
 
 ```svelte live
 <script>
-    import { Plot, Rect, bin } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
-    import { getContext } from 'svelte';
-    import { useDark } from '$shared/ui';
+  import { Plot, Rect, bin } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
+  import { getContext } from 'svelte';
+  import { useDark } from '$shared/ui';
 
-    const ds = useDark();
+  const ds = useDark();
 
-    let args = $derived(
-        bin(
-            { data: olympians, x: 'weight', y: 'height' },
-            { fill: 'count' }
-        )
-    );
+  let args = $derived(
+    bin(
+      { data: olympians, x: 'weight', y: 'height' },
+      { fill: 'count' }
+    )
+  );
 </script>
 
 {#if olympians}
-    <Plot
-        color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
-        <Rect {...args} inset={0} canvas />
-    </Plot>
+  <Plot color={{ scheme: ds.isDark ? 'turbo' : 'YlGnBu' }}>
+    <Rect {...args} inset={0} canvas />
+  </Plot>
 {/if}
 ```
 
@@ -622,10 +621,10 @@ Requires input channel _x_. Valid output channels for `binX()` are _y_, _y1_, _y
 
 ```svelte
 <script>
-    let { data, ...channels } = binX(
-        { data, x: 'weight' },
-        { y: 'count' }
-    );
+  let { data, ...channels } = binX(
+    { data, x: 'weight' },
+    { y: 'count' }
+  );
 </script>
 ```
 
@@ -633,39 +632,39 @@ Demo with area
 
 ```svelte live
 <script>
-    import { Plot, Line, AreaY, binX } from 'svelteplot';
+  import { Plot, Line, AreaY, binX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 
-    const r = $derived(
-        binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'Close',
-                y2: 'Close'
-            },
-            { interval: '3 weeks', y1: 'min', y2: 'max' }
-        )
-    );
+  const r = $derived(
+    binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'Close',
+        y2: 'Close'
+      },
+      { interval: '3 weeks', y1: 'min', y2: 'max' }
+    )
+  );
 </script>
 
 <Plot x={{ grid: true }}>
-    <AreaY
-        curve="basis"
-        fill="var(--svp-red)"
-        opacity={0.2}
-        {...binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'Close',
-                y2: 'Close'
-            },
-            { interval: '5 weeks', y1: 'min', y2: 'max' }
-        )} />
-    <Line data={aapl} x="Date" y="Close" />
+  <AreaY
+    curve="basis"
+    fill="var(--svp-red)"
+    opacity={0.2}
+    {...binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'Close',
+        y2: 'Close'
+      },
+      { interval: '5 weeks', y1: 'min', y2: 'max' }
+    )} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -677,29 +676,29 @@ Requires input channel _y_. Valid output channels for `binY()` are _x_, _x1_, _x
 
 ```svelte live
 <script>
-    import { Plot, RectX, RuleX, binY } from 'svelteplot';
+  import { Plot, RectX, RuleX, binY } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot x={{ grid: true }}>
-    <RectX
-        {...binY(
-            { data: olympians, y: 'weight' },
-            { x: 'count' }
-        )} />
-    <RuleX data={[0]} />
+  <RectX
+    {...binY(
+      { data: olympians, y: 'weight' },
+      { x: 'count' }
+    )} />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot x={{ grid: true }}>
-    <RectX
-        {...binY(
-            { data: olympians, y: 'weight' },
-            { x: 'count' }
-        )} />
-    <RuleX data={[0]} />
+  <RectX
+    {...binY(
+      { data: olympians, y: 'weight' },
+      { x: 'count' }
+    )} />
+  <RuleX data={[0]} />
 </Plot>
 ```

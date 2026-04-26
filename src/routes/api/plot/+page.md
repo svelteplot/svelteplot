@@ -62,18 +62,18 @@ The Plot component is the container for plots. It collects the marks with their 
 
 ```ts
 export type XScaleOptions = ScaleOptions & {
-    grid: boolean;
-    axis: AxisXAnchor | false;
-    tickRotate: number;
-    labelAnchor: 'auto' | 'left' | 'center' | 'right';
-    tickFormat:
-        | 'auto'
-        | false
-        | Intl.NumberFormatOptions
-        | Intl.DateTimeFormatOptions
-        | TickFormatFunction;
-    wordWrap: boolean;
-    removeDuplicateTicks: boolean;
+  grid: boolean;
+  axis: AxisXAnchor | false;
+  tickRotate: number;
+  labelAnchor: 'auto' | 'left' | 'center' | 'right';
+  tickFormat:
+    | 'auto'
+    | false
+    | Intl.NumberFormatOptions
+    | Intl.DateTimeFormatOptions
+    | TickFormatFunction;
+  wordWrap: boolean;
+  removeDuplicateTicks: boolean;
 };
 ```
 
@@ -81,16 +81,16 @@ export type XScaleOptions = ScaleOptions & {
 
 ```ts
 export type YScaleOptions = ScaleOptions & {
-    grid: boolean;
-    axis: AxisYAnchor | false;
-    tickFormat:
-        | 'auto'
-        | false
-        | Intl.NumberFormatOptions
-        | Intl.DateTimeFormatOptions
-        | TickFormatFunction;
-    tickRotate: number;
-    labelAnchor: 'auto' | 'bottom' | 'middle' | 'top';
+  grid: boolean;
+  axis: AxisYAnchor | false;
+  tickFormat:
+    | 'auto'
+    | false
+    | Intl.NumberFormatOptions
+    | Intl.DateTimeFormatOptions
+    | TickFormatFunction;
+  tickRotate: number;
+  labelAnchor: 'auto' | 'bottom' | 'middle' | 'top';
 };
 ```
 
@@ -128,29 +128,29 @@ export type YScaleOptions = ScaleOptions & {
 
 ```ts
 export type ColorScaleOptions = ScaleOptions & {
-    legend: boolean;
-    type:
-        | ScaleType
-        | 'categorical'
-        | 'sequential'
-        | 'cyclical'
-        | 'threshold'
-        | 'quantile'
-        | 'quantize'
-        | 'diverging'
-        | 'diverging-log'
-        | 'diverging-pow'
-        | 'diverging-sqrt'
-        | 'diverging-symlog';
-    scheme: ColorScheme | string[] | Record<string, string>;
-    unknown: string;
-    pivot: number;
-    n: number;
-    interpolate: (d: any) => typeof d;
-    tickFormat:
-        | false
-        | Intl.NumberFormatOptions
-        | TickFormatFunction;
+  legend: boolean;
+  type:
+    | ScaleType
+    | 'categorical'
+    | 'sequential'
+    | 'cyclical'
+    | 'threshold'
+    | 'quantile'
+    | 'quantize'
+    | 'diverging'
+    | 'diverging-log'
+    | 'diverging-pow'
+    | 'diverging-sqrt'
+    | 'diverging-symlog';
+  scheme: ColorScheme | string[] | Record<string, string>;
+  unknown: string;
+  pivot: number;
+  n: number;
+  interpolate: (d: any) => typeof d;
+  tickFormat:
+    | false
+    | Intl.NumberFormatOptions
+    | TickFormatFunction;
 };
 ```
 
@@ -158,7 +158,7 @@ export type ColorScaleOptions = ScaleOptions & {
 
 ```ts
 export type LegendScaleOptions = ScaleOptions & {
-    legend: boolean;
+  legend: boolean;
 };
 ```
 
@@ -166,13 +166,13 @@ export type LegendScaleOptions = ScaleOptions & {
 
 ```ts
 export type ResolvedPlotOptions = Omit<
-    PlotOptions,
-    'x' | 'y' | 'fx' | 'fy'
+  PlotOptions,
+  'x' | 'y' | 'fx' | 'fy'
 > & {
-    x: ResolvedXScaleOptions;
-    y: ResolvedYScaleOptions;
-    fx: ResolvedFacetXOptions;
-    fy: ResolvedFacetYOptions;
+  x: ResolvedXScaleOptions;
+  y: ResolvedYScaleOptions;
+  fx: ResolvedFacetXOptions;
+  fy: ResolvedFacetYOptions;
 };
 ```
 
@@ -192,9 +192,9 @@ export type PlotScales = Record<ScaleName, PlotScale>;
 
 ```ts
 export type TickFormatFunction = (
-    d: RawValue,
-    index: number,
-    ticks: RawValue[]
+  d: RawValue,
+  index: number,
+  ticks: RawValue[]
 ) => string | string[];
 ```
 
@@ -280,8 +280,8 @@ Internal plot options shape after shorthand forms (`false`, arrays) are normaliz
 
 ```ts
 type ResolvedXScaleOptions = Partial<XScaleOptions> & {
-    tickSpacing: number;
-    ticks?: RawValue[];
+  tickSpacing: number;
+  ticks?: RawValue[];
 };
 ```
 
@@ -289,8 +289,8 @@ type ResolvedXScaleOptions = Partial<XScaleOptions> & {
 
 ```ts
 type ResolvedYScaleOptions = Partial<YScaleOptions> & {
-    tickSpacing: number;
-    ticks?: RawValue[];
+  tickSpacing: number;
+  ticks?: RawValue[];
 };
 ```
 
@@ -298,10 +298,10 @@ type ResolvedYScaleOptions = Partial<YScaleOptions> & {
 
 ```ts
 type ResolvedFacetXOptions = Partial<XScaleOptions> & {
-    axisProps?: Partial<ComponentProps<typeof BaseAxisX>>;
-    axisOptions?: Partial<
-        ComponentProps<typeof BaseAxisX>['options']
-    >;
+  axisProps?: Partial<ComponentProps<typeof BaseAxisX>>;
+  axisOptions?: Partial<
+    ComponentProps<typeof BaseAxisX>['options']
+  >;
 };
 ```
 
@@ -309,10 +309,10 @@ type ResolvedFacetXOptions = Partial<XScaleOptions> & {
 
 ```ts
 type ResolvedFacetYOptions = Partial<YScaleOptions> & {
-    axisProps?: Partial<ComponentProps<typeof BaseAxisY>>;
-    axisOptions?: Partial<
-        ComponentProps<typeof BaseAxisY>['options']
-    >;
+  axisProps?: Partial<ComponentProps<typeof BaseAxisY>>;
+  axisOptions?: Partial<
+    ComponentProps<typeof BaseAxisY>['options']
+  >;
 };
 ```
 
@@ -350,12 +350,12 @@ Specific methods only exist for certain scale types and may be undefined.
 
 ```ts
 export type PlotScaleFunction = ((value: any) => any) & {
-    range: () => RawValue[];
-    invert: (value: number) => RawValue;
-    bandwidth: () => number;
-    ticks: (count: number) => RawValue[];
-    quantiles: () => number[];
-    thresholds: () => number[];
-    domain: () => RawValue[];
+  range: () => RawValue[];
+  invert: (value: number) => RawValue;
+  bandwidth: () => number;
+  ticks: (count: number) => RawValue[];
+  quantiles: () => number[];
+  thresholds: () => number[];
+  domain: () => RawValue[];
 };
 ```

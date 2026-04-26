@@ -14,64 +14,64 @@ For two-dimensional densities, see the [density mark](/marks/density).
 
 ```svelte live
 <script lang="ts">
-    import { Plot, AreaY, densityX } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Select, Slider, Checkbox } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, AreaY, densityX } from 'svelteplot';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  import { Select, Slider, Checkbox } from '$shared/ui';
+  import { page } from '$app/state';
 
-    let { olympians } = $derived(page.data.data);
+  let { olympians } = $derived(page.data.data);
 
-    const kernels = [
-        'epanechnikov',
-        'gaussian',
-        'uniform',
-        'triangular',
-        'quartic',
-        'triweight',
-        'cosine'
-    ];
-    let kernel = $state('epanechnikov');
-    let trim = $state(false);
-    let bandwidth = $state(3); // kilograms
+  const kernels = [
+    'epanechnikov',
+    'gaussian',
+    'uniform',
+    'triangular',
+    'quartic',
+    'triweight',
+    'cosine'
+  ];
+  let kernel = $state('epanechnikov');
+  let trim = $state(false);
+  let bandwidth = $state(3); // kilograms
 </script>
 
 <Select
-    bind:value={kernel}
-    options={kernels}
-    label="Kernel" />
+  bind:value={kernel}
+  options={kernels}
+  label="Kernel" />
 <Slider
-    bind:value={bandwidth}
-    min={1}
-    max={10}
-    step={0.1}
-    label="Bandwidth (kg)" />
+  bind:value={bandwidth}
+  min={1}
+  max={10}
+  step={0.1}
+  label="Bandwidth (kg)" />
 <Checkbox bind:value={trim} label="Trim" />
 
 <Plot height={250} grid y={{ percent: true }}>
-    <RuleY y={0} />
-    <AreaY
-        {...densityX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex'
-            },
-            { kernel, bandwidth, trim }
-        )} />
+  <RuleY y={0} />
+  <AreaY
+    {...densityX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex'
+      },
+      { kernel, bandwidth, trim }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid y={{ percent: true }}>
-    <AreaY
-        {...densityX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex'
-            },
-            { channel: 'y2' }
-        )} />
+  <AreaY
+    {...densityX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex'
+      },
+      { channel: 'y2' }
+    )} />
 </Plot>
 ```
 
@@ -81,43 +81,43 @@ If you don't want to stack the densities but overlay them you can set the output
 
 ```svelte live
 <script lang="ts">
-    import { Plot, AreaY, densityX } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { page } from '$app/state';
-    import { useDark } from '$shared/ui';
+  import { Plot, AreaY, densityX } from 'svelteplot';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  import { page } from '$app/state';
+  import { useDark } from '$shared/ui';
 
-    const ds = useDark();
+  const ds = useDark();
 
-    let { olympians } = $derived(page.data.data);
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot height={250} grid y={{ percent: true }}>
-    <RuleY y={0} />
-    <AreaY
-        {...densityX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex'
-            },
-            { bandwidth: 3, channel: 'y2' }
-        )}
-        blend={ds.isDark ? 'screen' : 'multiply'} />
+  <RuleY y={0} />
+  <AreaY
+    {...densityX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex'
+      },
+      { bandwidth: 3, channel: 'y2' }
+    )}
+    blend={ds.isDark ? 'screen' : 'multiply'} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid y={{ percent: true }}>
-    <AreaY
-        {...densityX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex'
-            },
-            { kernel, bandwidth, trim }
-        )}
-        blend="multiply" />
+  <AreaY
+    {...densityX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex'
+      },
+      { kernel, bandwidth, trim }
+    )}
+    blend="multiply" />
 </Plot>
 ```
 
@@ -131,61 +131,61 @@ You can also display densities as lines, as in this example showing density curv
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, densityX } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Line, densityX } from 'svelteplot';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    const measures = [
-        { key: 'Sepal.Length', label: 'Sepal length' },
-        { key: 'Sepal.Width', label: 'Sepal width' },
-        { key: 'Petal.Length', label: 'Petal length' },
-        { key: 'Petal.Width', label: 'Petal width' }
-    ];
+  const measures = [
+    { key: 'Sepal.Length', label: 'Sepal length' },
+    { key: 'Sepal.Width', label: 'Sepal width' },
+    { key: 'Petal.Length', label: 'Petal length' },
+    { key: 'Petal.Width', label: 'Petal width' }
+  ];
 
-    let { iris } = $derived(page.data.data);
+  let { iris } = $derived(page.data.data);
 
-    const tidyIris = $derived(
-        measures.flatMap(({ key, label }) =>
-            iris.map((d) => ({
-                Measurement: label,
-                Value: d[key]
-            }))
-        )
-    );
+  const tidyIris = $derived(
+    measures.flatMap(({ key, label }) =>
+      iris.map((d) => ({
+        Measurement: label,
+        Value: d[key]
+      }))
+    )
+  );
 </script>
 
 <Plot
-    height={300}
-    color={{ legend: true }}
-    y={{ percent: true }}
-    grid>
-    <RuleY y={0} />
-    <Line
-        {...densityX(
-            {
-                data: tidyIris,
-                x: 'Value',
-                stroke: 'Measurement'
-            },
-            { bandwidth: 0.5 }
-        )}
-        strokeWidth={1.8} />
+  height={300}
+  color={{ legend: true }}
+  y={{ percent: true }}
+  grid>
+  <RuleY y={0} />
+  <Line
+    {...densityX(
+      {
+        data: tidyIris,
+        x: 'Value',
+        stroke: 'Measurement'
+      },
+      { bandwidth: 0.5 }
+    )}
+    strokeWidth={1.8} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <Line
-        {...densityX(
-            {
-                data: tidyIris,
-                x: 'Value',
-                stroke: 'Measurement'
-            },
-            { bandwidth: 0.5 }
-        )}
-        strokeWidth={1.8} />
+  <Line
+    {...densityX(
+      {
+        data: tidyIris,
+        x: 'Value',
+        stroke: 'Measurement'
+      },
+      { bandwidth: 0.5 }
+    )}
+    strokeWidth={1.8} />
 </Plot>
 ```
 
@@ -193,55 +193,55 @@ Densities are computed at regular intervals along the x-axis (for densityX), def
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, densityX } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Line, densityX } from 'svelteplot';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    const measures = [
-        { key: 'Sepal.Length', label: 'Sepal length' },
-        { key: 'Sepal.Width', label: 'Sepal width' },
-        { key: 'Petal.Length', label: 'Petal length' },
-        { key: 'Petal.Width', label: 'Petal width' }
-    ];
+  const measures = [
+    { key: 'Sepal.Length', label: 'Sepal length' },
+    { key: 'Sepal.Width', label: 'Sepal width' },
+    { key: 'Petal.Length', label: 'Petal length' },
+    { key: 'Petal.Width', label: 'Petal width' }
+  ];
 
-    let { iris } = $derived(page.data.data);
+  let { iris } = $derived(page.data.data);
 
-    const tidyIris = $derived(
-        measures.flatMap(({ key, label }) =>
-            iris.map((d) => ({
-                Measurement: label,
-                Value: d[key]
-            }))
-        )
-    );
+  const tidyIris = $derived(
+    measures.flatMap(({ key, label }) =>
+      iris.map((d) => ({
+        Measurement: label,
+        Value: d[key]
+      }))
+    )
+  );
 
-    let interval = $state(0.2);
+  let interval = $state(0.2);
 </script>
 
 <Slider
-    bind:value={interval}
-    min={0.1}
-    max={0.5}
-    step={0.01}
-    label="Interval" />
+  bind:value={interval}
+  min={0.1}
+  max={0.5}
+  step={0.01}
+  label="Interval" />
 <Plot
-    height={300}
-    color={{ legend: true }}
-    y={{ percent: true }}
-    grid>
-    <RuleY y={0} />
-    <Line
-        {...densityX(
-            {
-                data: tidyIris,
-                x: 'Value',
-                stroke: 'Measurement'
-            },
-            { bandwidth: 0.5, interval }
-        )}
-        marker
-        strokeWidth={1.8} />
+  height={300}
+  color={{ legend: true }}
+  y={{ percent: true }}
+  grid>
+  <RuleY y={0} />
+  <Line
+    {...densityX(
+      {
+        data: tidyIris,
+        x: 'Value',
+        stroke: 'Measurement'
+      },
+      { bandwidth: 0.5, interval }
+    )}
+    marker
+    strokeWidth={1.8} />
 </Plot>
 ```
 
@@ -249,40 +249,40 @@ You can pass a **weight** function with the channels to compute weighted densiti
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, densityX } from 'svelteplot';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Line, densityX } from 'svelteplot';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    let { penguins } = $derived(page.data.data);
-    let skew = $state(0);
+  let { penguins } = $derived(page.data.data);
+  let skew = $state(0);
 </script>
 
 <Slider
-    bind:value={skew}
-    min={-1}
-    max={1}
-    step={0.1}
-    label="Skew (-F/+M)" />
+  bind:value={skew}
+  min={-1}
+  max={1}
+  step={0.1}
+  label="Skew (-F/+M)" />
 <Plot
-    height={300}
-    color={{ legend: true }}
-    x={{ domain: [2400, 6550], label: 'Body mass (g)' }}
-    y={{ percent: true }}
-    grid>
-    <RuleY y={0} />
-    <Line
-        {...densityX(
-            {
-                data: penguins,
-                x: 'body_mass_g',
-                stroke: 'species',
-                weight: (d) =>
-                    d.sex === 'FEMALE' ? 1 - skew : 1 + skew
-            },
-            { bandwidth: 250 }
-        )}
-        strokeWidth={1.8} />
+  height={300}
+  color={{ legend: true }}
+  x={{ domain: [2400, 6550], label: 'Body mass (g)' }}
+  y={{ percent: true }}
+  grid>
+  <RuleY y={0} />
+  <Line
+    {...densityX(
+      {
+        data: penguins,
+        x: 'body_mass_g',
+        stroke: 'species',
+        weight: (d) =>
+          d.sex === 'FEMALE' ? 1 - skew : 1 + skew
+      },
+      { bandwidth: 250 }
+    )}
+    strokeWidth={1.8} />
 </Plot>
 ```
 
@@ -303,13 +303,13 @@ You can pass a **weight** function with the channels to compute weighted densiti
 
 ```svelte
 <Plot y={{ percent: true }} grid>
-    <AreaY
-        {...densityX(
-            { data: olympians, x: 'weight', fy: 'sex' },
-            { kernel: 'gaussian' }
-        )}
-        fill="sex"
-        y1={0} />
+  <AreaY
+    {...densityX(
+      { data: olympians, x: 'weight', fy: 'sex' },
+      { kernel: 'gaussian' }
+    )}
+    fill="sex"
+    y1={0} />
 </Plot>
 ```
 
@@ -321,57 +321,52 @@ You can pass a **weight** function with the channels to compute weighted densiti
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        AreaX,
-        RuleX,
-        densityY
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, AreaX, RuleX, densityY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot
-    x={{
-        axis: false,
-        percent: true,
-        insetLeft: 10,
-        insetRight: 10
-    }}
-    y={{ grid: true }}
-    fx={{ label: 'Cylinders', axis: 'bottom', padding: 0 }}>
-    <RuleX x={0} opacity={0.5} />
-    <AreaX
-        {...densityY(
-            {
-                data: cars,
-                y: 'weight (lb)',
-                fx: 'cylinders'
-            },
-            { bandwidth: 350 }
-        )}
-        stack={{ offset: 'center' }}
-        stroke="currentColor"
-        fillOpacity={0.5} />
+  x={{
+    axis: false,
+    percent: true,
+    insetLeft: 10,
+    insetRight: 10
+  }}
+  y={{ grid: true }}
+  fx={{ label: 'Cylinders', axis: 'bottom', padding: 0 }}>
+  <RuleX x={0} opacity={0.5} />
+  <AreaX
+    {...densityY(
+      {
+        data: cars,
+        y: 'weight (lb)',
+        fx: 'cylinders'
+      },
+      { bandwidth: 350 }
+    )}
+    stack={{ offset: 'center' }}
+    stroke="currentColor"
+    fillOpacity={0.5} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{ axis: false, percent: true }}
-    y={{ grid: true }}
-    fx={{ axis: 'bottom' }}>
-    <RuleX x={0} opacity={0.5} />
-    <AreaX
-        {...densityY(
-            {
-                data: cars,
-                y: 'weight (lb)',
-                fx: 'cylinders'
-            },
-            { bandwidth: 350 }
-        )}
-        stack={{ offset: 'center' }} />
+  x={{ axis: false, percent: true }}
+  y={{ grid: true }}
+  fx={{ axis: 'bottom' }}>
+  <RuleX x={0} opacity={0.5} />
+  <AreaX
+    {...densityY(
+      {
+        data: cars,
+        y: 'weight (lb)',
+        fx: 'cylinders'
+      },
+      { bandwidth: 350 }
+    )}
+    stack={{ offset: 'center' }} />
 </Plot>
 ```
 

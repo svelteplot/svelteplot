@@ -12,40 +12,40 @@ The Image mark renders images positioned at x/y coordinates. It’s useful for p
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Image } from 'svelteplot';
-    import { page } from '$app/state';
-    import RuleY from 'svelteplot/marks/RuleY.svelte';
-    const { presidents2 } = $derived(page.data.data);
+  import { Plot, Image } from 'svelteplot';
+  import { page } from '$app/state';
+  import RuleY from 'svelteplot/marks/RuleY.svelte';
+  const { presidents2 } = $derived(page.data.data);
 </script>
 
 <Plot grid inset={20}>
-    <RuleY y={0} />
-    <Image
-        data={presidents2}
-        x="First Inauguration Date"
-        y={(d) =>
-            d['Very Favorable %'] +
-            d['Somewhat Favorable %'] -
-            d['Very Unfavorable %'] -
-            d['Somewhat Unfavorable %']}
-        src="Portrait URL"
-        width={30} />
+  <RuleY y={0} />
+  <Image
+    data={presidents2}
+    x="First Inauguration Date"
+    y={(d) =>
+      d['Very Favorable %'] +
+      d['Somewhat Favorable %'] -
+      d['Very Unfavorable %'] -
+      d['Somewhat Unfavorable %']}
+    src="Portrait URL"
+    width={30} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid inset={20}>
-    <RuleY y={0} />
-    <Image
-        data={presidents}
-        x="First Inauguration Date"
-        y={(d) =>
-            d['Very Favorable %'] +
-            d['Somewhat Favorable %'] -
-            d['Very Unfavorable %'] -
-            d['Somewhat Unfavorable %']}
-        src="Portrait URL"
-        width={30} />
+  <RuleY y={0} />
+  <Image
+    data={presidents}
+    x="First Inauguration Date"
+    y={(d) =>
+      d['Very Favorable %'] +
+      d['Somewhat Favorable %'] -
+      d['Very Unfavorable %'] -
+      d['Somewhat Unfavorable %']}
+    src="Portrait URL"
+    width={30} />
 </Plot>
 ```
 
@@ -55,23 +55,23 @@ Here’s an example using dodgeY to create a beeswarm of presidential portraits 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Image } from 'svelteplot';
-    import { page } from '$app/state';
-    const { presidents2 } = $derived(page.data.data);
+  import { Plot, Image } from 'svelteplot';
+  import { page } from '$app/state';
+  const { presidents2 } = $derived(page.data.data);
 </script>
 
 <Plot
-    y={{ axis: false }}
-    inset={20}
-    height={(w) => Math.sqrt(1 / w) * 8e3}>
-    <Image
-        data={presidents2}
-        x="First Inauguration Date"
-        dodgeY="bottom"
-        y={0.01}
-        src="Portrait URL"
-        title="Name"
-        r={20} />
+  y={{ axis: false }}
+  inset={20}
+  height={(w) => Math.sqrt(1 / w) * 8e3}>
+  <Image
+    data={presidents2}
+    x="First Inauguration Date"
+    dodgeY="bottom"
+    y={0.01}
+    src="Portrait URL"
+    title="Name"
+    r={20} />
 </Plot>
 ```
 

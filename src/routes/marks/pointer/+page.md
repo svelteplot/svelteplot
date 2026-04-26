@@ -6,63 +6,59 @@ Pointer is a mark that doesn't render anything by itself, but you can use it to 
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    let sel = $state([]);
+  let sel = $state([]);
 </script>
 
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
-    <Pointer
-        data={aapl}
+  <Line data={aapl} x="Date" y="Close" />
+  <Pointer data={aapl} x="Date" y="Close" maxDistance={30}>
+    {#snippet children({ data })}
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
         x="Date"
         y="Close"
-        maxDistance={30}>
-        {#snippet children({ data })}
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                x="Date"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="bottom"
-                fontWeight="bold"
-                dy={-5} />
-            <Dot {data} x="Date" y="Close" fill />
-        {/snippet}
-    </Pointer>
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="bottom"
+        fontWeight="bold"
+        dy={-5} />
+      <Dot {data} x="Date" y="Close" fill />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Line data={aapl} x="Date" y="Close" />
-    <Pointer data={aapl} x="Date">
-        {#snippet children({ data })}
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                x="Date"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="bottom"
-                fontWeight="bold"
-                dy={-5} />
-            <Dot {data} x="Date" y="Close" fill />
-        {/snippet}
-    </Pointer>
+  <Line data={aapl} x="Date" y="Close" />
+  <Pointer data={aapl} x="Date">
+    {#snippet children({ data })}
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
+        x="Date"
+        y="Close"
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="bottom"
+        fontWeight="bold"
+        dy={-5} />
+      <Dot {data} x="Date" y="Close" fill />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -72,67 +68,63 @@ You can create a "crosshair" mark by wrapping grids and axes marks inside a poin
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleX,
-        RuleY,
-        AxisX,
-        AxisY,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    RuleX,
+    RuleY,
+    AxisX,
+    AxisY,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <div style="touch-action: none">
-    <Plot marginBottom={30}>
-        <AxisX />
-        <AxisY />
-        <Line data={aapl} x="Date" y="Close" />
-        <Pointer
-            data={aapl}
-            x="Date"
-            y="Close"
-            maxDistance={30}>
-            {#snippet children({ data })}
-                {#if data.length > 0}
-                    <RuleX {data} x="Date" opacity="0.3" />
-                    <RuleY {data} y="Close" opacity="0.3" />
-                    <AxisX
-                        data={data.map((d) => d.Date)}
-                        tickFormat="MMM D, YYYY" />
-                    <AxisY
-                        data={data.map((d) => d.Close)}
-                        tickFormat={(d) => d.toFixed()} />
-                {/if}
-            {/snippet}
-        </Pointer>
-    </Plot>
+  <Plot marginBottom={30}>
+    <AxisX />
+    <AxisY />
+    <Line data={aapl} x="Date" y="Close" />
+    <Pointer
+      data={aapl}
+      x="Date"
+      y="Close"
+      maxDistance={30}>
+      {#snippet children({ data })}
+        {#if data.length > 0}
+          <RuleX {data} x="Date" opacity="0.3" />
+          <RuleY {data} y="Close" opacity="0.3" />
+          <AxisX
+            data={data.map((d) => d.Date)}
+            tickFormat="MMM D, YYYY" />
+          <AxisY
+            data={data.map((d) => d.Close)}
+            tickFormat={(d) => d.toFixed()} />
+        {/if}
+      {/snippet}
+    </Pointer>
+  </Plot>
 </div>
 ```
 
 ```svelte
 <Plot>
-    <AxisX />
-    <AxisY />
-    <Line data={aapl} x="Date" y="Close" />
-    <Pointer
-        data={aapl}
-        x="Date"
-        y="Close"
-        maxDistance={30}>
-        {#snippet children({ data })}
-            <RuleX {data} x="Date" opacity="0.3" />
-            <RuleY {data} y="Close" opacity="0.3" />
-            <AxisX
-                data={data.map((d) => d.Date)}
-                tickFormat={(d) => d.getFullYear()} />
-            <AxisY
-                data={data.map((d) => d.Close)}
-                tickFormat={(d) => d.toFixed()} />
-        {/snippet}
-    </Pointer>
+  <AxisX />
+  <AxisY />
+  <Line data={aapl} x="Date" y="Close" />
+  <Pointer data={aapl} x="Date" y="Close" maxDistance={30}>
+    {#snippet children({ data })}
+      <RuleX {data} x="Date" opacity="0.3" />
+      <RuleY {data} y="Close" opacity="0.3" />
+      <AxisX
+        data={data.map((d) => d.Date)}
+        tickFormat={(d) => d.getFullYear()} />
+      <AxisY
+        data={data.map((d) => d.Close)}
+        tickFormat={(d) => d.toFixed()} />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -140,50 +132,50 @@ If we only pass an **x** channel to the Pointer mark it will try to find the clo
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleX,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    RuleX,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }} marginRight={20} height={250}>
-    <Line data={aapl} x="Date" y="Close" />
-    <Pointer data={aapl} x="Date" maxDistance={30}>
-        {#snippet children({ data })}
-            <RuleX {data} x="Date" opacity={0.2} />
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                x="Date"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="bottom"
-                fontWeight="bold"
-                dy="-10" />
-            <Dot {data} x="Date" y="Close" fill />
-        {/snippet}
-    </Pointer>
+  <Line data={aapl} x="Date" y="Close" />
+  <Pointer data={aapl} x="Date" maxDistance={30}>
+    {#snippet children({ data })}
+      <RuleX {data} x="Date" opacity={0.2} />
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
+        x="Date"
+        y="Close"
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="bottom"
+        fontWeight="bold"
+        dy="-10" />
+      <Dot {data} x="Date" y="Close" fill />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <Pointer data={aapl} x="Date" maxDistance={30}>
-        {#snippet children({ data })}
-            <RuleX {data} x="Date" opacity={0.2} />
-            <Dot {data} x="Date" y="Close" fill />
-            <Text {data} ... />
-        {/snippet}
-    </Pointer>
+  <Line data={aapl} x="Date" y="Close" />
+  <Pointer data={aapl} x="Date" maxDistance={30}>
+    {#snippet children({ data })}
+      <RuleX {data} x="Date" opacity={0.2} />
+      <Dot {data} x="Date" y="Close" fill />
+      <Text {data} ... />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -191,68 +183,68 @@ We can use the `onupdate` event to fade out marks whenever points are highlighte
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleX,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    RuleX,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    let sel = $state([]);
+  let sel = $state([]);
 </script>
 
 <Plot y={{ grid: true }} marginRight={20} height={250}>
-    <Line
-        data={aapl}
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    opacity={sel.length ? 0.4 : 1} />
+  <Pointer
+    data={aapl}
+    x="Date"
+    maxDistance={30}
+    onupdate={(e) => (sel = e)}>
+    {#snippet children({ data })}
+      <RuleX {data} x="Date" opacity={0.2} />
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
         x="Date"
         y="Close"
-        opacity={sel.length ? 0.4 : 1} />
-    <Pointer
-        data={aapl}
-        x="Date"
-        maxDistance={30}
-        onupdate={(e) => (sel = e)}>
-        {#snippet children({ data })}
-            <RuleX {data} x="Date" opacity={0.2} />
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                x="Date"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="bottom"
-                fontWeight="bold"
-                dy="-10" />
-            <Dot {data} x="Date" y="Close" fill />
-        {/snippet}
-    </Pointer>
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="bottom"
+        fontWeight="bold"
+        dy="-10" />
+      <Dot {data} x="Date" y="Close" fill />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line
-        data={aapl}
-        x="Date"
-        y="Close"
-        opacity={seletion.length > 0 ? 0.4 : 1} />
-    <Pointer
-        data={aapl}
-        x="Date"
-        maxDistance={30}
-        onupdate={(data) => (seletion = data)}>
-        {#snippet children({ data })}
-            <RuleX {data} x="Date" opacity={0.2} />
-            <Dot {data} x="Date" y="Close" fill />
-            <Text {data} ... />
-        {/snippet}
-    </Pointer>
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    opacity={seletion.length > 0 ? 0.4 : 1} />
+  <Pointer
+    data={aapl}
+    x="Date"
+    maxDistance={30}
+    onupdate={(data) => (seletion = data)}>
+    {#snippet children({ data })}
+      <RuleX {data} x="Date" opacity={0.2} />
+      <Dot {data} x="Date" y="Close" fill />
+      <Text {data} ... />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -260,47 +252,47 @@ This works for the **y** channel as well, but note that we only highlight one po
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleY,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
-    let sel = $state([]);
+  import {
+    Plot,
+    Line,
+    RuleY,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
+  let sel = $state([]);
 </script>
 
 <Plot marginRight={20}>
-    <Line
-        data={aapl}
-        x="Date"
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    opacity={sel.length > 0 ? 0.4 : 1} />
+  <Pointer
+    data={aapl}
+    y="Close"
+    maxDistance={30}
+    onupdate={(e) => (sel = e)}>
+    {#snippet children({ data })}
+      <RuleY {data} y="Close" opacity={0.2} />
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
         y="Close"
-        opacity={sel.length > 0 ? 0.4 : 1} />
-    <Pointer
-        data={aapl}
-        y="Close"
-        maxDistance={30}
-        onupdate={(e) => (sel = e)}>
-        {#snippet children({ data })}
-            <RuleY {data} y="Close" opacity={0.2} />
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="middle"
-                textAnchor="end"
-                dx={-5}
-                frameAnchor="left"
-                fontWeight="bold" />
-            <Dot {data} x="Date" y="Close" fill r={4} />
-        {/snippet}
-    </Pointer>
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="middle"
+        textAnchor="end"
+        dx={-5}
+        frameAnchor="left"
+        fontWeight="bold" />
+      <Dot {data} x="Date" y="Close" fill r={4} />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -308,48 +300,48 @@ We can change this behavior by passing a **tolerance** option to the Pointer mar
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleY,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
-    let sel = $state([]);
+  import {
+    Plot,
+    Line,
+    RuleY,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
+  let sel = $state([]);
 </script>
 
 <Plot marginRight={20}>
-    <Line
-        data={aapl}
-        x="Date"
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    opacity={sel.length > 0 ? 0.4 : 1} />
+  <Pointer
+    data={aapl}
+    y="Close"
+    maxDistance={30}
+    tolerance={1}
+    onupdate={(e) => (sel = e)}>
+    {#snippet children({ data })}
+      <RuleY {data} y="Close" opacity={0.2} />
+      <Text
+        {data}
+        fill="currentColor"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
         y="Close"
-        opacity={sel.length > 0 ? 0.4 : 1} />
-    <Pointer
-        data={aapl}
-        y="Close"
-        maxDistance={30}
-        tolerance={1}
-        onupdate={(e) => (sel = e)}>
-        {#snippet children({ data })}
-            <RuleY {data} y="Close" opacity={0.2} />
-            <Text
-                {data}
-                fill="currentColor"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="middle"
-                textAnchor="end"
-                dx={-5}
-                frameAnchor="left"
-                fontWeight="bold" />
-            <Dot {data} x="Date" y="Close" fill r={4} />
-        {/snippet}
-    </Pointer>
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="middle"
+        textAnchor="end"
+        dx={-5}
+        frameAnchor="left"
+        fontWeight="bold" />
+      <Dot {data} x="Date" y="Close" fill r={4} />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 
@@ -357,59 +349,59 @@ Another common use case is to show one point per group. This is useful when you 
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        RuleX,
-        Dot,
-        Text,
-        Pointer
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { stocks } = $derived(page.data.data);
-    let stocks2 = $derived(
-        stocks.filter((d) => d.Date < new Date(2018, 0, 1))
-    );
-    let sel = $state([]);
+  import {
+    Plot,
+    Line,
+    RuleX,
+    Dot,
+    Text,
+    Pointer
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { stocks } = $derived(page.data.data);
+  let stocks2 = $derived(
+    stocks.filter((d) => d.Date < new Date(2018, 0, 1))
+  );
+  let sel = $state([]);
 </script>
 
 <Plot
-    testid="stocks-line-frame"
-    y={{ type: 'log' }}
-    marginRight={20}>
-    <Line
-        data={stocks2}
+  testid="stocks-line-frame"
+  y={{ type: 'log' }}
+  marginRight={20}>
+  <Line
+    data={stocks2}
+    x="Date"
+    opacity={sel.length > 0 ? 0.4 : 1}
+    y="Close"
+    stroke="Symbol" />
+  <Pointer
+    data={stocks2}
+    x="Date"
+    z="Symbol"
+    onupdate={(e) => (sel = e)}
+    maxDistance={30}>
+    {#snippet children({ data })}
+      <Text
+        {data}
+        fill="Symbol"
+        stroke="var(--svelteplot-bg)"
+        strokeWidth="3"
         x="Date"
-        opacity={sel.length > 0 ? 0.4 : 1}
         y="Close"
-        stroke="Symbol" />
-    <Pointer
-        data={stocks2}
+        text={(d) => d.Close.toFixed()}
+        lineAnchor="bottom"
+        fontWeight="bold"
+        dy="-7" />
+      <Dot
+        {data}
         x="Date"
-        z="Symbol"
-        onupdate={(e) => (sel = e)}
-        maxDistance={30}>
-        {#snippet children({ data })}
-            <Text
-                {data}
-                fill="Symbol"
-                stroke="var(--svelteplot-bg)"
-                strokeWidth="3"
-                x="Date"
-                y="Close"
-                text={(d) => d.Close.toFixed()}
-                lineAnchor="bottom"
-                fontWeight="bold"
-                dy="-7" />
-            <Dot
-                {data}
-                x="Date"
-                y="Close"
-                fill="Symbol"
-                strokeWidth="0.7"
-                stroke="var(--svelteplot-bg)" />
-        {/snippet}
-    </Pointer>
+        y="Close"
+        fill="Symbol"
+        strokeWidth="0.7"
+        stroke="var(--svelteplot-bg)" />
+    {/snippet}
+  </Pointer>
 </Plot>
 ```
 

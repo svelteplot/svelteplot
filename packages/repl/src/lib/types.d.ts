@@ -8,36 +8,36 @@ import type { BundleResult } from './public';
 export type Lang = 'js' | 'svelte' | 'json' | 'md' | 'css' | (string & Record<never, never>);
 
 type StartOrEnd = {
-	line: number;
-	column: number;
-	character: number;
+    line: number;
+    column: number;
+    character: number;
 };
 
 export type MessageDetails = {
-	start: StartOrEnd;
-	end: StartOrEnd;
-	filename: string;
-	message: string;
+    start: StartOrEnd;
+    end: StartOrEnd;
+    filename: string;
+    message: string;
 };
 
 export type Warning = MessageDetails;
 
 export type File = {
-	name: string;
-	source: string;
-	type: Lang;
-	modified?: boolean;
+    name: string;
+    source: string;
+    type: Lang;
+    modified?: boolean;
 };
 
 export type ReplState = {
-	bundle: BundleResult | null;
-	bundler: import('./Bundler.svelte').default | null;
-	toggleable: boolean;
+    bundle: BundleResult | null;
+    bundler: import('./Bundler.svelte').default | null;
+    toggleable: boolean;
 };
 
 export type ReplContext = {
-	bundler: Bundler;
-	toggleable: Writable<ReplState['toggleable']>;
-	workspace: Workspace;
-	svelteVersion: string;
+    bundler: Bundler;
+    toggleable: Writable<ReplState['toggleable']>;
+    workspace: Workspace;
+    svelteVersion: string;
 };

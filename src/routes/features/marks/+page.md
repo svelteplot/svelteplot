@@ -42,8 +42,8 @@ Marks automatically inform the scale calculations of the parent Plot component. 
 
 ```svelte
 <Plot>
-    <Line data={dataset1} x="date" y="sales" />
-    <Dot data={dataset2} x="date" y="revenue" />
+  <Line data={dataset1} x="date" y="sales" />
+  <Dot data={dataset2} x="date" y="revenue" />
 </Plot>
 ```
 
@@ -53,53 +53,51 @@ Marks can be styled using both SVG attributes and CSS classes:
 
 ```svelte
 <Line
-    {data}
-    x="date"
-    y="value"
-    stroke="steelblue"
-    strokeWidth={2}
-    class="highlight-line" />
+  {data}
+  x="date"
+  y="value"
+  stroke="steelblue"
+  strokeWidth={2}
+  class="highlight-line" />
 ```
 
 Styles can also be defined as function, even for non-scaled attributes like
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+  import { Plot, Line } from 'svelteplot';
 
-    // Sample data
-    const data = [
-        { x: 0, y: 0, projection: false },
-        { x: 1, y: 2.5, projection: false },
-        { x: 2, y: 1, projection: false },
-        { x: 3, y: 4, projection: false },
-        { x: 4, y: 2, projection: false },
-        { x: 4, y: 2, projection: true },
-        { x: 5, y: 5, projection: true }
-    ];
+  // Sample data
+  const data = [
+    { x: 0, y: 0, projection: false },
+    { x: 1, y: 2.5, projection: false },
+    { x: 2, y: 1, projection: false },
+    { x: 3, y: 4, projection: false },
+    { x: 4, y: 2, projection: false },
+    { x: 4, y: 2, projection: true },
+    { x: 5, y: 5, projection: true }
+  ];
 </script>
 
 <Plot height={250} grid>
-    <Line
-        {data}
-        x="x"
-        y="y"
-        stroke="projection"
-        strokeWidth={2.5}
-        strokeDasharray={(d) =>
-            d.projection ? '5,5' : ''} />
+  <Line
+    {data}
+    x="x"
+    y="y"
+    stroke="projection"
+    strokeWidth={2.5}
+    strokeDasharray={(d) => (d.projection ? '5,5' : '')} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <Line
-        {data}
-        x="date"
-        y="value"
-        stroke="projection"
-        strokeDasharray={(d) =>
-            d.projection ? '5,5' : ''} />
+  <Line
+    {data}
+    x="date"
+    y="value"
+    stroke="projection"
+    strokeDasharray={(d) => (d.projection ? '5,5' : '')} />
 </Plot>
 ```
 
@@ -111,49 +109,47 @@ Compare the DOM of the example below:
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { css } from '@emotion/css';
+  import { Plot, Line } from 'svelteplot';
+  import { css } from '@emotion/css';
 
-    // Sample data
-    const data = [
-        { x: 0, y: 0, projection: false },
-        { x: 1, y: 2.5, projection: false },
-        { x: 2, y: 1, projection: false },
-        { x: 3, y: 4, projection: false },
-        { x: 4, y: 2, projection: false },
-        { x: 4, y: 2, projection: true },
-        { x: 5, y: 5, projection: true }
-    ];
+  // Sample data
+  const data = [
+    { x: 0, y: 0, projection: false },
+    { x: 1, y: 2.5, projection: false },
+    { x: 2, y: 1, projection: false },
+    { x: 3, y: 4, projection: false },
+    { x: 4, y: 2, projection: false },
+    { x: 4, y: 2, projection: true },
+    { x: 5, y: 5, projection: true }
+  ];
 </script>
 
 <Plot height={250} grid {css}>
-    <Line
-        {data}
-        x="x"
-        y="y"
-        stroke="projection"
-        strokeWidth={2.5}
-        strokeDasharray={(d) =>
-            d.projection ? '5,5' : ''} />
+  <Line
+    {data}
+    x="x"
+    y="y"
+    stroke="projection"
+    strokeWidth={2.5}
+    strokeDasharray={(d) => (d.projection ? '5,5' : '')} />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import { css } from '@emotion/css';
-    const data = [
-        /*...*/
-    ];
+  import { css } from '@emotion/css';
+  const data = [
+    /*...*/
+  ];
 </script>
 
 <Plot height={250} grid {css}>
-    <Line
-        {data}
-        x="x"
-        y="y"
-        stroke="projection"
-        strokeDasharray={(d) =>
-            d.projection ? '5,5' : ''} />
+  <Line
+    {data}
+    x="x"
+    y="y"
+    stroke="projection"
+    strokeDasharray={(d) => (d.projection ? '5,5' : '')} />
 </Plot>
 ```
 
@@ -165,31 +161,31 @@ Marks support interactive events that can be hooked into:
 
 ```svelte live
 <script>
-    import { Plot, Dot, AxisX, AxisY } from 'svelteplot';
+  import { Plot, Dot, AxisX, AxisY } from 'svelteplot';
 
-    // Sample data
-    const data = [
-        { x: 1, y: 1, size: 5, category: 'A' },
-        { x: 2, y: 3, size: 10, category: 'B' },
-        { x: 3.5, y: 4, size: 9, category: 'A' },
-        { x: 3, y: 2, size: 8, category: 'A' },
-        { x: 4, y: 5, size: 12, category: 'C' },
-        { x: 5, y: 4, size: 15, category: 'B' }
-    ];
+  // Sample data
+  const data = [
+    { x: 1, y: 1, size: 5, category: 'A' },
+    { x: 2, y: 3, size: 10, category: 'B' },
+    { x: 3.5, y: 4, size: 9, category: 'A' },
+    { x: 3, y: 2, size: 8, category: 'A' },
+    { x: 4, y: 5, size: 12, category: 'C' },
+    { x: 5, y: 4, size: 15, category: 'B' }
+  ];
 </script>
 
 <Plot
-    height={80}
-    r={{ range: [0, 20] }}
-    y={{ grid: true }}
-    inset={30}>
-    <Dot
-        {data}
-        y={0}
-        x="x"
-        r="size"
-        fill="category"
-        onclick={(e, d) => alert(JSON.stringify(d))} />
+  height={80}
+  r={{ range: [0, 20] }}
+  y={{ grid: true }}
+  inset={30}>
+  <Dot
+    {data}
+    y={0}
+    x="x"
+    r="size"
+    fill="category"
+    onclick={(e, d) => alert(JSON.stringify(d))} />
 </Plot>
 ```
 
@@ -203,7 +199,7 @@ All marks support [faceting](/features/facets) for creating small multiples:
 
 ```svelte
 <Plot>
-    <Line x="date" y="value" fx="category" />
+  <Line x="date" y="value" fx="category" />
 </Plot>
 ```
 

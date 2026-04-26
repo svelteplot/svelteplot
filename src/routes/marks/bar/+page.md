@@ -11,26 +11,26 @@ Bars are useful to show quantitative data for different categories. They come in
 
 ```svelte live
 <script>
-    import { Plot, BarX, RuleX } from 'svelteplot';
-    const data = [
-        { year: 2019, value: 20 },
-        { year: 2020, value: 24 },
-        { year: 2021, value: 32 },
-        { year: 2022, value: 39 },
-        { year: 2024, value: 56 }
-    ];
+  import { Plot, BarX, RuleX } from 'svelteplot';
+  const data = [
+    { year: 2019, value: 20 },
+    { year: 2020, value: 24 },
+    { year: 2021, value: 32 },
+    { year: 2022, value: 39 },
+    { year: 2024, value: 56 }
+  ];
 </script>
 
 <Plot>
-    <BarX {data} x="value" y="year" />
-    <RuleX data={[0]} />
+  <BarX {data} x="value" y="year" />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <BarX {data} x="value" y="year" />
-    <RuleX data={[0]} />
+  <BarX {data} x="value" y="year" />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
@@ -40,19 +40,19 @@ SveltePlot automatically infers a band scale for the y axis in the above example
 
 ```svelte live
 <script>
-    import { Plot, BarX, RuleX } from 'svelteplot';
-    const data = [
-        { year: 2019, value: 20 },
-        { year: 2020, value: 24 },
-        { year: 2021, value: 32 },
-        { year: 2022, value: 39 },
-        { year: 2024, value: 56 }
-    ];
+  import { Plot, BarX, RuleX } from 'svelteplot';
+  const data = [
+    { year: 2019, value: 20 },
+    { year: 2020, value: 24 },
+    { year: 2021, value: 32 },
+    { year: 2022, value: 39 },
+    { year: 2024, value: 56 }
+  ];
 </script>
 
 <Plot y={{ interval: 1 }}>
-    <BarX {data} x="value" y="year" />
-    <RuleX data={[0]} />
+  <BarX {data} x="value" y="year" />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
@@ -67,42 +67,42 @@ You can create stacked bar charts by defining a fill channel which will be used 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarX, groupY, RuleX } from 'svelteplot';
-    import { getContext } from 'svelte';
+  import { Plot, BarX, groupY, RuleX } from 'svelteplot';
+  import { getContext } from 'svelte';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    x={{ axis: 'top' }}
-    color={{ legend: true }}
-    marginTop={40}>
-    <RuleX data={[0]} />
-    <BarX
-        {...groupY(
-            {
-                data: penguins,
-                y: 'island',
-                fill: 'species'
-            },
-            { x: 'count' }
-        )} />
+  x={{ axis: 'top' }}
+  color={{ legend: true }}
+  marginTop={40}>
+  <RuleX data={[0]} />
+  <BarX
+    {...groupY(
+      {
+        data: penguins,
+        y: 'island',
+        fill: 'species'
+      },
+      { x: 'count' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot x={{ axis: 'top' }} color={{ legend: true }}>
-    <RuleX data={[0]} />
-    <BarX
-        {...groupY(
-            {
-                data: penguins,
-                y: 'island',
-                fill: 'species'
-            },
-            { x: 'count' }
-        )} />
+  <RuleX data={[0]} />
+  <BarX
+    {...groupY(
+      {
+        data: penguins,
+        y: 'island',
+        fill: 'species'
+      },
+      { x: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -157,26 +157,26 @@ Additionally, `BarY` supports all common styling properties like `fill`, `stroke
 
 ```svelte live
 <script>
-    import { Plot, BarY, RuleY } from 'svelteplot';
-    const data = [
-        { year: 2019, value: 20 },
-        { year: 2020, value: 24 },
-        { year: 2021, value: 32 },
-        { year: 2022, value: 39 },
-        { year: 2024, value: 56 }
-    ];
+  import { Plot, BarY, RuleY } from 'svelteplot';
+  const data = [
+    { year: 2019, value: 20 },
+    { year: 2020, value: 24 },
+    { year: 2021, value: 32 },
+    { year: 2022, value: 39 },
+    { year: 2024, value: 56 }
+  ];
 </script>
 
 <Plot height={250}>
-    <BarY {data} x="year" y="value" />
-    <RuleY data={[0]} />
+  <BarY {data} x="year" y="value" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <BarY {data} x="year" y="value" />
-    <RuleY data={[0]} />
+  <BarY {data} x="year" y="value" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -188,19 +188,19 @@ You can create bullet bars using the `inset` option and two `BarX` layers:
 
 ```svelte live
 <script>
-    import { Plot, BarX, RuleX } from 'svelteplot';
+  import { Plot, BarX, RuleX } from 'svelteplot';
 </script>
 
 <Plot y={{ type: 'band' }} height={200} marginTop={0}>
-    <BarX data={[2.3, 4, 5, 3.7, 5.4]} opacity={0.3} />
-    <BarX data={[1, 2, 3, 4, 5]} inset={8} />
+  <BarX data={[2.3, 4, 5, 3.7, 5.4]} opacity={0.3} />
+  <BarX data={[1, 2, 3, 4, 5]} inset={8} />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ type: 'band' }} height={200} marginTop={0}>
-    <BarX data={[2.3, 4, 5, 3.7, 5.4]} opacity={0.3} />
-    <BarX data={[1, 2, 3, 4, 5]} inset={8} />
+  <BarX data={[2.3, 4, 5, 3.7, 5.4]} opacity={0.3} />
+  <BarX data={[1, 2, 3, 4, 5]} inset={8} />
 </Plot>
 ```
 
@@ -210,39 +210,39 @@ Note that **inset** by default only applies along the band scale axis, but won't
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarX, groupY, RuleX } from 'svelteplot';
-    import { getContext } from 'svelte';
+  import { Plot, BarX, groupY, RuleX } from 'svelteplot';
+  import { getContext } from 'svelte';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot x={{ axis: 'top' }}>
-    <RuleX data={[0]} />
-    <BarX
-        {...groupY(
-            {
-                data: penguins,
-                y: 'island',
-                fill: 'species'
-            },
-            { x: 'count' }
-        )}
-        insetRight={1} />
+  <RuleX data={[0]} />
+  <BarX
+    {...groupY(
+      {
+        data: penguins,
+        y: 'island',
+        fill: 'species'
+      },
+      { x: 'count' }
+    )}
+    insetRight={1} />
 </Plot>
 ```
 
 ```svelte
 <BarX
-    {...groupY(
-        {
-            data: penguins,
-            y: 'island',
-            fill: 'species'
-        },
-        { x: 'count' }
-    )}
-    insetRight={1} />
+  {...groupY(
+    {
+      data: penguins,
+      y: 'island',
+      fill: 'species'
+    },
+    { x: 'count' }
+  )}
+  insetRight={1} />
 ```
 
 [fork](https://svelte.dev/playground/6f5f4ae882e24f5b81c60842c6250f31?version=5)
@@ -261,33 +261,33 @@ Please be aware that by setting a border radius, you are slightly distorting the
 
 ```svelte live
 <script>
-    import { Plot, BarX, RuleX } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot, BarX, RuleX } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    let radius = $state(10);
+  let radius = $state(10);
 </script>
 
 <Slider
-    bind:value={radius}
-    min={0}
-    max={20}
-    label="radius" />
+  bind:value={radius}
+  min={0}
+  max={20}
+  label="radius" />
 <Plot x={{ axis: false }} y={{ type: 'band', axis: false }}>
-    <BarX
-        data={[1, 2, 3, 4, 5]}
-        borderRadius={{
-            topRight: radius,
-            bottomRight: radius
-        }} />
-    <RuleX data={[0]} />
+  <BarX
+    data={[1, 2, 3, 4, 5]}
+    borderRadius={{
+      topRight: radius,
+      bottomRight: radius
+    }} />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot x={{ axis: false }} y={{ type: 'band', axis: false }}>
-    <BarX
-        data={[1, 2, 3, 4, 5]}
-        borderRadius={{ topRight: 10, bottomRight: 10 }} />
-    <RuleX data={[0]} />
+  <BarX
+    data={[1, 2, 3, 4, 5]}
+    borderRadius={{ topRight: 10, bottomRight: 10 }} />
+  <RuleX data={[0]} />
 </Plot>
 ```

@@ -21,7 +21,7 @@ SveltePlot is a visualization framework based on the [layered grammar of graphic
 - **Svelte 5.x**: Component framework with modern reactivity
 - **TypeScript**: Type safety and developer experience
 - **D3.js ecosystem**: Data manipulation and mathematical utilities
-    - `d3-array`, `d3-scale`, `d3-shape`, `d3-color`, `d3-interpolate`, etc.
+  - `d3-array`, `d3-scale`, `d3-shape`, `d3-color`, `d3-interpolate`, etc.
 - **Vite**: Build tool and development server
 - **Vitest**: Unit testing framework
 - **SvelteKit**: Application framework for routing and SSR (for docs)
@@ -86,10 +86,10 @@ SveltePlot follows a layered approach where visualizations are built by combinin
 
 ```svelte
 <Plot>
-    <Dot {data} x="date" y="value" />
-    <Line data={trend} x="date" y="predicted" />
-    <AxisX />
-    <AxisY />
+  <Dot {data} x="date" y="value" />
+  <Line data={trend} x="date" y="predicted" />
+  <AxisX />
+  <AxisY />
 </Plot>
 ```
 
@@ -116,24 +116,24 @@ All marks follow consistent patterns:
 
 ```svelte
 <script lang="ts">
-    import type { ComponentProps } from 'svelte';
-    import type { Data, Channel } from '../types/index.js';
+  import type { ComponentProps } from 'svelte';
+  import type { Data, Channel } from '../types/index.js';
 
-    interface Props {
-        data: Data;
-        x: Channel;
-        y: Channel;
-        // Additional mark-specific props
-    }
+  interface Props {
+    data: Data;
+    x: Channel;
+    y: Channel;
+    // Additional mark-specific props
+  }
 
-    let { data, x, y, ...props }: Props = $props();
+  let { data, x, y, ...props }: Props = $props();
 
-    // Reactive computations
-    const processedData = $derived(
-        data.map((d) => ({
-            /* transformation logic */
-        }))
-    );
+  // Reactive computations
+  const processedData = $derived(
+    data.map((d) => ({
+      /* transformation logic */
+    }))
+  );
 </script>
 ```
 
@@ -153,12 +153,12 @@ import { scaleLinear, scaleOrdinal } from 'd3-scale';
 
 // Prefer functional programming patterns
 const processData = (data: DataRow[]) =>
-    data
-        .filter((d) => d.value != null)
-        .map((d) => ({
-            ...d,
-            computed: transform(d.value)
-        }));
+  data
+    .filter((d) => d.value != null)
+    .map((d) => ({
+      ...d,
+      computed: transform(d.value)
+    }));
 ```
 
 ### Testing Patterns
@@ -169,19 +169,19 @@ import { render } from '@testing-library/svelte';
 import Component from './Component.svelte';
 
 test('renders correctly with data', () => {
-    const { container } = render(Component, {
-        props: { data: mockData }
-    });
-    expect(
-        container.querySelector('svg')
-    ).toBeInTheDocument();
+  const { container } = render(Component, {
+    props: { data: mockData }
+  });
+  expect(
+    container.querySelector('svg')
+  ).toBeInTheDocument();
 });
 
 // Unit tests for utilities
 import { transform } from './utility.js';
 
 test('transforms data correctly', () => {
-    expect(transform(input)).toEqual(expectedOutput);
+  expect(transform(input)).toEqual(expectedOutput);
 });
 ```
 
@@ -252,14 +252,14 @@ pnpm run build                 # Build library
 ```typescript
 // Mock data generators
 const generateTimeSeriesData = (count: number) =>
-    Array.from({ length: count }, (_, i) => ({
-        date: new Date(2023, 0, i + 1),
-        value: Math.random() * 100
-    }));
+  Array.from({ length: count }, (_, i) => ({
+    date: new Date(2023, 0, i + 1),
+    value: Math.random() * 100
+  }));
 
 // Common test helpers
 const renderPlot = (marks: any[]) =>
-    render(Plot, { props: { children: marks } });
+  render(Plot, { props: { children: marks } });
 ```
 
 ### Coverage Expectations

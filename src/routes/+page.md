@@ -4,120 +4,120 @@ description: The best visualizations are built with <span>Svelte.</span>
 heroImage: /logo.svg
 tagline: A Svelte-native visualization framework based on the layered grammar of graphics principles.
 actions:
-    - label: Getting started
-      type: primary
-      to: /getting-started
-    - label: Why SveltePlot?
-      to: /why-svelteplot
-      type: flat
-    - label: Examples
-      to: /examples
-      type: flat
+  - label: Getting started
+    type: primary
+    to: /getting-started
+  - label: Why SveltePlot?
+    to: /why-svelteplot
+    type: flat
+  - label: Examples
+    to: /examples
+    type: flat
 examples:
-    - area/smoothed-area
-    - area/density
-    - area/layered-density
-    - area/streamgraph
-    - area/violin
-    - area/ridgeline
-    - arrow/metro
-    - axis/datawrapper-ticks
-    - bar/faceted-bars
-    - box/box-x-faceted
-    - box/box-y
-    - box/box-y-facet
-    - brush/overview-detail
-    - cell/temperatures-threshold
-    - contour/volcano
-    - contour/weather
-    - contour/interactive
-    - contour/faceted
-    - contour/sampled
-    - custom/histogram-topline
-    - delaunay/delaunay-link
-    - delaunay/hull-species
-    - delaunay/voronoi-penguins
-    - delaunay/voronoi-mesh-walmart
-    - density/grouped
-    - density/filled
-    - difference/anomaly-baseline
-    - difference/apple-yoy
-    - difference/trade-balance
-    - dot/1-colored-scatterplot
-    - dot/beeswarm-bubbles
-    - dot/dot-faceted
-    - dot/dodge-faceted
-    - dot/walmart-stores
-    - geo/earthquakes
-    - geo/us-choropleth
-    - image/image-scatter
-    - image/image-beeswarm
-    - line/bls
-    - line/geo-line
-    - line/gradient-line
-    - line/indexed-stocks
-    - line/running-mean
-    - line/parallel-x
-    - line/penguins-cdf
-    - line/parallel-y-hl
-    - link/spherical-link
-    - raster/volcano
-    - raster/sampled
-    - raster/weather
-    - rect/binned
-    - rect/marimekko
-    - rect/marimekko-faceted
-    - rect/stacked-histogram
-    - regression/grouped
-    - regression/log
-    - rule/data-rules
-    - text/beeswarm-country-codes
-    - tick/tick-x
-    - trail/countries
-    - trail/napoleon
-    - trail/tdf
-    - vector/shift-map
-    - vector/spike-map
-    - vector/wind
-    - waffle/custom-symbol
-    - waffle/stacked-x
+  - area/smoothed-area
+  - area/density
+  - area/layered-density
+  - area/streamgraph
+  - area/violin
+  - area/ridgeline
+  - arrow/metro
+  - axis/datawrapper-ticks
+  - bar/faceted-bars
+  - box/box-x-faceted
+  - box/box-y
+  - box/box-y-facet
+  - brush/overview-detail
+  - cell/temperatures-threshold
+  - contour/volcano
+  - contour/weather
+  - contour/interactive
+  - contour/faceted
+  - contour/sampled
+  - custom/histogram-topline
+  - delaunay/delaunay-link
+  - delaunay/hull-species
+  - delaunay/voronoi-penguins
+  - delaunay/voronoi-mesh-walmart
+  - density/grouped
+  - density/filled
+  - difference/anomaly-baseline
+  - difference/apple-yoy
+  - difference/trade-balance
+  - dot/1-colored-scatterplot
+  - dot/beeswarm-bubbles
+  - dot/dot-faceted
+  - dot/dodge-faceted
+  - dot/walmart-stores
+  - geo/earthquakes
+  - geo/us-choropleth
+  - image/image-scatter
+  - image/image-beeswarm
+  - line/bls
+  - line/geo-line
+  - line/gradient-line
+  - line/indexed-stocks
+  - line/running-mean
+  - line/parallel-x
+  - line/penguins-cdf
+  - line/parallel-y-hl
+  - link/spherical-link
+  - raster/volcano
+  - raster/sampled
+  - raster/weather
+  - rect/binned
+  - rect/marimekko
+  - rect/marimekko-faceted
+  - rect/stacked-histogram
+  - regression/grouped
+  - regression/log
+  - rule/data-rules
+  - text/beeswarm-country-codes
+  - tick/tick-x
+  - trail/countries
+  - trail/napoleon
+  - trail/tdf
+  - vector/shift-map
+  - vector/spike-map
+  - vector/wind
+  - waffle/custom-symbol
+  - waffle/stacked-x
 _features:
-    - title: Marks
-      description: SveltePlot comes with a powerful set of built-in marks for building for your visualizations
-      icon:
-          type: iconify
-          collection: carbon
-          name: roadmap
-    - title: Automatic scales
-      description: Scale types and domains are automatically inferred from your data, unless you customize them
-      icon:
-          type: iconify
-          collection: ri
-          name: ruler-line
-    - title: Fully reactive
-      description: Everything in SveltePlot is fully reactive, the plot just updates when the data or configuration changes
-      icon:
-          type: iconify
-          collection: ri
-          name: svelte-line
-    - title: TypeScript
-      description: All components are fully typed and documented to integrate with VSCode
-      icon:
-          type: iconify
-          collection: nonicons
-          name: typescript-16
-    - title: Customizable
-      description: All components are fully typed and documented to integrate with VSCode
-      icon:
-          type: iconify
-          collection: nonicons
-          name: typescript-16
-    - title: Written in Svelte5 & TypeScript
-      description: All components and props are fully reactive, typed and documented!
-      icon:
-          type: iconify
-          collection: ri
-          name: svelte-line
+  - title: Marks
+    description: SveltePlot comes with a powerful set of built-in marks for building for your visualizations
+    icon:
+      type: iconify
+      collection: carbon
+      name: roadmap
+  - title: Automatic scales
+    description: Scale types and domains are automatically inferred from your data, unless you customize them
+    icon:
+      type: iconify
+      collection: ri
+      name: ruler-line
+  - title: Fully reactive
+    description: Everything in SveltePlot is fully reactive, the plot just updates when the data or configuration changes
+    icon:
+      type: iconify
+      collection: ri
+      name: svelte-line
+  - title: TypeScript
+    description: All components are fully typed and documented to integrate with VSCode
+    icon:
+      type: iconify
+      collection: nonicons
+      name: typescript-16
+  - title: Customizable
+    description: All components are fully typed and documented to integrate with VSCode
+    icon:
+      type: iconify
+      collection: nonicons
+      name: typescript-16
+  - title: Written in Svelte5 & TypeScript
+    description: All components and props are fully reactive, typed and documented!
+    icon:
+      type: iconify
+      collection: ri
+      name: svelte-line
 ---
 
 <footer class={['text-gray-5', 'text-small']}>

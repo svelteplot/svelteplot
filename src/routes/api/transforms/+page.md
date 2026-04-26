@@ -54,38 +54,38 @@ type BinOptions = BinBaseOptions & AdditionalOutputChannels;
 
 ```ts
 type ReducerOption =
-    | ReducerName
-    | ((group: DataRecord[]) => RawValue);
+  | ReducerName
+  | ((group: DataRecord[]) => RawValue);
 ```
 
 ### ReducerName
 
 ```ts
 export type ReducerName =
-    | 'count'
-    | 'deviation'
-    | 'difference'
-    | 'first'
-    | 'last'
-    | 'max'
-    | 'mean'
-    | 'median'
-    | 'min'
-    | 'mode'
-    | 'ratio'
-    | 'sum'
-    | 'variance'
-    | ReducerPercentile;
+  | 'count'
+  | 'deviation'
+  | 'difference'
+  | 'first'
+  | 'last'
+  | 'max'
+  | 'mean'
+  | 'median'
+  | 'min'
+  | 'mode'
+  | 'ratio'
+  | 'sum'
+  | 'variance'
+  | ReducerPercentile;
 ```
 
 ### ReducerPercentile
 
 ```ts
 export type ReducerPercentile =
-    | (`p${Digit}${Digit}` & Record<never, never>)
-    | 'p25'
-    | 'p50'
-    | 'p75';
+  | (`p${Digit}${Digit}` & Record<never, never>)
+  | 'p25'
+  | 'p50'
+  | 'p75';
 ```
 
 ## binX
@@ -100,12 +100,12 @@ binX({ data, ...channels }: TransformArg<DataRecord>, options: BinXOptions): Tra
 
 ```ts
 export type BinXOptions = BinBaseOptions &
-    AdditionalOutputChannels &
-    Partial<{
-        y: ReducerOption;
-        y1: ReducerOption;
-        y2: ReducerOption;
-    }>;
+  AdditionalOutputChannels &
+  Partial<{
+    y: ReducerOption;
+    y1: ReducerOption;
+    y2: ReducerOption;
+  }>;
 ```
 
 Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
@@ -122,12 +122,12 @@ binY({ data, ...channels }: TransformArg<DataRecord>, options: BinYOptions): Tra
 
 ```ts
 export type BinYOptions = BinBaseOptions &
-    AdditionalOutputChannels &
-    Partial<{
-        x: ReducerOption;
-        x1: ReducerOption;
-        x2: ReducerOption;
-    }>;
+  AdditionalOutputChannels &
+  Partial<{
+    x: ReducerOption;
+    x1: ReducerOption;
+    x2: ReducerOption;
+  }>;
 ```
 
 Uses: [BinBaseOptions](/api/transforms#BinBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
@@ -244,7 +244,7 @@ e.g. `{ x: 'rank' }`
 
 ```ts
 export type MapOptions = Partial<
-    Record<ScaledChannelName, MapMethod>
+  Record<ScaledChannelName, MapMethod>
 >;
 ```
 
@@ -254,11 +254,11 @@ a named map method, a custom mapping function, or a MapIndexObject
 
 ```ts
 export type MapMethod =
-    | 'cumsum'
-    | 'rank'
-    | 'quantile'
-    | ((I: number[], S: number[]) => number[])
-    | MapIndexObject;
+  | 'cumsum'
+  | 'rank'
+  | 'quantile'
+  | ((I: number[], S: number[]) => number[])
+  | MapIndexObject;
 ```
 
 ### MapIndexObject
@@ -275,9 +275,9 @@ a function that maps source values (S) to target values (T) for the given indice
 
 ```ts
 export type MapIndexFunction = (
-    I: number[],
-    S: RawValue[],
-    T: RawValue[]
+  I: number[],
+  S: RawValue[],
+  T: RawValue[]
 ) => void;
 ```
 
@@ -309,27 +309,27 @@ normalizeX<T>(args: TransformArg<T>, options: NormalizeOptions): void
 
 ```ts
 type NormalizeOptions =
-    | NormalizeBasis
-    | {
-          basis: NormalizeBasis;
-      };
+  | NormalizeBasis
+  | {
+      basis: NormalizeBasis;
+    };
 ```
 
 ### NormalizeBasis
 
 ```ts
 type NormalizeBasis =
-    | 'deviation'
-    | 'first'
-    | 'last'
-    | 'min'
-    | 'max'
-    | 'mean'
-    | 'median'
-    | 'sum'
-    | 'extent'
-    | BasisFunction
-    | MapIndexObject;
+  | 'deviation'
+  | 'first'
+  | 'last'
+  | 'min'
+  | 'max'
+  | 'mean'
+  | 'median'
+  | 'sum'
+  | 'extent'
+  | BasisFunction
+  | MapIndexObject;
 ```
 
 Uses: [MapIndexObject](/api/transforms#MapIndexObject)
@@ -391,13 +391,13 @@ group({ data, ...channels }: TransformArg<DataRecord>, options: GroupXOptions): 
 
 ```ts
 type GroupXOptions = GroupBaseOptions &
-    AdditionalOutputChannels &
-    Partial<{
-        y: ReducerOption;
-        y1: ReducerOption;
-        y2: ReducerOption;
-        xPropName: string;
-    }>;
+  AdditionalOutputChannels &
+  Partial<{
+    y: ReducerOption;
+    y1: ReducerOption;
+    y2: ReducerOption;
+    xPropName: string;
+  }>;
 ```
 
 Uses: [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
@@ -439,13 +439,13 @@ groupY(input: TransformArg<DataRecord>, options: GroupYOptions): void
 
 ```ts
 type GroupYOptions = GroupBaseOptions &
-    AdditionalOutputChannels &
-    Partial<{
-        x: ReducerOption;
-        x1: ReducerOption;
-        x2: ReducerOption;
-        yPropName: string;
-    }>;
+  AdditionalOutputChannels &
+  Partial<{
+    x: ReducerOption;
+    x1: ReducerOption;
+    x2: ReducerOption;
+    yPropName: string;
+  }>;
 ```
 
 Uses: [GroupBaseOptions](/api/transforms#GroupBaseOptions), [AdditionalOutputChannels](/api/transforms#AdditionalOutputChannels), [ReducerOption](/api/transforms#ReducerOption)
@@ -496,16 +496,16 @@ jitter<T>({ data, ...channels }: TransformArg<T>, options: Partial<Record<Positi
 
 ```ts
 type JitterOptions = {
-    source?: () => number;
+  source?: () => number;
 } & (
-    | {
-          type: 'uniform';
-          width?: number | string;
-      }
-    | {
-          type: 'normal';
-          std?: number | string;
-      }
+  | {
+      type: 'uniform';
+      width?: number | string;
+    }
+  | {
+      type: 'normal';
+      std?: number | string;
+    }
 );
 ```
 
@@ -559,7 +559,7 @@ renameChannels<T extends DataRecord, C extends TransformLike<T>>({ data, ...chan
 
 ```ts
 type RenameChannelsOptions = Partial<
-    Record<ScaledChannelName, ScaledChannelName>
+  Record<ScaledChannelName, ScaledChannelName>
 >;
 ```
 
@@ -576,7 +576,7 @@ replaceChannels<T extends DataRecord, C extends TransformLike<T>>({ data, ...cha
 
 ```ts
 type ReplaceChannelsOptions = Partial<
-    Record<ScaledChannelName, ScaledChannelName[]>
+  Record<ScaledChannelName, ScaledChannelName[]>
 >;
 ```
 
@@ -593,21 +593,21 @@ select({ data, ...channels }: TransformArg<DataRecord>, options: SelectOptions):
 
 ```ts
 type SelectOptions =
-    | 'first'
-    | 'last'
-    | AtLeastOne<{
-          [k in ChannelName]: 'min' | 'max';
-      }>;
+  | 'first'
+  | 'last'
+  | AtLeastOne<{
+      [k in ChannelName]: 'min' | 'max';
+    }>;
 ```
 
 ### AtLeastOne
 
 ```ts
 type AtLeastOne<
-    T,
-    U = {
-        [K in keyof T]: Pick<T, K>;
-    }
+  T,
+  U = {
+    [K in keyof T]: Pick<T, K>;
+  }
 > = Partial<T> & U[keyof U];
 ```
 
@@ -673,7 +673,7 @@ per-channel shift amounts for x channels; values can be numbers or time interval
 
 ```ts
 type ShiftXOptions = {
-    [key in 'x' | 'x1' | 'x2']: string | number;
+  [key in 'x' | 'x1' | 'x2']: string | number;
 };
 ```
 
@@ -691,7 +691,7 @@ per-channel shift amounts for y channels; values can be numbers or time interval
 
 ```ts
 type ShiftYOptions = {
-    [key in 'y' | 'y1' | 'y2']: string | number;
+  [key in 'y' | 'y1' | 'y2']: string | number;
 };
 ```
 
@@ -738,12 +738,12 @@ options for the stack transform, or false to disable stacking
 
 ```ts
 export type StackOptions =
-    | {
-          offset: null | StackOffset;
-          order: null | StackOrder;
-          reverse: boolean;
-      }
-    | false;
+  | {
+      offset: null | StackOffset;
+      order: null | StackOrder;
+      reverse: boolean;
+    }
+  | false;
 ```
 
 ### StackOffset
@@ -837,8 +837,8 @@ a generic record type used when the specific mark options type is not known
 
 ```ts
 export type GenericMarkOptions = Record<
-    string | symbol,
-    any
+  string | symbol,
+  any
 >;
 ```
 
@@ -881,13 +881,13 @@ the name of a d3 curve interpolation method
 
 ```ts
 export type ConstantAccessor<
-    K,
-    T = Record<string | symbol, RawValue>
+  K,
+  T = Record<string | symbol, RawValue>
 > =
-    | K
-    | BivariantCallback<[d: T, index: number], K>
-    | null
-    | undefined;
+  | K
+  | BivariantCallback<[d: T, index: number], K>
+  | null
+  | undefined;
 ```
 
 ### TransformArg
@@ -896,9 +896,9 @@ the input argument to a data transform: data array plus channel mappings and mar
 
 ```ts
 export type TransformArg<T> = Channels<T> &
-    BaseMarkProps<T> & {
-        data: T[];
-    };
+  BaseMarkProps<T> & {
+    data: T[];
+  };
 ```
 
 ### MapArg
@@ -907,7 +907,7 @@ the input argument to a map transform: data array plus channel mappings
 
 ```ts
 export type MapArg<T> = Channels<T> & {
-    data: T[];
+  data: T[];
 };
 ```
 
@@ -917,9 +917,9 @@ transform input for raw data rows (before recordization)
 
 ```ts
 export type TransformArgsRow<T extends RawValue | object> =
-    Partial<Channels<T>> & {
-        data: T[];
-    };
+  Partial<Channels<T>> & {
+    data: T[];
+  };
 ```
 
 ### TransformArgsRecord
@@ -928,9 +928,9 @@ transform input for data records (after recordization)
 
 ```ts
 export type TransformArgsRecord<T extends object> = Partial<
-    Channels<T>
+  Channels<T>
 > & {
-    data: T[];
+  data: T[];
 };
 ```
 
@@ -940,8 +940,8 @@ the return type of a transform, ensuring data is always present
 
 ```ts
 export type TransformReturn<
-    C extends TransformArg<T>,
-    T
+  C extends TransformArg<T>,
+  T
 > = C & Required<Pick<Channels<T>, 'data'>>;
 ```
 

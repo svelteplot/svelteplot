@@ -6,55 +6,55 @@ Useful for normalizing data series of different measurement units or varying mag
 
 ```svelte live
 <script>
-    import { Plot, Line, normalizeY } from 'svelteplot';
-    import { Select } from '$shared/ui';
-    import { page } from '$app/state';
-    let { tech7 } = $derived(page.data.data);
+  import { Plot, Line, normalizeY } from 'svelteplot';
+  import { Select } from '$shared/ui';
+  import { page } from '$app/state';
+  let { tech7 } = $derived(page.data.data);
 
-    let basis = $state('first');
+  let basis = $state('first');
 </script>
 
 <Select
-    bind:value={basis}
-    label="Basis"
-    options={[
-        'first',
-        'last',
-        'min',
-        'max',
-        'mean',
-        'median',
-        'sum',
-        'deviation',
-        'extent'
-    ]} />
+  bind:value={basis}
+  label="Basis"
+  options={[
+    'first',
+    'last',
+    'min',
+    'max',
+    'mean',
+    'median',
+    'sum',
+    'deviation',
+    'extent'
+  ]} />
 <Plot y={{ grid: true }}>
-    <Line
-        {...normalizeY(
-            {
-                data: tech7,
-                x: 'date',
-                y: 'adj_close',
-                stroke: 'symbol',
-                curve: 'monotone-x'
-            },
-            basis
-        )} />
+  <Line
+    {...normalizeY(
+      {
+        data: tech7,
+        x: 'date',
+        y: 'adj_close',
+        stroke: 'symbol',
+        curve: 'monotone-x'
+      },
+      basis
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line
-        {...normalizeY(
-            {
-                data: tech7,
-                x: 'date',
-                y: 'adj_close',
-                stroke: 'symbol'
-            },
-            'first'
-        )} />
+  <Line
+    {...normalizeY(
+      {
+        data: tech7,
+        x: 'date',
+        y: 'adj_close',
+        stroke: 'symbol'
+      },
+      'first'
+    )} />
 </Plot>
 ```
 
@@ -80,43 +80,43 @@ In addition to the named basis options you can define your own, e.g. to specify 
 
 ```svelte live
 <script>
-    import { Plot, Line, normalizeY } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    let { tech7 } = $derived(page.data.data);
+  import { Plot, Line, normalizeY } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  let { tech7 } = $derived(page.data.data);
 
-    let i = $state(30);
+  let i = $state(30);
 </script>
 
 <Slider label="index" min={0} max={60} bind:value={i} />
 <Plot y={{ grid: true }}>
-    <Line
-        {...normalizeY(
-            {
-                data: tech7,
-                x: 'date',
-                y: 'adj_close',
-                stroke: 'symbol',
-                curve: 'monotone-x'
-            },
-            (I, S) => S[i]
-        )} />
+  <Line
+    {...normalizeY(
+      {
+        data: tech7,
+        x: 'date',
+        y: 'adj_close',
+        stroke: 'symbol',
+        curve: 'monotone-x'
+      },
+      (I, S) => S[i]
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line
-        {...normalizeY(
-            {
-                data: tech7,
-                x: 'date',
-                y: 'adj_close',
-                stroke: 'symbol',
-                curve: 'monotone-x'
-            },
-            (I, S) => S[30]
-        )} />
+  <Line
+    {...normalizeY(
+      {
+        data: tech7,
+        x: 'date',
+        y: 'adj_close',
+        stroke: 'symbol',
+        curve: 'monotone-x'
+      },
+      (I, S) => S[30]
+    )} />
 </Plot>
 ```
 
@@ -144,50 +144,50 @@ A specialized normalizeY that normalizes multiple y-value series indepenently fo
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        normalizeParallelY
-    } from 'svelteplot';
+  import {
+    Plot,
+    Line,
+    normalizeParallelY
+  } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { iris2 } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { iris2 } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    y={{ label: 'Standard deviation' }}
-    color={{ legend: true }}>
-    <Line
-        {...normalizeParallelY(
-            {
-                data: iris2,
-                x: 'Measurement',
-                y: 'Value',
-                z: 'Id'
-            },
-            'deviation'
-        )}
-        strokeOpacity={0.5}
-        stroke="Species"
-        marker="dot" />
+  grid
+  y={{ label: 'Standard deviation' }}
+  color={{ legend: true }}>
+  <Line
+    {...normalizeParallelY(
+      {
+        data: iris2,
+        x: 'Measurement',
+        y: 'Value',
+        z: 'Id'
+      },
+      'deviation'
+    )}
+    strokeOpacity={0.5}
+    stroke="Species"
+    marker="dot" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid color={{ legend: true }}>
-    <Line
-        {...normalizeParallelY(
-            {
-                data: iris,
-                x: 'Measurement',
-                y: 'Value',
-                z: 'Id'
-            },
-            'deviation'
-        )}
-        strokeOpacity={0.5}
-        stroke="Species" />
+  <Line
+    {...normalizeParallelY(
+      {
+        data: iris,
+        x: 'Measurement',
+        y: 'Value',
+        z: 'Id'
+      },
+      'deviation'
+    )}
+    strokeOpacity={0.5}
+    stroke="Species" />
 </Plot>
 ```
 
@@ -205,29 +205,29 @@ A specialized normalizeX that normalizes multiple x-value series for each y-valu
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        normalizeParallelX
-    } from 'svelteplot';
+  import {
+    Plot,
+    Line,
+    normalizeParallelX
+  } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { iris2 } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { iris2 } = $derived(page.data.data);
 </script>
 
 <Plot grid height={300} color={{ legend: true }}>
-    <Line
-        {...normalizeParallelX(
-            {
-                data: iris2,
-                x: 'Value',
-                y: 'Measurement',
-                z: 'Id'
-            },
-            'extent'
-        )}
-        strokeOpacity={0.5}
-        stroke="Species"
-        marker="dot" />
+  <Line
+    {...normalizeParallelX(
+      {
+        data: iris2,
+        x: 'Value',
+        y: 'Measurement',
+        z: 'Id'
+      },
+      'extent'
+    )}
+    strokeOpacity={0.5}
+    stroke="Species"
+    marker="dot" />
 </Plot>
 ```

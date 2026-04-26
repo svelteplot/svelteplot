@@ -1081,32 +1081,32 @@ These props are shared by marks via the base type aliases.
 
 ```ts
 export type StackOptions =
-    | {
-          offset: null | StackOffset;
-          order: null | StackOrder;
-          reverse: boolean;
-      }
-    | false;
+  | {
+      offset: null | StackOffset;
+      order: null | StackOrder;
+      reverse: boolean;
+    }
+  | false;
 ```
 
 ### DodgeXOptions
 
 ```ts
 export type DodgeXOptions =
-    | AnchorX
-    | (BaseDodgeOptions & {
-          anchor?: 'left' | 'right' | 'middle';
-      });
+  | AnchorX
+  | (BaseDodgeOptions & {
+      anchor?: 'left' | 'right' | 'middle';
+    });
 ```
 
 ### DodgeYOptions
 
 ```ts
 export type DodgeYOptions =
-    | AnchorY
-    | (BaseDodgeOptions & {
-          anchor?: 'top' | 'bottom' | 'middle';
-      });
+  | AnchorY
+  | (BaseDodgeOptions & {
+      anchor?: 'top' | 'bottom' | 'middle';
+    });
 ```
 
 ### MarkerShape

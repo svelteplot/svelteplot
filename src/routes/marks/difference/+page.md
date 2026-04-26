@@ -8,59 +8,59 @@ The following example shows trade between the USA and the UK, with the exports f
 
 ```svelte live
 <script>
-    import { Plot, Line, DifferenceY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { trade } = $derived(page.data.data);
+  import { Plot, Line, DifferenceY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { trade } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <DifferenceY
-        data={trade}
-        x="Year"
-        y1="Imports"
-        y2="Exports"
-        curve="basis"
-        opacity="0.3"
-        positiveFill="var(--svp-blue)"
-        negativeFill="var(--svp-red)" />
-    <Line
-        data={trade}
-        x="Year"
-        y="Imports"
-        stroke="var(--svp-red)"
-        curve="basis" />
-    <Line
-        data={trade}
-        x="Year"
-        y="Exports"
-        stroke="var(--svp-blue)"
-        curve="basis" />
+  <DifferenceY
+    data={trade}
+    x="Year"
+    y1="Imports"
+    y2="Exports"
+    curve="basis"
+    opacity="0.3"
+    positiveFill="var(--svp-blue)"
+    negativeFill="var(--svp-red)" />
+  <Line
+    data={trade}
+    x="Year"
+    y="Imports"
+    stroke="var(--svp-red)"
+    curve="basis" />
+  <Line
+    data={trade}
+    x="Year"
+    y="Exports"
+    stroke="var(--svp-blue)"
+    curve="basis" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <DifferenceY
-        data={trade}
-        x="Year"
-        y1="Imports"
-        y2="Exports"
-        curve="basis"
-        opacity="0.3"
-        positiveFill="blue"
-        negativeFill="red" />
-    <Line
-        data={trade}
-        x="Year"
-        y="Imports"
-        stroke="red"
-        curve="basis" />
-    <Line
-        data={trade}
-        x="Year"
-        y="Exports"
-        stroke="blue"
-        curve="basis" />
+  <DifferenceY
+    data={trade}
+    x="Year"
+    y1="Imports"
+    y2="Exports"
+    curve="basis"
+    opacity="0.3"
+    positiveFill="blue"
+    negativeFill="red" />
+  <Line
+    data={trade}
+    x="Year"
+    y="Imports"
+    stroke="red"
+    curve="basis" />
+  <Line
+    data={trade}
+    x="Year"
+    y="Exports"
+    stroke="blue"
+    curve="basis" />
 </Plot>
 ```
 
@@ -68,38 +68,38 @@ If just one _x_ and _y_ channel is defined, the value zero will be used as compa
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        DifferenceY,
-        RuleY
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { gistemp } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    DifferenceY,
+    RuleY
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { gistemp } = $derived(page.data.data);
 </script>
 
 <Plot height={350} y={{ grid: true }}>
-    <DifferenceY
-        data={gistemp}
-        x="Date"
-        y="Anomaly"
-        curve="step"
-        positiveFill="var(--svp-red)"
-        negativeFill="var(--svp-blue)" />
-    <RuleY data={[0]} />
+  <DifferenceY
+    data={gistemp}
+    x="Date"
+    y="Anomaly"
+    curve="step"
+    positiveFill="var(--svp-red)"
+    negativeFill="var(--svp-blue)" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={350} y={{ grid: true }}>
-    <DifferenceY
-        data={gistemp}
-        x="Date"
-        y="Anomaly"
-        curve="step"
-        positiveFill="var(--svp-red)"
-        negativeFill="var(--svp-blue)" />
-    <RuleY data={[0]} />
+  <DifferenceY
+    data={gistemp}
+    x="Date"
+    y="Anomaly"
+    curve="step"
+    positiveFill="var(--svp-red)"
+    negativeFill="var(--svp-blue)" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -107,48 +107,48 @@ You can compare the metric to a different "baseline" by providing a constant _y1
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        DifferenceY,
-        RuleY
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { gistemp } = $derived(page.data.data);
-    import { Slider } from '$shared/ui';
-    let y1 = $state(0.2);
+  import {
+    Plot,
+    Line,
+    DifferenceY,
+    RuleY
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { gistemp } = $derived(page.data.data);
+  import { Slider } from '$shared/ui';
+  let y1 = $state(0.2);
 </script>
 
 <Slider
-    label="y1"
-    min={-0.4}
-    max={1}
-    step={0.01}
-    bind:value={y1} />
+  label="y1"
+  min={-0.4}
+  max={1}
+  step={0.01}
+  bind:value={y1} />
 <Plot height={350} y={{ grid: true }}>
-    <DifferenceY
-        data={gistemp}
-        x="Date"
-        y="Anomaly"
-        {y1}
-        curve="step"
-        positiveFill="var(--svp-red)"
-        negativeFill="var(--svp-blue)" />
-    <RuleY data={[y1]} />
+  <DifferenceY
+    data={gistemp}
+    x="Date"
+    y="Anomaly"
+    {y1}
+    curve="step"
+    positiveFill="var(--svp-red)"
+    negativeFill="var(--svp-blue)" />
+  <RuleY data={[y1]} />
 </Plot>
 ```
 
 ```svelte
 <Plot height={350} y={{ grid: true }}>
-    <DifferenceY
-        data={gistemp}
-        x="Date"
-        y="Anomaly"
-        {y1}
-        curve="step"
-        positiveFill="red"
-        negativeFill="blue" />
-    <RuleY data={[y1]} />
+  <DifferenceY
+    data={gistemp}
+    x="Date"
+    y="Anomaly"
+    {y1}
+    curve="step"
+    positiveFill="red"
+    negativeFill="blue" />
+  <RuleY data={[y1]} />
 </Plot>
 ```
 
@@ -156,43 +156,43 @@ In combination with the [shift transform](/transforms/shift) you can compare a s
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        DifferenceY,
-        shiftX,
-        RuleX
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Slider } from '$shared/ui';
+  import {
+    Plot,
+    Line,
+    DifferenceY,
+    shiftX,
+    RuleX
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Slider } from '$shared/ui';
 
-    let { aapl } = $derived(page.data.data);
-    let days = $state(100);
+  let { aapl } = $derived(page.data.data);
+  let days = $state(100);
 </script>
 
 <Slider label="days" min={0} max={700} bind:value={days} />
 <Plot height={350} grid>
-    <DifferenceY
-        stroke
-        {...shiftX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { x1: `+${days} days` }
-        )}
-        positiveFill="var(--svp-green)"
-        negativeFill="var(--svp-red)" />
+  <DifferenceY
+    stroke
+    {...shiftX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { x1: `+${days} days` }
+    )}
+    positiveFill="var(--svp-green)"
+    negativeFill="var(--svp-red)" />
 </Plot>
 ```
 
 ```svelte
 <Plot height={350} grid>
-    <DifferenceY
-        stroke
-        {...shiftX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { x1: `+${days} days` }
-        )}
-        positiveFill="green"
-        negativeFill="red" />
+  <DifferenceY
+    stroke
+    {...shiftX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { x1: `+${days} days` }
+    )}
+    positiveFill="green"
+    negativeFill="red" />
 </Plot>
 ```
 

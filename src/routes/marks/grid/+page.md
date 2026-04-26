@@ -6,20 +6,20 @@ The Grid mark renders the faint grid lines in the background of your plots (the 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
+  import { Plot, Line } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid testid="grid">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -37,27 +37,25 @@ with the axes marks.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, GridX, GridY } from 'svelteplot';
+  import { Plot, GridX, GridY } from 'svelteplot';
 </script>
 
 <Plot
-    x={{ domain: [0, 5] }}
-    y={{ domain: [0, 5] }}
-    testid="custom">
-    <GridX stroke="lime" strokeOpacity="1" />
-    <GridY
-        stroke="magenta"
-        strokeOpacity="1"
-        data={[0, 1.5, 2, 2.5, 4, 5]} />
+  x={{ domain: [0, 5] }}
+  y={{ domain: [0, 5] }}
+  testid="custom">
+  <GridX stroke="lime" strokeOpacity="1" />
+  <GridY
+    stroke="magenta"
+    strokeOpacity="1"
+    data={[0, 1.5, 2, 2.5, 4, 5]} />
 </Plot>
 ```
 
 ```svelte
 <Plot x={{ domain: [0, 5] }} testid="custom">
-    <GridX stroke="lime" />
-    <GridY
-        stroke="magenta"
-        ticks={[0, 1.5, 2, 2.5, 4, 5]} />
+  <GridX stroke="lime" />
+  <GridY stroke="magenta" ticks={[0, 1.5, 2, 2.5, 4, 5]} />
 </Plot>
 ```
 
@@ -65,27 +63,27 @@ In the following bar chart, we put two grids, one below the bars and one above:
 
 ```svelte live
 <script>
-    import { Plot, BarX, RuleX, GridX } from 'svelteplot';
+  import { Plot, BarX, RuleX, GridX } from 'svelteplot';
 </script>
 
 <Plot marginTop={0}>
-    <GridX />
-    <BarX data={[1.5, 2.5, 4.5, 4.7, 6.2, 6.8]} />
-    <GridX
-        stroke="var(--svelteplot-bg)"
-        strokeOpacity={0.4} />
-    <RuleX data={[0]} />
+  <GridX />
+  <BarX data={[1.5, 2.5, 4.5, 4.7, 6.2, 6.8]} />
+  <GridX
+    stroke="var(--svelteplot-bg)"
+    strokeOpacity={0.4} />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot marginTop={0}>
-    <GridX />
-    <BarX data={[1.5, 2.5, 4.5, 4.7, 6.2, 6.8]} />
-    <GridX
-        stroke="var(--svelteplot-bg)"
-        strokeOpacity={0.4} />
-    <RuleX data={[0]} />
+  <GridX />
+  <BarX data={[1.5, 2.5, 4.5, 4.7, 6.2, 6.8]} />
+  <GridX
+    stroke="var(--svelteplot-bg)"
+    strokeOpacity={0.4} />
+  <RuleX data={[0]} />
 </Plot>
 ```
 
@@ -93,29 +91,29 @@ You can use the **x1**, **x2**, **y1**, and **y2** options to limit the grid lin
 
 ```svelte live
 <script>
-    import { Plot, Line, GridY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, GridY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <GridY
-        x1={aapl[0].Date}
-        x2={(value) =>
-            aapl.find((d) => Math.abs(d.Close - value) < 1)
-                ?.Date} />
-    <Line data={aapl} x="Date" y="Close" />
+  <GridY
+    x1={aapl[0].Date}
+    x2={(value) =>
+      aapl.find((d) => Math.abs(d.Close - value) < 1)
+        ?.Date} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <GridY
-        x1={aapl[0].Date}
-        x2={(value) =>
-            aapl.find((d) => Math.abs(d.Close - value) < 1)
-                ?.Date} />
-    <Line data={aapl} x="Date" y="Close" />
+  <GridY
+    x1={aapl[0].Date}
+    x2={(value) =>
+      aapl.find((d) => Math.abs(d.Close - value) < 1)
+        ?.Date} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -123,11 +121,11 @@ The automatic ticks can be customized using the **tickSpacing** option:
 
 ```svelte
 <Plot
-    grid
-    x={{ tickSpacing: 150 }}
-    y={{ tickSpacing: 10 }}
-    testid="tickspacing">
-    <Line data={aapl} x="Date" y="Close" />
+  grid
+  x={{ tickSpacing: 150 }}
+  y={{ tickSpacing: 10 }}
+  testid="tickspacing">
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 

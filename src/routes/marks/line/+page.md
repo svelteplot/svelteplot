@@ -16,19 +16,19 @@ The **line mark** draws two-dimensional lines as in a line chart. Because the li
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -38,21 +38,21 @@ If the **x** and **y** options are not defined, the line mark assumes that the d
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <Line data={aapl.map((d) => [d.Date, d.Close])} />
+  <Line data={aapl.map((d) => [d.Date, d.Close])} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Line data={aapl.map((d) => [d.Date, d.Close])} />
+  <Line data={aapl.map((d) => [d.Date, d.Close])} />
 </Plot>
 ```
 
@@ -62,23 +62,20 @@ As with [areas](/marks/area), points in lines are connected in input order: the 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    import { shuffle } from 'd3-array';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  import { shuffle } from 'd3-array';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }}>
-    <Line
-        data={shuffle(aapl.slice(0))}
-        x="Date"
-        y="Close" />
+  <Line data={shuffle(aapl.slice(0))} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={shuffle(aapl)} x="Date" y="Close" />
+  <Line data={shuffle(aapl)} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -88,28 +85,28 @@ If your data isn’t sorted, use the [sort](/transforms/sort) transform.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    import { shuffle } from 'd3-array';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  import { shuffle } from 'd3-array';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <Line
-        data={shuffle(aapl.slice(0))}
-        x="Date"
-        y="Close"
-        sort="Date" />
+  <Line
+    data={shuffle(aapl.slice(0))}
+    x="Date"
+    y="Close"
+    sort="Date" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Line
-        data={shuffle(aapl)}
-        x="Date"
-        y="Close"
-        sort="Date" />
+  <Line
+    data={shuffle(aapl)}
+    x="Date"
+    y="Close"
+    sort="Date" />
 </Plot>
 ```
 
@@ -119,27 +116,27 @@ Lines are automatically grouped by `stroke`, `fill`, or the `z` channel. Only po
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot color={{ scheme: 'rainbow' }}>
-    <Line
-        data={aapl}
-        x="Date"
-        stroke={(d) => d.Date.getFullYear()}
-        y="Close" />
+  <Line
+    data={aapl}
+    x="Date"
+    stroke={(d) => d.Date.getFullYear()}
+    y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot color={{ scheme: 'rainbow' }}>
-    <Line
-        data={aapl}
-        x="Date"
-        y="Close"
-        stroke={(d) => d.Date.getFullYear()} />
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    stroke={(d) => d.Date.getFullYear()} />
 </Plot>
 ```
 
@@ -149,33 +146,33 @@ While the _x_ scale of a line chart often represents time, this is not required.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { tdf } = $derived(page.data.data);
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { tdf } = $derived(page.data.data);
 </script>
 
 <Plot
-    x={{ label: 'Distance from stage start (km)' }}
-    y={{
-        grid: true,
-        interval: 100,
-        label: 'Elevation (m)'
-    }}>
-    <Line data={tdf} x="distance" y="elevation" />
-    <RuleY y={0} />
+  x={{ label: 'Distance from stage start (km)' }}
+  y={{
+    grid: true,
+    interval: 100,
+    label: 'Elevation (m)'
+  }}>
+  <Line data={tdf} x="distance" y="elevation" />
+  <RuleY y={0} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{ label: 'Distance from stage start (km)' }}
-    y={{
-        grid: true,
-        interval: 100,
-        label: 'Elevation (m)'
-    }}>
-    <Line data={tdf} x="distance" y="elevation" />
-    <RuleY y={0} />
+  x={{ label: 'Distance from stage start (km)' }}
+  y={{
+    grid: true,
+    interval: 100,
+    label: 'Elevation (m)'
+  }}>
+  <Line data={tdf} x="distance" y="elevation" />
+  <RuleY y={0} />
 </Plot>
 ```
 
@@ -185,56 +182,48 @@ There is no requirement that **y** be dependent on **x**; lines can be used in c
 
 ```svelte live
 <script>
-    import { Plot, Line, Text } from 'svelteplot';
+  import { Plot, Line, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { driving } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { driving } = $derived(page.data.data);
 </script>
 
 <Plot
-    inset={10}
-    grid
-    height={500}
-    x={{ label: 'Miles driven (per person-year) →' }}
-    y={{ label: '↑ Cost of gasoline ($ per gallon)' }}>
-    <Line
-        data={driving}
-        x="miles"
-        y="gas"
-        curve="catmull-rom"
-        marker="arrow" />
-    <Text
-        data={driving}
-        x="miles"
-        y="gas"
-        text="year"
-        fill="currentColor"
-        stroke="var(--svelteplot-bg)"
-        filter={(d) => d.year % 5 === 0}
-        dx={(d) =>
-            d.side === 'left'
-                ? -5
-                : d.side === 'right'
-                  ? 5
-                  : 0}
-        dy={(d) =>
-            d.side === 'top'
-                ? 5
-                : d.side === 'bottom'
-                  ? -5
-                  : 0}
-        textAnchor={(d) =>
-            d.side === 'left'
-                ? 'end'
-                : d.side === 'right'
-                  ? 'start'
-                  : 'center'}
-        lineAnchor={(d) =>
-            d.side === 'top'
-                ? 'top'
-                : d.side === 'bottom'
-                  ? 'bottom'
-                  : 'middle'} />
+  inset={10}
+  grid
+  height={500}
+  x={{ label: 'Miles driven (per person-year) →' }}
+  y={{ label: '↑ Cost of gasoline ($ per gallon)' }}>
+  <Line
+    data={driving}
+    x="miles"
+    y="gas"
+    curve="catmull-rom"
+    marker="arrow" />
+  <Text
+    data={driving}
+    x="miles"
+    y="gas"
+    text="year"
+    fill="currentColor"
+    stroke="var(--svelteplot-bg)"
+    filter={(d) => d.year % 5 === 0}
+    dx={(d) =>
+      d.side === 'left' ? -5 : d.side === 'right' ? 5 : 0}
+    dy={(d) =>
+      d.side === 'top' ? 5 : d.side === 'bottom' ? -5 : 0}
+    textAnchor={(d) =>
+      d.side === 'left'
+        ? 'end'
+        : d.side === 'right'
+          ? 'start'
+          : 'center'}
+    lineAnchor={(d) =>
+      d.side === 'top'
+        ? 'top'
+        : d.side === 'bottom'
+          ? 'bottom'
+          : 'middle'} />
 </Plot>
 ```
 
@@ -242,39 +231,37 @@ BLS Demo:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { bls } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { bls } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <Line
-        data={bls}
-        x="date"
-        y="unemployment"
-        z="division"
-        canvas={true}
-        outlineStroke="var(--svelteplot-bg)"
-        sort={(d) => /, MI /.test(d.division)}
-        stroke={(d) =>
-            /, MI /.test(d.division)
-                ? 'red'
-                : '#99999956'} />
+  <Line
+    data={bls}
+    x="date"
+    y="unemployment"
+    z="division"
+    canvas={true}
+    outlineStroke="var(--svelteplot-bg)"
+    sort={(d) => /, MI /.test(d.division)}
+    stroke={(d) =>
+      /, MI /.test(d.division) ? 'red' : '#99999956'} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <Line
-        data={bls}
-        x="date"
-        y="unemployment"
-        z="division"
-        sort={(d) => /, MI /.test(d.division)}
-        stroke={(d) =>
-            /, MI /.test(d.division) ? 'red' : '#ccc'} />
+  <Line
+    data={bls}
+    x="date"
+    y="unemployment"
+    z="division"
+    sort={(d) => /, MI /.test(d.division)}
+    stroke={(d) =>
+      /, MI /.test(d.division) ? 'red' : '#ccc'} />
 </Plot>
 ```
 
@@ -338,20 +325,20 @@ The [LineY constructor](/marks/line#LineY) provides default channel definitions 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, LineY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
-    import { randomNormal } from 'd3-random';
-    import { range, cumsum } from 'd3-array';
+  import { Plot, LineY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
+  import { randomNormal } from 'd3-random';
+  import { range, cumsum } from 'd3-array';
 </script>
 
 <Plot grid height={250}>
-    <LineY data={cumsum(range(600).map(randomNormal()))} />
+  <LineY data={cumsum(range(600).map(randomNormal()))} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <LineY data={cumsum(range(600).map(randomNormal()))} />
+  <LineY data={cumsum(range(600).map(randomNormal()))} />
 </Plot>
 ```
 
@@ -365,24 +352,24 @@ Convenience wrapper for rendering an array of numbers over their indices.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, LineX } from 'svelteplot';
-    import { range } from 'd3-array';
+  import { Plot, LineX } from 'svelteplot';
+  import { range } from 'd3-array';
 </script>
 
 <Plot grid x={{ nice: true }} maxWidth="180px">
-    <LineX
-        data={range(Math.PI * 100).map((i) =>
-            Math.sin(i / 20)
-        )} />
+  <LineX
+    data={range(Math.PI * 100).map((i) =>
+      Math.sin(i / 20)
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot grid x={{ nice: true }}>
-    <LineX
-        data={range(Math.PI * 100).map((i) =>
-            Math.sin(i / 20)
-        )} />
+  <LineX
+    data={range(Math.PI * 100).map((i) =>
+      Math.sin(i / 20)
+    )} />
 </Plot>
 ```
 
@@ -392,40 +379,40 @@ While uncommon, you can draw a line with ordinal position values. For example be
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { stateage } = $derived(page.data.data);
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { stateage } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    x={{ label: 'Age range (years)' }}
-    y={{
-        percent: true,
+  grid
+  x={{ label: 'Age range (years)' }}
+  y={{
+    percent: true,
 
-        label: 'Population (%)'
-    }}>
-    <Line
-        data={stateage}
-        x="age"
-        y="pop_share"
-        z="state"
-        canvas
-        strokeOpacity={0.5} />
-    <RuleY data={[0]} />
+    label: 'Population (%)'
+  }}>
+  <Line
+    data={stateage}
+    x="age"
+    y="pop_share"
+    z="state"
+    canvas
+    strokeOpacity={0.5} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{ label: 'Age range (years)' }}
-    y={{
-        percent: true,
-        grid: true,
-        label: 'Population (%)'
-    }}>
-    <Line data={stateage} x="age" y="pop_share" z="state" />
-    <RuleY data={[0]} />
+  x={{ label: 'Age range (years)' }}
+  y={{
+    percent: true,
+    grid: true,
+    label: 'Population (%)'
+  }}>
+  <Line data={stateage} x="age" y="pop_share" z="state" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -437,43 +424,39 @@ With a [spherical projection](/features/projections), line segments become [geod
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Geo, Dot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    import * as topojson from 'topojson-client';
-    const { world, beagle } = $derived(page.data.data);
-    const land = $derived(
-        topojson.feature(world, world.objects.land)
-    );
+  import { Plot, Geo, Dot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  import * as topojson from 'topojson-client';
+  const { world, beagle } = $derived(page.data.data);
+  const land = $derived(
+    topojson.feature(world, world.objects.land)
+  );
 </script>
 
 <Plot projection="equirectangular">
-    <Geo data={[land]} stroke="currentColor" />
-    <Line
-        data={beagle}
-        x="lon"
-        y="lat"
-        stroke="var(--svp-red)" />
-    <Geo
-        data={[
-            { type: 'Point', coordinates: [-0.13, 51.5] }
-        ]}
-        fill="var(--svp-red)" />
+  <Geo data={[land]} stroke="currentColor" />
+  <Line
+    data={beagle}
+    x="lon"
+    y="lat"
+    stroke="var(--svp-red)" />
+  <Geo
+    data={[{ type: 'Point', coordinates: [-0.13, 51.5] }]}
+    fill="var(--svp-red)" />
 </Plot>
 ```
 
 ```svelte
 <Plot projection="equirectangular">
-    <Geo data={[land]} stroke="currentColor" />
-    <Line
-        data={beagle}
-        x="lon"
-        y="lat"
-        stroke="var(--svp-red)" />
-    <Geo
-        data={[
-            { type: 'Point', coordinates: [-0.13, 51.5] }
-        ]}
-        fill="var(--svp-red)" />
+  <Geo data={[land]} stroke="currentColor" />
+  <Line
+    data={beagle}
+    x="lon"
+    y="lat"
+    stroke="var(--svp-red)" />
+  <Geo
+    data={[{ type: 'Point', coordinates: [-0.13, 51.5] }]}
+    fill="var(--svp-red)" />
 </Plot>
 ```
 
@@ -483,48 +466,48 @@ With a [spherical projection](/features/projections), line segments become [geod
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, Dot } from 'svelteplot';
+  import { Plot, Line, Dot } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <p>
-    By disabling the plot axes and reducing the margins and
-    inset you can place tiny line charts
-    <Plot
-        axes={false}
-        inset={3}
-        width={40}
-        height={25}
-        margin={0}
-        testid="axis-off">
-        <Line data={aapl.slice(-60)} x="Date" y="Close" />
-    </Plot> inside a text paragraph or table -- often referred
-    to as sparklines.
+  By disabling the plot axes and reducing the margins and
+  inset you can place tiny line charts
+  <Plot
+    axes={false}
+    inset={3}
+    width={40}
+    height={25}
+    margin={0}
+    testid="axis-off">
+    <Line data={aapl.slice(-60)} x="Date" y="Close" />
+  </Plot> inside a text paragraph or table -- often referred to
+  as sparklines.
 </p>
 
 <style>
-    p :global(figure.svelteplot) {
-        display: inline-block;
-        vertical-align: baseline;
-    }
+  p :global(figure.svelteplot) {
+    display: inline-block;
+    vertical-align: baseline;
+  }
 </style>
 ```
 
 ```svelte
 <p>
-    By disabling the plot axes and reducing the margins and
-    inset you can place tiny line charts
-    <Plot
-        axes={false}
-        inset={3}
-        width={40}
-        height={25}
-        margin={0}>
-        <Line data={aapl.slice(-60)} x="Date" y="Close" />
-    </Plot> inside a text paragraph or table -- often referred
-    to as sparklines.
+  By disabling the plot axes and reducing the margins and
+  inset you can place tiny line charts
+  <Plot
+    axes={false}
+    inset={3}
+    width={40}
+    height={25}
+    margin={0}>
+    <Line data={aapl.slice(-60)} x="Date" y="Close" />
+  </Plot> inside a text paragraph or table -- often referred to
+  as sparklines.
 </p>
 ```
 
@@ -534,55 +517,52 @@ You can set the line interpolation using the **interpolation** option.
 
 ```svelte live
 <script>
-    import { Plot, LineY, Dot } from 'svelteplot';
-    import Slider from '$shared/ui/Slider.svelte';
-    import Select from '$shared/ui/Select.svelte';
+  import { Plot, LineY, Dot } from 'svelteplot';
+  import Slider from '$shared/ui/Slider.svelte';
+  import Select from '$shared/ui/Select.svelte';
 
-    // curve demo
-    const numbers = [
-        0.25, 0.09, 0.58, 0.22, 0.38, 0.03, 0.45, 0.12,
-        0.87, 0.99, 0.85, 0.5, 0.64, 0.86, 0.6, 0.09, 0.14,
-        0.95, 0.92, 0.89
-    ];
-    let curve = $state('catmull-rom');
-    let tension = $state(0.5);
-    const CURVES =
-        'basis,basis-open,basis-closed,bump-x,bump-y,bundle,cardinal,cardinal-open,cardinal-closed,catmull-rom,catmull-rom-open,catmull-rom-closed,linear,linear-closed,monotone-x,monotone-y,natural,step,step-after,step-before'.split(
-            ','
-        );
+  // curve demo
+  const numbers = [
+    0.25, 0.09, 0.58, 0.22, 0.38, 0.03, 0.45, 0.12, 0.87,
+    0.99, 0.85, 0.5, 0.64, 0.86, 0.6, 0.09, 0.14, 0.95,
+    0.92, 0.89
+  ];
+  let curve = $state('catmull-rom');
+  let tension = $state(0.5);
+  const CURVES =
+    'basis,basis-open,basis-closed,bump-x,bump-y,bundle,cardinal,cardinal-open,cardinal-closed,catmull-rom,catmull-rom-open,catmull-rom-closed,linear,linear-closed,monotone-x,monotone-y,natural,step,step-after,step-before'.split(
+      ','
+    );
 </script>
 
 <Select label="curve" bind:value={curve} options={CURVES} />
 
 {#if curve.includes('bundle') || curve.includes('catmull') || curve.includes('cardinal')}
-    <Slider
-        label="tension"
-        bind:value={tension}
-        min={0}
-        max={2}
-        step={0.1} />
+  <Slider
+    label="tension"
+    bind:value={tension}
+    min={0}
+    max={2}
+    step={0.1} />
 {/if}
 
 <Plot grid testid="curvedemo" height={300}>
-    <LineY data={numbers} {curve} {tension} />
-    <!-- TODO: use DotY here -->
-    <Dot
-        data={numbers.map((d, i) => ({
-            value: d,
-            index: i
-        }))}
-        symbol="plus"
-        y="value"
-        x="index" />
+  <LineY data={numbers} {curve} {tension} />
+  <!-- TODO: use DotY here -->
+  <Dot
+    data={numbers.map((d, i) => ({
+      value: d,
+      index: i
+    }))}
+    symbol="plus"
+    y="value"
+    x="index" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <LineY
-        data={numbers}
-        curve="catmul-rom"
-        tension={0.3} />
+  <LineY data={numbers} curve="catmul-rom" tension={0.3} />
 </Plot>
 ```
 
@@ -594,39 +574,39 @@ Lines can show a text label along the path:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, Dot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot, Line, Dot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
-    let offset = $state(50);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
+  let offset = $state(50);
 </script>
 
 <Slider
-    bind:value={offset}
-    label="textStartOffset"
-    min={0}
-    max={100} />
+  bind:value={offset}
+  label="textStartOffset"
+  min={0}
+  max={100} />
 <Plot height={200}>
-    <Line
-        data={aapl.slice(20, 40)}
-        x="Date"
-        y="Close"
-        curve="basis"
-        text="AAPL"
-        textSize={16}
-        textStartOffset="{offset}%" />
+  <Line
+    data={aapl.slice(20, 40)}
+    x="Date"
+    y="Close"
+    curve="basis"
+    text="AAPL"
+    textSize={16}
+    textStartOffset="{offset}%" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid>
-    <Line
-        data={aapl.slice(20, 40)}
-        x="Date"
-        y="Close"
-        curve="basis"
-        text="AAPL" />
+  <Line
+    data={aapl.slice(20, 40)}
+    x="Date"
+    y="Close"
+    curve="basis"
+    text="AAPL" />
 </Plot>
 ```
 
@@ -638,44 +618,44 @@ Line charts do not support implicit stacking, but you can use the [stack](/trans
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        AreaY,
-        stackY,
-        renameChannels
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    const { riaa } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    AreaY,
+    stackY,
+    renameChannels
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  const { riaa } = $derived(page.data.data);
 
-    const stacked = $derived(
-        stackY(
-            {
-                data: riaa,
-                x: 'year',
-                y: 'revenue',
-                z: 'format',
-                stroke: 'group'
-            },
-            { offset: 'wiggle' }
-        )
-    );
+  const stacked = $derived(
+    stackY(
+      {
+        data: riaa,
+        x: 'year',
+        y: 'revenue',
+        z: 'format',
+        stroke: 'group'
+      },
+      { offset: 'wiggle' }
+    )
+  );
 </script>
 
 <Plot grid height={250}>
-    <AreaY {...stacked} opacity={0.5} fill="group" />
-    {#each ['y1', 'y2'] as y}
-        <Line {...renameChannels(stacked, { [y]: 'y' })} />
-    {/each}
+  <AreaY {...stacked} opacity={0.5} fill="group" />
+  {#each ['y1', 'y2'] as y}
+    <Line {...renameChannels(stacked, { [y]: 'y' })} />
+  {/each}
 </Plot>
 ```
 
 ```svelte
 <Plot grid height={250}>
-    <AreaY {...stacked} opacity={0.5} fill="group" />
-    {#each ['y1', 'y2'] as y}
-        <Line {...renameChannels(stacked, { [y]: 'y' })} />
-    {/each}
+  <AreaY {...stacked} opacity={0.5} fill="group" />
+  {#each ['y1', 'y2'] as y}
+    <Line {...renameChannels(stacked, { [y]: 'y' })} />
+  {/each}
 </Plot>
 ```
 
@@ -689,95 +669,92 @@ Like all marks, Line marks support [faceting](/features/faceting). In this examp
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        Frame,
-        normalizeY
-    } from 'svelteplot';
-    import { innerWidth } from 'svelte/reactivity/window';
-    import { page } from '$app/state';
-    import { Checkbox } from '$shared/ui';
-    import { writable } from 'svelte/store';
+  import {
+    Plot,
+    Line,
+    Frame,
+    normalizeY
+  } from 'svelteplot';
+  import { innerWidth } from 'svelte/reactivity/window';
+  import { page } from '$app/state';
+  import { Checkbox } from '$shared/ui';
+  import { writable } from 'svelte/store';
 
-    // Use stocks dataset
-    let { stocks } = $derived(page.data.data);
+  // Use stocks dataset
+  let { stocks } = $derived(page.data.data);
 
-    // Create a store for canvas rendering toggle
-    let useCanvas = $state(false);
+  // Create a store for canvas rendering toggle
+  let useCanvas = $state(false);
 
-    let maxDate = $state(new Date('2013-05-13'));
+  let maxDate = $state(new Date('2013-05-13'));
 
-    $effect(() => {
-        window.requestAnimationFrame(frame);
-    });
+  $effect(() => {
+    window.requestAnimationFrame(frame);
+  });
 
-    function frame() {
-        maxDate = new Date(maxDate.getTime() + 864e5);
-        if (maxDate.getFullYear() >= 2018) {
-            maxDate = new Date('2013-05-13');
-        }
-        requestAnimationFrame(frame);
+  function frame() {
+    maxDate = new Date(maxDate.getTime() + 864e5);
+    if (maxDate.getFullYear() >= 2018) {
+      maxDate = new Date('2013-05-13');
     }
+    requestAnimationFrame(frame);
+  }
 
-    const normalized = $derived(
-        normalizeY(
-            {
-                data: stocks.filter(
-                    (d) =>
-                        d.Date <
-                            new Date(
-                                maxDate.getTime() +
-                                    864e5 * 420
-                            ) && d.Date > maxDate
-                ),
-                x: 'Date',
-                y: 'Close',
-                stroke: 'Symbol'
-            },
-            'extent'
-        )
-    );
+  const normalized = $derived(
+    normalizeY(
+      {
+        data: stocks.filter(
+          (d) =>
+            d.Date <
+              new Date(maxDate.getTime() + 864e5 * 420) &&
+            d.Date > maxDate
+        ),
+        x: 'Date',
+        y: 'Close',
+        stroke: 'Symbol'
+      },
+      'extent'
+    )
+  );
 </script>
 
 <Checkbox label="Canvas rendering" bind:value={useCanvas} />
 <Plot
-    height={innerWidth.current < 500 ? 400 : 130}
-    inset={5}
-    x={{
-        interval: 'year',
-        grid: true,
-        tickFormat: (d) => d.getFullYear()
-    }}
-    y={{ axis: false }}>
-    <Frame fill opacity={0.05} />
-    <Line
-        {...normalized}
-        curve="basis"
-        strokeWidth={2}
-        canvas={useCanvas}
-        outlineStroke="var(--svelteplot-bg)"
-        {...{
-            [innerWidth.current < 500 ? 'fy' : 'fx']:
-                'Symbol'
-        }} />
-    />
+  height={innerWidth.current < 500 ? 400 : 130}
+  inset={5}
+  x={{
+    interval: 'year',
+    grid: true,
+    tickFormat: (d) => d.getFullYear()
+  }}
+  y={{ axis: false }}>
+  <Frame fill opacity={0.05} />
+  <Line
+    {...normalized}
+    curve="basis"
+    strokeWidth={2}
+    canvas={useCanvas}
+    outlineStroke="var(--svelteplot-bg)"
+    {...{
+      [innerWidth.current < 500 ? 'fy' : 'fx']: 'Symbol'
+    }} />
+  />
 </Plot>
 ```
 
 ```svelte
 <Line
-    {...normalizeY(
-        {
-            data: stocks,
-            x: 'Date',
-            y: 'Close',
-            stroke: 'Symbol'
-        },
-        'extent'
-    )}
-    curve="basis"
-    fx="Symbol" />
+  {...normalizeY(
+    {
+      data: stocks,
+      x: 'Date',
+      y: 'Close',
+      stroke: 'Symbol'
+    },
+    'extent'
+  )}
+  curve="basis"
+  fx="Symbol" />
 />
 ```
 
@@ -787,49 +764,49 @@ You can use the [LinearGradient](/features/gradients) helper components to color
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        Frame,
-        LinearGradientX,
-        LinearGradientY
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { sftemp } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    Frame,
+    LinearGradientX,
+    LinearGradientY
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { sftemp } = $derived(page.data.data);
 </script>
 
 <Plot height={250} y={{ grid: true }}>
-    <defs>
-        <LinearGradientY
-            id="gradient-y"
-            stops={[
-                { y: 70, color: 'var(--svp-red)' },
-                { y: 50, color: 'var(--svp-blue)' }
-            ]} />
-    </defs>
-    <Line
-        data={sftemp}
-        x="date"
-        y="high"
-        stroke="url(#gradient-y)" />
+  <defs>
+    <LinearGradientY
+      id="gradient-y"
+      stops={[
+        { y: 70, color: 'var(--svp-red)' },
+        { y: 50, color: 'var(--svp-blue)' }
+      ]} />
+  </defs>
+  <Line
+    data={sftemp}
+    x="date"
+    y="high"
+    stroke="url(#gradient-y)" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <defs>
-        <LinearGradientY
-            id="temp-gradient"
-            stops={[
-                { y: 70, color: 'red' },
-                { y: 50, color: 'blue' }
-            ]} />
-    </defs>
-    <Line
-        data={sftemp}
-        x="date"
-        y="high"
-        stroke="url(#temp-gradient)" />
+  <defs>
+    <LinearGradientY
+      id="temp-gradient"
+      stops={[
+        { y: 70, color: 'red' },
+        { y: 50, color: 'blue' }
+      ]} />
+  </defs>
+  <Line
+    data={sftemp}
+    x="date"
+    y="high"
+    stroke="url(#temp-gradient)" />
 </Plot>
 ```
 

@@ -1,5 +1,5 @@
 <script>
-	import V0 from './v0.svelte';
+    import V0 from './v0.svelte';
 </script>
 
 <V0 />

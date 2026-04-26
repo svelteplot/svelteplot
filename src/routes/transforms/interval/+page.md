@@ -10,23 +10,23 @@ The interval transform is often used for time-series bar charts. For example, co
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarY, RuleY } from 'svelteplot';
+  import { Plot, BarY, RuleY } from 'svelteplot';
 
-    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
-        day: 'numeric',
-        month: 'short'
-    });
+  const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short'
+  });
 
-    const tickFormat = (date: Date) =>
-        DAY_MONTH.format(date).split(' ').reverse();
+  const tickFormat = (date: Date) =>
+    DAY_MONTH.format(date).split(' ').reverse();
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot marginLeft={40} x={{ tickFormat }} grid>
-    <BarY data={aapl.slice(-40)} x="Date" y="Volume" />
-    <RuleY data={[0]} />
+  <BarY data={aapl.slice(-40)} x="Date" y="Volume" />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -34,40 +34,40 @@ In contrast, a [rectY](/marks/rect) mark with the interval option and the day in
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RectY, RuleY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, RectY, RuleY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
-        day: 'numeric',
-        month: 'short'
-    });
-    const tickFormat = (date: Date) =>
-        DAY_MONTH.format(date).split(' ').reverse();
+  const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short'
+  });
+  const tickFormat = (date: Date) =>
+    DAY_MONTH.format(date).split(' ').reverse();
 </script>
 
 <Plot marginLeft={40} x={{ tickFormat }} grid>
-    <RectY
-        data={aapl.slice(-40)}
-        x="Date"
-        y="Volume"
-        interval="day"
-        insetRight={1} />
-    <RuleY data={[0]} />
+  <RectY
+    data={aapl.slice(-40)}
+    x="Date"
+    y="Volume"
+    interval="day"
+    insetRight={1} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot marginLeft={40} x={{ tickFormat }} grid>
-    <RectY
-        data={aapl.slice(-40)}
-        x="Date"
-        y="Volume"
-        interval="day"
-        insetRight={1} />
-    <RuleY data={[0]} />
+  <RectY
+    data={aapl.slice(-40)}
+    x="Date"
+    y="Volume"
+    interval="day"
+    insetRight={1} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -75,45 +75,45 @@ The meaning of the interval mark option depends on the associated mark, such as 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarY, RuleY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, BarY, RuleY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
-        day: 'numeric',
-        month: 'short'
-    });
+  const DAY_MONTH = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short'
+  });
 
-    const tickFormat = (date: Date) =>
-        DAY_MONTH.format(date).split(' ').reverse();
+  const tickFormat = (date: Date) =>
+    DAY_MONTH.format(date).split(' ').reverse();
 </script>
 
 <Plot marginLeft={40} x={{ tickFormat }} grid>
-    <BarY
-        data={aapl.slice(-40)}
-        x="Date"
-        y="Volume"
-        interval={5e6} />
-    <RuleY data={[0]} />
+  <BarY
+    data={aapl.slice(-40)}
+    x="Date"
+    y="Volume"
+    interval={5e6} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    marginLeft={40}
-    x={{
-        /* force date ticks for band scale */
-        tickFormat
-    }}
-    grid>
-    <BarY
-        data={aapl.slice(-40)}
-        x="Date"
-        y="Volume"
-        interval={5e6} />
-    <RuleY data={[0]} />
+  marginLeft={40}
+  x={{
+    /* force date ticks for band scale */
+    tickFormat
+  }}
+  grid>
+  <BarY
+    data={aapl.slice(-40)}
+    x="Date"
+    y="Volume"
+    interval={5e6} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 

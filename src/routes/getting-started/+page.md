@@ -13,36 +13,33 @@ You can use SveltePlot inside any platform that supports Svelte 5, such as [Stac
 
 ```svelte live
 <script>
-    import { Plot, RectY, binX } from 'svelteplot';
-    import { randomNormal } from 'd3-random';
+  import { Plot, RectY, binX } from 'svelteplot';
+  import { randomNormal } from 'd3-random';
 
-    const randomNumbers = new Array(10000)
-        .fill(0)
-        .map(randomNormal());
+  const randomNumbers = new Array(10000)
+    .fill(0)
+    .map(randomNormal());
 </script>
 
 <Plot title="Histogram of random numbers" grid>
-    <RectY
-        {...binX(
-            { data: randomNumbers },
-            { y: 'count' }
-        )} />
+  <RectY
+    {...binX({ data: randomNumbers }, { y: 'count' })} />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import { Plot, RectY, binX } from 'svelteplot';
-    import { range } from 'd3-array';
-    import { randomNormal } from 'd3-random';
+  import { Plot, RectY, binX } from 'svelteplot';
+  import { range } from 'd3-array';
+  import { randomNormal } from 'd3-random';
 </script>
 
 <Plot grid>
-    <RectY
-        {...binX(
-            { data: range(10000).map(randomNormal()) },
-            { y: 'count' }
-        )} />
+  <RectY
+    {...binX(
+      { data: range(10000).map(randomNormal()) },
+      { y: 'count' }
+    )} />
 </Plot>
 ```
 
@@ -62,21 +59,21 @@ pnpm add svelteplot
 
 ```svelte
 <script>
-    import { Plot, BarX } from 'svelteplot';
+  import { Plot, BarX } from 'svelteplot';
 </script>
 
 <Plot grid y={['A', 'B', 'C', 'D']}>
-    <BarX data={[1, 2, 3, 4]} />
+  <BarX data={[1, 2, 3, 4]} />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, BarX } from 'svelteplot';
+  import { Plot, BarX } from 'svelteplot';
 </script>
 
 <Plot grid testid="four-bars" y={['A', 'B', 'C', 'D']}>
-    <BarX data={[1, 2, 3, 4]} />
+  <BarX data={[1, 2, 3, 4]} />
 </Plot>
 ```
 

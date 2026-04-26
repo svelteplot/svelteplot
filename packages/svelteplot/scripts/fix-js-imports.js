@@ -161,7 +161,11 @@ export async function fullySpecifyImportsInDirectory(rootDir = 'dist') {
 
         const replacements = [];
         for (const match of matches) {
-            const replacement = await resolveRelativeSpecifierOnDisk(match.specifier, filePath, absoluteRoot);
+            const replacement = await resolveRelativeSpecifierOnDisk(
+                match.specifier,
+                filePath,
+                absoluteRoot
+            );
             if (replacement && replacement !== match.specifier) {
                 replacements.push({
                     start: match.start,

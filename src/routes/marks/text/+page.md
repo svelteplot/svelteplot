@@ -8,113 +8,105 @@ Useful for showing text labels. The text mark is using SVG `<text>` elements, so
 
 ```svelte live
 <script>
-    import { Plot, Line, Text } from 'svelteplot';
+  import { Plot, Line, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { driving } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { driving } = $derived(page.data.data);
 </script>
 
 <Plot
-    inset={10}
-    grid
-    height={500}
-    x={{ label: 'Miles driven (per person-year) →' }}
-    y={{ label: '↑ Cost of gasoline ($ per gallon)' }}>
-    <Line
-        data={driving}
-        x="miles"
-        y="gas"
-        curve="catmull-rom"
-        marker="arrow" />
-    <Text
-        data={driving}
-        x="miles"
-        y="gas"
-        text="year"
-        fill="currentColor"
-        stroke="var(--svelteplot-bg)"
-        strokeWidth={3}
-        filter={(d) => d.year % 5 === 0}
-        dx={(d) =>
-            d.side === 'left'
-                ? -5
-                : d.side === 'right'
-                  ? 5
-                  : 0}
-        dy={(d) =>
-            d.side === 'top'
-                ? 5
-                : d.side === 'bottom'
-                  ? -5
-                  : 0}
-        textAnchor={(d) =>
-            d.side === 'left'
-                ? 'end'
-                : d.side === 'right'
-                  ? 'start'
-                  : 'center'}
-        lineAnchor={(d) =>
-            d.side === 'top'
-                ? 'top'
-                : d.side === 'bottom'
-                  ? 'bottom'
-                  : 'middle'} />
+  inset={10}
+  grid
+  height={500}
+  x={{ label: 'Miles driven (per person-year) →' }}
+  y={{ label: '↑ Cost of gasoline ($ per gallon)' }}>
+  <Line
+    data={driving}
+    x="miles"
+    y="gas"
+    curve="catmull-rom"
+    marker="arrow" />
+  <Text
+    data={driving}
+    x="miles"
+    y="gas"
+    text="year"
+    fill="currentColor"
+    stroke="var(--svelteplot-bg)"
+    strokeWidth={3}
+    filter={(d) => d.year % 5 === 0}
+    dx={(d) =>
+      d.side === 'left' ? -5 : d.side === 'right' ? 5 : 0}
+    dy={(d) =>
+      d.side === 'top' ? 5 : d.side === 'bottom' ? -5 : 0}
+    textAnchor={(d) =>
+      d.side === 'left'
+        ? 'end'
+        : d.side === 'right'
+          ? 'start'
+          : 'center'}
+    lineAnchor={(d) =>
+      d.side === 'top'
+        ? 'top'
+        : d.side === 'bottom'
+          ? 'bottom'
+          : 'middle'} />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Dot, Text } from 'svelteplot';
+  import { Plot, Dot, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={500}
-    color={{ legend: true }}
-    testid="penguins">
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="currentColor"
-        r={3} />
-    <Text
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="species"
-        stroke="var(--svelteplot-bg)"
-        strokeWidth={5}
-        strokeOpacity={0.7}
-        dx={-3}
-        dy={-5}
-        textClass={(d) =>
-            d.species === 'Chinstrap' ? 'text-italic' : ''}
-        textAnchor="start"
-        lineAnchor="bottom"
-        fontWeight={(d) =>
-            d.species === 'Gentoo' ? 'bold' : 'normal'}
-        text={(d) => d.island} />
+  grid
+  height={500}
+  color={{ legend: true }}
+  testid="penguins">
+  <Dot
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="currentColor"
+    r={3} />
+  <Text
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="species"
+    stroke="var(--svelteplot-bg)"
+    strokeWidth={5}
+    strokeOpacity={0.7}
+    dx={-3}
+    dy={-5}
+    textClass={(d) =>
+      d.species === 'Chinstrap' ? 'text-italic' : ''}
+    textAnchor="start"
+    lineAnchor="bottom"
+    fontWeight={(d) =>
+      d.species === 'Gentoo' ? 'bold' : 'normal'}
+    text={(d) => d.island} />
 </Plot>
 
 <style>
-    :global(.text-italic) {
-        font-style: italic;
-    }
+  :global(.text-italic) {
+    font-style: italic;
+  }
 </style>
 ```
 
 ```svelte
 <Plot grid height={500} color={{ legend: true }}>
-    <Text
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="species"
-        text={(d) => d.island.charAt(0)} />
+  <Text
+    data={penguins}
+    x="culmen_length_mm"
+    y="culmen_depth_mm"
+    fill="species"
+    text={(d) => d.island.charAt(0)} />
 </Plot>
 ```
 
@@ -143,40 +135,34 @@ You can align text relative to the plot frame. This is useful for captions or an
 
 ```svelte live
 <script>
-    import { Plot, Dot, Text } from 'svelteplot';
+  import { Plot, Dot, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    axes={false}
-    x={{ domain: [0, 10] }}
-    y={{ domain: [0, 10] }}>
-    {#each ['top', 'bottom', 'center', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as frameAnchor}
-        <Text
-            {frameAnchor}
-            fontSize={15}
-            text={frameAnchor} />
-    {/each}
+  grid
+  height={200}
+  axes={false}
+  x={{ domain: [0, 10] }}
+  y={{ domain: [0, 10] }}>
+  {#each ['top', 'bottom', 'center', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as frameAnchor}
+    <Text {frameAnchor} fontSize={15} text={frameAnchor} />
+  {/each}
 </Plot>
 ```
 
 ```svelte
 <Plot
-    frame
-    grid
-    axes={false}
-    x={{ domain: [0, 10] }}
-    y={{ domain: [0, 10] }}>
-    {#each ['top', 'bottom', 'center', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as frameAnchor}
-        <Text
-            {frameAnchor}
-            text={frameAnchor}
-            fontSize={15} />
-    {/each}
+  frame
+  grid
+  axes={false}
+  x={{ domain: [0, 10] }}
+  y={{ domain: [0, 10] }}>
+  {#each ['top', 'bottom', 'center', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as frameAnchor}
+    <Text {frameAnchor} text={frameAnchor} fontSize={15} />
+  {/each}
 </Plot>
 ```
 

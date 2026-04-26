@@ -3,15 +3,15 @@ import { parse } from 'acorn';
 import { print } from 'esrap';
 import ts from 'esrap/languages/ts';
 import type {
-	ArrowFunctionExpression,
-	BlockStatement,
-	DoWhileStatement,
-	ForStatement,
-	FunctionDeclaration,
-	FunctionExpression,
-	Node,
-	Statement,
-	WhileStatement
+    ArrowFunctionExpression,
+    BlockStatement,
+    DoWhileStatement,
+    ForStatement,
+    FunctionDeclaration,
+    FunctionExpression,
+    Node,
+    Statement,
+    WhileStatement
 } from 'estree';
 import { walk, type Context } from 'zimmerframe';
 
@@ -20,7 +20,7 @@ const TIMEOUT = 100;
 const regex = /\b(for|while)\b/;
 
 function parse_statement(code: string): Statement {
-	return parse(code, { ecmaVersion: 'latest' }).body[0] as Statement;
+    return parse(code, { ecmaVersion: 'latest' }).body[0] as Statement;
 }
 
 const declaration = parse_statement(`
@@ -34,80 +34,80 @@ const check = parse_statement(`
 `);
 
 export function get_current_function(
-	path: Node[]
+    path: Node[]
 ): null | FunctionExpression | FunctionDeclaration | ArrowFunctionExpression {
-	for (let i = path.length - 1; i >= 0; i--) {
-		const node = path[i];
-		if (
-			node.type === 'FunctionDeclaration' ||
-			node.type === 'FunctionExpression' ||
-			node.type === 'ArrowFunctionExpression'
-		) {
-			return node;
-		}
-	}
-	return null;
+    for (let i = path.length - 1; i >= 0; i--) {
+        const node = path[i];
+        if (
+            node.type === 'FunctionDeclaration' ||
+            node.type === 'FunctionExpression' ||
+            node.type === 'ArrowFunctionExpression'
+        ) {
+            return node;
+        }
+    }
+    return null;
 }
 
 function loop_protect<Statement extends DoWhileStatement | ForStatement | WhileStatement>(
-	node: Statement,
-	context: Context<Node, null>
+    node: Statement,
+    context: Context<Node, null>
 ): Node | void {
-	const current_function = get_current_function(context.path);
+    const current_function = get_current_function(context.path);
 
-	if (current_function === null || (!current_function.async && !current_function.generator)) {
-		const body = context.visit(node.body) as import('estree').Statement;
+    if (current_function === null || (!current_function.async && !current_function.generator)) {
+        const body = context.visit(node.body) as import('estree').Statement;
 
-		const statements = body.type === 'BlockStatement' ? [...body.body] : [body];
+        const statements = body.type === 'BlockStatement' ? [...body.body] : [body];
 
-		const replacement: BlockStatement = {
-			type: 'BlockStatement',
-			body: [
-				declaration,
-				{
-					...((context.next() ?? node) as Statement),
-					body: {
-						type: 'BlockStatement',
-						body: [...statements, check]
-					}
-				}
-			]
-		};
+        const replacement: BlockStatement = {
+            type: 'BlockStatement',
+            body: [
+                declaration,
+                {
+                    ...((context.next() ?? node) as Statement),
+                    body: {
+                        type: 'BlockStatement',
+                        body: [...statements, check]
+                    }
+                }
+            ]
+        };
 
-		return replacement;
-	}
+        return replacement;
+    }
 
-	context.next();
+    context.next();
 }
 
 const plugin: Plugin = {
-	name: 'loop-protect',
-	transform: (code, id) => {
-		// only applies to local files, not imports
-		if (!id.startsWith('./')) return;
+    name: 'loop-protect',
+    transform: (code, id) => {
+        // only applies to local files, not imports
+        if (!id.startsWith('./')) return;
 
-		// only applies to JS and Svelte files
-		if (!id.endsWith('.js') && !id.endsWith('.svelte')) return;
+        // only applies to JS and Svelte files
+        if (!id.endsWith('.js') && !id.endsWith('.svelte')) return;
 
-		// fast path
-		if (!regex.test(code)) return;
+        // fast path
+        if (!regex.test(code)) return;
 
-		const ast = parse(code, {
-			ecmaVersion: 'latest',
-			sourceType: 'module'
-		});
+        const ast = parse(code, {
+            ecmaVersion: 'latest',
+            sourceType: 'module'
+        });
 
-		const transformed = walk(ast as Node, null, {
-			WhileStatement: loop_protect,
-			DoWhileStatement: loop_protect,
-			ForStatement: loop_protect
-		});
+        const transformed = walk(ast as Node, null, {
+            WhileStatement: loop_protect,
+            DoWhileStatement: loop_protect,
+            ForStatement: loop_protect
+        });
 
-		// nothing changed
-		if (ast === transformed) return null;
+        // nothing changed
+        if (ast === transformed) return null;
 
-		return print(transformed, ts());
-	}
+        return print(transformed, ts());
+    }
 };
 
 export default plugin;

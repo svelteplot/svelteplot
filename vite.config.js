@@ -31,10 +31,7 @@ export default defineConfig({
             },
             {
                 find: '@sveltejs/repl/viewer',
-                replacement: path.resolve(
-                    __dirname,
-                    './packages/repl/src/lib/Output/Viewer.svelte'
-                )
+                replacement: path.resolve(__dirname, './packages/repl/src/lib/Output/Viewer.svelte')
             },
             {
                 find: '@sveltejs/repl/workspace',

@@ -8,24 +8,24 @@ In the following example, you can see that the `<Plot>` component has added axes
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid frame testid="aapl-line-frame">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import aapl from './aapl.csv';
+  import { Plot, Line } from 'svelteplot';
+  import aapl from './aapl.csv';
 </script>
 
 <Plot grid frame>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -39,50 +39,50 @@ But if we wanted to, we can add these marks individually, and it would look just
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Frame,
-        GridX,
-        GridY,
-        AxisX,
-        AxisY,
-        Line
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Frame,
+    GridX,
+    GridY,
+    AxisX,
+    AxisY,
+    Line
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot testid="aapl-line-frame">
-    <Frame />
-    <GridX />
-    <GridY />
-    <AxisX />
-    <AxisY />
-    <Line data={aapl} x="Date" y="Close" />
+  <Frame />
+  <GridX />
+  <GridY />
+  <AxisX />
+  <AxisY />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import {
-        Plot,
-        Frame,
-        GridX,
-        GridY,
-        AxisX,
-        AxisY,
-        Line
-    } from 'svelteplot';
-    import aapl from './aapl.csv';
+  import {
+    Plot,
+    Frame,
+    GridX,
+    GridY,
+    AxisX,
+    AxisY,
+    Line
+  } from 'svelteplot';
+  import aapl from './aapl.csv';
 </script>
 
 <Plot>
-    <Frame />
-    <GridX />
-    <GridY />
-    <AxisX />
-    <AxisY />
-    <Line data={aapl} x="Date" y="Close" />
+  <Frame />
+  <GridX />
+  <GridY />
+  <AxisX />
+  <AxisY />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -92,31 +92,31 @@ This can be useful if you want to customize the styling of the frame or grids, f
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        GridX,
-        GridY,
-        Frame
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    GridX,
+    GridY,
+    Frame
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot inset={10} testid="ggplot">
-    <Frame fill="#eaeaea" />
-    <GridX stroke="#fff" strokeOpacity="1" />
-    <GridY stroke="#fff" strokeOpacity="1" />
-    <Line data={aapl} x="Date" y="Close" stroke="#222" />
+  <Frame fill="#eaeaea" />
+  <GridX stroke="#fff" strokeOpacity="1" />
+  <GridY stroke="#fff" strokeOpacity="1" />
+  <Line data={aapl} x="Date" y="Close" stroke="#222" />
 </Plot>
 ```
 
 ```svelte
 <Plot inset={10}>
-    <Frame fill="#eaeaea" />
-    <GridX stroke="#fff" strokeOpacity="1" />
-    <GridY stroke="#fff" strokeOpacity="1" />
-    <Line data={aapl} x="Date" y="Close" stroke="#222" />
+  <Frame fill="#eaeaea" />
+  <GridX stroke="#fff" strokeOpacity="1" />
+  <GridY stroke="#fff" strokeOpacity="1" />
+  <Line data={aapl} x="Date" y="Close" stroke="#222" />
 </Plot>
 ```
 
@@ -126,18 +126,18 @@ For convenience, you can pass **title**, **subtitle**, and **caption** to the Pl
 
 ```svelte live
 <script>
-    import { Plot, Line, Frame } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, Frame } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    title="This is a plot title"
-    subtitle="This is a subtitle"
-    caption="This is the caption"
-    testid="with-title">
-    <Line data={aapl} x="Date" y="Close" />
+  grid
+  title="This is a plot title"
+  subtitle="This is a subtitle"
+  caption="This is the caption"
+  testid="with-title">
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -154,19 +154,19 @@ By default, the Plot element will fill 100% of it's parent container width, but 
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid maxWidth="300px">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid maxWidth="300px">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -201,11 +201,11 @@ List of all plot options you can pass via props on the `<Plot />` component:
 ### Scale options
 
 - `x` - options for the x scale:
-    - `axis`
-    - `insetLeft`
-    - `insetRight`
-    - `ticks`
-    - `tickFormat`
+  - `axis`
+  - `insetLeft`
+  - `insetRight`
+  - `ticks`
+  - `tickFormat`
 - `y` - options for the y scale
 - `r` - options for the radius scale
 - `color` - options for the color scale
@@ -214,54 +214,54 @@ List of all plot options you can pass via props on the `<Plot />` component:
 - `length` - options for the length scale
 
 - You can set the following shared scale options for all the scales listed above:
-    - `domain` - custom domain for the scale
-    - `range` - custom range for the scale
-    - `reverse` - reverse the scale direction
-    - `type` - override automatic scale type detection
-    - `padding` - padding for band and point scales
-    - `align` - alignment for band and point scales
-    - `clamp` - whether to clamp values outside the domain
-    - `nice` - whether to extend the domain to nice round values
-    - `zero` - whether to include zero in the domain
-    - `round` - whether to round output values
-    - `percent` - whether to format values as percentages
-    - `transform` - a function to transform values
-    - `ticks` - custom tick values
-    - `tickSpacing` - spacing between ticks
-    - `tickFormat` - custom formatter for tick labels
+  - `domain` - custom domain for the scale
+  - `range` - custom range for the scale
+  - `reverse` - reverse the scale direction
+  - `type` - override automatic scale type detection
+  - `padding` - padding for band and point scales
+  - `align` - alignment for band and point scales
+  - `clamp` - whether to clamp values outside the domain
+  - `nice` - whether to extend the domain to nice round values
+  - `zero` - whether to include zero in the domain
+  - `round` - whether to round output values
+  - `percent` - whether to format values as percentages
+  - `transform` - a function to transform values
+  - `ticks` - custom tick values
+  - `tickSpacing` - spacing between ticks
+  - `tickFormat` - custom formatter for tick labels
 
 **Scale-specific options**
 
 - `x` also supports:
-    - `grid` - whether to show a grid
-    - `axis` - axis position ('top', 'bottom', 'both', or false)
-    - `tickRotate` - rotation angle for tick labels
-    - `labelAnchor` - position of axis label ('auto', 'left', 'center', 'right')
-    - `insetLeft` - left inset value
-    - `insetRight` - right inset value
+  - `grid` - whether to show a grid
+  - `axis` - axis position ('top', 'bottom', 'both', or false)
+  - `tickRotate` - rotation angle for tick labels
+  - `labelAnchor` - position of axis label ('auto', 'left', 'center', 'right')
+  - `insetLeft` - left inset value
+  - `insetRight` - right inset value
 
 - `y` also supports:
-    - `grid` - whether to show a grid
-    - `axis` - axis position ('left', 'right', 'both', or false)
-    - `tickRotate` - rotation angle for tick labels
-    - `labelAnchor` - position of axis label ('auto', 'bottom', 'middle', 'top')
-    - `insetTop` - top inset value
-    - `insetBottom` - bottom inset value
+  - `grid` - whether to show a grid
+  - `axis` - axis position ('left', 'right', 'both', or false)
+  - `tickRotate` - rotation angle for tick labels
+  - `labelAnchor` - position of axis label ('auto', 'bottom', 'middle', 'top')
+  - `insetTop` - top inset value
+  - `insetBottom` - bottom inset value
 
 - `color` also supports:
-    - `legend` - whether to show a color legend
-    - `scheme` - color scheme name
-    - `unknown` - fallback color for null/undefined values
-    - `pivot` - center value for diverging scales
-    - `n` - number of colors for quantize/quantile scales
+  - `legend` - whether to show a color legend
+  - `scheme` - color scheme name
+  - `unknown` - fallback color for null/undefined values
+  - `pivot` - center value for diverging scales
+  - `n` - number of colors for quantize/quantile scales
 - `symbol` also supports:
-    - `legend` - whether to show a symbol legend
+  - `legend` - whether to show a symbol legend
 
 You can also just pass the domain array as shorthand: _added in 0.7.0_
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
+  import { Plot } from 'svelteplot';
 </script>
 
 <Plot grid height={250} x={[0, 100]} y={[-50, 50]} />
@@ -281,9 +281,9 @@ You can also just pass the domain array as shorthand: _added in 0.7.0_
 - `implicitScales` - if true, uses implicit scales for automated behavior
 - `css` - custom CSS styling function
 - `facet` - top-level faceting options:
-    - `data` - data to facet by
-    - `x` - accessor for horizontal facets
-    - `y` - accessor for vertical facets
+  - `data` - data to facet by
+  - `x` - accessor for horizontal facets
+  - `y` - accessor for vertical facets
 
 ### Snippet options
 
@@ -312,37 +312,35 @@ to add events and scoped styles.
 
 ```svelte live
 <script>
-    import { Plot, Line, Frame } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, Frame } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    {#snippet header()}
-        <figcaption>
-            Custom caption above the plot
-        </figcaption>
-    {/snippet}
-    {#snippet footer()}
-        <h4>
-            Centered headline below plot with
-            <a href="#/" onclick={() => alert('works')}
-                >custom link</a>
-        </h4>
-    {/snippet}
-    <Line data={aapl} x="Date" y="Close" />
+  {#snippet header()}
+    <figcaption>Custom caption above the plot</figcaption>
+  {/snippet}
+  {#snippet footer()}
+    <h4>
+      Centered headline below plot with
+      <a href="#/" onclick={() => alert('works')}
+        >custom link</a>
+    </h4>
+  {/snippet}
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 
 <style>
-    h4 {
-        margin-top: 0;
-        text-align: center;
-        font-size: 1.15rem;
-    }
-    h4 a {
-        color: magenta;
-        text-decoration: underline;
-    }
+  h4 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.15rem;
+  }
+  h4 a {
+    color: magenta;
+    text-decoration: underline;
+  }
 </style>
 ```
 
@@ -358,13 +356,13 @@ You can use the **usePlot** hook to access the internal plot state. This is usef
 
 ```svelte
 <script>
-    import { usePlot } from 'svelteplot';
+  import { usePlot } from 'svelteplot';
 
-    const plot = usePlot();
-    // reactive access to things like
-    // plot.width
-    // plot.facetWidth
-    // plot.scales.x.fn() raw x scale
+  const plot = usePlot();
+  // reactive access to things like
+  // plot.width
+  // plot.facetWidth
+  // plot.scales.x.fn() raw x scale
 </script>
 ```
 
@@ -376,15 +374,15 @@ This allows you to set d[efault plot options](/features/defaults) globally for a
 
 ```svelte
 <script>
-    import { setPlotDefaults } from 'svelteplot';
+  import { setPlotDefaults } from 'svelteplot';
 
-    setPlotDefaults({
-        grid: true,
-        frame: true,
-        line: {
-            curve: 'monotoneX'
-        }
-    });
+  setPlotDefaults({
+    grid: true,
+    frame: true,
+    line: {
+      curve: 'monotoneX'
+    }
+  });
 </script>
 ```
 
@@ -394,86 +392,86 @@ SveltePlot provides a lot of convenience features with the unfortunate side-effe
 
 ```svelte live
 <script>
-    import Plot from 'svelteplot/core/Plot.svelte';
-    import { Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import Plot from 'svelteplot/core/Plot.svelte';
+  import { Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 
-    // custom x and y scale
-    function scaleX({ domain, plotWidth, plotOptions }) {
-        const { marginLeft, marginRight } = plotOptions;
-        const range = [
-            marginLeft,
-            plotWidth - marginLeft - marginRight
-        ];
-        const fn = (v) =>
-            ((v - domain[0]) / (domain[1] - domain[0])) *
-                (range[1] - range[0]) +
-            range[0];
-        fn.range = () => range;
-        return fn;
-    }
-    function scaleY({ domain, plotHeight, plotOptions }) {
-        const { marginTop, marginBottom } = plotOptions;
-        const range = [
-            plotHeight - marginTop - marginBottom,
-            marginBottom
-        ];
-        const fn = (v) =>
-            ((v - domain[0]) / (domain[1] - domain[0])) *
-                (range[1] - range[0]) +
-            range[0];
-        fn.range = () => range;
-        return fn;
-    }
+  // custom x and y scale
+  function scaleX({ domain, plotWidth, plotOptions }) {
+    const { marginLeft, marginRight } = plotOptions;
+    const range = [
+      marginLeft,
+      plotWidth - marginLeft - marginRight
+    ];
+    const fn = (v) =>
+      ((v - domain[0]) / (domain[1] - domain[0])) *
+        (range[1] - range[0]) +
+      range[0];
+    fn.range = () => range;
+    return fn;
+  }
+  function scaleY({ domain, plotHeight, plotOptions }) {
+    const { marginTop, marginBottom } = plotOptions;
+    const range = [
+      plotHeight - marginTop - marginBottom,
+      marginBottom
+    ];
+    const fn = (v) =>
+      ((v - domain[0]) / (domain[1] - domain[0])) *
+        (range[1] - range[0]) +
+      range[0];
+    fn.range = () => range;
+    return fn;
+  }
 </script>
 
 <Plot x={{ scale: scaleX }} y={{ scale: scaleY }}>
-    <Line
-        data={aapl}
-        x={(d) => new Date(d.Date)}
-        y="Adj Close" />
+  <Line
+    data={aapl}
+    x={(d) => new Date(d.Date)}
+    y="Adj Close" />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import Plot from 'svelteplot/core/Plot.svelte';
-    import { Line } from 'svelteplot';
+  import Plot from 'svelteplot/core/Plot.svelte';
+  import { Line } from 'svelteplot';
 
-    function scaleX({ domain, plotWidth, plotOptions }) {
-        const { marginLeft, marginRight } = plotOptions;
-        const range = [
-            marginLeft,
-            plotWidth - marginLeft - marginRight
-        ];
-        const fn = (v) =>
-            ((v - domain[0]) / (domain[1] - domain[0])) *
-                (range[1] - range[0]) +
-            range[0];
-        fn.range = () => range;
-        return fn;
-    }
-    function scaleY({ domain, plotHeight, plotOptions }) {
-        const { marginTop, marginBottom } = plotOptions;
-        const range = [
-            plotHeight - marginTop - marginBottom,
-            marginBottom
-        ];
-        const fn = (v) =>
-            ((v - domain[0]) / (domain[1] - domain[0])) *
-                (range[1] - range[0]) +
-            range[0];
-        fn.range = () => range;
-        return fn;
-    }
+  function scaleX({ domain, plotWidth, plotOptions }) {
+    const { marginLeft, marginRight } = plotOptions;
+    const range = [
+      marginLeft,
+      plotWidth - marginLeft - marginRight
+    ];
+    const fn = (v) =>
+      ((v - domain[0]) / (domain[1] - domain[0])) *
+        (range[1] - range[0]) +
+      range[0];
+    fn.range = () => range;
+    return fn;
+  }
+  function scaleY({ domain, plotHeight, plotOptions }) {
+    const { marginTop, marginBottom } = plotOptions;
+    const range = [
+      plotHeight - marginTop - marginBottom,
+      marginBottom
+    ];
+    const fn = (v) =>
+      ((v - domain[0]) / (domain[1] - domain[0])) *
+        (range[1] - range[0]) +
+      range[0];
+    fn.range = () => range;
+    return fn;
+  }
 </script>
 
 <Plot x={{ scale: scaleX }} y={{ scale: scaleY }}>
-    <Line
-        data={aapl}
-        x={(d) => new Date(d.Date)}
-        y="Adj Close" />
+  <Line
+    data={aapl}
+    x={(d) => new Date(d.Date)}
+    y="Adj Close" />
 </Plot>
 ```
 
