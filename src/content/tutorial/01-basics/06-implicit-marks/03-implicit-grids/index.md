@@ -18,7 +18,6 @@ Note that in Svelte, you can also just omit the `={true}`, so this works just th
 
 We can toggle the grids separately for the `x` and `y` axis by using the scale options (we'll come back to them later).
 
-
 ```svelte
 /// file: App.svelte
 <Plot+++ y={{ grid: true }}+++>

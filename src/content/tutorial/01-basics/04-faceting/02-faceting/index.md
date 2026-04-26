@@ -8,20 +8,22 @@ Add `fx="party"` to both marks to split them by party:
 
 ```svelte
 /// file: App.svelte
-	<Dot
-		{data}
-		x="date"
-		y="value"
-		+++fx="party"+++
-		stroke="party"
-		r={2}
-		opacity={0.5} />
-	<RegressionY
-		{data}
-		x="date"
-		y="value"
-		+++fx="party"+++
-		stroke="party" />
+<Dot
+  {data}
+  x="date"
+  y="value"
+  +++fx="party"
+  +++
+  stroke="party"
+  r={2}
+  opacity={0.5} />
+<RegressionY
+  {data}
+  x="date"
+  y="value"
+  +++fx="party"
+  +++
+  stroke="party" />
 ```
 
 `fx` is the **horizontal facet channel** — SveltePlot creates a separate sub-plot for each unique value and lines them up side by side. A shared y-axis makes cross-panel comparison straightforward.

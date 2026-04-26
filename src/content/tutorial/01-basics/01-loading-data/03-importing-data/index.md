@@ -5,7 +5,6 @@ title: Importing data
 For this tutorial, we're going to use an easier way to load data.
 
 ```svelte
-/// file: App.svelte
 <script>
 	---import { csvParse, autoType } from 'd3-dsv';
 	let data = $state([]);
@@ -16,6 +15,8 @@ For this tutorial, we're going to use an easier way to load data.
 	})---
   +++import data from '/data/aapl.csv';+++
 </script>
+
+/// file: App.svelte
 ```
 
 We're also going to add the data file right next to the app so you can inspect it.

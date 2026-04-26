@@ -1,4 +1,6 @@
-import { marked } from 'marked';
+import { marked, type Tokens } from 'marked';
+import { getSingletonHighlighter } from 'shiki';
+import { shikiDiffNotation, shikiFileHeader } from './shikiDiffNotation.js';
 
 export interface ExerciseStub {
     slug: string;
@@ -54,13 +56,57 @@ function parse_front_matter(md: string): { meta: Record<string, string>; body: s
     return { meta, body: match[2] };
 }
 
-function render_markdown(body: string): string {
-    // Strip code diff markers (---deleted--- and +++added+++) — show the final state
-    const cleaned = body
-        .replace(/^---(.*)---$/gm, '')
-        .replace(/^\+\+\+(.*)$/gm, '$1')
-        .replace(/^(.*)\+\+\+$/gm, '$1');
-    return marked(cleaned) as string;
+let hl_promise: ReturnType<typeof getSingletonHighlighter> | null = null;
+
+function get_highlighter() {
+    if (!hl_promise) {
+        hl_promise = getSingletonHighlighter({
+            themes: ['github-light', 'github-dark'],
+            langs: ['javascript', 'typescript', 'svelte', 'css', 'html', 'bash', 'json', 'text']
+        });
+    }
+    return hl_promise;
+}
+
+let marked_configured = false;
+
+async function ensure_marked_configured() {
+    if (marked_configured) return;
+    const hl = await get_highlighter();
+    marked.use({
+        renderer: {
+            code({ text, lang }: Tokens.Code): string {
+                const language = lang?.toLowerCase() ?? '';
+                if (language) {
+                    try {
+                        return hl.codeToHtml(text, {
+                            lang: language,
+                            themes: { light: 'github-light', dark: 'github-dark' },
+                            defaultColor: false,
+                            transformers: [
+                                shikiFileHeader(),
+                                shikiDiffNotation({
+                                    classLineAdd: 'line--added',
+                                    classLineRemove: 'line--deleted'
+                                })
+                            ]
+                        });
+                    } catch {
+                        // unknown language — fall through
+                    }
+                }
+                const esc = (s: string) =>
+                    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<pre class="shiki"><code><span class="line">${esc(text)}</span></code></pre>`;
+            }
+        }
+    });
+    marked_configured = true;
+}
+
+async function render_markdown(body: string): Promise<string> {
+    await ensure_marked_configured();
+    return (await marked(body)) as string;
 }
 
 const TUTORIAL_ROOT = '/src/content/tutorial';
@@ -150,7 +196,7 @@ export function get_exercise_stubs(): ExerciseStub[] {
     return exercise_list.map(({ slug, title, chapter }) => ({ slug, title, chapter }));
 }
 
-export function load_exercise(slug: string): Exercise | null {
+export async function load_exercise(slug: string): Promise<Exercise | null> {
     const entry = exercise_map.get(slug);
     if (!entry) return null;
 
@@ -185,7 +231,7 @@ export function load_exercise(slug: string): Exercise | null {
         slug,
         title: meta.title ?? slug,
         chapter: entry.chapter,
-        html: render_markdown(body),
+        html: await render_markdown(body),
         a,
         b,
         focus: focus.replace(/^\//, ''),

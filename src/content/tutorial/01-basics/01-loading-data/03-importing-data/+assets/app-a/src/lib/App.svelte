@@ -1,13 +1,13 @@
 <script>
-	import { csvParse, autoType } from 'd3-dsv';
+  import { csvParse, autoType } from 'd3-dsv';
 
-	let data = $state([]);
+  let data = $state([]);
 
-	$effect(async () => {
-		const res = await fetch('/data/aapl.csv');
-		const text = await res.text();
-		data = csvParse(text, autoType);
-	})
+  $effect(async () => {
+    const res = await fetch('/data/aapl.csv');
+    const text = await res.text();
+    data = csvParse(text, autoType);
+  });
 </script>
 
 <h1>Welcome to SveltePlot!</h1>

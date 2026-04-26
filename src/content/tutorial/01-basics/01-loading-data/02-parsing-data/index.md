@@ -4,9 +4,7 @@ title: Parsing data
 
 Now that we loaded the CSV data as test, we need to parse it.
 
-
 ```svelte
-/// file: App.svelte
 <script>
 	+++import { csvParse, autoType } from 'd3-dsv';+++
 
@@ -20,4 +18,6 @@ Now that we loaded the CSV data as test, we need to parse it.
 		data = csvParse(text, autoType);+++
 	})
 </script>
+
+/// file: App.svelte
 ```

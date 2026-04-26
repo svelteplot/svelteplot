@@ -1,8 +1,7 @@
 <script>
-	import { Plot } from 'svelteplot';
+  import { Plot } from 'svelteplot';
 </script>
 
 <Plot>
-	<!-- add marks -->
+  <!-- add marks -->
 </Plot>
-

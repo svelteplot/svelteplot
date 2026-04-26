@@ -50,6 +50,14 @@
 
     let svelte_version = $state('latest');
     let solved = $state(false);
+    let dark_mode = $state(false);
+    $effect(() => {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        dark_mode = mq.matches;
+        const handler = (e: MediaQueryListEvent) => (dark_mode = e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    });
 
     const bundler = browser
         ? new Bundler({
@@ -143,6 +151,20 @@
             <SplitPane id="editor-output" type="columns" pos="50%" min="200px" max="-200px">
                 {#snippet a()}
                     <div class="editor-pane">
+                        {#if workspace.files.filter((f) => f.type === 'file' && !f.basename.startsWith('+')).length > 1}
+                            <div class="file-tabs">
+                                {#each workspace.files as file}
+                                    {#if file.type === 'file' && !file.basename.startsWith('+')}
+                                        <button
+                                            class="tab"
+                                            class:active={workspace.current?.name === file.name}
+                                            onclick={() => workspace.select(file.name)}>
+                                            {file.basename}
+                                        </button>
+                                    {/if}
+                                {/each}
+                            </div>
+                        {/if}
                         <Editor {workspace} />
                     </div>
                 {/snippet}
@@ -150,7 +172,7 @@
                 {#snippet b()}
                     <div class="output-pane">
                         {#if browser && bundler}
-                            <Viewer relaxed {bundler} status={null} error={null} theme="light" />
+                            <Viewer relaxed {bundler} status={null} error={null} theme={dark_mode ? 'dark' : 'light'} />
                         {/if}
                     </div>
                 {/snippet}
@@ -164,6 +186,8 @@
         height: calc(100dvh - var(--header-height, 60px));
         display: flex;
         flex-direction: column;
+        /* make SplitPane dividers visible */
+        --color: var(--sk-border);
     }
 
     .prose-pane {
@@ -220,6 +244,57 @@
         padding: 0;
     }
 
+    /* shiki dual-theme: use light colors by default, dark colors when dark mode */
+    .prose-inner :global(.shiki) {
+        background-color: var(--shiki-light-bg, var(--sk-bg-3)) !important;
+        border: 1px solid var(--sk-border);
+        border-radius: var(--sk-border-radius);
+        padding: 0.75rem 1rem;
+        overflow-x: auto;
+        font: var(--sk-font-mono);
+        font-size: 0.82rem;
+        margin: 1rem 0;
+    }
+    .prose-inner :global(.shiki span) {
+        color: var(--shiki-light) !important;
+    }
+    @media (prefers-color-scheme: dark) {
+        .prose-inner :global(.shiki) {
+            background-color: var(--shiki-dark-bg, var(--sk-bg-3)) !important;
+        }
+        .prose-inner :global(.shiki span) {
+            color: var(--shiki-dark) !important;
+        }
+    }
+
+    /* diff line highlighting */
+    .prose-inner :global(.shiki .line) {
+        display: inline-block;
+        width: 100%;
+        padding: 0 1rem;
+        margin: 0 -1rem;
+    }
+
+    .prose-inner :global(.shiki .line--file-header) {
+        opacity: 0.4;
+        font-style: italic;
+    }
+    .prose-inner :global(.shiki .inline-add),
+    .prose-inner :global(.shiki .inline-add > *),
+    .prose-inner :global(.shiki .line--added > *) {
+        background: rgb(0 180 0 / 0.1) !important;
+        color: #98df98 !important;
+        border-radius: 2px;
+    }
+    .prose-inner :global(.shiki .inline-remove),
+    .prose-inner :global(.shiki .inline-remove > *),
+    .prose-inner :global(.shiki .line--deleted > *) {
+        background: rgb(200 0 0 / 0.15) !important;
+        color: rgb(255, 111, 111) !important;
+        border-radius: 2px;
+        opacity: 1;
+    }
+
     .prose-footer {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
@@ -265,6 +340,37 @@
         display: flex;
         flex-direction: column;
         border-right: 1px solid var(--sk-border);
+    }
+
+    .file-tabs {
+        display: flex;
+        flex-shrink: 0;
+        border-bottom: 1px solid var(--sk-border);
+        background: var(--sk-bg-2);
+        overflow-x: auto;
+    }
+
+    .tab {
+        padding: 0.4rem 0.9rem;
+        font: var(--sk-font-mono);
+        font-size: 0.78rem;
+        color: var(--sk-fg-3);
+        background: none;
+        border: none;
+        border-right: 1px solid var(--sk-border);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .tab:hover {
+        color: var(--sk-fg-1);
+        background: var(--sk-bg-3);
+    }
+
+    .tab.active {
+        color: var(--sk-fg-1);
+        background: var(--sk-bg-1);
+        border-bottom: 2px solid var(--sk-fg-accent);
     }
 
     .output-pane {

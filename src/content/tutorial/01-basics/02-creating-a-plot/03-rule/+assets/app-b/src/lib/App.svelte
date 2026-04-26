@@ -1,13 +1,12 @@
 <script>
-	import data from './aapl.csv';
-	import { Plot, Line, AreaY, RuleY } from 'svelteplot';
+  import data from './aapl.csv';
+  import { Plot, Line, AreaY, RuleY } from 'svelteplot';
 </script>
 
 <h1>Welcome to SveltePlot!</h1>
 
 <Plot>
-	<Line {data} x="Date" y="Close" />
-	<AreaY {data} x="Date" y="Close" opacity={0.2} />
-	<RuleY y={0} />
+  <Line {data} x="Date" y="Close" />
+  <AreaY {data} x="Date" y="Close" opacity={0.2} />
+  <RuleY y={0} />
 </Plot>
-

@@ -1,9 +1,9 @@
 <script>
-	let data = $state();
+  let data = $state();
 
-	$effect(async () => {
+  $effect(async () => {
     // TODO: fetch a file
-	})
+  });
 </script>
 
 <h1>Fetching a file</h1>
