@@ -172,7 +172,12 @@
                 {#snippet b()}
                     <div class="output-pane">
                         {#if browser && bundler}
-                            <Viewer relaxed {bundler} status={null} error={null} theme={dark_mode ? 'dark' : 'light'} />
+                            <Viewer
+                                relaxed
+                                {bundler}
+                                status={null}
+                                error={null}
+                                theme={dark_mode ? 'dark' : 'light'} />
                         {/if}
                     </div>
                 {/snippet}
