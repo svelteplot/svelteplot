@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { get_exercise_stubs, load_exercise } from '$lib/server/tutorial.js';
 import type { PageServerLoad } from './$types.js';
 

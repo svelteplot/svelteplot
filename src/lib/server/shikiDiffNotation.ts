@@ -64,55 +64,32 @@ export function shikiDiffNotation(options: ShikiDiffNotationOptions = {}): Shiki
         name: 'shiki-diff-notation',
         preprocess(code) {
             let hasDiff = false;
-            let inAdded = false;
-            let inDeleted = false;
             const decorations: DecorationItem[] = [];
 
             const lines = code.split('\n').map((line, lineIndex) => {
-                // Block-level: line starts with +++ or --- (no leading whitespace)
-                let handledByBlock = false;
-
-                if (line.startsWith('+') && !line.startsWith('+++')) {
-                    inAdded = true;
-                    // line = line.slice(1);
+                // Whole-line additions/deletions: lines starting with + or -
+                // (the code hook strips the prefix and adds line classes)
+                if (
+                    (line.startsWith('+') && !line.startsWith('+++')) ||
+                    (line.startsWith('-') && !line.startsWith('---'))
+                ) {
                     hasDiff = true;
-                    handledByBlock = true;
-                } else if (line.startsWith('-') && !line.startsWith('---')) {
-                    inDeleted = true;
-                    // line = line.slice(1);
-                    hasDiff = true;
-                    handledByBlock = true;
+                    return line;
                 }
 
-                // if (inAdded && line.endsWith('+++')) {
-                //     inAdded = false;
-                //     line = line.slice(0, -3);
-                // } else if (inDeleted && line.endsWith('---')) {
-                //     inDeleted = false;
-                //     line = line.slice(0, -3);
-                // }
-
                 // Inline: strip +++text+++ / ---text--- markers and record decorations
-                if (!handledByBlock) {
-                    if (line.includes('+++')) {
-                        line = processInlineMarkers(
-                            line,
-                            lineIndex,
-                            '+++',
-                            classInlineAdd,
-                            decorations
-                        );
-                        hasDiff = true;
-                    } else if (line.includes('---')) {
-                        line = processInlineMarkers(
-                            line,
-                            lineIndex,
-                            '---',
-                            classInlineRemove,
-                            decorations
-                        );
-                        hasDiff = true;
-                    }
+                if (line.includes('+++')) {
+                    line = processInlineMarkers(line, lineIndex, '+++', classInlineAdd, decorations);
+                    hasDiff = true;
+                } else if (line.includes('---')) {
+                    line = processInlineMarkers(
+                        line,
+                        lineIndex,
+                        '---',
+                        classInlineRemove,
+                        decorations
+                    );
+                    hasDiff = true;
                 }
 
                 return line;
