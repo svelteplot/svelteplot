@@ -1,10 +1,11 @@
 <script>
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
 </script>
 
 {#if page.status === 404}
   <h1>Not found</h1>
-  <p><a href="/">Go to /</a></p>
+  <p><a href={resolve('/')}>Go to /</a></p>
 {:else}
   <p>
     Server-side rendering failed with HTTP status code

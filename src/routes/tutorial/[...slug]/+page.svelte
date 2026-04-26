@@ -1,6 +1,7 @@
 <script lang="ts">
     import { browser } from '$app/environment';
     import { afterNavigate } from '$app/navigation';
+    import { resolve } from '$app/paths';
     import { SplitPane } from '@rich_harris/svelte-split-pane';
     import Editor from '@sveltejs/repl/editor';
     import Bundler from '@sveltejs/repl/bundler';
@@ -123,8 +124,9 @@
 
                 <div class="prose-footer">
                     {#if data.exercise.prev}
-                        <a href="/tutorial/{data.exercise.prev.slug}" class="nav-link prev"
-                            >← {data.exercise.prev.title}</a>
+                        <a
+                            href={resolve(`/tutorial/${data.exercise.prev.slug}`)}
+                            class="nav-link prev">← {data.exercise.prev.title}</a>
                     {:else}
                         <span></span>
                     {/if}
@@ -138,8 +140,9 @@
                     {/if}
 
                     {#if data.exercise.next}
-                        <a href="/tutorial/{data.exercise.next.slug}" class="nav-link next"
-                            >{data.exercise.next.title} →</a>
+                        <a
+                            href={resolve(`/tutorial/${data.exercise.next.slug}`)}
+                            class="nav-link next">{data.exercise.next.title} →</a>
                     {:else}
                         <span></span>
                     {/if}
@@ -153,7 +156,7 @@
                     <div class="editor-pane">
                         {#if workspace.files.filter((f) => f.type === 'file' && !f.basename.startsWith('+')).length > 1}
                             <div class="file-tabs">
-                                {#each workspace.files as file}
+                                {#each workspace.files as file (file.name)}
                                     {#if file.type === 'file' && !file.basename.startsWith('+')}
                                         <button
                                             class="tab"
