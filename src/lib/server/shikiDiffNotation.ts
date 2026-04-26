@@ -71,7 +71,6 @@ export function shikiDiffNotation(options: ShikiDiffNotationOptions = {}): Shiki
             const lines = code.split('\n').map((line, lineIndex) => {
                 // Block-level: line starts with +++ or --- (no leading whitespace)
                 let handledByBlock = false;
-                console.log({ line, inAdded, inDeleted });
 
                 if (line.startsWith('+') && !line.startsWith('+++')) {
                     inAdded = true;
