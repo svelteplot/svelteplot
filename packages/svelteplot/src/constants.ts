@@ -127,7 +127,7 @@ export const CHANNEL_SCALE: Record<ScaledChannelName, ScaleName> = {
 };
 
 export const CSS_VAR = /^var\(--([a-z-0-9,\s]+)\)$/;
-export const CSS_COLOR = /^color\(/;
+export const CSS_COLOR = /^(?:color|light-dark)\(/;
 export const CSS_COLOR_MIX = /^color-mix\(/; // just check for prefix
 export const CSS_COLOR_CONTRAST = /^color-contrast\(/; // just check for prefix
 export const CSS_RGBA = /^rgba\(/; // just check for prefix
