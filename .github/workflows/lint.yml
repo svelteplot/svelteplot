@@ -34,7 +34,7 @@ jobs:
               run: pnpm install
 
             - name: Run linting (oxlint)
-              run: pnpm run lint:oxlint
+              run: pnpm run lint:oxlint 2>&1
 
             - name: Run linting (eslint)
               run: pnpm run lint:eslint
