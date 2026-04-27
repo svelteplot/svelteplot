@@ -2,11 +2,11 @@ import * as ts from 'typescript';
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const MARKS_DIR = path.resolve('src/lib/marks');
+const MARKS_DIR = path.resolve('packages/svelteplot/src/marks');
 const MARKS_OUT_DIR = path.resolve('src/routes/api/marks');
 const PLOT_OUT_DIR = path.resolve('src/routes/api/plot');
 const TRANSFORMS_OUT_DIR = path.resolve('src/routes/api/transforms');
-const TRANSFORMS_DIR = path.resolve('src/lib/transforms');
+const TRANSFORMS_DIR = path.resolve('packages/svelteplot/src/transforms');
 
 const EXPANDED_TYPE_NAMES = new Set(['StackOptions', 'DodgeXOptions', 'DodgeYOptions']);
 
@@ -540,8 +540,8 @@ function getTypeAliasExtends(typeAlias, sourceFile, declarations) {
 }
 
 async function getInheritedPropsTables(typeLinks, stringUnionMap, allTypeNames) {
-    const baseSource = await parseSource(path.resolve('src/lib/types/mark.ts'));
-    const typesSource = await parseSource(path.resolve('src/lib/types/index.ts'));
+    const baseSource = await parseSource(path.resolve('packages/svelteplot/src/types/mark.ts'));
+    const typesSource = await parseSource(path.resolve('packages/svelteplot/src/types/index.ts'));
 
     const baseAlias = findTypeAlias(baseSource, 'BaseMarkProps');
     const markerAlias = findTypeAlias(typesSource, 'MarkerOptions');
@@ -627,11 +627,15 @@ async function generateMarksApi() {
         markByName.set(mark.name, mark);
     }
 
-    const typeSource = await parseSource(path.resolve('src/lib/types/index.ts'));
-    const stackSource = await parseSource(path.resolve('src/lib/transforms/stack.ts'));
-    const dodgeSource = await parseSource(path.resolve('src/lib/transforms/dodge.ts'));
+    const typeSource = await parseSource(path.resolve('packages/svelteplot/src/types/index.ts'));
+    const stackSource = await parseSource(
+        path.resolve('packages/svelteplot/src/transforms/stack.ts')
+    );
+    const dodgeSource = await parseSource(
+        path.resolve('packages/svelteplot/src/transforms/dodge.ts')
+    );
     const markerSourceText = await readFile(
-        path.resolve('src/lib/marks/helpers/Marker.svelte'),
+        path.resolve('packages/svelteplot/src/marks/helpers/Marker.svelte'),
         'utf8'
     );
     const markerModule = await extractModuleScript(markerSourceText);
@@ -813,10 +817,13 @@ async function generateMarksApi() {
 }
 
 async function generatePlotApi() {
-    const plotSource = await parseSource(path.resolve('src/lib/types/plot.ts'));
-    const scaleSource = await parseSource(path.resolve('src/lib/types/scale.ts'));
+    const plotSource = await parseSource(path.resolve('packages/svelteplot/src/types/plot.ts'));
+    const scaleSource = await parseSource(path.resolve('packages/svelteplot/src/types/scale.ts'));
     const typeSources = [plotSource, scaleSource];
-    const plotComponent = await readFile(path.resolve('src/lib/Plot.svelte'), 'utf8');
+    const plotComponent = await readFile(
+        path.resolve('packages/svelteplot/src/Plot.svelte'),
+        'utf8'
+    );
     const plotComment = await extractComponentComment(plotComponent);
 
     let plotAlias = null;
@@ -1018,7 +1025,9 @@ async function generateTransformsApi() {
         }
     }
 
-    const reduceSource = await parseSource(path.resolve('src/lib/helpers/reduce.ts'));
+    const reduceSource = await parseSource(
+        path.resolve('packages/svelteplot/src/helpers/reduce.ts')
+    );
     const reduceStringUnionMap = getStringUnionMap(reduceSource);
     const reduceAliasMap = getExportedTypeAliases(reduceSource);
     for (const [name, node] of reduceAliasMap) {
@@ -1026,7 +1035,7 @@ async function generateTransformsApi() {
         typeDetails.set(name, { values, node });
     }
 
-    const typesSource = await parseSource(path.resolve('src/lib/types/index.ts'));
+    const typesSource = await parseSource(path.resolve('packages/svelteplot/src/types/index.ts'));
     const typesStringUnionMap = getStringUnionMap(typesSource);
     const typesAliasMap = getExportedTypeAliases(typesSource);
     for (const [name, node] of typesAliasMap) {
