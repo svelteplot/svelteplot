@@ -18,7 +18,7 @@ export default function mergeDeep<T extends ObjectType>(
                     if (!target[key]) {
                         Object.assign(target, { [key]: {} });
                     } else {
-                        target[key] = Object.assign({}, target[key]) as T[Extract<keyof T, string>];
+                        Object.assign(target, { [key]: Object.assign({}, target[key]) });
                     }
                     mergeDeep(target[key] as T, source[key] as Partial<T>);
                 } else if (source[key] !== null) {
