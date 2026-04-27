@@ -19,7 +19,7 @@ const config = {
             options: {
                 tabWidth: 2,
                 printWidth: 60,
-                // embeddedLanguageFormatting: 'off',
+                embeddedLanguageFormatting: 'off',
                 bracketSameLine: true,
                 svelteAllowShorthand: true
             }
@@ -27,7 +27,8 @@ const config = {
         {
             files: 'src/content/tutorial/**/*.svelte',
             options: {
-                tabWidth: 2
+                tabWidth: 2,
+                printWidth: 40
             }
         },
         {

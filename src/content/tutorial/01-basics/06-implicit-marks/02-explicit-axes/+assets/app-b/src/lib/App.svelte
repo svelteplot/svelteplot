@@ -1,6 +1,11 @@
 <script>
   import data from './aapl.csv';
-  import { Plot, Line, AxisX, AxisY } from 'svelteplot';
+  import {
+    Plot,
+    Line,
+    AxisX,
+    AxisY
+  } from 'svelteplot';
 </script>
 
 <Plot>

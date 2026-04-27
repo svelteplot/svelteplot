@@ -7,13 +7,11 @@ When two groups share the same axes, their marks can visually overlap and become
 Add `fx="party"` to both marks to split them by party:
 
 ```svelte
-/// file: App.svelte
 <Dot
   {data}
   x="date"
   y="value"
-  +++fx="party"
-  +++
+  +++fx="party"+++
   stroke="party"
   r={2}
   opacity={0.5} />
@@ -21,8 +19,7 @@ Add `fx="party"` to both marks to split them by party:
   {data}
   x="date"
   y="value"
-  +++fx="party"
-  +++
+  +++fx="party"+++
   stroke="party" />
 ```
 
@@ -31,8 +28,7 @@ Add `fx="party"` to both marks to split them by party:
 It can make sense to activate the implicit `frame` mark in faceted plots:
 
 ```svelte
-/// file: App.svelte
 <Plot
   +++frame+++
-	color={{ legend: true, scheme }}
+	color={{ legend: true, scheme }}>
 ```

@@ -8,8 +8,12 @@
   <p><a href={resolve('/')}>Go to /</a></p>
 {:else}
   <p>
-    Server-side rendering failed with HTTP status code
-    <a target="_blank" href="https://http.dog/{page.status}">{page.status}</a>
+    Server-side rendering failed with HTTP status
+    code
+    <a
+      target="_blank"
+      href="https://http.dog/{page.status}"
+      >{page.status}</a>
   </p>
 {/if}
 

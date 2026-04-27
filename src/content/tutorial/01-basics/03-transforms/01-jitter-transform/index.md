@@ -7,22 +7,23 @@ With many polls per month, dots on the same date stack on top of each other. A *
 Import `jitterY` alongside the other imports:
 
 ```svelte
-/// file: App.svelte ---import {(Plot, Dot)} from 'svelteplot';---
-+++import {(Plot, Dot, jitterY)} from 'svelteplot';+++
+---import { Plot, Dot } from 'svelteplot';---
++++import { Plot, Dot, jitterY } from 'svelteplot';+++
 ```
 
 Then wrap the `<Dot>` channels with `jitterY`. It takes the channel object as the first argument and jitter options as the second:
 
 ```svelte
-/// file: App.svelte ---<Dot
-  {data}
-  x="date"
-  y="value"
-  fill="party" />--- +++<Dot
-  {...jitterY(
-    { data, x: 'date', y: 'value', fill: 'party' },
-    { type: 'normal', std: 0.001 }
-  )} />+++
+-<Dot
+-  {data}
+-  x="date"
+-  y="value"
+-  fill="party" />
++<Dot
++  {...jitterY(
++    { data, x: 'date', y: 'value', fill: 'party' },
++    { type: 'normal', std: 0.001 }
++  )} />+++
 ```
 
 `type: 'normal'` draws from a normal distribution, and `std` controls how wide the spread is (in our case 0.1%).

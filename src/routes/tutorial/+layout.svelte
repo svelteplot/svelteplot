@@ -21,8 +21,13 @@
 </div>
 
 <style>
-    :global(main) {
-        --header-height: 73px;
+    :global(header) {
+        position: static !important;
+        height: 50px !important;
+    }
+    :global(body main) {
+        --header-height: 50px !important;
+        padding-top: 0 !important;
     }
     .tutorial-shell {
         /* sk-* CSS tokens used by the REPL components — mapped to svelteplot.dev colors */
@@ -56,20 +61,12 @@
         --shiki-token-comment: #6e7781;
         --shiki-token-string: #0a3069;
         --sk-code-atom: #0550ae;
-        /* header height for viewport calculation — matches GlobalLayout's pt-[76px] sm:pt-[73px] */
-        --header-height: 76px;
+        --header-height: 50px;
 
         display: flex;
         flex-direction: column;
-        height: calc(100dvh - 76px);
+        height: calc(100dvh - 50px);
         overflow: hidden;
-    }
-
-    @media (min-width: 640px) {
-        .tutorial-shell {
-            --header-height: 73px;
-            height: calc(100dvh - var(--header-height));
-        }
     }
 
     @media (prefers-color-scheme: dark) {

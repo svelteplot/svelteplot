@@ -3,11 +3,18 @@
   import { Plot, Dot } from 'svelteplot';
 
   const scheme = {
-    CDUCSU: 'black',
+    CDUCSU: 'currentColor',
     AfD: 'deepskyblue'
   };
 </script>
 
-<Plot color={{ legend: true, scheme }} y={{ percent: true, grid: true }}>
-  <Dot {data} x="date" y="value" stroke="party" opacity={0.5} />
+<Plot
+  color={{ legend: true, scheme }}
+  y={{ percent: true, grid: true }}>
+  <Dot
+    {data}
+    x="date"
+    y="value"
+    stroke="party"
+    opacity={0.5} />
 </Plot>
