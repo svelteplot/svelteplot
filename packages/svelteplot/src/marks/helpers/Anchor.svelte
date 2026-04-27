@@ -32,7 +32,29 @@
 
     let { datum = {} as Datum, options = {}, children }: AnchorProps = $props();
 
-    const href = $derived(resolveProp(options.href, datum, null));
+    const sanitizeHref = (value: unknown): string | null => {
+        if (typeof value !== 'string') return null;
+        const href = value.trim();
+        if (!href) return null;
+        if (
+            href.startsWith('#') ||
+            href.startsWith('/') ||
+            href.startsWith('./') ||
+            href.startsWith('../') ||
+            href.startsWith('?')
+        ) {
+            return href;
+        }
+        const schemeMatch = href.match(/^([a-zA-Z][a-zA-Z\d+.-]*):/);
+        if (!schemeMatch) return href;
+        const protocol = schemeMatch[1].toLowerCase();
+        if (protocol === 'http' || protocol === 'https' || protocol === 'mailto') {
+            return href;
+        }
+        return null;
+    };
+
+    const href = $derived(sanitizeHref(resolveProp(options.href, datum, null)));
     const target = $derived(resolveProp(options.target, datum, null));
     const rel = $derived(resolveProp(options.rel, datum, null));
     const type = $derived(resolveProp(options.type, datum, null));
