@@ -535,9 +535,9 @@ export class Workspace {
 
         localStorage.setItem('vim', String(value));
 
-        // @ts-ignore jfc CodeMirror is a struggle
         let vim_extension_index = default_extensions.findIndex(
-            (ext) => ext.compartment === vim_mode
+            // @ts-ignore jfc CodeMirror is a struggle
+            (ext: any) => ext.compartment === vim_mode
         );
 
         let extension: any = [];
