@@ -79,7 +79,13 @@ export function shikiDiffNotation(options: ShikiDiffNotationOptions = {}): Shiki
 
                 // Inline: strip +++text+++ / ---text--- markers and record decorations
                 if (line.includes('+++')) {
-                    line = processInlineMarkers(line, lineIndex, '+++', classInlineAdd, decorations);
+                    line = processInlineMarkers(
+                        line,
+                        lineIndex,
+                        '+++',
+                        classInlineAdd,
+                        decorations
+                    );
                     hasDiff = true;
                 } else if (line.includes('---')) {
                     line = processInlineMarkers(
