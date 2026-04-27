@@ -1,6 +1,10 @@
 <script>
   import data from './aapl.csv';
-  import { Plot, Line, AreaY } from 'svelteplot';
+  import {
+    Plot,
+    Line,
+    AreaY
+  } from 'svelteplot';
 </script>
 
 <h1>Welcome to SveltePlot!</h1>

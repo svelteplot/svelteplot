@@ -31,7 +31,11 @@
         y: 'value',
         stroke: 'party'
       },
-      { k: 14, anchor: 'end', strict: true }
+      {
+        k: 14,
+        anchor: 'end',
+        strict: true
+      }
     )}
     outlineStroke="var(--bg-1)"
     strokeWidth={2} />

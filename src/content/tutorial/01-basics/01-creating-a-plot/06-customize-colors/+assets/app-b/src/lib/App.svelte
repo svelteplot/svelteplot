@@ -1,6 +1,9 @@
 <script>
   import data from './polls.csv';
-  import { Plot, Dot } from 'svelteplot';
+  import {
+    Plot,
+    Dot
+  } from 'svelteplot';
 
   const scheme = {
     CDUCSU: 'light-dark(black, white)',
@@ -9,5 +12,9 @@
 </script>
 
 <Plot color={{ legend: true, scheme }}>
-  <Dot {data} x="date" y="value" fill="party" />
+  <Dot
+    {data}
+    x="date"
+    y="value"
+    fill="party" />
 </Plot>

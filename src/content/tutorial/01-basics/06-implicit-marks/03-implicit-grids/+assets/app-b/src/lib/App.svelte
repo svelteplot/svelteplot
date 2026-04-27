@@ -1,6 +1,9 @@
 <script>
   import data from './aapl.csv';
-  import { Plot, Line } from 'svelteplot';
+  import {
+    Plot,
+    Line
+  } from 'svelteplot';
 </script>
 
 <Plot y={{ grid: true }}>

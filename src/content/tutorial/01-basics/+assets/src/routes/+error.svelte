@@ -5,11 +5,13 @@
 
 {#if page.status === 404}
   <h1>Not found</h1>
-  <p><a href={resolve('/')}>Go to /</a></p>
+  <p>
+    <a href={resolve('/')}>Go to /</a>
+  </p>
 {:else}
   <p>
-    Server-side rendering failed with HTTP status
-    code
+    Server-side rendering failed with
+    HTTP status code
     <a
       target="_blank"
       href="https://http.dog/{page.status}"

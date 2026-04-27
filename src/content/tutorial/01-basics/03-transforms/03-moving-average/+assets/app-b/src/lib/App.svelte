@@ -1,6 +1,10 @@
 <script>
   import data from './polls.csv';
-  import { Plot, Dot, Line } from 'svelteplot';
+  import {
+    Plot,
+    Dot,
+    Line
+  } from 'svelteplot';
 
   const scheme = {
     CDUCSU: 'currentColor',
@@ -11,7 +15,11 @@
 <Plot
   color={{ legend: true, scheme }}
   y={{ percent: true, grid: true }}>
-  <Dot {data} x="date" y="value" fill="party" />
+  <Dot
+    {data}
+    x="date"
+    y="value"
+    fill="party" />
   <Line
     {data}
     x="date"

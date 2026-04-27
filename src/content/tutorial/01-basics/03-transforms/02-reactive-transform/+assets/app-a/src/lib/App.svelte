@@ -1,6 +1,10 @@
 <script>
   import data from './polls.csv';
-  import { Plot, Dot, jitterY } from 'svelteplot';
+  import {
+    Plot,
+    Dot,
+    jitterY
+  } from 'svelteplot';
 
   const scheme = {
     CDUCSU: 'currentColor',
