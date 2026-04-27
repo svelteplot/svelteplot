@@ -18,6 +18,10 @@
 </script>
 
 <Plot grid color={{ scheme: 'ylgnbu' }}>
-    <Hexbin data={olympians} x="weight" y="height" fill="count" />
+    <Hexbin
+        data={olympians}
+        x="weight"
+        y="height"
+        fill="count" />
     <Hexgrid />
 </Plot>

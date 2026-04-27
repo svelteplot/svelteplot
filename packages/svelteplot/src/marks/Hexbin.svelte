@@ -21,6 +21,10 @@
         x?: ChannelAccessor<Datum>;
         /** y position channel (data space). */
         y?: ChannelAccessor<Datum>;
+        /** horizontal facet channel — bins are computed independently per facet. */
+        fx?: ChannelAccessor<Datum>;
+        /** vertical facet channel — bins are computed independently per facet. */
+        fy?: ChannelAccessor<Datum>;
         /**
          * Hex cell pitch in pixels (distance between adjacent cell centers
          * along x). Default 20, matching `<Hexgrid />`.
@@ -72,6 +76,8 @@
     const Y_VAL = Symbol('hexbin_y');
     const FILL_VAL = Symbol('hexbin_fill');
     const STROKE_VAL = Symbol('hexbin_stroke');
+    const FX_VAL = Symbol('hexbin_fx');
+    const FY_VAL = Symbol('hexbin_fy');
 
     const DEFAULTS = {
         ...getPlotDefaults().hexbin
@@ -83,6 +89,8 @@
         data,
         x: xAcc,
         y: yAcc,
+        fx: fxAcc,
+        fy: fyAcc,
         binWidth = HEX_DEFAULT_BIN_WIDTH,
         fill: rawFill = 'count',
         stroke: rawStroke = 'none',
@@ -140,6 +148,22 @@
     // projects each raw point through the live x/y scales to pixel space,
     // and snaps to the nearest hex center via pointToHex. Returns null on
     // the bootstrap pass (before scales are computable).
+    //
+    // Faceting: when fx/fy accessors are provided, raw records are partitioned
+    // by (fxVal, fyVal) before binning so each facet panel gets independent
+    // bin counts. The lattice itself stays single-source — Mark.svelte applies
+    // the per-facet group transform at render time, and pointToHex outputs in
+    // plot-global pixel space (same as scales.x/y.fn). Mirrors Density's
+    // group-by-facet pattern (Density.svelte:272-286).
+    type Bin = {
+        i: number;
+        j: number;
+        cx: number;
+        cy: number;
+        items: any[];
+        fxVal: any;
+        fyVal: any;
+    };
     const binResult = $derived.by(() => {
         if (!data?.length || xAcc == null || yAcc == null) return null;
         const sx = plot.scales.x?.fn as ((v: any) => number) | undefined;
@@ -155,47 +179,104 @@
         // offset, which puts the cell half-inside the left edge.
         const lattice = hexLattice(binWidth, ml + binWidth / 2, mt);
 
-        const map = new Map<
-            string,
-            { i: number; j: number; cx: number; cy: number; items: any[] }
-        >();
+        // Two-level map: (fxVal, fyVal) → (i, j) → bin. Single outer entry
+        // when not faceted.
+        const groups = new Map<string, Map<string, Bin>>();
+        const facetKeys: { key: string; fxVal: any; fyVal: any }[] = [];
         for (const d of data as any[]) {
             const xv = resolveProp(xAcc as any, d);
             const yv = resolveProp(yAcc as any, d);
             const px = sx(xv);
             const py = sy(yv);
             if (!Number.isFinite(px) || !Number.isFinite(py)) continue;
+            const fxVal = fxAcc != null ? resolveProp(fxAcc as any, d) : undefined;
+            const fyVal = fyAcc != null ? resolveProp(fyAcc as any, d) : undefined;
+            const groupKey = `${String(fxVal)}\0${String(fyVal)}`;
+            let group = groups.get(groupKey);
+            if (!group) {
+                group = new Map();
+                groups.set(groupKey, group);
+                facetKeys.push({ key: groupKey, fxVal, fyVal });
+            }
             const { i, j, cx, cy } = pointToHex(px, py, lattice);
-            const key = `${i},${j}`;
-            let bin = map.get(key);
+            const binKey = `${i},${j}`;
+            let bin = group.get(binKey);
             if (!bin) {
-                bin = { i, j, cx, cy, items: [] };
-                map.set(key, bin);
+                bin = { i, j, cx, cy, items: [], fxVal, fyVal };
+                group.set(binKey, bin);
             }
             bin.items.push(d);
         }
-        return { lattice, bins: [...map.values()] };
+        const bins: Bin[] = [];
+        for (const g of groups.values()) for (const bin of g.values()) bins.push(bin);
+        return { lattice, bins, facetKeys };
     });
 
-    // Synthetic records for <Mark>. Bootstrap pass emits two corner records so
-    // x/y scales compute a domain before bins exist; result pass emits the same
-    // two corner records plus one per bin carrying:
+    // Synthetic records for <Mark>. Bootstrap pass emits corner records so
+    // x/y scales compute a domain before bins exist; result pass emits the
+    // persistent corner records plus one per bin carrying:
     //   X_VAL / Y_VAL  raw data extent → x/y scale domain (one value per record;
     //                  two records together span the extent)
     //   FILL_VAL       reducer output  → color scale domain (when fill is a reducer)
     //   STROKE_VAL     reducer output  → color scale domain (when stroke is a reducer)
+    //   FX_VAL / FY_VAL facet values   → Mark facet filtering (when faceted)
     //   GEOM           pixel-space hex geometry → rendered by children snippet
+    //
+    // When faceted, we emit one corner-pair per unique (fxVal, fyVal) so no
+    // record carries an undefined facet value (which would create a spurious
+    // null facet panel). Mirrors Density.svelte:441-497.
     const markData = $derived.by((): DataRecord[] => {
         const ext = extent;
         const br = binResult;
+        const isFaceted = fxAcc != null || fyAcc != null;
         if (!ext) return [];
 
-        if (!br) {
-            return [
-                { [X_VAL]: ext.x1, [Y_VAL]: ext.y1 } as DataRecord,
-                { [X_VAL]: ext.x2, [Y_VAL]: ext.y2 } as DataRecord
-            ];
+        // Build the list of (fxVal, fyVal) pairs the corner records should be
+        // emitted for. binResult.facetKeys is the authoritative list once
+        // binning has happened; on the bootstrap pass we walk data ourselves
+        // since binResult is null.
+        type FK = { fxVal: any; fyVal: any };
+        let facetKeys: FK[];
+        if (br) {
+            facetKeys = br.facetKeys.map(({ fxVal, fyVal }) => ({ fxVal, fyVal }));
+            if (facetKeys.length === 0) facetKeys = [{ fxVal: undefined, fyVal: undefined }];
+        } else if (isFaceted && data?.length) {
+            const seen = new Set<string>();
+            facetKeys = [];
+            for (const d of data as any[]) {
+                const fxVal = fxAcc != null ? resolveProp(fxAcc as any, d) : undefined;
+                const fyVal = fyAcc != null ? resolveProp(fyAcc as any, d) : undefined;
+                const key = `${String(fxVal)}\0${String(fyVal)}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    facetKeys.push({ fxVal, fyVal });
+                }
+            }
+        } else {
+            facetKeys = [{ fxVal: undefined, fyVal: undefined }];
         }
+
+        const records: any[] = [];
+        // Persistent corner records (one pair per facet) keep x/y scale domains
+        // anchored at [x1,x2]/[y1,y2] across re-derivations and ensure each
+        // facet panel registers a domain even when no data lands in some bin.
+        for (const { fxVal, fyVal } of facetKeys) {
+            const c1: any = { [X_VAL]: ext.x1, [Y_VAL]: ext.y1 };
+            const c2: any = { [X_VAL]: ext.x2, [Y_VAL]: ext.y2 };
+            if (isFaceted) {
+                if (fxAcc != null) {
+                    c1[FX_VAL] = fxVal;
+                    c2[FX_VAL] = fxVal;
+                }
+                if (fyAcc != null) {
+                    c1[FY_VAL] = fyVal;
+                    c2[FY_VAL] = fyVal;
+                }
+            }
+            records.push(c1, c2);
+        }
+
+        if (!br) return records;
 
         const reducerOpts: any = {};
         const outputs: string[] = [];
@@ -208,14 +289,6 @@
             outputs.push('stroke');
         }
 
-        const records: any[] = [
-            // Persistent corner records so x/y scale domain stays at [x1,x2]
-            // / [y1,y2] across re-derivations. Without them, after the bootstrap
-            // pass replaces markData with bin records (all near a single x/y),
-            // the scale domain collapses and the next pass produces NaN.
-            { [X_VAL]: ext.x1, [Y_VAL]: ext.y1 } as any,
-            { [X_VAL]: ext.x2, [Y_VAL]: ext.y2 } as any
-        ];
         for (const bin of br.bins) {
             const item: any = {
                 // Channel values irrelevant for rendering (GEOM drives that),
@@ -229,6 +302,10 @@
                     ry: br.lattice.ry
                 }
             };
+            if (isFaceted) {
+                if (fxAcc != null) item[FX_VAL] = bin.fxVal;
+                if (fyAcc != null) item[FY_VAL] = bin.fyVal;
+            }
 
             // reduceOutputs writes item.__fill = countValue etc. (note the
             // `__` prefix — see reduce.ts:113); copy onto Symbol keys so the
@@ -256,14 +333,18 @@
         'x',
         'y',
         ...(fillIsReducer ? ['fill'] : []),
-        ...(strokeIsReducer ? ['stroke'] : [])
+        ...(strokeIsReducer ? ['stroke'] : []),
+        ...(fxAcc != null ? ['fx'] : []),
+        ...(fyAcc != null ? ['fy'] : [])
     ] as const);
 
     const markChannelProps = $derived({
         x: X_VAL as any,
         y: Y_VAL as any,
         ...(fillIsReducer ? { fill: FILL_VAL as any } : {}),
-        ...(strokeIsReducer ? { stroke: STROKE_VAL as any } : {})
+        ...(strokeIsReducer ? { stroke: STROKE_VAL as any } : {}),
+        ...(fxAcc != null ? { fx: FX_VAL as any } : {}),
+        ...(fyAcc != null ? { fy: FY_VAL as any } : {})
     });
 </script>
 

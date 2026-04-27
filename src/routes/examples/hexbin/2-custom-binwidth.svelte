@@ -1,5 +1,6 @@
 <script module>
-    export const title = 'Coarser bins with custom binWidth';
+    export const title =
+        'Coarser bins with custom binWidth';
     export const description =
         'binWidth controls the hex cell pitch in pixels. Larger cells aggregate more points per bin and emphasize density gradients over a backdrop grid.';
     export const data = {

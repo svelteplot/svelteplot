@@ -191,6 +191,49 @@ describe('Hexbin mark', () => {
         expect(container.querySelector('g.hexbin')).toBeNull();
     });
 
+    it('faceted plot bins each panel independently (fx)', () => {
+        // Two facet groups with different point distributions: group A has
+        // points clustered at (0.5, 0.5); group B has points spread on a 3x3
+        // grid. Without per-facet binning all points share one bin map and
+        // each panel renders the union — group A would show grid cells, group
+        // B would show the cluster cell. With per-facet binning each panel
+        // shows only its own data.
+        const groupA = Array.from({ length: 30 }, () => ({
+            x: 0.5,
+            y: 0.5,
+            grp: 'A'
+        }));
+        const groupB: { x: number; y: number; grp: string }[] = [];
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                groupB.push({ x: 0.2 + i * 0.3, y: 0.2 + j * 0.3, grp: 'B' });
+            }
+        }
+        const data = [...groupA, ...groupB];
+
+        const { container } = render(HexbinTest, {
+            props: {
+                data,
+                hexbinArgs: { fx: 'grp', facet: 'include' as any },
+                plotArgs: { width: 600, height: 300 }
+            }
+        });
+
+        // Two facet panels should exist (one per grp value); each panel has
+        // its own g.hexbin group inside it.
+        const panels = container.querySelectorAll('g.hexbin');
+        expect(panels.length).toBe(2);
+
+        // Per-panel cell counts: group A collapses to 1 bin (all points
+        // identical); group B's 9 points spread across multiple bins. If
+        // faceting were broken, both panels would show the union (>= 2 cells
+        // each), and the cell counts would be equal.
+        const cellCounts = Array.from(panels).map((p) => p.querySelectorAll('path').length);
+        const sorted = [...cellCounts].sort((a, b) => a - b);
+        expect(sorted[0]).toBe(1); // group A: one bin
+        expect(sorted[1]).toBeGreaterThan(1); // group B: multiple bins
+    });
+
     it('Hexbin and Hexgrid centers align with default binWidth', () => {
         // The promise of pairing Hexbin + Hexgrid at the same binWidth is that
         // every bin cell coincides exactly with a grid cell. This breaks if
