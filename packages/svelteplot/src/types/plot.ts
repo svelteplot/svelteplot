@@ -43,6 +43,7 @@ import type {
     Graticule,
     GridX,
     GridY,
+    Hexbin,
     Hull,
     Image,
     Line,
@@ -331,6 +332,10 @@ export type PlotDefaults = {
     gridY:
         | Partial<Omit<ComponentProps<typeof GridY>, IgnoreDefaults> & { implicit: boolean }>
         | true;
+    /**
+     * default props for hexbin marks
+     */
+    hexbin: Partial<Omit<ComponentProps<typeof Hexbin>, IgnoreDefaults>>;
     /**
      * default props for hull marks
      */

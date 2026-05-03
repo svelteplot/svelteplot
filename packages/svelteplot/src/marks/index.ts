@@ -31,6 +31,8 @@ export { default as Geo } from './Geo.svelte';
 export { default as Graticule } from './Graticule.svelte';
 export { default as GridX } from './GridX.svelte';
 export { default as GridY } from './GridY.svelte';
+export { default as Hexbin } from './Hexbin.svelte';
+export { default as Hexgrid } from './Hexgrid.svelte';
 export { default as Hull } from './Hull.svelte';
 export { default as Image } from './Image.svelte';
 export { default as Line } from './Line.svelte';
