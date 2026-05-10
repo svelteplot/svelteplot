@@ -35,12 +35,20 @@
 
     let nav_open = $state(false);
     let open_groups = $state(new Set([data.exercise.group]));
+    let open_chapters = $state(new Set([data.exercise.chapter]));
 
     function toggle_group(group: string) {
         const next = new Set(open_groups);
         if (next.has(group)) next.delete(group);
         else next.add(group);
         open_groups = next;
+    }
+
+    function toggle_chapter(chapter: string) {
+        const next = new Set(open_chapters);
+        if (next.has(chapter)) next.delete(chapter);
+        else next.add(chapter);
+        open_chapters = next;
     }
 
     const text_exts = new Set([
@@ -132,6 +140,7 @@
         solved = false;
         nav_open = false;
         open_groups = new Set([data.exercise.group]);
+        open_chapters = new Set([data.exercise.chapter]);
     });
 
     function toggle_solution() {
@@ -197,16 +206,36 @@
                                     {#if open_groups.has(group.title)}
                                         {#each group.chapters as ch (ch.title)}
                                             <div class="nav-chapter">
-                                                <div class="nav-chapter-title">{ch.title}</div>
-                                                {#each ch.exercises as ex (ex.slug)}
-                                                    <a
-                                                        href={resolve(`/tutorial/${ex.slug}`)}
-                                                        class="nav-exercise"
-                                                        class:active={ex.slug ===
-                                                            data.exercise.slug}>
-                                                        {ex.title}
-                                                    </a>
-                                                {/each}
+                                                <button
+                                                    class="nav-chapter-btn"
+                                                    onclick={() => toggle_chapter(ch.title)}>
+                                                    <svg
+                                                        class="nav-folder-chevron"
+                                                        class:open={open_chapters.has(ch.title)}
+                                                        viewBox="0 0 6 10"
+                                                        width="6"
+                                                        height="10">
+                                                        <path
+                                                            d="M0 0 L6 5 L0 10"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            stroke-width="1.5"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                    </svg>
+                                                    {ch.title}
+                                                </button>
+                                                {#if open_chapters.has(ch.title)}
+                                                    {#each ch.exercises as ex (ex.slug)}
+                                                        <a
+                                                            href={resolve(`/tutorial/${ex.slug}`)}
+                                                            class="nav-exercise"
+                                                            class:active={ex.slug ===
+                                                                data.exercise.slug}>
+                                                            {ex.title}
+                                                        </a>
+                                                    {/each}
+                                                {/if}
                                             </div>
                                         {/each}
                                     {/if}
@@ -398,17 +427,29 @@
         padding-bottom: 0.25rem;
     }
 
-    .nav-chapter-title {
-        padding: 0.25rem 0.75rem 0.15rem 1.75rem;
+    .nav-chapter-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.75rem 0.15rem 1.25rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
         font: var(--sk-font-ui-small);
         color: var(--sk-fg-4);
         text-transform: uppercase;
         letter-spacing: 0.06em;
     }
+    .nav-chapter-btn:hover {
+        background: var(--sk-bg-2);
+        color: var(--sk-fg-2);
+    }
 
     .nav-exercise {
         display: block;
-        padding: 0.3rem 0.75rem 0.3rem 1.75rem;
+        padding: 0.3rem 0.75rem 0.3rem 2.25rem;
         font: var(--sk-font-ui-medium);
         color: var(--sk-fg-2);
         text-decoration: none;

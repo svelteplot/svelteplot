@@ -1,12 +1,15 @@
 # Tutorial Plan
 
 Three levels map to the three directory levels: Part → Chapter → Lesson (REPL step).
-`→ reuse` notes where existing content can be adapted from its old location.
+
+Structure mirrors SveltePlot's own organisation: **01-basics → 02-marks → 03-transforms**.
+Chapter and lesson ordering within 02-marks and 03-transforms is TBD.
 
 ## Dataset decisions
 
 - **01 · Basics** — Palmer Penguins throughout; first mark is `Dot` (not `Line`)
-- **03 · Line & area** — Apple stock (aapl.csv) for single series; multi-series TBD
+- **02 · Marks / Line** — Apple stock (aapl.csv) for single series; BLS + polls for multi-series
+- **02 · Marks / Jitter** — Cars dataset (cylinders × power (hp)); `jitterX` requires quantitative x
 
 ---
 
@@ -16,181 +19,132 @@ Three levels map to the three directory levels: Part → Chapter → Lesson (REP
   - [x] Your first plot → `01-basics/01-getting-started/01-first-plot`
   - [x] Marks — what they are, swapping one for another → `01-getting-started/02-marks`
   - [x] Layering marks → `01-getting-started/03-layering`
-  - [x] Channels (x, y, stroke, fill, r) → `01-getting-started/04-channels`
-  - [x] Color channels → `01-getting-started/05-color-channels`
+  - [x] Channels (x, y, fill) → `01-getting-started/04-channels`
+  - [x] Color channels — quantitative fill → `01-getting-started/05-color-channels`
   - [x] Legends → `01-getting-started/06-legend`
   - [x] Scale options → `01-getting-started/07-scale-options`
   - [x] Reactivity → `01-getting-started/08-reactivity`
 
 - **Axes & grids**
-  - [x] Implicit axes — auto-added AxisX/AxisY → `01-basics/06-implicit-marks/01-implicit-marks`
-  - [x] Explicit axes — overriding defaults → `06-implicit-marks/02-explicit-axes`
-  - [x] Implicit grids → `06-implicit-marks/03-implicit-grids`
+  - [x] Implicit axes — auto-added AxisX/AxisY → `01-basics/02-axes-grids/01-implicit-marks`
+  - [x] Explicit axes — overriding defaults → `02-axes-grids/02-explicit-axes`
+  - [x] Implicit grids → `02-axes-grids/03-implicit-grids`
 
 - **Faceting**
-  - [x] Faceting basics (fx/fy) → `01-basics/04-faceting/02-faceting`
+  - [x] Faceting basics (fx/fy) → `01-basics/03-faceting/02-faceting`
   - [ ] Facet options (gap, label, axis placement)
 
 ---
 
-## 02 · Scatter & distribution
+## 02 · Marks
 
-- **Dot mark**
-  - [x] Symbol channel (shapes for categories) → `02-scatter/01-dot/01-symbol`
-  - [x] Size channel — bubble chart (r channel) → `02-scatter/01-dot/03-size-channel`
+- **Dot** (`02-marks/01-dot/`)
+  - [x] Symbol channel — shapes for categories → `01-dot/01-symbol`
+  - [x] Size channel — bubble chart (r channel) → `01-dot/03-size-channel`
+  - [ ] Color & opacity
+  - [x] DotX / DotY — one-dimensional strip → `02-strip-plots/01-dotx-doty`
 
-- **Jitter** — uses **cars dataset** (cylinders × power (hp)); jitterX works on quantitative x only
-  - [x] Jitter transform — spreading overlapping points → `02-scatter/02-jitter/01-jitter`
-  - [x] Reactive jitter (width control) → `02-scatter/02-jitter/02-reactive-jitter`
+- **Line** (`02-marks/03-line/`) — Apple stock (aapl.csv)
+  - [x] The Line mark — time series → `03-line/01-line`
+  - [x] Sorting — sort transform for non-temporal x → `03-line/02-sorting`
+  - [x] Multiple series — stroke channel + group → `03-line/03-grouping`
+  - [x] Markers — arrowhead / dot markers → `03-line/04-markers`
+  - [x] Curve — interpolation options → `03-line/05-curve`
+  - [x] Text along lines — inline labels → `03-line/06-text`
 
-- **Strip plots** — faceted by species (`fy="species"`) for a richer end state
-  - [x] DotX / DotY — one-dimensional scatter → `02-scatter/03-strip-plots/01-dotx-doty`
-  - [x] TickX / TickY — strip / rug plots → `02-scatter/03-strip-plots/02-tickx-ticky`
-
----
-
-## 03 · Line & area
-
-- **Line mark**
-  - [x] The Line mark — time series → reuse `02-marks/02-line/01-line`
-  - [x] Sorting — sort transform for non-temporal x → reuse `02-line/02-sorting`
-  - [x] Multiple series — stroke channel + group → reuse `02-line/03-grouping`
-  - [x] Markers — arrowhead / dot markers → reuse `02-line/04-markers`
-  - [x] Curve — interpolation options → reuse `02-line/05-curve`
-  - [x] Text along lines — inline labels → reuse `02-line/06-text`
-
-- **Area mark**
+- **Area** (TBD)
   - [ ] AreaY — area below a line
   - [ ] AreaX — horizontal area
-  - [ ] Stacked areas — stack transform
   - [ ] Band / range area (y1 and y2 channels)
+  - [ ] DifferenceY — difference / above-below chart
 
-- **Statistical overlays**
-  - [ ] Moving average — window transform → reuse `01-basics/03-transforms/03-moving-average` + `04-moving-average-2`
-  - [ ] Bollinger bands — BollingerY mark
-
-- **Trail mark**
-  - [ ] Trail — temporal path with varying stroke width
-
----
-
-## 04 · Bar charts
-
-- **Bar marks**
+- **Bar** (TBD)
   - [ ] BarY — vertical bar chart
   - [ ] BarX — horizontal bar chart
   - [ ] Color channel on bars
 
-- **Stacked bars**
-  - [ ] Stack transform — stacked bar chart
-  - [ ] Normalized stacks (stack offset: normalize)
-
-- **Grouped bars**
-  - [ ] Group transform — grouped bar chart
-
-- **Waffle charts**
-  - [ ] WaffleX / WaffleY — part-to-whole alternative to bars
-
----
-
-## 05 · Histograms & rectangles
-
-- **Histograms**
+- **Rect** (TBD)
   - [ ] RectY + bin transform — basic histogram
-  - [ ] Bin options — thresholds, step, domain
   - [ ] RectX — horizontal histogram
 
-- **2D binning**
-  - [ ] Two binned axes — frequency heatmap with RectY
-
----
-
-## 06 · Heatmaps
-
-- **Cell mark**
+- **Cell** (TBD)
   - [ ] Cell — basic heatmap (x/y as categories, fill as value)
   - [ ] CellX / CellY — one axis is categorical
-  - [ ] Group transform — aggregating into cells
 
-- **Color scales**
-  - [ ] Sequential color scales
-  - [ ] Diverging color scales
-
----
-
-## 07 · Annotations
-
-- **Reference lines**
+- **Rule** (TBD)
   - [ ] RuleY — horizontal reference line
   - [ ] RuleX — vertical reference line
 
-- **Text labels**
-  - [ ] Text mark — positioning, formatting, alignment
-  - [ ] Avoiding overlap
+- **Tick** (`02-marks/02-strip-plots/`) — faceted by species (`fy="species"`)
+  - [x] TickX / TickY — tick strip / rug plot → `02-strip-plots/02-tickx-ticky`
 
-- **Connectors**
+- **Text** (TBD)
+  - [ ] Text mark — positioning, formatting, alignment
+
+- **Arrow / Link** (TBD)
   - [ ] Arrow — curved labeled arrows between points
   - [ ] Link — straight line between two data points
 
-- **Vectors & decorations**
+- **Vector** (TBD)
   - [ ] Vector — directional / wind field
-  - [ ] Frame — explicit plot frame
-  - [ ] Image — images at data positions
+  - [ ] Spike — magnitude as spike height
 
----
-
-## 08 · Statistical marks
-
-- **Box plots**
+- **Box** (TBD)
   - [ ] BoxY — vertical box plot
   - [ ] BoxX — horizontal box plot
 
-- **Regression**
-  - [ ] RegressionY — linear regression line → reuse `01-basics/04-faceting/01-regression` (partial)
+- **Regression** (TBD)
+  - [ ] RegressionY — linear regression line
   - [ ] RegressionX
 
-- **Comparison**
-  - [ ] DifferenceY — difference / above-below chart
+- **Other statistical marks** (TBD)
+  - [ ] BollingerY
+  - [ ] Trail — temporal path with varying stroke width
 
-- **Spike mark**
-  - [ ] Spike — magnitude as spike height (spike maps)
-
----
-
-## 09 · Geographic
-
-- **Geographic marks**
+- **Geographic** (TBD)
   - [ ] Geo — rendering GeoJSON features with a projection
   - [ ] Sphere and Graticule — globe outline and grid lines
 
----
-
-## 10 · Interaction
-
-- **Pointer**
+- **Interaction** (TBD)
   - [ ] Pointer mark — nearest-point hover / tooltip
+  - [ ] BrushX / BrushY / Brush — selection
 
-- **Brush**
-  - [ ] BrushX — 1D horizontal selection
-  - [ ] BrushY — 1D vertical selection
-  - [ ] Brush — 2D selection
+- **Advanced** (TBD)
+  - [ ] Density / Contour
+  - [ ] DelaunayLink / Hull / Voronoi
+  - [ ] Raster
+  - [ ] CustomMark / CustomMarkHTML
 
 ---
 
-## 11 · Advanced
+## 03 · Transforms
 
-- **Density & contours**
+- **Jitter** (`03-transforms/01-jitter/`) — Cars dataset
+  - [x] Jitter transform — spreading overlapping points → `01-jitter/01-jitter`
+  - [x] Reactive jitter — width control via $state → `01-jitter/02-reactive-jitter`
+
+- **Window** (TBD)
+  - [ ] Moving average — window transform
+  - [ ] Bollinger bands
+
+- **Bin** (TBD)
+  - [ ] Basic histogram (RectY + bin)
+  - [ ] Bin options — thresholds, step, domain
+  - [ ] 2D binning — frequency heatmap
+
+- **Stack** (TBD)
+  - [ ] Stacked bars / areas
+  - [ ] Normalized stacks (offset: normalize)
+
+- **Group** (TBD)
+  - [ ] Grouped bar chart
+  - [ ] Aggregating into cells (Cell + group)
+
+- **Dodge** (TBD)
+  - [ ] Dodge — non-overlapping layout
+
+- **Normalize** (TBD)
+
+- **Density** (TBD)
   - [ ] Density mark — kernel density estimation
   - [ ] Contour mark — density contour lines
-
-- **Voronoi & Delaunay**
-  - [ ] DelaunayLink / DelaunayMesh — triangulation edges
-  - [ ] Hull — convex hull per group
-  - [ ] Voronoi / VoronoiMesh — Voronoi cells
-
-- **Raster**
-  - [ ] Raster — canvas-rendered raster / image data
-
-- **Custom marks**
-  - [ ] CustomMark — SVG-based custom mark
-  - [ ] CustomMarkHTML — HTML overlay mark
