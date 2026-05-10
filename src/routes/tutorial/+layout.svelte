@@ -48,6 +48,8 @@
         --sk-font-ui-medium: 400 0.875rem/1 var(--font-sans, system-ui);
         --sk-font-mono: 400 0.85rem/1.5 var(--font-mono, monospace);
         --sk-pane-controls-height: 2.8rem;
+        --sk-bg-selection: rgba(75, 125, 225, 0.3);
+        --sk-bg-unfocused-selection: rgba(75, 125, 225, 0.15);
         /* raised button tokens */
         --sk-raised-color: var(--sk-border);
         --sk-raised-width: 1px;
@@ -80,6 +82,8 @@
             --sk-fg-3: #aaaaaa;
             --sk-fg-4: #777777;
             --sk-border: #3a3a3e;
+            --sk-bg-selection: rgba(100, 150, 255, 0.35);
+            --sk-bg-unfocused-selection: rgba(100, 150, 255, 0.2);
             /* CodeMirror syntax highlight colors — github-dark palette */
             --shiki-color-text: #e6edf3;
             --shiki-token-keyword: #ff7b72;

@@ -60,13 +60,10 @@
             &::after {
                 content: '';
                 position: absolute;
-                width: 100%;
-                right: 0;
-                top: 0;
-                height: 2.4rem;
+                inset: 0;
                 background: currentColor;
                 mask: url(icons/chevron.svg) no-repeat 50% 50%;
-                mask-size: contain;
+                mask-size: 0.7rem;
                 transition: transform 0.2s;
                 cursor: pointer;
                 rotate: 180deg;

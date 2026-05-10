@@ -6,12 +6,14 @@ export interface ExerciseStub {
     slug: string;
     title: string;
     chapter: string;
+    group: string;
 }
 
 export interface Exercise {
     slug: string;
     title: string;
     chapter: string;
+    group: string;
     html: string;
     /** starting file state: path → content, paths relative to /src/lib/ */
     a: Record<string, string>;
@@ -117,10 +119,18 @@ function sorted_keys(obj: Record<string, string>, prefix: string) {
         .sort();
 }
 
+function group_label(dir: string): string {
+    return dir
+        .replace(/^\d+-/, '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 interface RawExercise {
     slug: string;
     title: string;
     chapter: string;
+    group: string;
     mdPath: string;
     assetPrefix: string;
     chapterAssetPrefix: string;
@@ -177,6 +187,7 @@ function build_exercise_list(): RawExercise[] {
                     slug: `${chapter}/${ex}`,
                     title: meta.title ?? ex,
                     chapter: chapterTitle,
+                    group: group_label(group),
                     mdPath,
                     assetPrefix: `${chapterBase}/${ex}/+assets/`,
                     chapterAssetPrefix: `${chapterBase}/+assets/`,
@@ -193,7 +204,12 @@ const exercise_list = build_exercise_list();
 const exercise_map = new Map(exercise_list.map((e, i) => [e.slug, { ...e, index: i }]));
 
 export function get_exercise_stubs(): ExerciseStub[] {
-    return exercise_list.map(({ slug, title, chapter }) => ({ slug, title, chapter }));
+    return exercise_list.map(({ slug, title, chapter, group }) => ({
+        slug,
+        title,
+        chapter,
+        group
+    }));
 }
 
 export async function load_exercise(slug: string): Promise<Exercise | null> {
@@ -231,11 +247,16 @@ export async function load_exercise(slug: string): Promise<Exercise | null> {
         slug,
         title: meta.title ?? slug,
         chapter: entry.chapter,
+        group: entry.group,
         html: await render_markdown(body),
         a,
         b,
         focus: focus.replace(/^\//, ''),
-        prev: prev ? { slug: prev.slug, title: prev.title, chapter: prev.chapter } : null,
-        next: next ? { slug: next.slug, title: next.title, chapter: next.chapter } : null
+        prev: prev
+            ? { slug: prev.slug, title: prev.title, chapter: prev.chapter, group: prev.group }
+            : null,
+        next: next
+            ? { slug: next.slug, title: next.title, chapter: next.chapter, group: next.group }
+            : null
     };
 }

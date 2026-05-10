@@ -149,6 +149,46 @@ You can also use a point scale for dot dimensions to create dot plots, such as t
 </Plot>
 ```
 
+## Symbol types
+
+The `symbol` channel accepts a string name to pick from the built-in set:
+
+```svelte live
+<script>
+  import { Plot, Dot, Text } from 'svelteplot';
+
+  const strokeOnly = new Set(['asterisk', 'plus', 'times']);
+  const symbols = [
+    'asterisk', 'circle', 'cross', 'diamond', 'diamond2',
+    'hexagon', 'plus', 'square', 'square2', 'star',
+    'times', 'triangle', 'triangle2', 'wye'
+  ];
+  const data = symbols.map((name, x) => ({ name, x }));
+</script>
+
+<Plot
+  height={100}
+  marginBottom={45}
+  x={{ axis: false, domain: [-0.5, symbols.length - 0.5] }}
+  y={{ axis: false, domain: [-1, 1] }}>
+  <Dot
+    {data}
+    x="x"
+    y={0}
+    symbol="name"
+    r={7}
+    fill={(d) => strokeOnly.has(d.name) ? null : 'currentColor'}
+    stroke={(d) => strokeOnly.has(d.name) ? 'currentColor' : null} />
+  <Text
+    {data}
+    x="x"
+    y={0}
+    text="name"
+    lineAnchor="top"
+    dy={12} />
+</Plot>
+```
+
 ## DotX
 
 [API Reference](/api/marks#DotX)

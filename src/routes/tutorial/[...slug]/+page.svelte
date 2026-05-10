@@ -1,6 +1,6 @@
 <script lang="ts">
     import { browser } from '$app/environment';
-    import { afterNavigate } from '$app/navigation';
+    import { afterNavigate, goto } from '$app/navigation';
     import { resolve } from '$app/paths';
     import { SplitPane } from '@rich_harris/svelte-split-pane';
     import Editor from '@sveltejs/repl/editor';
@@ -10,6 +10,38 @@
     import type { PageProps } from './$types.js';
 
     let { data }: PageProps = $props();
+
+    const tree = $derived.by(() => {
+        const groups = new Map<
+            string,
+            {
+                title: string;
+                chapters: { title: string; exercises: { slug: string; title: string }[] }[];
+            }
+        >();
+        for (const stub of data.stubs) {
+            if (!groups.has(stub.group))
+                groups.set(stub.group, { title: stub.group, chapters: [] });
+            const g = groups.get(stub.group)!;
+            let ch = g.chapters.find((c) => c.title === stub.chapter);
+            if (!ch) {
+                ch = { title: stub.chapter, exercises: [] };
+                g.chapters.push(ch);
+            }
+            ch.exercises.push({ slug: stub.slug, title: stub.title });
+        }
+        return Array.from(groups.values());
+    });
+
+    let nav_open = $state(false);
+    let open_groups = $state(new Set([data.exercise.group]));
+
+    function toggle_group(group: string) {
+        const next = new Set(open_groups);
+        if (next.has(group)) next.delete(group);
+        else next.add(group);
+        open_groups = next;
+    }
 
     const text_exts = new Set([
         '.svelte',
@@ -98,6 +130,8 @@
             '/' + data.exercise.focus
         );
         solved = false;
+        nav_open = false;
+        open_groups = new Set([data.exercise.group]);
     });
 
     function toggle_solution() {
@@ -115,8 +149,73 @@
     <SplitPane id="tutorial" type="columns" pos="35%" min="260px" max="-400px">
         {#snippet a()}
             <div class="prose-pane">
+                <div class="prose-nav">
+                    <button class="nav-trigger" onclick={() => (nav_open = !nav_open)}>
+                        <span class="nav-trigger-label">
+                            {data.exercise.group} / {data.exercise.chapter}
+                        </span>
+                        <svg
+                            class="nav-chevron"
+                            class:open={nav_open}
+                            viewBox="0 0 10 6"
+                            width="10"
+                            height="6">
+                            <path
+                                d="M0 0 L5 6 L10 0"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </button>
+
+                    {#if nav_open}
+                        <div class="nav-backdrop" onclick={() => (nav_open = false)}></div>
+                        <div class="nav-menu">
+                            {#each tree as group (group.title)}
+                                <div class="nav-group">
+                                    <button
+                                        class="nav-group-btn"
+                                        onclick={() => toggle_group(group.title)}>
+                                        <svg
+                                            class="nav-folder-chevron"
+                                            class:open={open_groups.has(group.title)}
+                                            viewBox="0 0 6 10"
+                                            width="6"
+                                            height="10">
+                                            <path
+                                                d="M0 0 L6 5 L0 10"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round" />
+                                        </svg>
+                                        {group.title}
+                                    </button>
+                                    {#if open_groups.has(group.title)}
+                                        {#each group.chapters as ch (ch.title)}
+                                            <div class="nav-chapter">
+                                                <div class="nav-chapter-title">{ch.title}</div>
+                                                {#each ch.exercises as ex (ex.slug)}
+                                                    <a
+                                                        href={resolve(`/tutorial/${ex.slug}`)}
+                                                        class="nav-exercise"
+                                                        class:active={ex.slug ===
+                                                            data.exercise.slug}>
+                                                        {ex.title}
+                                                    </a>
+                                                {/each}
+                                            </div>
+                                        {/each}
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
                 <div class="prose-inner">
-                    <p class="chapter-label">{data.exercise.chapter}</p>
                     <h2>{data.exercise.title}</h2>
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                     {@html data.exercise.html}
@@ -207,6 +306,124 @@
         overflow: hidden;
     }
 
+    .prose-nav {
+        flex-shrink: 0;
+        position: relative;
+        border-bottom: 1px solid var(--sk-border);
+        background: var(--sk-bg-1);
+    }
+
+    .nav-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.55rem 0.75rem;
+        background: none;
+        border: none;
+        color: var(--sk-fg-2);
+        font: var(--sk-font-ui-medium);
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .nav-trigger:hover {
+        background: var(--sk-bg-2);
+    }
+
+    .nav-trigger-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .nav-chevron {
+        flex-shrink: 0;
+        transition: transform 0.15s;
+        opacity: 0.5;
+    }
+    .nav-chevron.open {
+        transform: rotate(180deg);
+    }
+
+    .nav-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 99;
+    }
+
+    .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: var(--sk-bg-1);
+        border: 1px solid var(--sk-border);
+        border-top: none;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .nav-group-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 0.75rem;
+        background: none;
+        border: none;
+        color: var(--sk-fg-1);
+        font: var(--sk-font-ui-medium);
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+    }
+    .nav-group-btn:hover {
+        background: var(--sk-bg-2);
+    }
+
+    .nav-folder-chevron {
+        flex-shrink: 0;
+        transition: transform 0.15s;
+        opacity: 0.5;
+    }
+    .nav-folder-chevron.open {
+        transform: rotate(90deg);
+    }
+
+    .nav-chapter {
+        padding-bottom: 0.25rem;
+    }
+
+    .nav-chapter-title {
+        padding: 0.25rem 0.75rem 0.15rem 1.75rem;
+        font: var(--sk-font-ui-small);
+        color: var(--sk-fg-4);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .nav-exercise {
+        display: block;
+        padding: 0.3rem 0.75rem 0.3rem 1.75rem;
+        font: var(--sk-font-ui-medium);
+        color: var(--sk-fg-2);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+    }
+    .nav-exercise:hover {
+        background: var(--sk-bg-2);
+        color: var(--sk-fg-1);
+    }
+    .nav-exercise.active {
+        color: var(--sk-fg-accent);
+        border-left-color: var(--sk-fg-accent);
+        background: var(--sk-bg-2);
+    }
+
     .prose-inner {
         flex: 1;
         overflow-y: auto;
@@ -291,7 +508,7 @@
     .prose-inner :global(.shiki .inline-add > *),
     .prose-inner :global(.shiki .line--added > *) {
         background: rgb(0 180 0 / 0.1) !important;
-        color: #98df98 !important;
+        color: light-dark(#0b670b, #a3f4a3) !important;
         border-radius: 2px;
     }
     .prose-inner :global(.shiki .inline-remove),
