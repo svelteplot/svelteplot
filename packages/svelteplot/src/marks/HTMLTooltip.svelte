@@ -99,8 +99,8 @@
 
 <div
     class={['svelteplot-tooltip', { hide: !datum }]}
-    style:left="{tooltipX ? facetOffsetX + projectX('x', plot.scales, tooltipX) : 0}px"
-    style:top="{tooltipY ? facetOffsetY + projectY('y', plot.scales, tooltipY) : 0}px">
+    style:left="{facetOffsetX + projectX('x', plot.scales, tooltipX ?? 0)}px"
+    style:top="{facetOffsetY + projectY('y', plot.scales, tooltipY ?? 0)}px">
     {@render children({ datum: datum as Datum })}
 </div>
 
