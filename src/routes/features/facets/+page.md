@@ -21,13 +21,13 @@ Facets are a way to split a plot into multiple panels.
     marginBottom={40}>
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       r={2}
       opacity={0.1} />
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       fy="species"
       fx="sex" />
@@ -39,13 +39,13 @@ Facets are a way to split a plot into multiple panels.
 <Plot frame grid height={600} inset={10} margin={30}>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     r={2}
     opacity={0.1} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     fy="island"
@@ -106,14 +106,14 @@ Apply top-level facet options automatically:
     <Frame />
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       facet="exclude"
       r={2}
       opacity={0.1} />
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       stroke="species" />
   </Plot>

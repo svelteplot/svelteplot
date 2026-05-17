@@ -26,13 +26,13 @@ For one-dimensional kernel density estimates, see the [densityX](/transforms/den
 <Plot color={{ scheme: ds.isDark ? 'viridis' : 'blues' }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     thresholds={10} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="currentColor"
     r={1.5}
@@ -48,7 +48,7 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
 <Plot>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm" />
 </Plot>
 ```
@@ -64,7 +64,7 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
 <Plot>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm" />
 </Plot>
 ```
@@ -85,7 +85,7 @@ You can create separate densities by grouping via stroke or `z` channel:
   <Density
     data={penguins}
     stroke="species"
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm" />
 </Plot>
 ```
@@ -95,7 +95,7 @@ You can create separate densities by grouping via stroke or `z` channel:
   <Density
     data={penguins}
     stroke="species"
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm" />
 </Plot>
 ```
@@ -106,7 +106,7 @@ Set `fill="density"` to fill each contour band by its estimated density using th
 <Plot color={{ scheme: 'blues' }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     stroke="none"
@@ -131,7 +131,7 @@ Set `fill="density"` to fill each contour band by its estimated density using th
   }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     stroke="none"
@@ -154,7 +154,7 @@ Use `stroke="density"` to color each isoline by its density level:
 <Plot color={{ scheme: 'viridis', legend: true }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="density"
     thresholds={15} />
@@ -186,7 +186,7 @@ The `bandwidth` option (default 20) controls the Gaussian kernel's standard devi
 <Plot color={{ scheme: 'blues' }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     stroke="none"
@@ -221,7 +221,7 @@ Control the number and placement of density levels with `thresholds`:
 <Plot>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     {thresholds} />
 </Plot>
@@ -235,7 +235,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
 <Plot frame color={{ scheme: 'blues' }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     stroke="none"
@@ -254,7 +254,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
 <Plot inset={10} frame color={{ scheme: 'blues' }}>
   <Density
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="density"
     stroke="none"
@@ -262,7 +262,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
     fx="species" />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     r={1.5}
     symbol="plus"
@@ -300,7 +300,7 @@ Use `weight` to give different data points different contributions to the densit
 <Plot color={{ legend: true }}>
   <Density
     {data}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     weight={(d) =>
       d.sex === 'FEMALE' ? 1 - skew : 1 + skew}
@@ -309,7 +309,7 @@ Use `weight` to give different data points different contributions to the densit
     {data}
     fill="sex"
     r={2}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm" />
 </Plot>
 ```

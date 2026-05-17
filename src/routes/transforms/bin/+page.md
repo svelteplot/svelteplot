@@ -293,7 +293,7 @@ By default, the binX transform will set the _insetRight_ channel to 1, but you c
 <Plot height={200}>
   <RectY
     {...binX(
-      { data: penguins, x: 'culmen_length_mm' },
+      { data: penguins, x: 'bill_length_mm' },
       { y: 'count' },
       { thresholds: [0, 35, 40, 41, 45, 53, 80] }
     )}
@@ -384,7 +384,7 @@ Or as arbitrary bin bounds, passed as array of values via **thresholds**:
 <Plot height={200}>
   <RectY
     {...binX(
-      { data: penguins, x: 'culmen_length_mm' },
+      { data: penguins, x: 'bill_length_mm' },
       {
         y: 'count',
         thresholds: [0, 35, 40, 41, 45, 53, 80]
@@ -400,7 +400,7 @@ Or as arbitrary bin bounds, passed as array of values via **thresholds**:
     {...binX(
       {
         data: penguins,
-        x: 'culmen_length_mm',
+        x: 'bill_length_mm',
         y: 'count'
       },
       { thresholds: [0, 35, 40, 41, 45, 53, 80] }

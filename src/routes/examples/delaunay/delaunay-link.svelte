@@ -16,13 +16,13 @@
 <Plot grid color={{ legend: true }}>
     <DelaunayLink
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         stroke="body_mass_g"
         strokeOpacity={0.55} />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill
         r={2} />

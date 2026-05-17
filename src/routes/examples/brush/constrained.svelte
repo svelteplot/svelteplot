@@ -19,7 +19,7 @@
 <Plot grid>
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         opacity={brush.enabled ? 0.3 : 1}
         stroke={(d) => (brush.enabled ? 'gray' : d.species)}
@@ -29,11 +29,11 @@
         <Dot
             data={penguins}
             filter={(d) =>
-                d.culmen_length_mm >= brush.x1 &&
-                d.culmen_length_mm <= brush.x2 &&
+                d.bill_length_mm >= brush.x1 &&
+                d.bill_length_mm <= brush.x2 &&
                 d.culmen_depth_mm >= brush.y1 &&
                 d.culmen_depth_mm <= brush.y2}
-            x="culmen_length_mm"
+            x="bill_length_mm"
             y="culmen_depth_mm"
             stroke="species"
             symbol="species" />

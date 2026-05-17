@@ -15,7 +15,7 @@ You can use the custom mark to render your own marks. You can pass data to the c
 <Plot grid inset={10}>
   <CustomMark
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species">
     {#snippet mark({ record })}
@@ -32,7 +32,7 @@ You can use the custom mark to render your own marks. You can pass data to the c
 ```svelte
 <CustomMark
   data={penguins}
-  x="culmen_length_mm"
+  x="bill_length_mm"
   y="culmen_depth_mm"
   stroke="species">
   {#snippet mark({ record })}
@@ -50,7 +50,7 @@ We can also pass the `marks` (plural) snippet to draw all symbols at once:
 ```svelte
 <CustomMark
   data={penguins}
-  x="culmen_length_mm"
+  x="bill_length_mm"
   y="culmen_depth_mm">
   {#snippet marks({ records })}
     <polyline
@@ -70,7 +70,7 @@ We can also pass the `marks` (plural) snippet to draw all symbols at once:
 <Plot grid inset={10}>
   <CustomMark
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm">
     {#snippet marks({ records })}
       <polyline
@@ -168,14 +168,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
 <Plot grid>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm">
       {#snippet children({ datum })}
         <div
@@ -192,14 +192,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
 <Plot grid>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm">
       {#snippet children({ datum })}
         <div
@@ -235,14 +235,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
 <Plot grid inset={40}>
   <Dot
     {data}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       {data}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm">
       {#snippet children({ datum })}
         <div

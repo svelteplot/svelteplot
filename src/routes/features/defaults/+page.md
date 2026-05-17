@@ -130,7 +130,7 @@ Setting Global and Component Defaults
 <Plot>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     fx="species"
     y="culmen_depth_mm"
     fill="species" />

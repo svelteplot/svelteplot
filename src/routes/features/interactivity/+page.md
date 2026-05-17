@@ -48,14 +48,14 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
 <Plot grid symbol={{ legend: true }}>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <HTMLTooltip
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm">
       {#snippet children({ datum })}
         <div class="tooltip">
@@ -88,14 +88,14 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
 <Plot grid symbol={{ legend: true }}>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <HTMLTooltip
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm">
       {#snippet children({ datum })}
         <div class="tooltip">
@@ -178,7 +178,7 @@ The [Brush](/marks/brush) mark allows users to select data by dragging a rectang
 <Plot grid>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />

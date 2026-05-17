@@ -14,7 +14,7 @@
 <Plot frame grid marginTop={35}>
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fx="species"
         opacity={0.35} />

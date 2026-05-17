@@ -40,9 +40,9 @@ Chapter and lesson ordering within 02-marks and 03-transforms is TBD.
 
 - **Dot** (`02-marks/01-dot/`)
   - [x] Symbol channel — shapes for categories → `01-dot/01-symbol`
+  - [x] DotX / DotY — one-dimensional strip → `01-dot/02-dotx-doty`
   - [x] Size channel — bubble chart (r channel) → `01-dot/03-size-channel`
   - [ ] Color & opacity
-  - [x] DotX / DotY — one-dimensional strip → `02-strip-plots/01-dotx-doty`
 
 - **Line** (`02-marks/03-line/`) — Apple stock (aapl.csv)
   - [x] The Line mark — time series → `03-line/01-line`
@@ -75,8 +75,8 @@ Chapter and lesson ordering within 02-marks and 03-transforms is TBD.
   - [ ] RuleY — horizontal reference line
   - [ ] RuleX — vertical reference line
 
-- **Tick** (`02-marks/02-strip-plots/`) — faceted by species (`fy="species"`)
-  - [x] TickX / TickY — tick strip / rug plot → `02-strip-plots/02-tickx-ticky`
+- **Tick** (`02-marks/02-tick/`) — faceted by species (`fy="species"`)
+  - [x] TickX / TickY — tick strip / rug plot → `02-tick/01-tickx-ticky`
 
 - **Text** (TBD)
   - [ ] Text mark — positioning, formatting, alignment

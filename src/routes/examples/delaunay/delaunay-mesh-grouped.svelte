@@ -16,14 +16,14 @@
 <Plot grid>
     <DelaunayMesh
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         stroke="species"
         z="species"
         strokeOpacity={0.7} />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="species"
         r={3} />

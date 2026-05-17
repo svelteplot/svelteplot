@@ -20,4 +20,9 @@ Then add it inside `<Plot>`:
 </Plot>
 ```
 
-The line marks 4,000 g — roughly where lighter Adelie and Chinstrap penguins separate from heavier Gentoos. No data required: `RuleY` just needs a `y` position.
+The line marks 4,000 g — roughly where lighter Adelie and Chinstrap penguins separate from heavier Gentoos. No data required: `RuleY` just needs a `y` position. If you want, you can also map the `body_mass_g` variable as data:
+
+```svelte
+---<RuleY y={4000} />---
++++<RuleY {data} y="body_mass_g" />+++
+```

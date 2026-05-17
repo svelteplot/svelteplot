@@ -16,12 +16,12 @@
 <Plot>
     <VoronoiMesh
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         strokeOpacity={0.3} />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="species"
         r={3} />

@@ -30,7 +30,7 @@ The **Brush** mark is useful for interactively selecting data. In contrast to th
   <Plot grid>
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       stroke="species"
       symbol="species" />
@@ -45,7 +45,7 @@ The **Brush** mark is useful for interactively selecting data. In contrast to th
 <Plot grid>
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     symbol="species" />
@@ -71,7 +71,7 @@ By default, the Brush mark will use a `<Rect>` mark to render the selection with
   <Plot grid>
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       opacity={brush.enabled ? 0.3 : 1}
       stroke={(d) => (brush.enabled ? 'gray' : d.species)}
@@ -81,11 +81,11 @@ By default, the Brush mark will use a `<Rect>` mark to render the selection with
       <Dot
         data={penguins}
         filter={(d) =>
-          d.culmen_length_mm >= brush.x1 &&
-          d.culmen_length_mm <= brush.x2 &&
+          d.bill_length_mm >= brush.x1 &&
+          d.bill_length_mm <= brush.x2 &&
           d.culmen_depth_mm >= brush.y1 &&
           d.culmen_depth_mm <= brush.y2}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         stroke="species"
         symbol="species" />
@@ -100,7 +100,7 @@ By default, the Brush mark will use a `<Rect>` mark to render the selection with
   <!-- gray symbols if brush is enabled -->
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke={(d) => (brush.enabled ? 'gray' : d.species)}
     opacity={brush.enabled ? 0.3 : 1}
@@ -112,11 +112,11 @@ By default, the Brush mark will use a `<Rect>` mark to render the selection with
     <Dot
       data={penguins}
       filter={(d) =>
-        d.culmen_length_mm >= brush.x1 &&
-        d.culmen_length_mm <= brush.x2 &&
+        d.bill_length_mm >= brush.x1 &&
+        d.bill_length_mm <= brush.x2 &&
         d.culmen_depth_mm >= brush.y1 &&
         d.culmen_depth_mm <= brush.y2}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       stroke="species"
       symbol="species" />
@@ -227,7 +227,7 @@ Another use case for the Brush mark would be to create a zoomable plot by changi
 
   const fullDomainX = extent(
     penguins,
-    (d) => d.culmen_length_mm
+    (d) => d.bill_length_mm
   );
   const fullDomainY = extent(
     penguins,
@@ -256,7 +256,7 @@ Another use case for the Brush mark would be to create a zoomable plot by changi
     grid
     x={{
       domain: domainXT.current,
-      label: 'culmen_length_mm'
+      label: 'bill_length_mm'
     }}
     y={{
       domain: domainYT.current,
@@ -264,7 +264,7 @@ Another use case for the Brush mark would be to create a zoomable plot by changi
     }}>
     <Dot
       data={penguins}
-      x="culmen_length_mm"
+      x="bill_length_mm"
       y="culmen_depth_mm"
       stroke="species"
       symbol="species" />

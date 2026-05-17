@@ -14,19 +14,19 @@
 <Plot grid frame aspectRatio={1} inset={5}>
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="#999"
         opacity={0.2} />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         fx="species"
         y="culmen_depth_mm"
         fill="species" />
     <RegressionY
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         fx="species"
         y="culmen_depth_mm"
         stroke="species" />

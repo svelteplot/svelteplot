@@ -16,14 +16,14 @@
 <Plot>
     <Voronoi
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="species"
         fillOpacity={0.3}
         stroke="var(--svelteplot-bg)" />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="species"
         r={2} />

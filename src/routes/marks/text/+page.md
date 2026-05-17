@@ -69,13 +69,13 @@ Useful for showing text labels. The text mark is using SVG `<text>` elements, so
   testid="penguins">
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="currentColor"
     r={3} />
   <Text
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     stroke="var(--svelteplot-bg)"
@@ -103,7 +103,7 @@ Useful for showing text labels. The text mark is using SVG `<text>` elements, so
 <Plot grid height={500} color={{ legend: true }}>
   <Text
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     text={(d) => d.island.charAt(0)} />

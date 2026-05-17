@@ -30,7 +30,7 @@
     </defs>
     <CustomMark
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="species"
         r="body_mass_g">

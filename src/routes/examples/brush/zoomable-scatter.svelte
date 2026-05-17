@@ -11,7 +11,7 @@
     import { extent } from 'd3-array';
 
     type PenguinRow = {
-        culmen_length_mm: number;
+        bill_length_mm: number;
         culmen_depth_mm: number;
         species: string;
     };
@@ -25,7 +25,7 @@
 
     const fullDomainX = extent(
         penguins,
-        (d) => d.culmen_length_mm
+        (d) => d.bill_length_mm
     );
     const fullDomainY = extent(
         penguins,
@@ -56,7 +56,7 @@
         grid
         x={{
             domain: domainXT.current as any,
-            label: 'culmen_length_mm'
+            label: 'bill_length_mm'
         }}
         y={{
             domain: domainYT.current as any,
@@ -64,7 +64,7 @@
         }}>
         <Dot
             data={penguins as any}
-            x="culmen_length_mm"
+            x="bill_length_mm"
             y="culmen_depth_mm"
             stroke="species"
             symbol="species" />

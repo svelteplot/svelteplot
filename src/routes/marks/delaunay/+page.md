@@ -31,14 +31,14 @@ The **Voronoi** mark partitions the plane into cells, one per data point, each c
 <Plot testid="voronoi-penguins">
   <Voronoi
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     fillOpacity={0.3}
     stroke="var(--svelteplot-bg)" />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={2} />
@@ -50,14 +50,14 @@ The **Voronoi** mark partitions the plane into cells, one per data point, each c
 <Plot>
   <Voronoi
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     fillOpacity={0.3}
     stroke="species" />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={2} />
@@ -82,12 +82,12 @@ The **VoronoiMesh** mark renders the full Voronoi diagram as a single `<path>`, 
 <Plot testid="voronoi-mesh">
   <VoronoiMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     strokeOpacity={0.3} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -98,12 +98,12 @@ The **VoronoiMesh** mark renders the full Voronoi diagram as a single `<path>`, 
 <Plot>
   <VoronoiMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     strokeOpacity={0.3} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -171,12 +171,12 @@ The **DelaunayMesh** mark renders the full Delaunay triangulation as a single `<
 <Plot grid testid="delaunay-mesh">
   <DelaunayMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     strokeOpacity={0.3} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -187,14 +187,14 @@ The **DelaunayMesh** mark renders the full Delaunay triangulation as a single `<
 <Plot grid>
   <DelaunayMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     z="species"
     strokeOpacity={0.3} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -216,14 +216,14 @@ You can use the `z` channel to group the meshes:
 <Plot grid testid="delaunay-mesh">
   <DelaunayMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     z="species"
     strokeOpacity={0.7} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -234,14 +234,14 @@ You can use the `z` channel to group the meshes:
 <Plot grid>
   <DelaunayMesh
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     z="species"
     strokeOpacity={0.7} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -265,13 +265,13 @@ The **DelaunayLink** mark renders individual Delaunay edges as separate paths, a
 <Plot grid color={{ legend: true }}>
   <DelaunayLink
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="body_mass_g"
     strokeOpacity={0.55} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill
     r={2} />
@@ -282,13 +282,13 @@ The **DelaunayLink** mark renders individual Delaunay edges as separate paths, a
 <Plot grid>
   <DelaunayLink
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     strokeOpacity={0.5} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -312,7 +312,7 @@ The **Hull** mark renders the convex hull of data points. Use the **z**, **fill*
 <Plot grid testid="hull-species">
   <Hull
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     fill="species"
@@ -320,7 +320,7 @@ The **Hull** mark renders the convex hull of data points. Use the **z**, **fill*
     strokeWidth={2} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />
@@ -331,7 +331,7 @@ The **Hull** mark renders the convex hull of data points. Use the **z**, **fill*
 <Plot grid>
   <Hull
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     stroke="species"
     fill="species"
@@ -339,7 +339,7 @@ The **Hull** mark renders the convex hull of data points. Use the **z**, **fill*
     strokeWidth={2} />
   <Dot
     data={penguins}
-    x="culmen_length_mm"
+    x="bill_length_mm"
     y="culmen_depth_mm"
     fill="species"
     r={3} />

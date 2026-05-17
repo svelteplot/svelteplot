@@ -27,7 +27,7 @@
     }}>
     <Density
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill="density"
         canvas
@@ -35,7 +35,7 @@
         thresholds={10} />
     <Dot
         data={penguins}
-        x="culmen_length_mm"
+        x="bill_length_mm"
         y="culmen_depth_mm"
         fill={ds.isDark ? 'white' : 'black'}
         r={1.5}
