@@ -2,16 +2,19 @@
   import {
     Plot,
     Dot,
-    RuleY
+    GridY
   } from 'svelteplot';
   import data from './penguins.csv';
 </script>
 
 <Plot>
+  <GridY
+    stroke="red"
+    strokeDasharray="3,3"
+    strokeOpacity={1} />
   <Dot
     {data}
     x="bill_length_mm"
     y="body_mass_g"
-    fill />
-  <RuleY y={4000} stroke="red" />
+    fill="species" />
 </Plot>

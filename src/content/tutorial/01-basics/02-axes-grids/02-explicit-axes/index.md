@@ -6,17 +6,20 @@ The implicit axes are just `AxisX` and `AxisY` marks that SveltePlot inserts for
 
 Import them and add them to the plot, turning off the implicit ones with `axes={false}`:
 
-```svelte
----import { Plot, Dot } from 'svelteplot';---
-+++import { Plot, Dot, AxisX, AxisY } from 'svelteplot';+++
+```js
+import {
+  Plot, 
+  Dot+++,+++
++  AxisX, 
++  AxisY
+} from 'svelteplot';
 ```
 
 ```svelte
----<Plot grid frame>---
-+++<Plot axes={false}>+++
+<Plot axes={false}>
   <Dot {data} x="bill_length_mm" y="body_mass_g" />
-  +++<AxisX label="Bill length (mm)" />+++
-  +++<AxisY label="Body mass (g)" />+++
+  +++<AxisX />+++
+  +++<AxisY />+++
 </Plot>
 ```
 
@@ -28,3 +31,8 @@ SveltePlot detects the explicit axes and skips its own, so you can drop `axes={f
 ```
 
 Explicit axes expose props like `label`, `ticks`, `tickFormat`, and `anchor` for fine-grained control.
+
+```svelte
+<AxisX +++title="Bill length (mm)"+++ />
+<AxisY +++title="Body mass (g)"+++ />
+````

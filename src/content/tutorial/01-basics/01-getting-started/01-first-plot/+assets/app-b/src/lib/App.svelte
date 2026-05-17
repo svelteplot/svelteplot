@@ -10,5 +10,6 @@
   <Dot
     {data}
     x="bill_length_mm"
-    y="body_mass_g" />
+    y="body_mass_g"
+    fill />
 </Plot>

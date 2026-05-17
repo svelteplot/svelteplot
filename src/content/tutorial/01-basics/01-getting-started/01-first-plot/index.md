@@ -23,3 +23,13 @@ Then replace the paragraph with a `<Plot>` and a `<Dot>` mark inside it:
 ```
 
 `x="bill_length_mm"` and `y="body_mass_g"` tell SveltePlot which columns to map to horizontal and vertical position. Axes and tick labels appear automatically.
+
+If you want filled dots, just pass the `fill` prop:
+
+```svelte
+  <Dot 
+    {data} 
+    x="bill_length_mm" 
+    y="body_mass_g" 
+    +++fill+++ />
+```

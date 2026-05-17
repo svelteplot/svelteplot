@@ -6,7 +6,7 @@
   import data from './penguins.csv';
 </script>
 
-<Plot grid frame>
+<Plot axes={false}>
   <Dot
     {data}
     x="bill_length_mm"

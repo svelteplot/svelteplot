@@ -1,17 +1,15 @@
 <script>
   import {
     Plot,
-    Dot,
-    RuleY
+    Dot
   } from 'svelteplot';
   import data from './penguins.csv';
 </script>
 
-<Plot>
+<Plot y={{ grid: true }}>
   <Dot
     {data}
     x="bill_length_mm"
     y="body_mass_g"
-    fill />
-  <RuleY y={4000} stroke="red" />
+    fill="species" />
 </Plot>
