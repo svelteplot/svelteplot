@@ -1,5 +1,15 @@
 ---
 title: Line mark
+description: Line mark connects data points with a continuous path — the standard mark for time-series charts and any ordered sequence.
+examples:
+  - line/apple-stock
+  - line/bls
+  - line/gradient-line
+  - line/indexed-stocks
+  - line/parallel-y
+links:
+  examples: /examples/line
+  api: /api/marks#Line
 ---
 
 <script>

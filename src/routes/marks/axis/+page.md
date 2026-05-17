@@ -1,5 +1,15 @@
 ---
 title: Axis mark
+description: AxisX and AxisY render tick marks and labels along a scale; SveltePlot adds them implicitly unless you provide your own.
+examples:
+  - axis/rotated-labels
+  - axis/major-minor
+  - axis/tick-intervals
+  - axis/datawrapper-ticks
+  - axis/wordwrap
+links:
+  examples: /examples/axis
+  api: /api/marks#AxisX
 ---
 
 Axis marks are useful for rendering the x and y axes! Since they are useful in 95% of plots, SveltePlot will create axis marks by default (implicit axes):

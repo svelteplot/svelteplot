@@ -29,6 +29,7 @@ Chapter and lesson ordering within 02-marks and 03-transforms is TBD.
   - [x] Implicit axes — auto-added AxisX/AxisY → `01-basics/02-axes-grids/01-implicit-marks`
   - [x] Explicit axes — overriding defaults → `02-axes-grids/02-explicit-axes`
   - [x] Implicit grids → `02-axes-grids/03-implicit-grids`
+  - [x] Explicit grids — GridX/GridY, strokeDasharray, strokeOpacity → `02-axes-grids/04-explicit-grids`
 
 - **Faceting**
   - [x] Faceting basics (fx/fy) → `01-basics/03-faceting/02-faceting`

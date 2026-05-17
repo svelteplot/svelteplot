@@ -1,5 +1,13 @@
 ---
 title: Frame mark
+description: Frame mark draws a border rectangle around the plot area — useful for chart types where a visible boundary aids readability.
+examples:
+  - frame/explicit-frame
+  - frame/implicit-frame
+  - frame/frame-dx-dy
+links:
+  examples: /examples/frame
+  api: /api/marks#Frame
 ---
 
 [API Reference](/api/marks#Frame)

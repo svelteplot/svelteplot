@@ -1,5 +1,12 @@
 ---
 title: Arrow mark
+description: Arrow mark draws a directed arrow between two positions in data space.
+examples:
+  - arrow/metro
+  - arrow/metro-canvas
+links:
+  examples: /examples/arrow
+  api: /api/marks#Arrow
 ---
 
 [API Reference](/api/marks#Arrow)

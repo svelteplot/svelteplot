@@ -1,10 +1,16 @@
 ---
 title: Raster mark
+description: Raster mark renders a dense pixel grid by sampling a function or interpolating scattered data — ideal for continuous scalar fields.
+examples:
+  - raster/sampled
+  - raster/interpolated
+  - raster/volcano
+  - raster/weather
+links:
+  examples: /examples/raster
+  api: /api/marks#Raster
+addedIn: '0.12.0'
 ---
-
-:::info
-added in 0.12.0
-:::
 
 [API Reference](/api/marks#Raster)
 

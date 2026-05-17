@@ -1,5 +1,14 @@
 ---
 title: Tick mark
+description: TickX and TickY draw a short perpendicular stroke at each data value — ideal for strip plots, rug plots, and barcode charts.
+examples:
+  - tick/tick-x
+  - tick/tick-x-faceted
+  - tick/tick-y
+  - tick/tick-x-quant
+links:
+  examples: /examples/tick
+  api: /api/marks#TickX
 ---
 
 Ticks are useful for showing one-dimensional distributions, as in the "barcode" plot below. The secondary dimension must be a band scale.

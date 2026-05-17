@@ -1,5 +1,14 @@
 ---
 title: Regression mark
+description: RegressionY and RegressionX fit and draw a linear, polynomial, or loess regression line through a point cloud.
+examples:
+  - regression/cars
+  - regression/faceted
+  - regression/loess
+  - regression/grouped
+links:
+  examples: /examples/regression
+  api: /api/marks#RegressionY
 ---
 
 Regressions are useful if you want to show the relationship between two variables. The following plot shows how the weight of cars depends on their power. The mark is using [d3-regression](https://github.com/harrystevens/d3-regression) for computing the regression lines.

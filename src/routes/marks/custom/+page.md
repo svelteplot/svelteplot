@@ -1,5 +1,13 @@
 ---
 title: Custom marks
+description: CustomMark and CustomMarkHTML embed arbitrary SVG or HTML elements at data-space positions — for when built-in marks are not enough.
+examples:
+  - custom/single
+  - custom/multiple
+  - custom/histogram-topline
+links:
+  examples: /examples/custom
+  api: /api/marks#CustomMark
 ---
 
 You can use the custom mark to render your own marks. You can pass data to the custom mark and use the plot scales. Let's say we want to render our own symbols instead of using the [dot mark](/marks/dot):

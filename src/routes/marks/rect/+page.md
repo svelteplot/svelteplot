@@ -1,5 +1,14 @@
 ---
 title: Rect mark
+description: RectY and RectX draw axis-aligned rectangles defined by x1/x2 and y1/y2 — the foundation for histograms, bin plots, and mosaic charts.
+examples:
+  - rect/histogram
+  - rect/stacked-histogram
+  - rect/faceted-histogram
+  - rect/marimekko
+links:
+  examples: /examples/rect
+  api: /api/marks#RectY
 ---
 
 The Rect mark can be used to add rectangles to the plot, defined by x1, y1, x2, and y2 coordinates. It is useful in cases where both the x and y axis are using quantitative scales.

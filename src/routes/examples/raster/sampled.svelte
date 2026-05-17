@@ -1,7 +1,7 @@
 <script module>
     export const title = 'Sampled raster';
     export const description =
-        'A raster image of <a href="https://en.wikipedia.org/wiki/Maungawhau_/_Mount_Eden">Maungawhau (Mt. Eden)</a> in Auckland, NZ, rendered from a 87×61 dense elevation grid.';
+        'The <a href="https://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot set</a> rendered by sampling a function — the Raster mark calls <code>fill(x, y)</code> for each pixel and maps the iteration count to a color scale.';
 
     export const sortKey = 55;
 </script>

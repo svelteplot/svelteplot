@@ -1,5 +1,15 @@
 ---
 title: Pointer mark
+description: Pointer mark highlights the data point nearest to the cursor, enabling hover tooltips and interactive cross-filtering.
+examples:
+  - pointer/crosshair
+  - pointer/grouped
+  - pointer/scanline-y
+  - pointer/faceted-1
+  - pointer/faceted-2
+links:
+  examples: /examples/pointer
+  api: /api/marks#Pointer
 ---
 
 Pointer is a mark that doesn't render anything by itself, but you can use it to show marks filtered to data points close to the cursor. You access the filtered data by placing the marks as children of the Pointer mark:

@@ -1,5 +1,14 @@
 ---
 title: Bar mark
+description: BarY and BarX draw vertical and horizontal bars for categorical or ordinal comparisons.
+examples:
+  - bar/defaults
+  - bar/stacked
+  - bar/faceted-bars
+  - bar/waterfall
+links:
+  examples: /examples/bar
+  api: /api/marks#BarY
 ---
 
 <script>

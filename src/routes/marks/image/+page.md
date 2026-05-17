@@ -1,12 +1,14 @@
 ---
 title: Image mark
+description: Image mark places an image at each data point, positioned in data space by x and y channels.
+examples:
+  - image/image-scatter
+  - image/image-beeswarm
+links:
+  examples: /examples/image
+  api: /api/marks#Image
+addedIn: 0.6.0
 ---
-
-[API Reference](/api/marks#Image)
-
-:::info
-added in 0.6.0
-:::
 
 The Image mark renders images positioned at x/y coordinates. It’s useful for photo scatterplots, beeswarms with thumbnails, and similar layouts.
 

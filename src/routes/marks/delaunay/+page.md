@@ -1,10 +1,13 @@
 ---
 title: Delaunay / Voronoi marks
+description: Delaunay and Voronoi marks tessellate a point cloud into triangles or cells — for proximity diagrams, hull outlines, and nearest-neighbour overlays.
+examples:
+  - delaunay/voronoi-mesh-walmart
+links:
+  examples: /examples/delaunay
+  api: /api/marks#DelaunayLink
+addedIn: '0.14.0'
 ---
-
-:::info
-added in 0.14.0
-:::
 
 The Delaunay marks compute a [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) or its dual [Voronoi diagram](https://en.wikipedia.org/wiki/Voronoi_diagram) from **x** and **y** positions. Five marks are available:
 

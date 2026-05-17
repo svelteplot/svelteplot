@@ -1,5 +1,8 @@
 ---
 title: Bollinger mark
+description: BollingerY and BollingerX overlay moving-average Bollinger band envelopes on a time series.
+links:
+  api: /api/marks#BollingerY
 ---
 
 Bollinger Bands are a [useful analysis tool](https://www.investopedia.com/terms/b/bollingerbands.asp) for investors and stock traders. They are named after John Bollinger who invented them in the 1980s.

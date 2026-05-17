@@ -1,5 +1,13 @@
 ---
 title: Text mark
+description: Text mark places a label at each data point with full control over position, alignment, font size, and rotation.
+examples:
+  - text/beeswarm-country-codes
+  - text/frame-anchor
+  - text/css-var
+links:
+  examples: /examples/text
+  api: /api/marks#Text
 ---
 
 [API Reference](/api/marks#Text)

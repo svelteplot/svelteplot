@@ -1,10 +1,15 @@
 ---
 title: Density mark
+description: The Density mark estimates a kernel density and draws the result as isolines, filled bands, or a smoothed area.
+examples:
+  - density/basic
+  - density/colored-isolines
+  - density/grouped
+links:
+  examples: /examples/density
+  api: /api/marks#Density
+addedIn: '0.14.0'
 ---
-
-:::info
-added in 0.14.0
-:::
 
 The **density mark** estimates and renders a [two-dimensional kernel density](https://en.wikipedia.org/wiki/Multivariate_kernel_density_estimation) from scatter data. It uses a Gaussian kernel applied to data projected into pixel space, then draws [iso-density contours](https://en.wikipedia.org/wiki/Contour_line) using the marching-squares algorithm.
 
@@ -39,8 +44,6 @@ For one-dimensional kernel density estimates, see the [densityX](/transforms/den
     opacity={0.4} />
 </Plot>
 ```
-
-[API Reference](/api/marks#Density)
 
 Pass `data` with `x` and `y` channels. The mark computes density across the plot area and draws contour lines at automatically-chosen levels:
 

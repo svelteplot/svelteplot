@@ -1,10 +1,17 @@
 ---
 title: Contour mark
+description: Contour mark draws isolines (or filled bands) over a sampled or interpolated scalar field.
+examples:
+  - contour/volcano
+  - contour/filled-bands
+  - contour/weather
+  - contour/interactive
+  - contour/sampled
+links:
+  examples: /examples/contour
+  api: /api/marks#Contour
+addedIn: '0.13.0'
 ---
-
-:::info
-added in 0.13.0
-:::
 
 [API Reference](/api/marks#Contour)
 

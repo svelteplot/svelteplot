@@ -1,5 +1,15 @@
 ---
 title: Box mark
+description: BoxY and BoxX draw box-and-whisker plots summarising a distribution's median, quartiles, and outliers.
+examples:
+  - box/box-y
+  - box/box-y-sorted
+  - box/box-x
+  - box/box-x-faceted
+  - box/box-y-facet
+links:
+  examples: /examples/box
+  api: /api/marks#BoxY
 ---
 
 Box marks are a compound mark consisting of a bar, rule, dots and tick marks (see options)

@@ -1,8 +1,17 @@
 ---
 title: Dot mark
+description: The dot mark draws circles or other symbols positioned in x and y as in a scatterplot.
+examples:
+  - dot/1-colored-scatterplot
+  - dot/2-symbol-channel
+  - dot/3-dot-plot
+  - dot/beeswarm-bubbles
+  - dot/jitter
+links:
+  examples: /examples/dot
+  api: /api/marks#Dot  
 ---
 
-The dot mark draws circles or other symbols positioned in **x** and **y** as in a scatterplot.
 For example, the chart below shows the roughly-inverse relationship between car horsepower in
 y↑ and fuel efficiency in miles per gallon in x→.
 

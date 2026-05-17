@@ -1,5 +1,12 @@
 ---
 title: Link mark
+description: Link mark draws a straight line segment between two explicit (x1, y1) → (x2, y2) positions in data space.
+examples:
+  - link/metros
+  - link/spherical-link
+links:
+  examples: /examples/link
+  api: /api/marks#Link
 ---
 
 [API Reference](/api/marks#Link)

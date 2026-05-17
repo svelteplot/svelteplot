@@ -1,5 +1,13 @@
 ---
 title: Trail mark
+description: Trail mark draws a path like Line but encodes a third variable as varying stroke width — creating a tapering trace that reveals magnitude over time or space.
+examples:
+  - trail/napoleon
+  - trail/countries
+  - trail/curves
+links:
+  examples: /examples/trail
+  api: /api/marks#Trail
 ---
 
 [API Reference](/api/marks#Trail)

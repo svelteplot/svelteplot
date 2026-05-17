@@ -1,5 +1,15 @@
 ---
 title: Brush mark
+description: Brush marks (BrushX, BrushY, Brush) let users interactively select a 1D or 2D range on the plot.
+examples:
+  - brush/filter
+  - brush/overview-detail
+  - brush/zoomable-scatter
+  - brush/constrained
+  - brush/walmart-timeline
+links:
+  examples: /examples/brush
+  api: /api/marks#Brush
 ---
 
 The **Brush** mark is useful for interactively selecting data. In contrast to the [Pointer](/marks/pointer) mark, the Brush mark is not bound to data; it will simply let you drag a rectangular selection and bind to the `brush` property or listen to brush events.

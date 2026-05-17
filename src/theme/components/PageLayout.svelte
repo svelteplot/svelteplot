@@ -6,10 +6,13 @@
     import themeOptions from 'virtual:sveltepress/theme-default';
     import EditPage from './EditPage.svelte';
     import Home from './Home.svelte';
+    import InlineExamplesGrid from '$shared/docs/InlineExamplesGrid.svelte';
     import HeroImage from './home/HeroImage.svelte';
     import LastUpdate from './LastUpdate.svelte';
     import { anchors, pages, showHeader, sidebar } from './layout';
     import PageSwitcher from './PageSwitcher.svelte';
+    import { resolve } from '$app/paths';
+    import ActionButton from './ActionButton.svelte';
 
     const routeId = $derived(page.route.id);
 
@@ -67,9 +70,40 @@
             {#if title}
                 <h1 class="page-title">
                     {title}
+                    {#if fm.addedIn}
+                        <a
+                            class="version-link admonition-info"
+                            href="https://github.com/svelteplot/svelteplot/releases/tag/v{fm.addedIn}"
+                            target="_blank"
+                            title="Added in version {fm.addedIn}">
+                            <span class="admonition-content">^{fm.addedIn}</span>
+                        </a>
+                    {/if}
                 </h1>
             {/if}
+            {#if description}
+                <p class="page-description">
+                    {description}
+                </p>
+            {/if}
+            {#if fm.examples?.length}
+                <InlineExamplesGrid keys={fm.examples} />
+            {/if}
+            {#if fm.links}
+                <div class="links">
+                    {#if fm.links?.examples}
+                        <ActionButton
+                            small
+                            to={resolve(fm.links?.examples)}
+                            label="More examples" />
+                    {/if}
+                    {#if fm.links?.api}
+                        <ActionButton small to={resolve(fm.links?.api)} label="API reference" />
+                    {/if}
+                </div>
+            {/if}
             {@render children?.()}
+
             <div class="meta" class:without-edit-link={!themeOptions.editLink}>
                 {#if themeOptions.editLink}
                     <EditPage {pageType} />
@@ -124,6 +158,10 @@
     :global(.theme-default--page-layout img) {
         --at-apply: 'max-w-full';
     }
+    .links {
+        --at-apply: 'flex gap-4 mt-4 mb-8';
+    }
+
     .content {
         --at-apply: 'sm:w-[45vw] mx-auto pb-8 sm:pb-28 w-[90vw]';
     }

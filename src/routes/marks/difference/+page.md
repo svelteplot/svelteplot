@@ -1,5 +1,13 @@
 ---
 title: Difference mark
+description: DifferenceY shades the area between two lines in contrasting colors above and below — for highlighting when one series exceeds the other.
+examples:
+  - difference/anomaly-baseline
+  - difference/trade-balance
+  - difference/apple-yoy
+links:
+  examples: /examples/difference
+  api: /api/marks#DifferenceY
 ---
 
 The **difference mark** can be used to fill the areas between a _metric_ line and a _comparison_ line/value colored based whether or not the difference is positive or negative.

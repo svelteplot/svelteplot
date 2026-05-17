@@ -1,5 +1,13 @@
 ---
 title: Rule mark
+description: RuleX and RuleY draw full-width horizontal or vertical lines across the plot — for baselines, thresholds, and reference markers.
+examples:
+  - rule/y-baseline
+  - rule/min-max
+  - rule/data-rules
+links:
+  examples: /examples/rule
+  api: /api/marks#RuleY
 ---
 
 Rules can be used for highlighting certain axis values but they can also be used to show data. Rules come in two variants: [RuleX](#RuleX) for vertical lines (located along the x scale) and [RuleY](#RuleY) for horizontal lines (located along the y scale).

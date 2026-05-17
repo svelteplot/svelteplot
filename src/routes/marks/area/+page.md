@@ -1,5 +1,15 @@
 ---
 title: Area mark
+description: AreaY and AreaX fill the region between a baseline and a line — used for time-series areas, stacked charts, and distributions.
+examples:
+  - area/area-y
+  - area/streamgraph
+  - area/ridgeline
+  - area/violin
+  - area/stacked-density
+links:
+  examples: /examples/area
+  api: /api/marks#AreaY
 ---
 
 <script lang="ts">

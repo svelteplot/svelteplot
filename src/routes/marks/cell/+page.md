@@ -1,5 +1,14 @@
 ---
 title: Cell mark
+description: Cell mark draws a colored rectangle for each (x, y) category pair — the building block for heatmaps and calendar plots.
+examples:
+  - cell/simpsons
+  - cell/temperatures
+  - cell/temperatures-threshold
+  - cell/cell-canvas
+links:
+  examples: /examples/cell
+  api: /api/marks#Cell
 ---
 
 The **cell mark** draws rectangles positioned in two ordinal dimensions. Hence, the plot’s _x_ and _y_ scales are [band scales](https://observablehq.com/plot/features/scales). Cells typically also have a **fill** color encoding.

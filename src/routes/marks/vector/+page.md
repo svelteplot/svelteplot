@@ -1,5 +1,13 @@
 ---
 title: Vector mark
+description: Vector mark draws a scaled, rotated arrow at each data point — used for wind fields, flow maps, and other directional or magnitude data.
+examples:
+  - vector/wind
+  - vector/shift-map
+  - vector/spike-map
+links:
+  examples: /examples/vector
+  api: /api/marks#Vector
 ---
 
 The vector mark lets you place shapes (like arrows) on your plot. If you want to connect start and end points with arrows, consider using the [arrow](/marks/arrow) mark instead.

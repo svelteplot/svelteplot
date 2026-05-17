@@ -1,5 +1,13 @@
 ---
 title: Grid mark
+description: GridX and GridY draw reference lines at tick positions — use them directly to style, clip, or restrict grid lines beyond what scale options allow.
+examples:
+  - grid/clipped-gridlines
+  - grid/gridlines-x2
+  - grid/gridlines-y2
+links:
+  examples: /examples/grid
+  api: /api/marks#GridX
 ---
 
 The Grid mark renders the faint grid lines in the background of your plots (the black tick lines and tick labels are rendered by the [Axis](/marks/axis) marks). You can let SveltePlot add the grids automatically for you by setting the `grid` flag on the Plot:

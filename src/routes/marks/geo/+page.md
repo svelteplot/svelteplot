@@ -1,5 +1,14 @@
 ---
 title: Geo mark
+description: Geo mark renders GeoJSON geometries using a cartographic projection — the foundation for choropleth maps and geographic visualisations.
+examples:
+  - geo/us-choropleth
+  - geo/earthquakes
+  - geo/custom-proj
+  - geo/inset-aspect
+links:
+  examples: /examples/geo
+  api: /api/marks#Geo
 ---
 
 <script>
