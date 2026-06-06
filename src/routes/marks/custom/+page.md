@@ -24,7 +24,7 @@ You can use the custom mark to render your own marks. You can pass data to the c
   <CustomMark
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species">
     {#snippet mark({ record })}
       <g transform="translate({[record.x, record.y]})">
@@ -41,7 +41,7 @@ You can use the custom mark to render your own marks. You can pass data to the c
 <CustomMark
   data={penguins}
   x="bill_length_mm"
-  y="culmen_depth_mm"
+  y="bill_depth_mm"
   stroke="species">
   {#snippet mark({ record })}
     <g transform="translate({[record.x, record.y]})">
@@ -59,7 +59,7 @@ We can also pass the `marks` (plural) snippet to draw all symbols at once:
 <CustomMark
   data={penguins}
   x="bill_length_mm"
-  y="culmen_depth_mm">
+  y="bill_depth_mm">
   {#snippet marks({ records })}
     <polyline
       points={records.map((r) => [r.x, r.y]).join(' ')} />
@@ -79,7 +79,7 @@ We can also pass the `marks` (plural) snippet to draw all symbols at once:
   <CustomMark
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm">
+    y="bill_depth_mm">
     {#snippet marks({ records })}
       <polyline
         stroke="currentColor"
@@ -177,14 +177,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       data={penguins}
       x="bill_length_mm"
-      y="culmen_depth_mm">
+      y="bill_depth_mm">
       {#snippet children({ datum })}
         <div
           style="width:80px;height: 2em;position:absolute;top:-1em;left:-40px; text-align:center">
@@ -201,14 +201,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       data={penguins}
       x="bill_length_mm"
-      y="culmen_depth_mm">
+      y="bill_depth_mm">
       {#snippet children({ datum })}
         <div
           style="width:80px;height: 2em;position:absolute;top:-1em;left:-40px; text-align:center">
@@ -244,14 +244,14 @@ You can arrange custom HTML elements in the plot using the `CustomMarkHTML` mark
   <Dot
     {data}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <CustomMarkHTML
       {data}
       x="bill_length_mm"
-      y="culmen_depth_mm">
+      y="bill_depth_mm">
       {#snippet children({ datum })}
         <div
           style:width="{datum.width}px"

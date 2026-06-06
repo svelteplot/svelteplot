@@ -49,14 +49,14 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <HTMLTooltip
       data={penguins}
       x="bill_length_mm"
-      y="culmen_depth_mm">
+      y="bill_depth_mm">
       {#snippet children({ datum })}
         <div class="tooltip">
           <div>Species: {datum.species}</div>
@@ -89,14 +89,14 @@ The `HTMLTooltip` mark allows you to display HTML content when users hover over 
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   {#snippet overlay()}
     <HTMLTooltip
       data={penguins}
       x="bill_length_mm"
-      y="culmen_depth_mm">
+      y="bill_depth_mm">
       {#snippet children({ datum })}
         <div class="tooltip">
           <div>Species: {datum.species}</div>
@@ -179,7 +179,7 @@ The [Brush](/marks/brush) mark allows users to select data by dragging a rectang
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
   <Brush bind:brush />

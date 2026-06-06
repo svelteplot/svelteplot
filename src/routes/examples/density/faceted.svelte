@@ -27,14 +27,14 @@
     <Density
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         stroke="density"
         thresholds={8}
         fx="species" />
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         r={1}
         fill={ds.isDark ? 'white' : 'black'}
         opacity={0.6}

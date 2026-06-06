@@ -26,13 +26,13 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         r={2}
         opacity={0.1} />
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fy="species"
         fx="sex" />
 </Plot>

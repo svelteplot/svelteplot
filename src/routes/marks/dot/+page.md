@@ -92,7 +92,7 @@ This example uses stroke color and mark shape/symbol to redundantly encode a cat
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="island" />
 </Plot>
@@ -119,9 +119,9 @@ max radius: <input
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     r={(d) =>
-      Math.pow(d.bill_length_mm * d.culmen_depth_mm, 4)}
+      Math.pow(d.bill_length_mm * d.bill_depth_mm, 4)}
     fill="sex" />
 </Plot>
 ```

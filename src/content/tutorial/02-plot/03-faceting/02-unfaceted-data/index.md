@@ -13,14 +13,14 @@ Add a second `<Dot>` before the existing one, without `fy`:
 +  <Dot
 +    {data}
 +    x="bill_length_mm"
-+    y="body_mass_g"
++    y="bill_depth_mm"
 +    fill="gray"
 +    opacity={0.3}
 +    r={2} />
   <Dot
     {data}
     x="bill_length_mm"
-    y="body_mass_g"
+    y="bill_depth_mm"
     fill="species"
     fy="island" />
 </Plot>

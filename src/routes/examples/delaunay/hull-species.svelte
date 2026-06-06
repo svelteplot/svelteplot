@@ -17,7 +17,7 @@
     <Hull
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         stroke="species"
         fill="species"
         fillOpacity={0.1}
@@ -25,7 +25,7 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="species"
         r={3} />
 </Plot>

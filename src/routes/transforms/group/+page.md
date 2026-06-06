@@ -199,14 +199,14 @@ Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ chann
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fx="species"
     opacity={0.35} />
   <RuleY
     {...groupZ(
       {
         data: penguins,
-        y: 'culmen_depth_mm',
+        y: 'bill_depth_mm',
         fx: 'species'
       },
       { y: 'mean' }
@@ -220,14 +220,14 @@ Groups on the _z_, _fill_, or _stroke_ channel as an additional _x_ or _y_ chann
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fx="species"
     opacity={0.35} />
   <RuleY
     {...groupZ(
       {
         data: penguins,
-        y: 'culmen_depth_mm',
+        y: 'bill_depth_mm',
         fx: 'species'
       },
       { y: 'mean' }

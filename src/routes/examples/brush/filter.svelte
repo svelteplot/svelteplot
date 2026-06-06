@@ -20,7 +20,7 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         opacity={brush.enabled ? 0.3 : 1}
         stroke={(d) => (brush.enabled ? 'gray' : d.species)}
         symbol="species" />
@@ -31,10 +31,10 @@
             filter={(d) =>
                 d.bill_length_mm >= brush.x1 &&
                 d.bill_length_mm <= brush.x2 &&
-                d.culmen_depth_mm >= brush.y1 &&
-                d.culmen_depth_mm <= brush.y2}
+                d.bill_depth_mm >= brush.y1 &&
+                d.bill_depth_mm <= brush.y2}
             x="bill_length_mm"
-            y="culmen_depth_mm"
+            y="bill_depth_mm"
             stroke="species"
             symbol="species" />
     {/if}

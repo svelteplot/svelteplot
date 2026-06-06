@@ -22,7 +22,7 @@ This means there is no "scatterplot" component in SveltePlot, but you can use th
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
 </Plot>
@@ -33,7 +33,7 @@ This means there is no "scatterplot" component in SveltePlot, but you can use th
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species"
     symbol="species" />
 </Plot>

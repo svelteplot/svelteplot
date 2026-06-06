@@ -132,7 +132,7 @@ Setting Global and Component Defaults
     data={penguins}
     x="bill_length_mm"
     fx="species"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="species" />
 </Plot>
 ```

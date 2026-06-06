@@ -17,13 +17,13 @@
     <DelaunayLink
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         stroke="body_mass_g"
         strokeOpacity={0.55} />
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill
         r={2} />
 </Plot>

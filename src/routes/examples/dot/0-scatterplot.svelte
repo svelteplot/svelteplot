@@ -15,5 +15,5 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm" />
+        y="bill_depth_mm" />
 </Plot>

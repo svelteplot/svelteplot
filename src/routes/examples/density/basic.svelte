@@ -21,12 +21,12 @@
     <Density
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         thresholds={12} />
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         r={1.5}
         opacity={0.4} />
 </Plot>

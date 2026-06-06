@@ -633,7 +633,7 @@ schemes are included in SveltePlot:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -643,7 +643,7 @@ schemes are included in SveltePlot:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -730,7 +730,7 @@ If you want to map custom colors to your data, you need to pass them via the `sc
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -745,7 +745,7 @@ If you want to map custom colors to your data, you need to pass them via the `sc
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -769,7 +769,7 @@ Note that the colors are picked in the order the categories appear in your datas
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="sex" />
 </Plot>
 ```
@@ -785,7 +785,7 @@ Note that the colors are picked in the order the categories appear in your datas
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="sex" />
 </Plot>
 ```
@@ -813,7 +813,7 @@ As a simpler syntax you can also pass domain -> scheme mapping as object:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="sex" />
 </Plot>
 ```
@@ -831,7 +831,7 @@ As a simpler syntax you can also pass domain -> scheme mapping as object:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="sex" />
 </Plot>
 ```
@@ -866,7 +866,7 @@ Another very common way to color plots is to map numbers to colors. If you simpl
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -887,7 +887,7 @@ Another very common way to color plots is to map numbers to colors. If you simpl
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -959,7 +959,7 @@ The default color scheme shown above is called `turbo`, but we can change it to 
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -993,7 +993,7 @@ You can also interpolate between custom colors of your liking by passing them as
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1009,7 +1009,7 @@ You can also interpolate between custom colors of your liking by passing them as
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1032,7 +1032,7 @@ You may wonder why some of the color schemes don't use their entire range (e.g.,
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1042,7 +1042,7 @@ You may wonder why some of the color schemes don't use their entire range (e.g.,
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1067,7 +1067,7 @@ You can disable this by passing `type: 'linear'` to the color options:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1083,7 +1083,7 @@ You can disable this by passing `type: 'linear'` to the color options:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1112,7 +1112,7 @@ Alternatively you can change the center point of the diverging scale using the `
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1124,7 +1124,7 @@ Alternatively you can change the center point of the diverging scale using the `
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1301,7 +1301,7 @@ Again, you can use your custom colors using the `scheme` option. If you omit the
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1317,7 +1317,7 @@ Again, you can use your custom colors using the `scheme` option. If you omit the
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1347,7 +1347,7 @@ If you also pass the `n` option to set a different number of output values, Svel
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```
@@ -1364,7 +1364,7 @@ If you also pass the `n` option to set a different number of output values, Svel
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="body_mass_g" />
 </Plot>
 ```

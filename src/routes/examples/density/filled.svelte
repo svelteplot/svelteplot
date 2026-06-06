@@ -28,7 +28,7 @@
     <Density
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="density"
         canvas
         stroke="none"
@@ -36,7 +36,7 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill={ds.isDark ? 'white' : 'black'}
         r={1.5}
         opacity={0.5} />

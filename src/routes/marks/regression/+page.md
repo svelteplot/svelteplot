@@ -97,16 +97,16 @@ Sometimes it's useful to look at regression within sub-groups of a dataset, sinc
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="species" />
   <RegressionY
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
   <RegressionY
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -124,20 +124,20 @@ You can combine the regression mark with grouping _and_ faceting:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="#999"
     opacity={0.2} />
   <Dot
     data={penguins}
     x="bill_length_mm"
     fx="species"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="species" />
   <RegressionY
     data={penguins}
     x="bill_length_mm"
     fx="species"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```
@@ -147,20 +147,20 @@ You can combine the regression mark with grouping _and_ faceting:
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="#999"
     opacity={0.2} />
   <Dot
     data={penguins}
     x="bill_length_mm"
     fx="species"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="species" />
   <RegressionY
     data={penguins}
     x="bill_length_mm"
     fx="species"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="species" />
 </Plot>
 ```

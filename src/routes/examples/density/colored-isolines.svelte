@@ -21,7 +21,7 @@
     <Density
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         stroke="density"
         thresholds={15} />
 </Plot>

@@ -12,7 +12,7 @@
 
     type PenguinRow = {
         bill_length_mm: number;
-        culmen_depth_mm: number;
+        bill_depth_mm: number;
         species: string;
     };
 
@@ -29,7 +29,7 @@
     );
     const fullDomainY = extent(
         penguins,
-        (d) => d.culmen_depth_mm
+        (d) => d.bill_depth_mm
     );
 
     let domainX: [number, number] | [undefined, undefined] =
@@ -60,12 +60,12 @@
         }}
         y={{
             domain: domainYT.current as any,
-            label: 'culmen_depth_mm'
+            label: 'bill_depth_mm'
         }}>
         <Dot
             data={penguins as any}
             x="bill_length_mm"
-            y="culmen_depth_mm"
+            y="bill_depth_mm"
             stroke="species"
             symbol="species" />
         {#if !isZoomedIn}

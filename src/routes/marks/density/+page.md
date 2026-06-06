@@ -32,13 +32,13 @@ For one-dimensional kernel density estimates, see the [densityX](/transforms/den
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     thresholds={10} />
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="currentColor"
     r={1.5}
     opacity={0.4} />
@@ -52,7 +52,7 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
 </Plot>
 ```
 
@@ -68,7 +68,7 @@ Pass `data` with `x` and `y` channels. The mark computes density across the plot
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
 </Plot>
 ```
 
@@ -89,7 +89,7 @@ You can create separate densities by grouping via stroke or `z` channel:
     data={penguins}
     stroke="species"
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
 </Plot>
 ```
 
@@ -99,7 +99,7 @@ You can create separate densities by grouping via stroke or `z` channel:
     data={penguins}
     stroke="species"
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
 </Plot>
 ```
 
@@ -110,7 +110,7 @@ Set `fill="density"` to fill each contour band by its estimated density using th
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     stroke="none"
     thresholds={10} />
@@ -135,7 +135,7 @@ Set `fill="density"` to fill each contour band by its estimated density using th
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     stroke="none"
     thresholds={10} />
@@ -158,7 +158,7 @@ Use `stroke="density"` to color each isoline by its density level:
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     stroke="density"
     thresholds={15} />
 </Plot>
@@ -190,7 +190,7 @@ The `bandwidth` option (default 20) controls the Gaussian kernel's standard devi
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     stroke="none"
     thresholds={10}
@@ -225,7 +225,7 @@ Control the number and placement of density levels with `thresholds`:
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     {thresholds} />
 </Plot>
 ```
@@ -239,7 +239,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     stroke="none"
     fy="species" />
@@ -258,7 +258,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
   <Density
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     fill="density"
     stroke="none"
     thresholds={8}
@@ -266,7 +266,7 @@ The density mark supports faceting via `fx` and `fy`. Each facet panel computes 
   <Dot
     data={penguins}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     r={1.5}
     symbol="plus"
     fx="species" />
@@ -304,7 +304,7 @@ Use `weight` to give different data points different contributions to the densit
   <Density
     {data}
     x="bill_length_mm"
-    y="culmen_depth_mm"
+    y="bill_depth_mm"
     weight={(d) =>
       d.sex === 'FEMALE' ? 1 - skew : 1 + skew}
     thresholds={10} />
@@ -313,6 +313,6 @@ Use `weight` to give different data points different contributions to the densit
     fill="sex"
     r={2}
     x="bill_length_mm"
-    y="culmen_depth_mm" />
+    y="bill_depth_mm" />
 </Plot>
 ```

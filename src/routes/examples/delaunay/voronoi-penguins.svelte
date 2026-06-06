@@ -17,14 +17,14 @@
     <Voronoi
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="species"
         fillOpacity={0.3}
         stroke="var(--svelteplot-bg)" />
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="species"
         r={2} />
     <Frame />

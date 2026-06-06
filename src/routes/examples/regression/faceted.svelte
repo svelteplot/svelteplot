@@ -15,19 +15,19 @@
     <Dot
         data={penguins}
         x="bill_length_mm"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="#999"
         opacity={0.2} />
     <Dot
         data={penguins}
         x="bill_length_mm"
         fx="species"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         fill="species" />
     <RegressionY
         data={penguins}
         x="bill_length_mm"
         fx="species"
-        y="culmen_depth_mm"
+        y="bill_depth_mm"
         stroke="species" />
 </Plot>
