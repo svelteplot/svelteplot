@@ -1,8 +1,5 @@
 <script>
-  import {
-    Plot,
-    Dot
-  } from 'svelteplot';
+  import { Plot, Dot } from 'svelteplot';
   import data from './penguins.csv';
 
   const scheme = {

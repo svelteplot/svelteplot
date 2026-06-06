@@ -28,7 +28,7 @@ const config = {
             files: 'src/content/tutorial/**/*.svelte',
             options: {
                 tabWidth: 2,
-                printWidth: 40
+                printWidth: 60
             }
         },
         {

@@ -1,8 +1,5 @@
 <script>
-  import {
-    Plot,
-    Dot
-  } from 'svelteplot';
+  import { Plot, Dot } from 'svelteplot';
   import data from './penguins.csv';
 
   const scheme = {
@@ -14,8 +11,7 @@
 <label>
   Island:
   <select bind:value={island}>
-    <option value="all"
-      >All islands</option>
+    <option value="all">All islands</option>
     <option>Biscoe</option>
     <option>Dream</option>
     <option>Torgersen</option>
@@ -32,9 +28,7 @@
   <Dot
     data={island === 'all'
       ? data
-      : data.filter(
-          (d) => d.island === island
-        )}
+      : data.filter((d) => d.island === island)}
     x="bill_length_mm"
     y="body_mass_g"
     fill="species" />

@@ -1,0 +1,13 @@
+<script>
+  import { Plot, Dot } from 'svelteplot';
+  import data from './penguins.csv';
+</script>
+
+<Plot frame>
+  <Dot
+    {data}
+    x="bill_length_mm"
+    y="body_mass_g"
+    fill="species"
+    fy="species" />
+</Plot>
