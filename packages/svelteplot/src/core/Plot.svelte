@@ -5,7 +5,7 @@
     you want to reduce the footprint of the plot to the bare minimum.
 
     Keep in mind that you will have to create your own scales if you're using
-    this component. 
+    this component.
 -->
 <script lang="ts">
     import { setContext } from 'svelte';
@@ -118,8 +118,8 @@
         underlay,
         children,
         facetAxes,
-        testid,
         facet,
+        testid,
         class: className = '',
         css = DEFAULTS.css,
         width: fixedWidth,
