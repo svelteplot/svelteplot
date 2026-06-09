@@ -8,11 +8,12 @@
     import Viewer from '@sveltejs/repl/viewer';
     import { Workspace, type File, type Item } from '@sveltejs/repl/workspace';
     import type { PageProps } from './$types.js';
+    import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
     let { data }: PageProps = $props();
 
     const tree = $derived.by(() => {
-        const groups = new Map<
+        const groups = new SvelteMap<
             string,
             {
                 title: string;
@@ -34,18 +35,18 @@
     });
 
     let nav_open = $state(false);
-    let open_groups = $state(new Set([data.exercise.group]));
-    let open_chapters = $state(new Set([data.exercise.chapter]));
+    let open_groups = new SvelteSet([data.exercise.group]);
+    let open_chapters = new SvelteSet([data.exercise.chapter]);
 
     function toggle_group(group: string) {
-        const next = new Set(open_groups);
+        const next = new SvelteSet(open_groups);
         if (next.has(group)) next.delete(group);
         else next.add(group);
         open_groups = next;
     }
 
     function toggle_chapter(chapter: string) {
-        const next = new Set(open_chapters);
+        const next = new SvelteSet(open_chapters);
         if (next.has(chapter)) next.delete(chapter);
         else next.add(chapter);
         open_chapters = next;
