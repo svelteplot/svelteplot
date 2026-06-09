@@ -99,6 +99,9 @@
                             y={record.y! - h * 0.5}
                             {preserveAspectRatio}
                             clip-path={record.r !== undefined ? `circle(${record.r}px)` : null}
+                            filter={resolveProp(options.svgFilter, record.datum, undefined) as
+                                | string
+                                | undefined}
                             width={w}
                             height={h}
                             >{#if title}<title>{resolveProp(title, record.datum, '')}</title

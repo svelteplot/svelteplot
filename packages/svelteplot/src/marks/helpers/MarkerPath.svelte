@@ -135,6 +135,7 @@
         marker-end={markerEnd || marker ? `url(#marker-${markerEnd ? 'end-' : ''}${id})` : null}
         {d}
         {style}
+        filter={resolveProp(mark.options.svgFilter as any, datum, undefined) as string | undefined}
         {@attach addEventHandlers({
             plot,
             options: mark.options,

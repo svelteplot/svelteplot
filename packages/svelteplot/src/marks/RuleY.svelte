@@ -86,6 +86,9 @@
                         transform="translate(0, {d.y})"
                         {style}
                         class={[styleClass]}
+                        filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                            | string
+                            | undefined}
                         x1={(inset || insetLeft) +
                             (d.x1 != null ? d.x1 : plot.options.marginLeft + d.dx)}
                         x2={(d.x2 != null

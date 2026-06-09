@@ -152,6 +152,11 @@
                                 ]}
                                 clip-path={options.clipPath}
                                 d={areaPath(areaData)}
+                                filter={resolveProp(
+                                    options.svgFilter,
+                                    datum.datum,
+                                    undefined
+                                ) as string | undefined}
                                 {@attach addEventHandlers({
                                     plot,
                                     options,

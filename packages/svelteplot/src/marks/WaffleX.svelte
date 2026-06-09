@@ -106,7 +106,11 @@
                         <rect {style} class={styleClass} {...rect} />
                     {/if}
                 </pattern>
-                <path {...path} />
+                <path
+                    {...path}
+                    filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                        | string
+                        | undefined} />
             </g>
         {/each}
     {/snippet}

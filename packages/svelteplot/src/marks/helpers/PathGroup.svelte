@@ -94,7 +94,11 @@
                 'stroke',
                 usedScales
             )}
-            <path d={path} class={styleClass} {style} />
+            <path
+                d={path}
+                class={styleClass}
+                {style}
+                filter={resolveProp(args.svgFilter, datum, undefined) as string | undefined} />
         {/each}
     </g>
 {/if}

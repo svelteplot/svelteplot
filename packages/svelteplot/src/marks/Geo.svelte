@@ -23,8 +23,6 @@
          * radius for point features
          */
         r?: ChannelAccessor<Datum>;
-        /** SVG filter attribute applied to each geo path element */
-        svgFilter?: ConstantAccessor<string | undefined, Datum>;
     }
     import type {
         DataRecord,

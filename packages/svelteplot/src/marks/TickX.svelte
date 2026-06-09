@@ -108,6 +108,9 @@
                                 plot,
                                 'stroke'
                             )}
+                            filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                                | string
+                                | undefined}
                             y1={y1 + inset + tickOffset}
                             y2={y2 - inset - tickOffset} />
                     {/if}

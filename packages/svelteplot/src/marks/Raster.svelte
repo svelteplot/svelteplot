@@ -115,6 +115,8 @@
         ...options
     }: RasterMarkProps = $derived({ ...DEFAULTS, ...markProps });
 
+    const svgFilter = $derived((markProps as any).svgFilter as string | undefined);
+
     const plot = usePlot();
 
     /** No data: fill/fillOpacity are (x,y) functions */
@@ -420,6 +422,7 @@
                 preserveAspectRatio="none"
                 clip-path={options.clipPath}
                 image-rendering={imageRendering}
+                filter={svgFilter}
                 href={result.canvas.toDataURL()} />
         {/if}
     {/snippet}

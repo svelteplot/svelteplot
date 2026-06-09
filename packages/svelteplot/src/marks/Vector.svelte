@@ -137,6 +137,9 @@
                                   ? `translate(0, ${d.length as number})`
                                   : `translate(0, ${(d.length as number) / 2})`}"
                             {style}
+                            filter={resolveProp(args.svgFilter, d.datum as any, undefined) as
+                                | string
+                                | undefined}
                             {@attach addEventHandlers({
                                 plot,
                                 options: args as any,

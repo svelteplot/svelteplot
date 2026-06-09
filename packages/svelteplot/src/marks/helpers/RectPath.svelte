@@ -117,6 +117,7 @@ Helper component for rendering rectangular marks in SVG
             )}
             class={[styleClass, className]}
             {style}
+            filter={resolveProp(options.svgFilter, datum?.datum, undefined) as string | undefined}
             {@attach addEventHandlers({
                 plot,
                 options,
@@ -129,6 +130,7 @@ Helper component for rendering rectangular marks in SVG
             height={height - insetTop - insetBottom}
             class={[styleClass, className]}
             {style}
+            filter={resolveProp(options.svgFilter, datum?.datum, undefined) as string | undefined}
             {@attach addEventHandlers({
                 plot,
                 options,

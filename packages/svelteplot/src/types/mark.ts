@@ -249,6 +249,8 @@ export type BaseMarkProps<T = DataRecord> = Partial<{
     cursor: ConstantAccessor<CSS.Property.Cursor, T>;
     /** tooltip text shown in an SVG <title> element when provided */
     title: ConstantAccessor<string, T>;
+    /** SVG filter attribute applied to each geo path element */
+    svgFilter?: ConstantAccessor<string | undefined, T>;
 }>;
 
 export type LinkableMarkProps<T> = {
