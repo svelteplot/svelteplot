@@ -77,22 +77,25 @@ export function shikiDiffNotation(options: ShikiDiffNotationOptions = {}): Shiki
                     return line;
                 }
 
-                // Inline: strip +++text+++ / ---text--- markers and record decorations
+                // Inline: strip +++text+++ / ---text--- markers and record decorations.
+                // Process --- first so that +++ positions are computed against the
+                // already-stripped text (correct offsets when both appear on one line).
+                if (line.includes('---')) {
+                    line = processInlineMarkers(
+                        line,
+                        lineIndex,
+                        '---',
+                        classInlineRemove,
+                        decorations
+                    );
+                    hasDiff = true;
+                }
                 if (line.includes('+++')) {
                     line = processInlineMarkers(
                         line,
                         lineIndex,
                         '+++',
                         classInlineAdd,
-                        decorations
-                    );
-                    hasDiff = true;
-                } else if (line.includes('---')) {
-                    line = processInlineMarkers(
-                        line,
-                        lineIndex,
-                        '---',
-                        classInlineRemove,
                         decorations
                     );
                     hasDiff = true;
