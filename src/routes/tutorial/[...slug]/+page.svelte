@@ -161,7 +161,7 @@
                 <div class="prose-nav">
                     <button class="nav-trigger" onclick={() => (nav_open = !nav_open)}>
                         <span class="nav-trigger-label">
-                            {data.exercise.group} / {data.exercise.chapter}
+                            {data.exercise.group} / {data.exercise.chapter} / {data.exercise.title}
                         </span>
                         <svg
                             class="nav-chevron"
@@ -245,7 +245,6 @@
                     {/if}
                 </div>
                 <div class="prose-inner">
-                    <h2>{data.exercise.title}</h2>
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                     {@html data.exercise.html}
                 </div>
@@ -330,6 +329,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        font-size: 1.2rem;
         background: var(--sk-bg-2);
         border-right: 1px solid var(--sk-border);
         overflow: hidden;

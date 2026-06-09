@@ -1,9 +1,24 @@
 # Tutorial Plan
 
-Three levels map to the three directory levels: Part → Chapter → Lesson (REPL step).
+## Goal
 
-Structure mirrors SveltePlot's own organisation: **01-basics → 02-plot → 03-marks → 04-transforms**.
-Chapter and lesson ordering within 03-marks and 04-transforms is TBD.
+Give new users a **playful, interactive introduction** to the mental model behind SveltePlot — not a complete feature reference. The tutorial is done when a user understands *why* SveltePlot works the way it does and feels confident enough to read the docs on their own.
+
+**The tutorial's job:** concepts. **The docs' job:** every option on every mark.
+
+## Scope — what "done" looks like
+
+The basics tutorial is **already essentially complete**:
+
+- **01-basics** — getting-started + scales + axes/grids + faceting (≈15 lessons ✓)
+
+The marks and transforms chapters inside 01-basics are **deferred**. Instead of duplicating the docs, mark-specific tutorials (e.g. "working with the Line mark") should be linked directly from the relevant docs pages. This keeps the main tutorial focused and finite.
+
+**02-advanced** is a placeholder for future advanced tutorials.
+
+---
+
+Three levels map to the three directory levels: Part → Chapter → Lesson (REPL step).
 
 ---
 
@@ -12,7 +27,7 @@ Chapter and lesson ordering within 03-marks and 04-transforms is TBD.
 ### Directory layout
 
 ```
-<part>/                          e.g. 02-plot/
+<part>/                          e.g. 01-basics/
   index.md                       part title + optional intro text
   +assets/                       shared files for every lesson in the part
     src/lib/penguins.csv
@@ -41,53 +56,71 @@ When the user clicks **Solve**, only the `app-b/` files are merged on top of `a`
 
 ### Lesson prose conventions
 
-- Use `+++added lines+++` and `---removed lines---` inside fenced code blocks to produce diff highlighting.
+- Full-line add/remove: prefix the line with `+` or `-` (single character).
+- Inline add/remove: wrap spans with `+++text+++` and `---text---`; multiple pairs on the same line are fine.
 - Show the import change in a separate code block when a new component is imported.
 - Keep prose short: one sentence of context, one instruction, one explanation of why.
 
 ---
 
-## 01 · Basics
+## 01 · Basics (`01-basics/`)
 
-The idea of the basics chapter is to learn how to construct a plot with SveltePlot by combining the Plot component with marks and transforms. This could lightly introduce the concept of a grammar of graphics.
+### Getting started (`01-getting-started/`)
 
-- **Getting started**
-  - [x] Your first plot → `01-basics/01-getting-started/01-first-plot`
-  - [x] Marks — what they are, swapping one for another, introducing dot and line → `01-getting-started/02-marks`
-  - [x] Layering marks → `01-getting-started/03-layering`
-  - [x] Channels (x, y, fill) → `01-getting-started/04-channels`
-  - [x] Color channels — quantitative fill → `01-getting-started/05-color-channels`
-  - [x] Reactivity → `01-getting-started/08-reactivity` - add a slider for cutting a data array that's fed into a line
+The idea of the basics section is to learn how to construct a plot with SveltePlot by combining the Plot component with marks and transforms.
+
+- [x] Your first plot → `01-getting-started/01-first-plot`
+- [x] Marks — what they are, swapping one for another → `01-getting-started/02-marks`
+- [x] Layering marks → `01-getting-started/03-layering`
+- [x] Channels (x, y, fill) → `01-getting-started/04-channels`
+- [x] Color channels — quantitative fill → `01-getting-started/05-color-channels`
+- [x] Reactivity → `01-getting-started/08-reactivity`
+
+### Marks (`02-marks/`) — DEFERRED
+
+> See `## Marks — DEFERRED` below.
+
+### Transforms (`03-transforms/`) — DEFERRED
+
+Transforms are useful when your dataset is not in the shape you need it to be visualized. Technically, the BarY mark requires  
+
+> See `## Transforms — DEFERRED` below.
+
+### Scales (`04-scales/`)
+
+The Plot component collects data from all marks and determines common scales.
+
+- [x] Extending the domain — add `<RuleY y={0} />` → `04-scales/01-zero-rule`
+- [x] The zero option — `y={{ zero: true }}` → `04-scales/02-zero-option`
+- [x] Scale types — add `<RuleX x={new Date('2014-01-01')} />` → `04-scales/03-scale-type`
+
+### Axes & grids (`05-axes-grids/`)
+
+Axes are auto-added; they can be disabled or overridden.
+
+- [x] Implicit axes → `05-axes-grids/01-implicit-marks`
+- [x] Explicit axes → `05-axes-grids/02-explicit-axes`
+- [x] Implicit grids → `05-axes-grids/03-implicit-grids`
+- [x] Explicit grids → `05-axes-grids/04-explicit-grids`
+
+### Faceting (`06-faceting/`)
+
+Plots can be split into multiple panels via `fx`/`fy` channels.
+
+- [x] Faceting basics → `06-faceting/01-faceting`
+- [x] Unfaceted data in every panel → `06-faceting/02-unfaceted-data`
 
 ---
 
-## 02 · Plot
+## 02 · Advanced (`02-advanced/`) — PLACEHOLDER
 
-This chapter introduces the main purpose of the plot component that is to collect the data from the marks and determine common scales.
+No lessons yet. Future candidates: plot defaults, overlays/underlays, HTML tooltips, image underlays.
 
-- **Scales** - the plot component determines the scale types based on the data that are passed through all marks.
-  - [x] example with a line mark and AAPL dataset. Ask user to add a `<RuleY y={0} />` to see how the plot scales extend to zero automatically. → `01-scales/01-zero-rule`
-  - [x] Same AAPL plot, again without the RuleY. Ask user to extend axis to zero by adding scale option `y={{ zero: true }}` → `01-scales/02-zero-option`
-  - [x] Plot with AAPL line data and a `<RuleX x={2014} />`. This forces the x scale to be linear. The fix is to change to `<RuleX x={new Date('2014-01-01')} />` → `01-scales/03-scale-type`
-- **Faceting** - plots can be split up into multiple facets.
-  - [x] Faceting basics (fx/fy) → `01-basics/03-faceting/01-faceting`
-  - [ ] Mix unfaceted with faceted data → `01-basics/03-faceting/01-unfaceted-data` (use gray dots in background + overlay with faceted dots)
-- **Plot defaults** - Users can set plot properties using the `setPlotDefaults` hook which will applied to all nested plots and marks.
-- **Overlays and underlays** - This chapter explains how to add HTML layers to a plot using the `overlay` snippet:
-  - [ ] Overlay: link to the HTMLTooltip chapter
-  - [ ] Underlay, but an image background behind the plot
-- **Axes & grids** - Plots come with axes by default, those are implicitely added for convenience but they can also be disabled or added explicitely (covered in Marks > Axes)
-  - [x] Implicit axes — auto-added AxisX/AxisY → `01-basics/02-axes-grids/01-implicit-marks`
-  - [x] Explicit axes — overriding defaults → `02-axes-grids/02-explicit-axes`
-  - [x] Implicit grids → `02-axes-grids/03-implicit-grids`
-  - [x] Explicit grids — GridX/GridY, strokeDasharray, strokeOpacity → `02-axes-grids/04-explicit-grids`
-- **Title, Desc, Footer** - The Plot component is for convenience. It renders the `<figure>` element surrounding the svg. You can add a plot title.
+## Marks — DEFERRED (`01-basics/02-marks/`)
 
-## 03 · Marks
-
-We're introducing every mark components with a short tutorial. You can jump directly to the marks you want to learn more about. Marks receive data.
-
-QUESTION: do we really want to introduce all marks and their features? Isn't that duplicating the marks docs? Perhaps it should just touch on the different kinds of marks?
+> Not part of the main basics tutorial. Mark-specific tutorials (if written) should be short, self-contained, and linked from the corresponding docs page rather than chained into this tutorial. Answer to the question below: no.
+>
+> *Original question:* do we really want to introduce all marks and their features? Isn't that duplicating the marks docs? Perhaps it should just touch on the different kinds of marks?
 
 - SVG vs HTML
 - Canvas rendering
@@ -97,14 +130,14 @@ QUESTION: do we really want to introduce all marks and their features? Isn't tha
 -
 
 - **Marks** - Short introduction into the marks concept. Data, Channels, Style properties, common properties
-- **Dot** (`02-marks/01-dot/`)
+- **Dot** (`01-basics/02-marks/01-dot/`)
   - The dot mark is a very versatile mark. It can be used for scatterplots, dot plots, beeswarm plots (in combination with the [dodge transform]).
   - [x] Symbol channel — shapes for categories → `01-dot/01-symbol`
   - [x] DotX / DotY — one-dimensional strip → `01-dot/02-dotx-doty`
   - [x] Size channel — bubble chart (r channel) → `01-dot/03-size-channel`
   - [ ] Color & opacity
 
-- **Line** (`02-marks/03-line/`) — Apple stock (aapl.csv)
+- **Line** (`01-basics/02-marks/03-line/`) — Apple stock (aapl.csv)
   - The line mark is useful for showing change. It accepts an array of positions that get connected through a line.
   - [x] The Line mark — time series → `03-line/01-line`
   - [x] Sorting — sort transform for non-temporal x → `03-line/02-sorting` - the line mark connects the data points in the order they appear in thet data. If your data comes in the wrong order, you can sort it before passing it to the line mark
@@ -150,7 +183,7 @@ QUESTION: do we really want to introduce all marks and their features? Isn't tha
   - [ ] Frames can be added implicitely by setting the frame property on the Plot component. But you can also add frames explicitely using the frame mark.
   - [ ] Frames can be manipulated
   - [ ] You can use a frame mark for clipping
-- **Tick** (`02-marks/02-tick/`) — faceted by species (`fy="species"`)
+- **Tick** (`01-basics/02-marks/02-tick/`) — faceted by species (`fy="species"`)
   - [x] TickX / TickY — tick strip / rug plot → `02-tick/01-tickx-ticky`
 
 - **Text** (TBD)
@@ -193,7 +226,9 @@ QUESTION: do we really want to introduce all marks and their features? Isn't tha
 
 ---
 
-## 04 · Transforms
+## Transforms — DEFERRED (`01-basics/03-transforms/`)
+
+> Not part of the main basics tutorial. Same rationale as 03-marks above.
 
 Transforms transform data into a shape that
 
@@ -202,7 +237,7 @@ Transforms transform data into a shape that
   - [ ] Explicit stacking example
   - [ ] Normalized stacks (offset: normalize)
 
-- **Jitter** (`03-transforms/01-jitter/`) — Cars dataset
+- **Jitter** (`01-basics/03-transforms/01-jitter/`) — Cars dataset
   - [x] Jitter transform — spreading overlapping points → `01-jitter/01-jitter`
   - [x] Reactive jitter — width control via $state → `01-jitter/02-reactive-jitter`
 
@@ -228,3 +263,40 @@ Transforms transform data into a shape that
 - **Density** (TBD)
   - [ ] Density mark — kernel density estimation
   - [ ] Contour mark — density contour lines
+
+## Mark families
+
+Single x or y position:
+- Rule
+- Tick
+- Axis
+- Grid
+
+x/y Position only:
+- Dot
+- Vector (x/y + rotation + length)
+- Image
+- Text
+- Custom
+
+Start and end positions
+- Link
+- Arrow
+- Rect
+
+Geographical marks
+- Geo
+- Sphere
+- Graticule
+
+Multiple data points to one element:
+- Line
+- Area
+- Trail
+- Density
+- Contour
+
+Composite marks:
+- Difference
+- Box
+- Regression

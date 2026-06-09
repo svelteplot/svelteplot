@@ -2,7 +2,7 @@
 title: Facets
 ---
 
-Facets are a way to split a plot into multiple panels.
+Facets are a way to split a plot into multiple panels along one or two dimenstions. Each panel shows a subset of the data, making it easier to compare groups.
 
 ```svelte live
 <script>
@@ -11,28 +11,26 @@ Facets are a way to split a plot into multiple panels.
   const { penguins } = $derived(page.data.data);
 </script>
 
-{#if penguins.length}
-  <Plot
+<Plot
     frame
     grid
     height={600}
     inset={10}
     marginTop={35}
     marginBottom={40}>
-    <Dot
-      data={penguins}
-      x="bill_length_mm"
-      y="bill_depth_mm"
-      r={2}
-      opacity={0.1} />
-    <Dot
-      data={penguins}
-      x="bill_length_mm"
-      y="bill_depth_mm"
-      fy="species"
-      fx="sex" />
-  </Plot>
-{/if}
+<Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    r={2}
+    opacity={0.1} />
+<Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    fy="species"
+    fx="sex" />
+</Plot>
 ```
 
 ```svelte
@@ -89,7 +87,7 @@ Here's a histogram of Olympian athlete weights faceted by sex:
 
 Apply top-level facet options automatically:
 
-```svelte --live
+```svelte live
 <script>
   import { Plot, Dot, Frame } from 'svelteplot';
   import { page } from '$app/state';
@@ -158,3 +156,14 @@ Bar chart facets
     opacity="year" />
 </Plot>
 ```
+
+## Facet options
+
+You can pass options to the facet layout via the `facet` prop on `<Plot>`. It accepts an object with the following properties:
+
+- `data`: the dataset to facet by (required)
+- `x`: the column to facet by horizontally (optional)
+- `y`: the column to facet by vertically (optional)
+- `axis`: which axis to show for facet labels (`'top'`, `'bottom', `'left'`, `'right'`, or `false`) (optional)
+- `axisProps`: props to pass to the facet axis (optional)
+- `axisOptions`: options to pass to the facet axis (optional)
