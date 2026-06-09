@@ -17,7 +17,6 @@ The first step is to import the `Plot` and `Dot` componetents from `svelteplot`:
 
 The [Plot](/features/plot) component is the root componenent for all SveltePlot graphics. The [Dot](/marks/dot) component is one of the many marks you can use to display data (more on marks later).
 
-
 To put Plot and Dot into work we replace the paragraph with a `<Plot>` and a `<Dot>` mark inside it, to create a dot plot:
 
 ```svelte

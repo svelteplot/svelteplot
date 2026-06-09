@@ -11,6 +11,7 @@ const scheme = {
   Gentoo: 'orange'
 };
 ```
+
 and pass it to the `color` scale options:
 
 ```svelte

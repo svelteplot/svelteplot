@@ -2,7 +2,7 @@
 
 ## Goal
 
-Give new users a **playful, interactive introduction** to the mental model behind SveltePlot — not a complete feature reference. The tutorial is done when a user understands *why* SveltePlot works the way it does and feels confident enough to read the docs on their own.
+Give new users a **playful, interactive introduction** to the mental model behind SveltePlot — not a complete feature reference. The tutorial is done when a user understands _why_ SveltePlot works the way it does and feels confident enough to read the docs on their own.
 
 **The tutorial's job:** concepts. **The docs' job:** every option on every mark.
 
@@ -82,7 +82,7 @@ The idea of the basics section is to learn how to construct a plot with SveltePl
 
 ### Transforms (`03-transforms/`) — DEFERRED
 
-Transforms are useful when your dataset is not in the shape you need it to be visualized. Technically, the BarY mark requires  
+Transforms are useful when your dataset is not in the shape you need it to be visualized. Technically, the BarY mark requires
 
 > See `## Transforms — DEFERRED` below.
 
@@ -120,7 +120,7 @@ No lessons yet. Future candidates: plot defaults, overlays/underlays, HTML toolt
 
 > Not part of the main basics tutorial. Mark-specific tutorials (if written) should be short, self-contained, and linked from the corresponding docs page rather than chained into this tutorial. Answer to the question below: no.
 >
-> *Original question:* do we really want to introduce all marks and their features? Isn't that duplicating the marks docs? Perhaps it should just touch on the different kinds of marks?
+> _Original question:_ do we really want to introduce all marks and their features? Isn't that duplicating the marks docs? Perhaps it should just touch on the different kinds of marks?
 
 - SVG vs HTML
 - Canvas rendering
@@ -267,12 +267,14 @@ Transforms transform data into a shape that
 ## Mark families
 
 Single x or y position:
+
 - Rule
 - Tick
 - Axis
 - Grid
 
 x/y Position only:
+
 - Dot
 - Vector (x/y + rotation + length)
 - Image
@@ -280,16 +282,19 @@ x/y Position only:
 - Custom
 
 Start and end positions
+
 - Link
 - Arrow
 - Rect
 
 Geographical marks
+
 - Geo
 - Sphere
 - Graticule
 
 Multiple data points to one element:
+
 - Line
 - Area
 - Trail
@@ -297,6 +302,7 @@ Multiple data points to one element:
 - Contour
 
 Composite marks:
+
 - Difference
 - Box
 - Regression

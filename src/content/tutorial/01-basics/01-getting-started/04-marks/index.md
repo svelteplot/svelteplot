@@ -26,7 +26,7 @@ Then we add it and pass the same data and channels as we're passing to `Dot`:
     y="bill_length_mm"
     fill="species" />
 </Plot>
-````
+```
 
 Not all marks need data. `RuleX` draws a vertical reference line at a fixed x value. Again, just import it:
 

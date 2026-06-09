@@ -2,7 +2,7 @@
 title: Transforms
 ---
 
-Transforms are useful when your dataset is not in the shape you need it to be visualized. In the chart you see fruit sales numbers represented as bars ranging from zero to more than 2000 sales units. 
+Transforms are useful when your dataset is not in the shape you need it to be visualized. In the chart you see fruit sales numbers represented as bars ranging from zero to more than 2000 sales units.
 
 But if you take a look at the dataset, you'll find the largest number to be the Q1 Apple sales at 1448 units. How is that?
 
