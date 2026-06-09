@@ -2,16 +2,27 @@
 title: Channels
 ---
 
-The props on a mark — `x`, `y`, `r`, `fill`, `opacity`, and others — are called **channels**. A channel maps a data column (or a constant) to a visual property.
-
-Use the `fill` channel to color each dot by species:
+The props on a mark — `x`, `y`, `r`, `fill`, `opacity`, and others — are called **channels**. A channel maps a data column (or a constant) to a visual property. If we change the y channel to `bill_length_mm`, we turn the dot plot into a scatter plot:
 
 ```svelte
 <Plot>
   <Dot
     {data}
-    x="bill_length_mm"
-    y="body_mass_g"
+    x="body_mass_g"
+-    y="species"
++    y="bill_length_mm"
+    fill />
+</Plot>
+```
+
+It' stil the same `Dot` component, just a different channel assignment! Use the `fill` channel to color each dot by species:
+
+```svelte
+<Plot>
+  <Dot
+    {data}
+    x="body_mass_g"
+    y="bill_length_mm"
     +++fill="species"+++ />
 </Plot>
 ```

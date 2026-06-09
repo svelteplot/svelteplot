@@ -486,6 +486,11 @@
         font-size: 1.2rem;
     }
 
+    .prose-inner :global(a) {
+        color: var(--sk-fg-accent);
+        text-decoration: underline;
+    }
+
     .prose-inner :global(pre) {
         background: var(--sk-bg-3);
         border: 1px solid var(--sk-border);

@@ -4,5 +4,9 @@
 </script>
 
 <Plot>
-  <Dot {data} x="bill_length_mm" y="body_mass_g" />
+  <Dot
+    {data}
+    x="body_mass_g"
+    y="bill_length_mm"
+    fill="species" />
 </Plot>
