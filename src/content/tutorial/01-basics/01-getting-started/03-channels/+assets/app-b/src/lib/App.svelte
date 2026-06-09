@@ -3,7 +3,7 @@
   import data from './penguins.csv';
 </script>
 
-<Plot>
+<Plot color={{ legend: true }}>
   <Dot
     {data}
     x="body_mass_g"

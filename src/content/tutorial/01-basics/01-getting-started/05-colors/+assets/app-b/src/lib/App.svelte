@@ -1,9 +1,15 @@
 <script>
   import { Plot, Dot, Hull, RuleX } from 'svelteplot';
   import data from './penguins.csv';
+
+  const scheme = {
+    Adelie: 'hotpink',
+    Chinstrap: 'teal',
+    Gentoo: 'orange'
+  };
 </script>
 
-<Plot color={{ legend: true }}>
+<Plot color={{ legend: true, scheme }}>
   <Hull
     {data}
     x="body_mass_g"

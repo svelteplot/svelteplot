@@ -235,7 +235,19 @@ export async function load_exercise(slug: string): Promise<Exercise | null> {
         return out;
     }
 
-    const a = { ...only_lib(shared), ...only_lib(chapter_shared), ...only_lib(app_a_raw) };
+    // If app-a is absent, use the previous step's solved state (app-a + app-b) as
+    // the starting point — the REPL merges a and b, so this matches where prev ended.
+    const app_a_layer =
+        Object.keys(app_a_raw).length === 0 && index > 0
+            ? (() => {
+                  const prev = exercise_list[index - 1];
+                  const prev_a = get_files(`${prev.assetPrefix}app-a/`);
+                  const prev_b = get_files(`${prev.assetPrefix}app-b/`);
+                  return { ...only_lib(prev_a), ...only_lib(prev_b) };
+              })()
+            : only_lib(app_a_raw);
+
+    const a = { ...only_lib(shared), ...only_lib(chapter_shared), ...app_a_layer };
     const b = only_lib(app_b_raw);
 
     const prev = index > 0 ? exercise_list[index - 1] : null;

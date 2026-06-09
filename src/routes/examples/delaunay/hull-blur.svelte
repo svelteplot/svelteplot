@@ -1,9 +1,9 @@
 <script module lang="ts">
-    export const title = 'Hull (penguins by species)';
+    export const title = 'Hull blurred with filter';
     export const description =
         'Convex hulls drawn around each penguin species cluster, with fill and stroke colored by species.';
     export const data = { penguins: '/data/penguins.csv' };
-    export const sortKey = 10;
+    export const sortKey = 11;
 </script>
 
 <script lang="ts">
@@ -14,19 +14,24 @@
         $props();
 </script>
 
-<Plot grid>
+<Plot color={{ legend: true }}>
+    <defs>
+        <filter id="blur">
+            <feGaussianBlur
+                in="SourceGraphic"
+                stdDeviation="5" />
+        </filter>
+    </defs>
     <Hull
         data={penguins}
-        x="bill_length_mm"
-        y="bill_depth_mm"
-        stroke="species"
+        x="body_mass_g"
+        y="bill_length_mm"
         fill="species"
-        fillOpacity={0.1}
-        strokeWidth={2} />
+        svgFilter="url(#blur)"
+        opacity={0.2} />
     <Dot
         data={penguins}
-        x="bill_length_mm"
-        y="bill_depth_mm"
-        fill="species"
-        r={3} />
+        x="body_mass_g"
+        y="bill_length_mm"
+        fill="species" />
 </Plot>
