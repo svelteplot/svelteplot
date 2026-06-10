@@ -39,17 +39,13 @@
     let open_chapters = new SvelteSet([data.exercise.chapter]);
 
     function toggle_group(group: string) {
-        const next = new SvelteSet(open_groups);
-        if (next.has(group)) next.delete(group);
-        else next.add(group);
-        open_groups = next;
+        if (open_groups.has(group)) open_groups.delete(group);
+        else open_groups.add(group);
     }
 
     function toggle_chapter(chapter: string) {
-        const next = new SvelteSet(open_chapters);
-        if (next.has(chapter)) next.delete(chapter);
-        else next.add(chapter);
-        open_chapters = next;
+        if (open_chapters.has(chapter)) open_chapters.delete(chapter);
+        else open_chapters.add(chapter);
     }
 
     const text_exts = new Set([
@@ -140,8 +136,10 @@
         );
         solved = false;
         nav_open = false;
-        open_groups = new Set([data.exercise.group]);
-        open_chapters = new Set([data.exercise.chapter]);
+        open_groups.clear();
+        open_groups.add(data.exercise.group);
+        open_chapters.clear();
+        open_chapters.add(data.exercise.chapter);
     });
 
     function toggle_solution() {
@@ -349,11 +347,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 0.5rem;
-        padding: 0.55rem 0.75rem;
+        padding: 0.55rem 0.75rem 0.55rem 1.75rem;
         background: none;
         border: none;
         color: var(--sk-fg-2);
         font: var(--sk-font-ui-medium);
+        line-height: 1.4;
         cursor: pointer;
         text-align: left;
     }
@@ -571,7 +570,7 @@
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1rem 8px;
         border-top: 1px solid var(--sk-border);
         background: var(--sk-bg-2);
         gap: 0.5rem;
