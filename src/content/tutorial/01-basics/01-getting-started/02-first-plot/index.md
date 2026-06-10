@@ -4,7 +4,7 @@ title: Your first plot
 
 Let's dive right in. We have penguin measurement data loaded — 343 birds, each with a bill length and body mass. You can switch to the `penguins.csv` tab to take a look at the raw CSV data. Now let's visualize it.
 
-## The first dot plot
+## Your first plot
 
 The first step is to import the `Plot` and `Dot` componetents from `svelteplot`:
 

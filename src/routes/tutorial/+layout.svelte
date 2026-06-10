@@ -21,6 +21,9 @@
 </div>
 
 <style>
+    :global(body) {
+        margin: 0 !important;
+    }
     :global(header) {
         position: static !important;
         height: 50px !important;
@@ -47,7 +50,9 @@
         --sk-font-ui-small: 400 0.75rem/1 var(--font-sans, system-ui);
         --sk-font-ui-medium: 400 0.875rem/1 var(--font-sans, system-ui);
         --sk-font-mono: 400 0.85rem/1.5 var(--font-mono, monospace);
-        --sk-pane-controls-height: 2.8rem;
+        --sk-font-family-mono: var(--font-mono, monospace);
+        --json-tree-font-size: 0.82rem;
+        --sk-pane-controls-height: 2rem;
         --sk-bg-selection: rgba(75, 125, 225, 0.3);
         --sk-bg-unfocused-selection: rgba(75, 125, 225, 0.15);
         /* raised button tokens */

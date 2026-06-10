@@ -17,8 +17,8 @@
     let {
         panel,
         pos = $bindable('90%'),
-        min = '4.2rem',
-        max = '-4.2rem',
+        min = '3rem',
+        max = '-3rem',
         main,
         header,
         body
@@ -43,7 +43,7 @@
         const pc = normalize(pos);
         const px = pc * 0.01 * container.clientHeight;
 
-        const open = container.clientHeight - px > 42;
+        const open = container.clientHeight - px > 32;
 
         driver.set(pc, { hard: true });
 
@@ -79,8 +79,8 @@
                 <div class="panel-header">
                     <button class="panel-heading raised" onclick={toggle}>
                         <svg
-                            width="1.8rem"
-                            height="1.8rem"
+                            width="1rem"
+                            height="1rem"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -127,7 +127,7 @@
     .panel-heading {
         font: var(--sk-font-ui-small);
         text-transform: uppercase;
-        height: 3.2rem;
+        height: 100%;
         padding: 0 0.8rem;
         /* flex: 1; */
         text-align: left;

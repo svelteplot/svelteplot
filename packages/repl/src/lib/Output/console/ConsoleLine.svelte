@@ -237,12 +237,13 @@
         display: flex;
         gap: 1rem;
         width: 100%;
-        font-size: 1.2rem;
+        font-size: 1em;
         align-items: start;
     }
 
-    .log.expandable {
+    .log :global(.expandable) {
         cursor: pointer;
+        font-size: 1em;
     }
 
     .values {
@@ -254,7 +255,7 @@
         display: grid;
         grid-template-columns: minmax(0, auto) minmax(auto, 1fr);
         grid-gap: 0 2rem;
-        font-size: 1.2rem;
+        font-size: 1em;
         margin: 0 1rem 0.4rem calc(1em + var(--indent));
         overflow: hidden;
         line-height: 1.5;

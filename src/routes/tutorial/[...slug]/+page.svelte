@@ -347,7 +347,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 0.5rem;
-        padding: 0.55rem 0.75rem 0.55rem 1.75rem;
+        height: 2.25rem;
+        padding: 0 0.75rem 0 1.75rem;
         background: none;
         border: none;
         color: var(--sk-fg-2);
@@ -616,13 +617,15 @@
     .file-tabs {
         display: flex;
         flex-shrink: 0;
+        height: 2.25rem;
         border-bottom: 1px solid var(--sk-border);
         background: var(--sk-bg-2);
         overflow-x: auto;
     }
 
     .tab {
-        padding: 0.4rem 0.9rem;
+        height: 100%;
+        padding: 0 0.9rem;
         font: var(--sk-font-mono);
         font-size: 0.78rem;
         color: var(--sk-fg-3);
