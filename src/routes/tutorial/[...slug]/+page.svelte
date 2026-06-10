@@ -143,9 +143,12 @@
     });
 
     function toggle_solution() {
+        const next = !solved;
         const target = solved ? data.exercise.a : data.exercise.b;
         workspace.set(make_items({ ...data.exercise.a, ...target }));
-        solved = !solved;
+        // workspace.set() calls onreset synchronously, which sets solved = false.
+        // Restore the intended value after onreset runs.
+        solved = next;
     }
 </script>
 
