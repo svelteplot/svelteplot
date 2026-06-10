@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { base } from '$app/paths';
+    import { resolve } from '$app/paths';
     import { useDark } from '$shared/ui';
 
     let { keys }: { keys: string[] } = $props();
@@ -29,7 +29,7 @@
 {#if examples.length}
     <div class="list">
         {#each examples as ex (ex.key)}
-            <a href={base + ex.url}>
+            <a href={resolve(ex.url as any)}>
                 <div>
                     {#if allImages[`../../snapshots/${ex.key}.png`]}
                         <enhanced:img
