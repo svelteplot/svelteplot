@@ -76,9 +76,14 @@ The idea of the basics section is to learn how to construct a plot with SveltePl
 - [x] Color channels — quantitative fill → `01-getting-started/05-color-channels`
 - [x] Reactivity → `01-getting-started/08-reactivity`
 
-### Marks (`02-marks/`) — DEFERRED
+### Scales (`02-scales/`) 
 
-> See `## Marks — DEFERRED` below.
+In this chapter we learn how SveltePlot automatically determines the scales for our plot and how to customize them.
+
+- Automatic scale domains
+- Setting scale options: log, nice, padding, domain, etc.
+- Bypassing scales
+  - change `<RuleY y={0} />` to `<RuleY y={{ scale: null, value: 0 }} />` to bypass scale
 
 ### Transforms (`03-transforms/`) — DEFERRED
 

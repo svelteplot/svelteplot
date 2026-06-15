@@ -20,8 +20,8 @@
         --warning-border: rgb(242, 232, 163);
         --json-tree-string-color: var(--shiki-token-string);
         --json-tree-font-family: var(--sk-font-family-mono);
-        --json-tree-font-size: 1.2rem;
-        --json-tree-li-line-height: 1.5;
+        --json-tree-font-size: 1em;
+        --json-tree-li-line-height: 1.15;
 
         :root.dark & {
             --error-fg: rgb(235, 78, 109);
@@ -51,7 +51,7 @@
             ul {
                 font: var(--json-tree-font-family);
                 font-size: var(--json-tree-font-size);
-                line-height: 1.5;
+                line-height: 1.25;
             }
         }
     }

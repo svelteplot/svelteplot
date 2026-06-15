@@ -246,6 +246,10 @@
         font-size: 1em;
     }
 
+    .log :global(.expandable > *) {
+        font-size: 1em;
+    }
+
     .values {
         display: block;
         flex: 1;
