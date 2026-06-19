@@ -104,7 +104,7 @@
         "svelte": "5",
         "typescript": "^5.9.3",
         "tslib": "^2.8.1",
-        "vite": "^7.3.1",
+        "vite": "^7.3.5",
         "vitest": "^4.1.4",
         "vitest-matchmedia-mock": "^2.0.3"
     },

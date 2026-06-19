@@ -111,7 +111,7 @@
         "uid": "^2.0.2",
         "unist-util-visit": "^5.1.0",
         "unocss": "^66.6.8",
-        "vite": "^7.3.1",
+        "vite": "^7.3.5",
         "vitest": "^4.1.4",
         "vitest-matchmedia-mock": "^2.0.3",
         "wx-svelte-grid": "^2.6.1",
