@@ -67,6 +67,12 @@ const STACK_ORDER: Record<Exclude<StackOrder, 'value'>, (...args: any[]) => any>
     'inside-out': stackOrderInsideOut
 };
 
+function toStackNumber(value: unknown): number | null | undefined {
+    if (value == null) return value as null | undefined;
+    const n = +value;
+    return Number.isNaN(n) ? NaN : n;
+}
+
 function stackBucketByValue<T extends DataRecord>(
     items: T[],
     byDim: 'x' | 'y',
@@ -75,10 +81,14 @@ function stackBucketByValue<T extends DataRecord>(
     reverse: boolean
 ): T[] {
     const sorted = [...items].sort((a, b) => {
-        const av = a[S[byDim]] as number;
-        const bv = b[S[byDim]] as number;
+        const av = toStackNumber(a[S[byDim]]);
+        const bv = toStackNumber(b[S[byDim]]);
+        const aMissing = av == null || (typeof av === 'number' && Number.isNaN(av));
+        const bMissing = bv == null || (typeof bv === 'number' && Number.isNaN(bv));
+        if (aMissing !== bMissing) return aMissing ? 1 : -1;
+        if (aMissing) return (a[INDEX] as number) - (b[INDEX] as number);
         if (av !== bv) {
-            const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+            const cmp = (av as number) < (bv as number) ? -1 : 1;
             return reverse ? -cmp : cmp;
         }
         return (a[INDEX] as number) - (b[INDEX] as number);
@@ -88,7 +98,7 @@ function stackBucketByValue<T extends DataRecord>(
     let ny = 0;
     const out: T[] = [];
     for (const d of sorted) {
-        const value = d[S[byDim]] as number;
+        const value = toStackNumber(d[S[byDim]]);
         let low: number;
         let high: number;
         if (value == null || (typeof value === 'number' && Number.isNaN(value))) {
@@ -220,28 +230,28 @@ function stackXY<T>(
 
             if (options.order === 'value') {
                 const offset = options.offset ?? 'none';
-                if (offset !== 'none' && offset !== null) {
+                if (offset !== 'none' && offset !== 'diverging') {
                     throw new Error(
-                        `stack: order 'value' only supports offset 'none' (got '${offset}')`
+                        `stack: order 'value' only supports offset 'none' or 'diverging' (got '${offset}')`
                     );
                 }
 
                 for (const [, bucketItems] of groupedBySecondDim) {
                     let itemsToStack: DataRecord[];
                     if (groupBy !== true && hasUniqueGroups) {
-                        const obj: Record<string | number, DataRecord> = {};
+                        const groups = new Map<unknown, DataRecord>();
                         bucketItems.forEach((d) => {
-                            const key = d[GROUP] as string | number;
-                            if (obj[key] == null) obj[key] = { ...d };
+                            const key = d[GROUP];
+                            const existing = groups.get(key);
+                            if (existing == null) groups.set(key, { ...d });
                             else {
-                                obj[key] = {
-                                    ...d,
-                                    [S[byDim]]:
-                                        (obj[key][S[byDim]] as number) + (d[S[byDim]] as number)
-                                };
+                                const sum =
+                                    (toStackNumber(existing[S[byDim]]) as number) +
+                                    (toStackNumber(d[S[byDim]]) as number);
+                                groups.set(key, { ...d, [S[byDim]]: sum });
                             }
                         });
-                        itemsToStack = Object.values(obj);
+                        itemsToStack = [...groups.values()];
                     } else {
                         itemsToStack = [...bucketItems];
                     }

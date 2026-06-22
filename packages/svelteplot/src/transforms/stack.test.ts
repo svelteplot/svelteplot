@@ -315,13 +315,61 @@ describe('stackY transform', () => {
         ]);
     });
 
-    it('order value rejects non-none offsets', () => {
+    it('order value coerces numeric strings before sorting', () => {
+        const stringData: DataRecord[] = [
+            { year: 1, category: 'A', value: '100' },
+            { year: 1, category: 'B', value: '1' }
+        ];
+
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: stringData,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        expect(result).toEqual([
+            { y1: 1, y2: 101, fill: 'A' },
+            { y1: 0, y2: 1, fill: 'B' }
+        ]);
+    });
+
+    it('order value rejects unsupported offsets', () => {
         expect(() =>
             stackY<DataRecord>(
                 { data: crossoverData, x: 'year', fill: 'category', y: 'value' },
                 { order: 'value', offset: 'center' }
             )
-        ).toThrowError("stack: order 'value' only supports offset 'none'");
+        ).toThrowError("stack: order 'value' only supports offset 'none' or 'diverging'");
+    });
+
+    it('order value sorts missing values last within a bucket', () => {
+        const data = [10, undefined, 20, undefined] as DataRow[];
+        const { data: stackedData, ...channels } = stackY(
+            recordizeY({ data, x1: null, x2: null, y1: 0, y2: 0 }),
+            { order: 'value' }
+        );
+        const { x, y1, y2 } = channels;
+        const result = stackedData.map((d) => ({
+            x: d[x as string],
+            y1: d[y1 as string],
+            y2: d[y2 as string]
+        }));
+        expect(result).toEqual([
+            { x: 0, y1: 0, y2: 10 },
+            { x: 1, y1: 0, y2: NaN },
+            { x: 2, y1: 0, y2: 20 },
+            { x: 3, y1: 0, y2: NaN }
+        ]);
     });
 
     it('order value respects facet isolation', () => {
