@@ -31,7 +31,7 @@
         "preview": "vite preview",
         "screenshots": "node screenshot-examples.js",
         "test": "pnpm --filter svelteplot test",
-        "test:scripts": "node --test scripts/svelte-check-staged.test.mjs",
+        "test:scripts": "node --test scripts/*.test.mjs",
         "test:visual": "node scripts/visual-regression.js",
         "vr:report": "node scripts/vr-report.js"
     },
