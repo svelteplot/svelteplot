@@ -44,7 +44,7 @@ const DEFAULT_STACK_OPTIONS: StackOptions = {
 };
 
 /** the order in which series are stacked */
-export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum';
+export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum' | 'value';
 /** the offset method used to position stacked values */
 export type StackOffset = 'none' | 'wiggle' | 'center' | 'normalize' | 'diverging';
 
@@ -60,14 +60,68 @@ export type StackOptions =
       }
     | false;
 
-const STACK_ORDER: Record<StackOrder, (...args: any[]) => any> = {
-    // null
-    // TODO: value: ,
+const STACK_ORDER: Record<Exclude<StackOrder, 'value'>, (...args: any[]) => any> = {
     none: stackOrderNone,
     sum: stackOrderAscending,
     appearance: stackOrderAppearance,
     'inside-out': stackOrderInsideOut
 };
+
+function toStackNumber(value: unknown): number | null | undefined {
+    if (value == null) return value as null | undefined;
+    const n = +value;
+    return Number.isNaN(n) ? NaN : n;
+}
+
+function stackBucketByValue<T extends DataRecord>(
+    items: T[],
+    byDim: 'x' | 'y',
+    byLow: 'x1' | 'y1',
+    byHigh: 'x2' | 'y2',
+    reverse: boolean,
+    offset: 'none' | 'diverging'
+): T[] {
+    const sorted = [...items].sort((a, b) => {
+        const av = toStackNumber(a[S[byDim]]);
+        const bv = toStackNumber(b[S[byDim]]);
+        const aMissing = av == null || (typeof av === 'number' && Number.isNaN(av));
+        const bMissing = bv == null || (typeof bv === 'number' && Number.isNaN(bv));
+        if (aMissing !== bMissing) return aMissing ? 1 : -1;
+        if (aMissing) return (a[INDEX] as number) - (b[INDEX] as number);
+        if (av !== bv) {
+            const cmp = (av as number) < (bv as number) ? -1 : 1;
+            return reverse ? -cmp : cmp;
+        }
+        return (a[INDEX] as number) - (b[INDEX] as number);
+    });
+
+    const out: T[] = [];
+    let pos = 0;
+    let py = 0;
+    let ny = 0;
+
+    for (const d of sorted) {
+        const value = toStackNumber(d[S[byDim]]);
+        let low: number;
+        let high: number;
+        if (value == null || (typeof value === 'number' && Number.isNaN(value))) {
+            low = offset === 'none' ? pos : py;
+            high = NaN;
+        } else if (offset === 'none') {
+            // d3 stackOffsetNone: single cumulative baseline per bucket
+            low = pos;
+            high = pos += value;
+        } else if (value >= 0) {
+            low = py;
+            high = py += value;
+        } else {
+            high = ny;
+            low = ny += value;
+        }
+        out.push({ ...d, [S[byLow]]: low, [S[byHigh]]: high } as T);
+    }
+    return out;
+}
 
 const STACK_OFFSET: Record<StackOffset, ((...args: any[]) => any) | null> = {
     none: null,
@@ -181,35 +235,80 @@ function stackXY<T>(
                 keys = Array.from(keySet);
             }
 
-            const stackOrder = (series: any[]) => {
-                const f = STACK_ORDER[options.order || 'none'];
-                return options.reverse ? f(series).reverse() : f(series);
-            };
+            if (options.order === 'value') {
+                const offset = options.offset ?? 'none';
+                if (offset !== 'none' && offset !== 'diverging') {
+                    throw new Error(
+                        `stack: order 'value' only supports offset 'none' or 'diverging' (got '${offset}')`
+                    );
+                }
 
-            // now stack the values for each index
-            const series = stack()
-                .order(stackOrder as any)
-                // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
-                .offset(
-                    (groupBy === true && options.offset === 'wiggle'
-                        ? STACK_OFFSET['center']
-                        : STACK_OFFSET[options.offset ?? 'none']) as any
-                )
-                .keys(keys)
-                .value((d: any, key: any, _i: any, _data: any) => {
-                    return d[key]?.v == null ? undefined : d[key]?.v;
-                })(stackData);
+                for (const [, bucketItems] of groupedBySecondDim) {
+                    let itemsToStack: DataRecord[];
+                    if (groupBy !== true && hasUniqueGroups) {
+                        const groups = new Map<unknown, DataRecord>();
+                        bucketItems.forEach((d) => {
+                            const key = d[GROUP];
+                            const existing = groups.get(key);
+                            if (existing == null) groups.set(key, { ...d });
+                            else {
+                                const sum =
+                                    (toStackNumber(existing[S[byDim]]) as number) +
+                                    (toStackNumber(d[S[byDim]]) as number);
+                                groups.set(key, { ...d, [S[byDim]]: sum });
+                            }
+                        });
+                        itemsToStack = [...groups.values()];
+                    } else {
+                        itemsToStack = [...bucketItems];
+                    }
+                    const valueOffset = (offset === 'diverging' ? 'diverging' : 'none') as
+                        | 'none'
+                        | 'diverging';
+                    out.push(
+                        ...stackBucketByValue(
+                            itemsToStack,
+                            byDim,
+                            byLow,
+                            byHigh,
+                            options.reverse,
+                            valueOffset
+                        )
+                    );
+                }
+            } else {
+                const d3Order = (options.order ?? 'none') as Exclude<StackOrder, 'value'>;
+                const stackOrder = (series: any[]) => {
+                    const f = STACK_ORDER[d3Order];
+                    return options.reverse ? f(series).reverse() : f(series);
+                };
 
-            // and combine it all back into a flat array
-            const newData = (series as any)
-                .flatMap((s: any) => s.map((d: any) => [d[0], d[1], d.data[s.key]?.i]))
-                .filter((d: any) => d[2] !== undefined)
-                .map((d: any) => ({ [S[byLow]]: d[0], [S[byHigh]]: d[1], ...resolvedData[d[2]] }));
+                // now stack the values for each index
+                const series = stack()
+                    .order(stackOrder as any)
+                    // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
+                    .offset(
+                        (groupBy === true && options.offset === 'wiggle'
+                            ? STACK_OFFSET['center']
+                            : STACK_OFFSET[options.offset ?? 'none']) as any
+                    )
+                    .keys(keys)
+                    .value((d: any, key: any, _i: any, _data: any) => {
+                        return d[key]?.v == null ? undefined : d[key]?.v;
+                    })(stackData);
 
-            out.push(...newData);
+                // and combine it all back into a flat array
+                const newData = (series as any)
+                    .flatMap((s: any) => s.map((d: any) => [d[0], d[1], d.data[s.key]?.i]))
+                    .filter((d: any) => d[2] !== undefined)
+                    .map((d: any) => ({
+                        [S[byLow]]: d[0],
+                        [S[byHigh]]: d[1],
+                        ...resolvedData[d[2]]
+                    }));
 
-            // which we then add to the output data
-            // out.push(...newData);
+                out.push(...newData);
+            }
         }
 
         return {

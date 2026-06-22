@@ -764,6 +764,7 @@ the order in which series are stacked
 - `appearance`
 - `inside-out`
 - `sum`
+- `value`
 
 ## stackY
 
