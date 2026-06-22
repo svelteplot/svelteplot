@@ -14,9 +14,20 @@ checks before each commit. To set it up:
 
 1. Install pre-commit: `pip install pre-commit` (or `brew install pre-commit` on macOS)
 2. Install the hooks: `pre-commit install`
+3. After cloning, generate the SvelteKit tsconfig once: `pnpm exec svelte-kit sync`
+   (also run by `pnpm dev` and `pnpm check`)
 
-That's it — linting will run automatically on each commit. To run manually:
+On each commit, pre-commit runs **oxlint** (repo-wide) and **svelte-check**
+(scoped to files in the commit). The svelte-check hook runs a full project
+analysis but only blocks the commit when errors appear in staged files.
+Legacy errors elsewhere do not block local commits; CI still runs the full
+`pnpm check` gate on every PR.
+
+To run hooks manually:
 
 ```
 pre-commit run --all-files
 ```
+
+With `--all-files`, svelte-check applies to all matching files in the repo,
+not just staged paths — stricter than a normal commit.
