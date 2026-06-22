@@ -44,7 +44,7 @@ const DEFAULT_STACK_OPTIONS: StackOptions = {
 };
 
 /** the order in which series are stacked */
-export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum';
+export type StackOrder = 'none' | 'appearance' | 'inside-out' | 'sum' | 'value';
 /** the offset method used to position stacked values */
 export type StackOffset = 'none' | 'wiggle' | 'center' | 'normalize' | 'diverging';
 
@@ -60,14 +60,51 @@ export type StackOptions =
       }
     | false;
 
-const STACK_ORDER: Record<StackOrder, (...args: any[]) => any> = {
-    // null
-    // TODO: value: ,
+const STACK_ORDER: Record<Exclude<StackOrder, 'value'>, (...args: any[]) => any> = {
     none: stackOrderNone,
     sum: stackOrderAscending,
     appearance: stackOrderAppearance,
     'inside-out': stackOrderInsideOut
 };
+
+function stackBucketByValue<T extends DataRecord>(
+    items: T[],
+    byDim: 'x' | 'y',
+    byLow: 'x1' | 'y1',
+    byHigh: 'x2' | 'y2',
+    reverse: boolean
+): T[] {
+    const sorted = [...items].sort((a, b) => {
+        const av = a[S[byDim]] as number;
+        const bv = b[S[byDim]] as number;
+        if (av !== bv) {
+            const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+            return reverse ? -cmp : cmp;
+        }
+        return (a[INDEX] as number) - (b[INDEX] as number);
+    });
+
+    let py = 0;
+    let ny = 0;
+    const out: T[] = [];
+    for (const d of sorted) {
+        const value = d[S[byDim]] as number;
+        let low: number;
+        let high: number;
+        if (value == null || (typeof value === 'number' && Number.isNaN(value))) {
+            low = py;
+            high = NaN;
+        } else if (value >= 0) {
+            low = py;
+            high = py += value;
+        } else {
+            high = ny;
+            low = ny += value;
+        }
+        out.push({ ...d, [S[byLow]]: low, [S[byHigh]]: high } as T);
+    }
+    return out;
+}
 
 const STACK_OFFSET: Record<StackOffset, ((...args: any[]) => any) | null> = {
     none: null,
@@ -181,35 +218,69 @@ function stackXY<T>(
                 keys = Array.from(keySet);
             }
 
-            const stackOrder = (series: any[]) => {
-                const f = STACK_ORDER[options.order || 'none'];
-                return options.reverse ? f(series).reverse() : f(series);
-            };
+            if (options.order === 'value') {
+                const offset = options.offset ?? 'none';
+                if (offset !== 'none' && offset !== null) {
+                    throw new Error(
+                        `stack: order 'value' only supports offset 'none' (got '${offset}')`
+                    );
+                }
 
-            // now stack the values for each index
-            const series = stack()
-                .order(stackOrder as any)
-                // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
-                .offset(
-                    (groupBy === true && options.offset === 'wiggle'
-                        ? STACK_OFFSET['center']
-                        : STACK_OFFSET[options.offset ?? 'none']) as any
-                )
-                .keys(keys)
-                .value((d: any, key: any, _i: any, _data: any) => {
-                    return d[key]?.v == null ? undefined : d[key]?.v;
-                })(stackData);
+                for (const [, bucketItems] of groupedBySecondDim) {
+                    let itemsToStack: DataRecord[];
+                    if (groupBy !== true && hasUniqueGroups) {
+                        const obj: Record<string | number, DataRecord> = {};
+                        bucketItems.forEach((d) => {
+                            const key = d[GROUP] as string | number;
+                            if (obj[key] == null) obj[key] = { ...d };
+                            else {
+                                obj[key] = {
+                                    ...d,
+                                    [S[byDim]]:
+                                        (obj[key][S[byDim]] as number) + (d[S[byDim]] as number)
+                                };
+                            }
+                        });
+                        itemsToStack = Object.values(obj);
+                    } else {
+                        itemsToStack = [...bucketItems];
+                    }
+                    out.push(
+                        ...stackBucketByValue(itemsToStack, byDim, byLow, byHigh, options.reverse)
+                    );
+                }
+            } else {
+                const stackOrder = (series: any[]) => {
+                    const f = STACK_ORDER[options.order || 'none'];
+                    return options.reverse ? f(series).reverse() : f(series);
+                };
 
-            // and combine it all back into a flat array
-            const newData = (series as any)
-                .flatMap((s: any) => s.map((d: any) => [d[0], d[1], d.data[s.key]?.i]))
-                .filter((d: any) => d[2] !== undefined)
-                .map((d: any) => ({ [S[byLow]]: d[0], [S[byHigh]]: d[1], ...resolvedData[d[2]] }));
+                // now stack the values for each index
+                const series = stack()
+                    .order(stackOrder as any)
+                    // Wiggle requires consistent series identities; fall back to 'center' for unit stacking
+                    .offset(
+                        (groupBy === true && options.offset === 'wiggle'
+                            ? STACK_OFFSET['center']
+                            : STACK_OFFSET[options.offset ?? 'none']) as any
+                    )
+                    .keys(keys)
+                    .value((d: any, key: any, _i: any, _data: any) => {
+                        return d[key]?.v == null ? undefined : d[key]?.v;
+                    })(stackData);
 
-            out.push(...newData);
+                // and combine it all back into a flat array
+                const newData = (series as any)
+                    .flatMap((s: any) => s.map((d: any) => [d[0], d[1], d.data[s.key]?.i]))
+                    .filter((d: any) => d[2] !== undefined)
+                    .map((d: any) => ({
+                        [S[byLow]]: d[0],
+                        [S[byHigh]]: d[1],
+                        ...resolvedData[d[2]]
+                    }));
 
-            // which we then add to the output data
-            // out.push(...newData);
+                out.push(...newData);
+            }
         }
 
         return {

@@ -169,6 +169,199 @@ describe('stackY transform', () => {
             { x: 3, y1: 0, y2: 40 }
         ]);
     });
+
+    const crossoverData: DataRecord[] = [
+        { year: 1, category: 'A', value: 100 },
+        { year: 1, category: 'B', value: 1 },
+        { year: 2, category: 'A', value: 1 },
+        { year: 2, category: 'B', value: 100 }
+    ];
+
+    it('order value sorts within each stack group by signed value', () => {
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: crossoverData,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x as string],
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        // output is sorted by original row index
+        expect(result).toEqual([
+            { x: 1, y1: 1, y2: 101, fill: 'A' },
+            { x: 1, y1: 0, y2: 1, fill: 'B' },
+            { x: 2, y1: 0, y2: 1, fill: 'A' },
+            { x: 2, y1: 1, y2: 101, fill: 'B' }
+        ]);
+    });
+
+    it('order value with reverse inverts per-bucket sort', () => {
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: crossoverData,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { order: 'value', reverse: true }
+        );
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x as string],
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        expect(result).toEqual([
+            { x: 1, y1: 0, y2: 100, fill: 'A' },
+            { x: 1, y1: 100, y2: 101, fill: 'B' },
+            { x: 2, y1: 100, y2: 101, fill: 'A' },
+            { x: 2, y1: 0, y2: 100, fill: 'B' }
+        ]);
+    });
+
+    it('order sum keeps global series order on crossover data', () => {
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: crossoverData,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { order: 'sum' }
+        );
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x as string],
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        // A has lower total (101) so always below B
+        expect(result).toEqual([
+            { x: 1, y1: 0, y2: 100, fill: 'A' },
+            { x: 1, y1: 100, y2: 101, fill: 'B' },
+            { x: 2, y1: 0, y2: 1, fill: 'A' },
+            { x: 2, y1: 1, y2: 101, fill: 'B' }
+        ]);
+    });
+
+    it('order value stacks negative values with diverging baseline', () => {
+        const negativeData: DataRecord[] = [
+            { year: 1, category: 'A', value: -100 },
+            { year: 1, category: 'B', value: -1 },
+            { year: 1, category: 'C', value: 10 }
+        ];
+
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: negativeData,
+                x: 'year',
+                fill: 'category',
+                y: 'value'
+            },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        expect(result).toEqual([
+            { y1: -100, y2: 0, fill: 'A' },
+            { y1: -101, y2: -100, fill: 'B' },
+            { y1: 0, y2: 10, fill: 'C' }
+        ]);
+    });
+
+    it('order value on unit stacking sorts rows within each x bucket', () => {
+        const unitData: DataRecord[] = [
+            { make: 'A', mpg: 100 },
+            { make: 'A', mpg: 1 },
+            { make: 'B', mpg: 50 },
+            { make: 'B', mpg: 5 }
+        ];
+
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            { data: unitData, x: 'make', y: 'mpg' },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x as string],
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            mpg: d.mpg
+        }));
+
+        expect(result).toEqual([
+            { x: 'A', y1: 1, y2: 101, mpg: 100 },
+            { x: 'A', y1: 0, y2: 1, mpg: 1 },
+            { x: 'B', y1: 5, y2: 55, mpg: 50 },
+            { x: 'B', y1: 0, y2: 5, mpg: 5 }
+        ]);
+    });
+
+    it('order value rejects non-none offsets', () => {
+        expect(() =>
+            stackY<DataRecord>(
+                { data: crossoverData, x: 'year', fill: 'category', y: 'value' },
+                { order: 'value', offset: 'center' }
+            )
+        ).toThrowError("stack: order 'value' only supports offset 'none'");
+    });
+
+    it('order value respects facet isolation', () => {
+        const facetedCrossover: DataRecord[] = [
+            { year: 1, category: 'A', value: 100, facet: 'X' },
+            { year: 1, category: 'B', value: 1, facet: 'X' },
+            { year: 2, category: 'A', value: 1, facet: 'X' },
+            { year: 2, category: 'B', value: 100, facet: 'X' },
+            { year: 1, category: 'A', value: 50, facet: 'Y' },
+            { year: 1, category: 'B', value: 2, facet: 'Y' }
+        ];
+
+        const { data: stackedData, ...channels } = stackY<DataRecord>(
+            {
+                data: facetedCrossover,
+                x: 'year',
+                fill: 'category',
+                y: 'value',
+                fx: 'facet'
+            },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            x: d[channels.x as string],
+            y1: d[channels.y1 as string],
+            y2: d[channels.y2 as string],
+            fx: d[channels.fx as string],
+            fill: d[channels.fill as string]
+        }));
+
+        expect(result).toEqual([
+            { x: 1, y1: 1, y2: 101, fx: 'X', fill: 'A' },
+            { x: 1, y1: 0, y2: 1, fx: 'X', fill: 'B' },
+            { x: 2, y1: 0, y2: 1, fx: 'X', fill: 'A' },
+            { x: 2, y1: 1, y2: 101, fx: 'X', fill: 'B' },
+            { x: 1, y1: 2, y2: 52, fx: 'Y', fill: 'A' },
+            { x: 1, y1: 0, y2: 2, fx: 'Y', fill: 'B' }
+        ]);
+    });
 });
 
 describe('stackX transform', () => {
@@ -221,6 +414,58 @@ describe('stackX transform', () => {
             { y: 2, x1: 0, x2: 30 },
             { y: 3, x1: 0, x2: NaN },
             { y: 4, x1: 0, x2: 40 }
+        ]);
+    });
+
+    const crossoverData: DataRecord[] = [
+        { year: 1, category: 'A', value: 100 },
+        { year: 1, category: 'B', value: 1 },
+        { year: 2, category: 'A', value: 1 },
+        { year: 2, category: 'B', value: 100 }
+    ];
+
+    it('order value sorts within each stack group along x', () => {
+        const { data: stackedData, ...channels } = stackX<DataRecord>(
+            {
+                data: crossoverData,
+                y: 'year',
+                fill: 'category',
+                x: 'value'
+            },
+            { order: 'value' }
+        );
+
+        const result = stackedData.map((d) => ({
+            y: d[channels.y as string],
+            x1: d[channels.x1 as string],
+            x2: d[channels.x2 as string],
+            fill: d[channels.fill as string]
+        }));
+
+        expect(result).toEqual([
+            { y: 1, x1: 1, x2: 101, fill: 'A' },
+            { y: 1, x1: 0, x2: 1, fill: 'B' },
+            { y: 2, x1: 0, x2: 1, fill: 'A' },
+            { y: 2, x1: 1, x2: 101, fill: 'B' }
+        ]);
+    });
+
+    it('order value preserves undefined values in recordized arrays', () => {
+        const data = [10, 20, undefined, 40] as DataRow[];
+        const { data: stackedData, ...channels } = stackX(recordizeX({ data, x1: 0, x2: 0 }), {
+            order: 'value'
+        });
+        const { y, x1, x2 } = channels;
+        const result = stackedData.map((d) => ({
+            y: d[y as string],
+            x1: d[x1 as string],
+            x2: d[x2 as string]
+        }));
+        expect(result).toEqual([
+            { y: 0, x1: 0, x2: 10 },
+            { y: 1, x1: 0, x2: 20 },
+            { y: 2, x1: 0, x2: NaN },
+            { y: 3, x1: 0, x2: 40 }
         ]);
     });
 });

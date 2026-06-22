@@ -240,7 +240,7 @@ To create a stacked area chart you can use the implicit [stackY](/transforms/sta
 
 You can control the stacking for the implicit [stackY](/transforms/stack) transform using the `stack` options:
 
-- `order` - can be one of `none`, `appearance`, `inside-out`, or `sum`.
+- `order` - can be one of `none`, `appearance`, `inside-out`, `sum`, or `value`.
 - `reverse` - for reversing the order
 - `offset`
 
@@ -266,7 +266,13 @@ You can control the stacking for the implicit [stackY](/transforms/stack) transf
 <Select label="curve" options={CURVES} bind:value={curve} />
 <Select
     label="order"
-    options={['none', 'appearance', 'inside-out', 'sum']}
+    options={[
+        'none',
+        'appearance',
+        'inside-out',
+        'sum',
+        'value'
+    ]}
     bind:value={order} />
 <Plot>
     <AreaY
