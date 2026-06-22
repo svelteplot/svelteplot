@@ -257,34 +257,31 @@ describe('stackY transform', () => {
         ]);
     });
 
-    it('order value stacks negative values with diverging baseline', () => {
+    it('order value matches default d3 baseline for mixed-sign data', () => {
         const negativeData: DataRecord[] = [
             { year: 1, category: 'A', value: -100 },
             { year: 1, category: 'B', value: -1 },
             { year: 1, category: 'C', value: 10 }
         ];
 
-        const { data: stackedData, ...channels } = stackY<DataRecord>(
-            {
-                data: negativeData,
-                x: 'year',
-                fill: 'category',
-                y: 'value'
-            },
-            { order: 'value' }
-        );
+        const args = { data: negativeData, x: 'year', fill: 'category', y: 'value' } as const;
+        const simplify = (stacked: ReturnType<typeof stackY<DataRecord>>) =>
+            stacked.data.map((d) => ({
+                y1: d[stacked.y1 as string],
+                y2: d[stacked.y2 as string],
+                fill: d[stacked.fill as string]
+            }));
 
-        const result = stackedData.map((d) => ({
-            y1: d[channels.y1 as string],
-            y2: d[channels.y2 as string],
-            fill: d[channels.fill as string]
-        }));
+        const d3Stack = simplify(stackY<DataRecord>(args, { order: 'sum' }));
+        const valueStack = simplify(stackY<DataRecord>(args, { order: 'value' }));
 
-        expect(result).toEqual([
+        // same py/ny split as d3 offset none; only sort order within the bucket differs
+        expect(valueStack).toEqual([
             { y1: -100, y2: 0, fill: 'A' },
             { y1: -101, y2: -100, fill: 'B' },
             { y1: 0, y2: 10, fill: 'C' }
         ]);
+        expect(d3Stack.map((d) => d.fill)).toEqual(valueStack.map((d) => d.fill));
     });
 
     it('order value on unit stacking sorts rows within each x bucket', () => {
