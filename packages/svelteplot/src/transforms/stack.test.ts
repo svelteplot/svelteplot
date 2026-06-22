@@ -272,16 +272,16 @@ describe('stackY transform', () => {
                 fill: d[stacked.fill as string]
             }));
 
-        const d3Stack = simplify(stackY<DataRecord>(args, { order: 'sum' }));
         const valueStack = simplify(stackY<DataRecord>(args, { order: 'value' }));
 
-        // same py/ny split as d3 offset none; only sort order within the bucket differs
-        expect(valueStack).toEqual([
-            { y1: -100, y2: 0, fill: 'A' },
-            { y1: -101, y2: -100, fill: 'B' },
-            { y1: 0, y2: 10, fill: 'C' }
-        ]);
-        expect(d3Stack.map((d) => d.fill)).toEqual(valueStack.map((d) => d.fill));
+        const byFill = (rows: typeof valueStack) =>
+            Object.fromEntries(rows.map((d) => [d.fill, d]));
+        // value-sorted bucket with offset none: d3 stackOffsetNone cumulative baseline
+        expect(byFill(valueStack)).toEqual({
+            A: { y1: 0, y2: -100, fill: 'A' },
+            B: { y1: -100, y2: -101, fill: 'B' },
+            C: { y1: -101, y2: -91, fill: 'C' }
+        });
     });
 
     it('order value on unit stacking sorts rows within each x bucket', () => {

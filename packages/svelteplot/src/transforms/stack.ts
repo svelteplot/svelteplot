@@ -78,7 +78,8 @@ function stackBucketByValue<T extends DataRecord>(
     byDim: 'x' | 'y',
     byLow: 'x1' | 'y1',
     byHigh: 'x2' | 'y2',
-    reverse: boolean
+    reverse: boolean,
+    offset: 'none' | 'diverging'
 ): T[] {
     const sorted = [...items].sort((a, b) => {
         const av = toStackNumber(a[S[byDim]]);
@@ -94,16 +95,22 @@ function stackBucketByValue<T extends DataRecord>(
         return (a[INDEX] as number) - (b[INDEX] as number);
     });
 
+    const out: T[] = [];
+    let pos = 0;
     let py = 0;
     let ny = 0;
-    const out: T[] = [];
+
     for (const d of sorted) {
         const value = toStackNumber(d[S[byDim]]);
         let low: number;
         let high: number;
         if (value == null || (typeof value === 'number' && Number.isNaN(value))) {
-            low = py;
+            low = offset === 'none' ? pos : py;
             high = NaN;
+        } else if (offset === 'none') {
+            // d3 stackOffsetNone: single cumulative baseline per bucket
+            low = pos;
+            high = pos += value;
         } else if (value >= 0) {
             low = py;
             high = py += value;
@@ -255,13 +262,24 @@ function stackXY<T>(
                     } else {
                         itemsToStack = [...bucketItems];
                     }
+                    const valueOffset = (offset === 'diverging' ? 'diverging' : 'none') as
+                        | 'none'
+                        | 'diverging';
                     out.push(
-                        ...stackBucketByValue(itemsToStack, byDim, byLow, byHigh, options.reverse)
+                        ...stackBucketByValue(
+                            itemsToStack,
+                            byDim,
+                            byLow,
+                            byHigh,
+                            options.reverse,
+                            valueOffset
+                        )
                     );
                 }
             } else {
+                const d3Order = (options.order ?? 'none') as Exclude<StackOrder, 'value'>;
                 const stackOrder = (series: any[]) => {
-                    const f = STACK_ORDER[options.order || 'none'];
+                    const f = STACK_ORDER[d3Order];
                     return options.reverse ? f(series).reverse() : f(series);
                 };
 
