@@ -15,6 +15,103 @@ import { fileURLToPath } from 'node:url';
 
 const RECORD_RE = /^(\d+)\s+([\s\S]+)$/;
 
+export const PACKAGE_PREFIX = 'packages/svelteplot/';
+export const PACKAGE_TSCONFIG = 'packages/svelteplot/tsconfig.json';
+export const ROOT_TSCONFIG = './tsconfig.json';
+
+/**
+ * @param {string[]} targetPaths repo-relative posix paths
+ * @returns {Array<{ tsconfig: string, targets: Set<string>, needsSync: boolean }>}
+ */
+export function buildCheckPlans(targetPaths) {
+    const packageTargets = [];
+    const rootTargets = [];
+
+    for (const target of targetPaths) {
+        if (target.startsWith(PACKAGE_PREFIX)) packageTargets.push(target);
+        else rootTargets.push(target);
+    }
+
+    /** @type {Array<{ tsconfig: string, targets: Set<string>, needsSync: boolean }>} */
+    const plans = [];
+
+    if (packageTargets.length > 0) {
+        plans.push({
+            tsconfig: PACKAGE_TSCONFIG,
+            targets: new Set(packageTargets),
+            needsSync: false
+        });
+    }
+
+    if (rootTargets.length > 0) {
+        plans.push({
+            tsconfig: ROOT_TSCONFIG,
+            targets: new Set(rootTargets),
+            needsSync: true
+        });
+    }
+
+    return plans;
+}
+
+/**
+ * @param {string} root
+ * @param {{ tsconfig: string, targets: Set<string>, needsSync: boolean }} plan
+ * @returns {{ code: number, matching: Array<{ filename: string, line: number, column: number, message: string }>, outsideErrors: number }}
+ */
+function runCheckPlan(root, plan) {
+    if (plan.needsSync) {
+        const sync = spawnSync('pnpm', ['exec', 'svelte-kit', 'sync'], {
+            cwd: root,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe']
+        });
+        if (sync.status !== 0) {
+            process.stderr.write(sync.stderr || sync.stdout || 'svelte-kit sync failed\n');
+            return { code: sync.status ?? 1, matching: [], outsideErrors: 0 };
+        }
+    }
+
+    const check = spawnSync(
+        'pnpm',
+        [
+            'exec',
+            'svelte-check',
+            '--tsconfig',
+            plan.tsconfig,
+            '--output',
+            'machine-verbose',
+            '--threshold',
+            'error'
+        ],
+        { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }
+    );
+
+    if (check.stderr) process.stderr.write(check.stderr);
+
+    const parsed = parseMachineVerboseOutput(check.stdout ?? '');
+
+    if (parsed.failure) {
+        process.stderr.write(`svelte-check failed (${plan.tsconfig}): ${parsed.failure}\n`);
+        return { code: 1, matching: [], outsideErrors: 0 };
+    }
+
+    if (!parsed.completed) {
+        process.stderr.write(
+            `svelte-check-staged: incomplete svelte-check run for ${plan.tsconfig} (missing COMPLETED)\n`
+        );
+        if (check.status && check.status !== 0 && !check.stdout) {
+            process.stderr.write(check.stdout || '');
+        }
+        return { code: 1, matching: [], outsideErrors: 0 };
+    }
+
+    const matching = filterDiagnostics(parsed.errors, plan.targets);
+    const outsideErrors = parsed.totalErrors - matching.length;
+
+    return { code: 0, matching, outsideErrors: Math.max(0, outsideErrors) };
+}
+
 /** @param {string} repoRoot */
 export function getRepoRoot(repoRoot) {
     if (repoRoot) return repoRoot;
@@ -116,55 +213,22 @@ export function runStagedCheck(repoRoot, fileArgs, options = {}) {
     const existing = [...targets].filter((f) => existsSync(path.join(root, f)));
     if (existing.length === 0) return 0;
 
-    const targetSet = new Set(existing);
-
     if (!runCheck) return 0;
 
-    const sync = spawnSync('pnpm', ['exec', 'svelte-kit', 'sync'], {
-        cwd: root,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
-    });
-    if (sync.status !== 0) {
-        process.stderr.write(sync.stderr || sync.stdout || 'svelte-kit sync failed\n');
-        return sync.status ?? 1;
-    }
+    const plans = buildCheckPlans(existing);
+    /** @type {Array<{ filename: string, line: number, column: number, message: string }>} */
+    const matching = [];
 
-    const check = spawnSync(
-        'pnpm',
-        [
-            'exec',
-            'svelte-check',
-            '--tsconfig',
-            './tsconfig.json',
-            '--output',
-            'machine-verbose',
-            '--threshold',
-            'error'
-        ],
-        { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }
-    );
-
-    if (check.stderr) process.stderr.write(check.stderr);
-
-    const parsed = parseMachineVerboseOutput(check.stdout ?? '');
-
-    if (parsed.failure) {
-        process.stderr.write(`svelte-check failed: ${parsed.failure}\n`);
-        return 1;
-    }
-
-    if (!parsed.completed) {
-        process.stderr.write(
-            'svelte-check-staged: incomplete svelte-check run (missing COMPLETED)\n'
-        );
-        if (check.status && check.status !== 0 && !check.stdout) {
-            process.stderr.write(check.stdout || '');
+    for (const plan of plans) {
+        const result = runCheckPlan(root, plan);
+        if (result.code !== 0) return result.code;
+        matching.push(...result.matching);
+        if (result.outsideErrors > 0) {
+            process.stderr.write(
+                `svelte-check (${plan.tsconfig}): ${result.outsideErrors} error(s) outside commit files (CI will catch)\n`
+            );
         }
-        return 1;
     }
-
-    const matching = filterDiagnostics(parsed.errors, targetSet);
 
     if (matching.length > 0) {
         process.stderr.write('svelte-check errors in commit files:\n');
@@ -172,12 +236,6 @@ export function runStagedCheck(repoRoot, fileArgs, options = {}) {
             process.stderr.write(`  ${err.filename}:${err.line}:${err.column} ${err.message}\n`);
         }
         return 1;
-    }
-
-    if (parsed.totalErrors > 0) {
-        process.stderr.write(
-            `svelte-check: ${parsed.totalErrors} repo error(s) outside commit files (CI will catch)\n`
-        );
     }
 
     return 0;

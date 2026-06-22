@@ -5,10 +5,13 @@ import { fileURLToPath } from 'node:url';
 import { describe, it } from 'node:test';
 
 import {
-	filterDiagnostics,
-	normalizeTargetPath,
-	parseMachineVerboseOutput,
-	runStagedCheck
+    PACKAGE_TSCONFIG,
+    ROOT_TSCONFIG,
+    buildCheckPlans,
+    filterDiagnostics,
+    normalizeTargetPath,
+    parseMachineVerboseOutput,
+    runStagedCheck
 } from './svelte-check-staged.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,26 +80,53 @@ describe('parseMachineVerboseOutput', () => {
 });
 
 describe('filterDiagnostics', () => {
-	it('keeps only errors in target files', () => {
-		const parsed = parseMachineVerboseOutput(fixture);
-		const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
-		const matching = filterDiagnostics(parsed.errors, targets);
-		assert.equal(matching.length, 1);
-		assert.equal(matching[0].filename, 'packages/svelteplot/src/transforms/stack.ts');
-	});
+    it('keeps only errors in target files', () => {
+        const parsed = parseMachineVerboseOutput(fixture);
+        const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
+        const matching = filterDiagnostics(parsed.errors, targets);
+        assert.equal(matching.length, 1);
+        assert.equal(matching[0].filename, 'packages/svelteplot/src/transforms/stack.ts');
+    });
 
-	it('matches Windows-style diagnostic paths to posix targets', () => {
-		const errors = [
-			{
-				filename: 'packages\\svelteplot\\src\\transforms\\stack.ts',
-				line: 1,
-				column: 1,
-				message: 'err'
-			}
-		];
-		const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
-		assert.equal(filterDiagnostics(errors, targets).length, 1);
-	});
+    it('matches Windows-style diagnostic paths to posix targets', () => {
+        const errors = [
+            {
+                filename: 'packages\\svelteplot\\src\\transforms\\stack.ts',
+                line: 1,
+                column: 1,
+                message: 'err'
+            }
+        ];
+        const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
+        assert.equal(filterDiagnostics(errors, targets).length, 1);
+    });
+});
+
+describe('buildCheckPlans', () => {
+    it('uses package tsconfig for packages/svelteplot paths', () => {
+        const plans = buildCheckPlans(['packages/svelteplot/tests/areaY.test.svelte.ts']);
+        assert.equal(plans.length, 1);
+        assert.equal(plans[0].tsconfig, PACKAGE_TSCONFIG);
+        assert.equal(plans[0].needsSync, false);
+        assert.deepEqual([...plans[0].targets], ['packages/svelteplot/tests/areaY.test.svelte.ts']);
+    });
+
+    it('uses root tsconfig for docs app paths', () => {
+        const plans = buildCheckPlans(['src/routes/marks/area/+page.ts']);
+        assert.equal(plans.length, 1);
+        assert.equal(plans[0].tsconfig, ROOT_TSCONFIG);
+        assert.equal(plans[0].needsSync, true);
+    });
+
+    it('runs both tsconfigs when commit spans package and docs app', () => {
+        const plans = buildCheckPlans([
+            'packages/svelteplot/src/transforms/stack.ts',
+            'src/routes/marks/area/+page.ts'
+        ]);
+        assert.equal(plans.length, 2);
+        assert.equal(plans[0].tsconfig, PACKAGE_TSCONFIG);
+        assert.equal(plans[1].tsconfig, ROOT_TSCONFIG);
+    });
 });
 
 describe('runStagedCheck', () => {
