@@ -19,6 +19,24 @@ export const PACKAGE_PREFIX = 'packages/svelteplot/';
 export const PACKAGE_TSCONFIG = 'packages/svelteplot/tsconfig.json';
 export const ROOT_TSCONFIG = './tsconfig.json';
 
+/** @param {string} target repo-relative posix path */
+export function isDiagnosableTarget(target) {
+    if (target === 'vite.config.js' || target === 'vite.config.ts') return true;
+    if (target.startsWith('src/') || target.startsWith('test/') || target.startsWith('tests/')) {
+        return true;
+    }
+    if (target.startsWith(PACKAGE_PREFIX)) {
+        const rest = target.slice(PACKAGE_PREFIX.length);
+        return rest.startsWith('src/') || rest.startsWith('tests/');
+    }
+    return false;
+}
+
+/** @param {string[]} targetPaths */
+export function filterDiagnosableTargets(targetPaths) {
+    return targetPaths.filter(isDiagnosableTarget);
+}
+
 /**
  * @param {string[]} targetPaths repo-relative posix paths
  * @returns {Array<{ tsconfig: string, targets: Set<string>, needsSync: boolean }>}
@@ -210,7 +228,9 @@ export function runStagedCheck(repoRoot, fileArgs, options = {}) {
 
     if (targets.size === 0) return 0;
 
-    const existing = [...targets].filter((f) => existsSync(path.join(root, f)));
+    const existing = filterDiagnosableTargets(
+        [...targets].filter((f) => existsSync(path.join(root, f)))
+    );
     if (existing.length === 0) return 0;
 
     if (!runCheck) return 0;

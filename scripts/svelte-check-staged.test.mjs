@@ -8,7 +8,9 @@ import {
     PACKAGE_TSCONFIG,
     ROOT_TSCONFIG,
     buildCheckPlans,
+    filterDiagnosableTargets,
     filterDiagnostics,
+    isDiagnosableTarget,
     normalizeTargetPath,
     parseMachineVerboseOutput,
     runStagedCheck
@@ -102,6 +104,30 @@ describe('filterDiagnostics', () => {
     });
 });
 
+describe('isDiagnosableTarget', () => {
+    it('accepts paths covered by root or package tsconfig includes', () => {
+        assert.equal(isDiagnosableTarget('src/routes/marks/area/+page.ts'), true);
+        assert.equal(isDiagnosableTarget('vite.config.js'), true);
+        assert.equal(isDiagnosableTarget('packages/svelteplot/src/index.ts'), true);
+        assert.equal(isDiagnosableTarget('packages/svelteplot/tests/dot.test.ts'), true);
+    });
+
+    it('rejects paths outside svelte-check include globs', () => {
+        assert.equal(isDiagnosableTarget('scripts/generate-api.js'), false);
+        assert.equal(isDiagnosableTarget('screenshot-examples.js'), false);
+        assert.equal(isDiagnosableTarget('packages/svelteplot/scripts/fix-js-imports.js'), false);
+    });
+});
+
+describe('filterDiagnosableTargets', () => {
+    it('drops undiagnosable paths and keeps in-scope paths', () => {
+        assert.deepEqual(
+            filterDiagnosableTargets(['scripts/generate-api.js', 'src/routes/marks/area/+page.ts']),
+            ['src/routes/marks/area/+page.ts']
+        );
+    });
+});
+
 describe('buildCheckPlans', () => {
     it('uses package tsconfig for packages/svelteplot paths', () => {
         const plans = buildCheckPlans(['packages/svelteplot/tests/areaY.test.svelte.ts']);
@@ -139,5 +165,9 @@ describe('runStagedCheck', () => {
             runStagedCheck(repoRoot, ['packages/does-not-exist/removed.ts'], { runCheck: false }),
             0
         );
+    });
+
+    it('exits 0 for root scripts outside svelte-check include', () => {
+        assert.equal(runStagedCheck(repoRoot, ['scripts/generate-api.js'], { runCheck: false }), 0);
     });
 });

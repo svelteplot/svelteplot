@@ -11,5 +11,5 @@ repos:
             name: svelte-check (commit files)
             entry: node scripts/svelte-check-staged.mjs
             language: system
-            files: \.(svelte|svelte\.ts|ts|mts|cts|js)$
+            files: ^((src|test|tests)/|packages/svelteplot/|vite\.config\.).+\.(svelte|svelte\.ts|ts|mts|cts|js)$|^vite\.config\.(js|ts)$
             pass_filenames: true
