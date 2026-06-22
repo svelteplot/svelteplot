@@ -3,7 +3,7 @@ repos:
       hooks:
           - id: oxlint
             name: oxlint (type-aware)
-            entry: pnpm exec oxlint --type-aware --fix
+            entry: bash -c 'pnpm exec svelte-kit sync && pnpm exec oxlint --type-aware --fix'
             language: system
             files: \.(js|ts|mts|cts|svelte)$
             pass_filenames: false

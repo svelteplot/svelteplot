@@ -25,10 +25,15 @@ export function getRepoRoot(repoRoot) {
     return result.stdout.trim();
 }
 
+/** @param {string} filePath */
+export function toPosixPath(filePath) {
+    return filePath.replace(/\\/g, '/');
+}
+
 /** @param {string} repoRoot @param {string} filePath */
 export function normalizeTargetPath(repoRoot, filePath) {
     const resolved = path.isAbsolute(filePath) ? filePath : path.resolve(repoRoot, filePath);
-    return path.relative(repoRoot, resolved).split(path.sep).join('/');
+    return toPosixPath(path.relative(repoRoot, resolved));
 }
 
 /**
@@ -57,7 +62,7 @@ export function parseMachineVerboseOutput(output) {
                 const record = JSON.parse(payload);
                 if (record.type === 'ERROR' && record.filename) {
                     errors.push({
-                        filename: record.filename,
+                        filename: toPosixPath(record.filename),
                         line: (record.start?.line ?? 0) + 1,
                         column: (record.start?.character ?? 0) + 1,
                         message: record.message ?? ''
@@ -89,7 +94,7 @@ export function parseMachineVerboseOutput(output) {
  * @param {Set<string>} targets repo-relative posix paths
  */
 export function filterDiagnostics(errors, targets) {
-    return errors.filter((d) => targets.has(d.filename));
+    return errors.filter((d) => targets.has(toPosixPath(d.filename)));
 }
 
 /**

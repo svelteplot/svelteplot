@@ -26,7 +26,7 @@
         "format": "eslint --fix package.json && prettier --write .",
         "lint": "pnpm run lint:oxlint && pnpm run lint:eslint && pnpm run lint:types",
         "lint:eslint": "prettier --check src && eslint src package.json",
-        "lint:oxlint": "oxlint --type-aware",
+        "lint:oxlint": "svelte-kit sync && oxlint --type-aware",
         "lint:types": "svelte-kit sync && tsc --noEmit -p tsconfig.lint-types.json",
         "preview": "vite preview",
         "screenshots": "node screenshot-examples.js",

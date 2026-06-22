@@ -5,10 +5,10 @@ import { fileURLToPath } from 'node:url';
 import { describe, it } from 'node:test';
 
 import {
-    filterDiagnostics,
-    normalizeTargetPath,
-    parseMachineVerboseOutput,
-    runStagedCheck
+	filterDiagnostics,
+	normalizeTargetPath,
+	parseMachineVerboseOutput,
+	runStagedCheck
 } from './svelte-check-staged.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,13 +77,26 @@ describe('parseMachineVerboseOutput', () => {
 });
 
 describe('filterDiagnostics', () => {
-    it('keeps only errors in target files', () => {
-        const parsed = parseMachineVerboseOutput(fixture);
-        const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
-        const matching = filterDiagnostics(parsed.errors, targets);
-        assert.equal(matching.length, 1);
-        assert.equal(matching[0].filename, 'packages/svelteplot/src/transforms/stack.ts');
-    });
+	it('keeps only errors in target files', () => {
+		const parsed = parseMachineVerboseOutput(fixture);
+		const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
+		const matching = filterDiagnostics(parsed.errors, targets);
+		assert.equal(matching.length, 1);
+		assert.equal(matching[0].filename, 'packages/svelteplot/src/transforms/stack.ts');
+	});
+
+	it('matches Windows-style diagnostic paths to posix targets', () => {
+		const errors = [
+			{
+				filename: 'packages\\svelteplot\\src\\transforms\\stack.ts',
+				line: 1,
+				column: 1,
+				message: 'err'
+			}
+		];
+		const targets = new Set(['packages/svelteplot/src/transforms/stack.ts']);
+		assert.equal(filterDiagnostics(errors, targets).length, 1);
+	});
 });
 
 describe('runStagedCheck', () => {
