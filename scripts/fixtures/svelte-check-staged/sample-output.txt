@@ -1,0 +1,5 @@
+1782156929346 START "/home/liam/Code/svelteplot"
+1782156929349 {"type":"ERROR","filename":"packages/svelteplot/src/helpers/rasterInterpolate.ts","start":{"line":0,"character":25},"end":{"line":0,"character":38},"message":"Cannot find module 'd3-delaunay' or its corresponding type declarations.","code":2307}
+1782156929349 {"type":"ERROR","filename":"packages/svelteplot/src/transforms/stack.ts","start":{"line":0,"character":8},"end":{"line":0,"character":20},"message":"Type 'string' is not assignable to type 'StackOrder'.","code":2322}
+1782156929349 {"type":"WARNING","filename":"packages/svelteplot/src/marks/Brush.svelte","start":{"line":112,"character":20},"end":{"line":112,"character":25},"message":"This reference only captures the initial value of `brush`.","code":"state_referenced_locally","source":"svelte"}
+1782156943140 COMPLETED 1555 FILES 21 ERRORS 7 WARNINGS 10 FILES_WITH_PROBLEMS

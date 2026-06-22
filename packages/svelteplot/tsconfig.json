@@ -10,7 +10,17 @@
         "strict": true,
         "moduleResolution": "bundler",
         "module": "esnext",
-        "target": "esnext"
+        "target": "esnext",
+        "paths": {
+            "svelteplot": ["./src/index.ts"],
+            "svelteplot/*": ["./src/*"]
+        }
     },
-    "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.js", "tests/**/*.ts", "tests/**/*.svelte"]
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.svelte",
+        "src/**/*.js",
+        "tests/**/*.ts",
+        "tests/**/*.svelte"
+    ]
 }
