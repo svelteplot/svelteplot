@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 import * as url from 'url';
@@ -21,12 +22,12 @@ export default defineConfig({
         ]
     },
     test: {
-        include: [
-            'tests/**/*.{test,spec}.{js,ts,svelte.ts}',
-            'src/**/*.{test,spec}.{js,ts,svelte.ts}'
-        ],
-        exclude: ['tests/**/*.browser.test.svelte.ts'],
-        environment: 'jsdom',
-        setupFiles: ['./tests/setup.ts']
+        include: ['tests/**/*.browser.test.svelte.ts'],
+        setupFiles: ['vitest-browser-svelte'],
+        browser: {
+            enabled: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium' }]
+        }
     }
 });

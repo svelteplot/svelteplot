@@ -57,6 +57,7 @@
     "scripts": {
         "prepack": "npx svelte-package --input src && node scripts/fix-js-imports.js dist",
         "test": "vitest run",
+        "test:browser": "vitest run --config vitest.browser.config.js",
         "test:watch": "vitest"
     },
     "dependencies": {
@@ -99,7 +100,10 @@
         "@types/topojson-client": "^3.1.5",
         "@testing-library/svelte": "^5.3.1",
         "@testing-library/user-event": "^14.6.1",
+        "@vitest/browser-playwright": "4.1.4",
+        "vitest-browser-svelte": "^2.1.1",
         "jsdom": "^27.4.0",
+        "playwright": "^1.52.0",
         "resize-observer-polyfill": "^1.5.1",
         "svelte": "5",
         "typescript": "^5.9.3",
