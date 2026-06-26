@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { inferScaleType, looksLikeANumber } from './scales.js';
+import { scalePoint } from 'd3-scale';
+import { createScale, inferScaleType, looksLikeANumber } from './scales.js';
+import { IS_SORTED } from '../transforms/sort.js';
+import type { Mark } from '../types/mark.js';
+import type { GenericMarkOptions } from '../types/index.js';
 
 const STRINGS = ['foo', 'bar', 'baz'];
 const DATES = [new Date(), new Date()];
@@ -47,6 +51,66 @@ describe('inferScaleType', () => {
     });
     it('infers time scale when nice is set on date data', () => {
         expect(inferScaleType('x', DATES, new Set(['tickY']), { nice: true })).toBe('time');
+    });
+});
+
+const plotDefaults = {} as any;
+const basePlotOptions = {
+    implicitScales: true,
+    sortOrdinalDomains: true
+} as any;
+
+function mockMark(
+    data: Record<string, unknown>[],
+    options: GenericMarkOptions & { [IS_SORTED]?: unknown }
+): Mark<GenericMarkOptions> {
+    return {
+        id: Symbol(),
+        type: 'dot',
+        channels: ['x', 'y'],
+        scales: new Set(['x', 'y']),
+        data,
+        options
+    };
+}
+
+describe('createScale sorted ordinal domain', () => {
+    it('uses the first sorted mark bound to the scale for domain order', () => {
+        const unsorted = mockMark(
+            [
+                { label: 'Zulu', value: 300 },
+                { label: 'Alpha', value: 100 },
+                { label: 'Beta', value: 200 }
+            ],
+            { x: 'value', y: 'label' }
+        );
+        const sorted = mockMark(
+            [
+                { label: 'Zulu', value: 300 },
+                { label: 'Beta', value: 200 },
+                { label: 'Alpha', value: 100 }
+            ],
+            { x: 'value', y: 'label', [IS_SORTED]: { channel: '-x' } }
+        );
+
+        const scale = createScale(
+            'y',
+            {
+                scale: ({ domain, plotHeight }: any) =>
+                    scalePoint()
+                        .domain(domain)
+                        .range([plotHeight, 0])
+            },
+            [unsorted, sorted],
+            basePlotOptions,
+            100,
+            100,
+            false,
+            plotDefaults
+        );
+
+        // y domains are reversed from value order
+        expect(scale.domain).toEqual(['Alpha', 'Beta', 'Zulu']);
     });
 });
 

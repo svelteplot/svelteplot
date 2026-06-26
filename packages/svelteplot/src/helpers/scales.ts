@@ -165,6 +165,59 @@ export function computeScales(
     return { x, y, r, color, opacity, length, symbol, fx, fy, projection } as unknown as PlotScales;
 }
 
+function channelAccessorForScale(
+    channel: ScaledChannelName,
+    mark: Mark<GenericMarkOptions>,
+    scaleName: ScaleName,
+    plotOptions: ResolvedPlotOptions,
+    scaleOptions: Partial<ScaleOptions>
+): ChannelAccessor | null {
+    if (!mark.data.length || mark.options[channel] === undefined) return null;
+
+    const channelOptions = isDataRecord(mark.options[channel])
+        ? mark.options[channel]
+        : { value: mark.options[channel], scale: CHANNEL_SCALE[channel] };
+
+    const useScale =
+        channelOptions.scale === scaleName &&
+        (plotOptions.implicitScales || (scaleOptions as any).scale) &&
+        typeof channelOptions.value !== 'undefined';
+
+    return useScale && channelOptions.value != null ? channelOptions.value : null;
+}
+
+const SCALE_CHANNELS: Record<'x' | 'y', ScaledChannelName[]> = {
+    x: ['x', 'x1', 'x2'],
+    y: ['y', 'y1', 'y2']
+};
+
+/** Collect unique ordinal scale values in a sorted mark's data order. */
+function collectSortedDomainOrder(
+    mark: Mark<GenericMarkOptions>,
+    scaleName: 'x' | 'y',
+    plotOptions: ResolvedPlotOptions,
+    scaleOptions: Partial<ScaleOptions>
+): RawValue[] {
+    let accessor: ChannelAccessor | null = null;
+    for (const channel of SCALE_CHANNELS[scaleName]) {
+        accessor = channelAccessorForScale(channel, mark, scaleName, plotOptions, scaleOptions);
+        if (accessor) break;
+    }
+    if (!accessor) return [];
+
+    const order: RawValue[] = [];
+    const seen = new Set<RawValue>();
+    for (const datum of mark.data) {
+        const value = resolveProp(accessor, datum);
+        if (value == null) continue;
+        if (!seen.has(value)) {
+            seen.add(value);
+            order.push(value);
+        }
+    }
+    return order;
+}
+
 export function createScale(
     name: ScaleName,
     scaleOptions: Partial<ScaleOptions>,
@@ -201,6 +254,7 @@ export function createScale(
     const propNames = new Set<string>();
     const uniqueScaleProps = new Set<string | ChannelAccessor>();
     let sortOrdinalDomain = plotOptions.sortOrdinalDomains ?? true;
+    let sortedDomainMark: Mark<GenericMarkOptions> | null = null;
     for (const mark of marks) {
         // we only sort the scale domain alphabetically, if none of the
         // marks that map to it are using the `sort` transform. Note that
@@ -208,7 +262,16 @@ export function createScale(
         // since the explicit sort transforms like shuffle will set the
         // sort channel to null to we know that there's an explicit order
         if ((name === 'x' || name === 'y') && mark.options[IS_SORTED] != undefined) {
-            sortOrdinalDomain = false;
+            const sortedOrder = collectSortedDomainOrder(
+                mark,
+                name,
+                plotOptions,
+                scaleOptions
+            );
+            if (sortedOrder.length > 0) {
+                sortOrdinalDomain = false;
+                if (!sortedDomainMark) sortedDomainMark = mark;
+            }
         }
 
         for (const channel of mark.channels) {
@@ -324,7 +387,7 @@ export function createScale(
 
     // construct domain from data values
     // For facet scales (fx/fy), null is a valid grouping category (e.g. penguins with sex=null)
-    const valueArr = [...dataValues.values(), ...(scaleOptions.domain || [])].filter(
+    let valueArr = [...dataValues.values(), ...(scaleOptions.domain || [])].filter(
         (d) => d != null || name === 'fx' || name === 'fy'
     );
 
@@ -342,6 +405,22 @@ export function createScale(
 
     if (isOrdinal && sortOrdinalDomain) {
         valueArr.sort(ascending as any);
+    } else if (
+        isOrdinal &&
+        !scaleOptions.domain &&
+        sortedDomainMark &&
+        (name === 'x' || name === 'y')
+    ) {
+        const sortedDomainOrder = collectSortedDomainOrder(
+            sortedDomainMark,
+            name,
+            plotOptions,
+            scaleOptions
+        );
+        if (sortedDomainOrder.length > 0) {
+            const seen = new Set(sortedDomainOrder);
+            valueArr = [...sortedDomainOrder, ...valueArr.filter((v) => !seen.has(v))];
+        }
     }
 
     const valueArray =
