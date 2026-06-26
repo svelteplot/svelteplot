@@ -15,7 +15,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+        "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && pnpm --filter svelteplot check",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "dev": "vite dev",
         "docs": "npm run build && cd build && rsync --recursive . vis4.net:svelteplot/alpha0/",

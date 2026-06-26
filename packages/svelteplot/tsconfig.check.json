@@ -1,0 +1,23 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "paths": {
+            "svelteplot": ["./src/index.ts"],
+            "svelteplot/*": ["./src/*"]
+        }
+    },
+    "include": [
+        "tests/ruleY.contract.ts",
+        "tests/check-ambient.d.ts",
+        "src/**/*.ts",
+        "src/**/*.svelte",
+        "src/**/*.js"
+    ],
+    "exclude": [
+        "tests/**/*.test.ts",
+        "tests/**/*.test.svelte.ts",
+        "tests/**/*.svelte",
+        "src/**/*.test.ts",
+        "src/**/*.spec.ts"
+    ]
+}
