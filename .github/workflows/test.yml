@@ -28,5 +28,11 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
+            - name: Install Playwright (svelteplot browser tests)
+              run: pnpm --filter svelteplot exec playwright install --with-deps chromium
+
             - name: Run Vitest tests
               run: pnpm test
+
+            - name: Run svelteplot browser tests
+              run: pnpm --filter svelteplot test:browser

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext, untrack } from 'svelte';
     import { randomId, testFilter } from '../../helpers/index.js';
+    import { measureSvgTextLayoutExtent } from '../../helpers/measureSvgTextLayoutExtent.js';
     import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
     import type {
@@ -119,7 +120,8 @@
                         )
                             return 0;
                         if (tick.hidden || !testFilter(tick, options)) return 0;
-                        if (tickTexts[i]) return tickTexts[i].getBoundingClientRect().width;
+                        if (tickTexts[i])
+                            return measureSvgTextLayoutExtent(tickTexts[i], 'width');
                         return 0;
                     }) as number[]
                 ) ?? 0

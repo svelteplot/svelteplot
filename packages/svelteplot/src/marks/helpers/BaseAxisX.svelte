@@ -16,6 +16,7 @@
     import { resolveProp, resolveStyles } from '../../helpers/resolve.js';
     import { max } from 'd3-array';
     import { randomId, testFilter } from '../../helpers/index.js';
+    import { measureSvgTextLayoutExtent } from '../../helpers/measureSvgTextLayoutExtent.js';
     import { INDEX } from 'svelteplot/constants';
     import { RAW_VALUE } from 'svelteplot/transforms/recordize';
     import wordwrap from 'svelteplot/helpers/wordwrap';
@@ -147,7 +148,7 @@
                             return 0;
                         if (tick.hidden || !testFilter(tick, options)) return 0;
                         if (tickTextElements[i])
-                            return tickTextElements[i].getBoundingClientRect().height;
+                            return measureSvgTextLayoutExtent(tickTextElements[i], 'height');
                         return 0;
                     }) as number[]
                 ) ?? 0
