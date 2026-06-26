@@ -1,7 +1,7 @@
 <!-- @component
     Renders horizontal rule lines at specified y positions with customizable horizontal range
 -->
-<script lang="ts" generics="Datum = DataRecord">
+<script lang="ts" generics="Datum extends DataRecord | RawValue = DataRecord | RawValue">
     interface RuleYMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         /** the input data array; each element becomes one horizontal rule */
         data?: Datum[];
@@ -27,10 +27,10 @@
     import { resolveProp, resolveStyles } from '../helpers/resolve.js';
     import type {
         DataRecord,
-        DataRow,
         BaseMarkProps,
         ConstantAccessor,
-        ChannelAccessor
+        ChannelAccessor,
+        RawValue
     } from '../types/index.js';
     import { getPlotDefaults } from '../hooks/plotDefaults.js';
     import { IS_SORTED } from 'svelteplot/transforms/sort';
@@ -52,9 +52,7 @@
     });
 
     const plot = usePlot();
-    const args = $derived(
-        recordizeY({ data: data as DataRow[], ...options }, { withIndex: false })
-    );
+    const args = $derived(recordizeY({ data, ...options }, { withIndex: false }));
 </script>
 
 <Mark type="ruleY" channels={['y', 'x1', 'x2', 'stroke', 'opacity', 'strokeOpacity']} {...args}>

@@ -56,6 +56,7 @@
     ],
     "scripts": {
         "prepack": "npx svelte-package --input src && node scripts/fix-js-imports.js dist",
+        "check": "svelte-check --tsconfig tsconfig.check.json --threshold error",
         "test": "vitest run",
         "test:watch": "vitest"
     },

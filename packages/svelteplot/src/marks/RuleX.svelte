@@ -1,7 +1,7 @@
 <!-- @component
     Renders vertical rule lines at specified x positions with customizable vertical range
 -->
-<script lang="ts" generics="Datum = DataRecord | RawValue">
+<script lang="ts" generics="Datum extends DataRecord | RawValue = DataRecord | RawValue">
     interface RuleXMarkProps extends Omit<BaseMarkProps<Datum>, 'fill' | 'fillOpacity'> {
         /** the input data array; each element becomes one vertical rule */
         data?: Datum[];
