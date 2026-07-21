@@ -1,5 +1,23 @@
 # Tutorial Plan
 
+Basics
+- Getting started
+- Scales
+- Transforms
+  - Step 1: What are transforms? (no exercise, just a short explanation)
+  - Step 2: Grouping (exercise: group by species and show the number of penguins per species in a bar chart)
+  - Step 3: Built-in transforms: sort (exercise: same plot as above, but sort the species by number of penguins using sort="Species")
+  - Step 4: Built-in transforms: filter
+  - Step 5: Post-scale transforms: dx, dy (exercise: place shadow bars behind the main bars in a bar chart)
+- Axes & grids
+- Faceting
+
+Advanced
+- Tooltips
+- Brushing
+- Transitions
+
+
 ## Goal
 
 Give new users a **playful, interactive introduction** to the mental model behind SveltePlot — not a complete feature reference. The tutorial is done when a user understands _why_ SveltePlot works the way it does and feels confident enough to read the docs on their own.
@@ -12,7 +30,7 @@ The basics tutorial is **already essentially complete**:
 
 - **01-basics** — getting-started + scales + axes/grids + faceting (≈15 lessons ✓)
 
-The marks and transforms chapters inside 01-basics are **deferred**. Instead of duplicating the docs, mark-specific tutorials (e.g. "working with the Line mark") should be linked directly from the relevant docs pages. This keeps the main tutorial focused and finite.
+The marks chapter inside 01-basics is **deferred**. Instead of duplicating the docs, mark-specific tutorials (e.g. "working with the Line mark") should be linked directly from the relevant docs pages. This keeps the main tutorial focused and finite.
 
 **02-advanced** is a placeholder for future advanced tutorials.
 
@@ -85,11 +103,13 @@ In this chapter we learn how SveltePlot automatically determines the scales for 
 - Bypassing scales
   - change `<RuleY y={0} />` to `<RuleY y={{ scale: null, value: 0 }} />` to bypass scale
 
-### Transforms (`03-transforms/`) — DEFERRED
+### Transforms (`03-transforms/`)
 
-Transforms are useful when your dataset is not in the shape you need it to be visualized. Technically, the BarY mark requires
-
-> See `## Transforms — DEFERRED` below.
+- [x] What are transforms? → `03-transforms/01-intro`
+- [x] Grouping — `groupX` to count penguins per species → `03-transforms/02-grouping`
+- [x] Sorting — `sort={{ channel: '-y' }}` → `03-transforms/03-sort`
+- [x] Filtering — `filter` channel on groupX → `03-transforms/04-filter`
+- [x] dx and dy — post-scale pixel offsets / shadow bars → `03-transforms/05-dx-dy`
 
 ### Scales (`04-scales/`)
 

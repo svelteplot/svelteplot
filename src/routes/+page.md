@@ -7,11 +7,11 @@ actions:
   - label: Getting started
     type: primary
     to: /getting-started
-  - label: Why SveltePlot?
-    to: /why-svelteplot
-    type: flat
   - label: Examples
     to: /examples
+    type: flat
+  - label: Tutorial
+    to: /tutorial
     type: flat
 examples:
   - area/smoothed-area
