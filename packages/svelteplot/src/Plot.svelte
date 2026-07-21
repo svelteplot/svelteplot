@@ -3,7 +3,7 @@
     The Plot component is the container for plots. It collects the marks with
     their data and channels and computes the shared scales.
 
-    The Plot component is split into two parts. This is the outer Plot which 
+    The Plot component is split into two parts. This is the outer Plot which
     provides convenient defaults and automatically adds axes etc to the graphics.
     The downside is that it adds a bunch of imports that you may not be using.
     To help with this you can use the core/Plot component directly for a more
@@ -97,13 +97,14 @@
     {#if userFooter}{@render userFooter?.()}{/if}
 {/snippet}
 
-<!-- There's a bug triggering RangeError: Maximum call stack size exceeded 
+<!-- There's a bug triggering RangeError: Maximum call stack size exceeded
      when using SveltePlot in ssr, so for now, we're disabling it -->
 
 <svelte:boundary>
     <Plot
         {overlay}
         {underlay}
+        {facet}
         {...restOptions}
         header={userHeader ||
         restOptions.title ||

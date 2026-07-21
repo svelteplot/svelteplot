@@ -1,5 +1,5 @@
-<!-- 
-    @component 
+<!--
+    @component
     The TickX mark is useful for showing one-dimensional distributions along the x axis. The y axis must be a band scale.
 -->
 
@@ -92,7 +92,7 @@
                                 ? yUsesBand
                                     ? d.y + yBandwidth * 0.5
                                     : d.y
-                                : plot.options.marginTop + plot.plotHeight}
+                                : plot.options.marginTop + plot.facetHeight}
                         {@const insetValue =
                             typeof inset_ === 'number' || typeof inset_ === 'string' ? inset_ : 0}
                         {@const inset = parseInset(insetValue, Math.abs(y2 - y1))}
@@ -108,6 +108,9 @@
                                 plot,
                                 'stroke'
                             )}
+                            filter={resolveProp(args.svgFilter, d.datum, undefined) as
+                                | string
+                                | undefined}
                             y1={y1 + inset + tickOffset}
                             y2={y2 - inset - tickOffset} />
                     {/if}

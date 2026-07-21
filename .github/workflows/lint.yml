@@ -33,8 +33,11 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
+            - name: Sync SvelteKit types
+              run: pnpm exec svelte-kit sync
+
             - name: Run linting (oxlint)
-              run: pnpm run lint:oxlint
+              run: pnpm run lint:oxlint 2>&1
 
             - name: Run linting (eslint)
               run: pnpm run lint:eslint

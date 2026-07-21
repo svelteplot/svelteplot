@@ -1,5 +1,13 @@
 ---
 title: Trail mark
+description: Trail mark draws a path like Line but encodes a third variable as varying stroke width — creating a tapering trace that reveals magnitude over time or space.
+examples:
+  - trail/napoleon
+  - trail/countries
+  - trail/curves
+links:
+  examples: /examples/trail
+  api: /api/marks#Trail
 ---
 
 [API Reference](/api/marks#Trail)
@@ -14,39 +22,39 @@ In the example below we use the line width to represent elevation along the 12th
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, Trail } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Line, Trail } from 'svelteplot';
+  import { page } from '$app/state';
 
-    let { tdf } = $derived(page.data.data);
+  let { tdf } = $derived(page.data.data);
 </script>
 
 <Plot
-    y={{ tickSpacing: 100 }}
-    r={{ zero: false, range: [1, 20] }}
-    aspectRatio={1}
-    grid>
-    <Line data={tdf} x="long" y="lat" />
-    <Trail
-        opacity={0.4}
-        data={tdf}
-        x="long"
-        y="lat"
-        r="elevation" />
+  y={{ tickSpacing: 100 }}
+  r={{ zero: false, range: [1, 20] }}
+  aspectRatio={1}
+  grid>
+  <Line data={tdf} x="long" y="lat" />
+  <Trail
+    opacity={0.4}
+    data={tdf}
+    x="long"
+    y="lat"
+    r="elevation" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    aspectRatio={1}
-    r={{ zero: false, range: [1, 20] }}
-    grid>
-    <Line data={tdf} x="long" y="lat" />
-    <Trail
-        opacity={0.4}
-        data={tdf}
-        x="long"
-        y="lat"
-        r="elevation" />
+  aspectRatio={1}
+  r={{ zero: false, range: [1, 20] }}
+  grid>
+  <Line data={tdf} x="long" y="lat" />
+  <Trail
+    opacity={0.4}
+    data={tdf}
+    x="long"
+    y="lat"
+    r="elevation" />
 </Plot>
 ```
 
@@ -56,53 +64,53 @@ By default, the trail width (bound to the `r` channel) is scaled using a square-
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Trail } from 'svelteplot';
-    import { RadioInput } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Trail } from 'svelteplot';
+  import { RadioInput } from '$shared/ui';
+  import { page } from '$app/state';
 
-    let { minard } = $derived(page.data.data);
-    let scale = $state('linear');
+  let { minard } = $derived(page.data.data);
+  let scale = $state('linear');
 </script>
 
 <RadioInput
-    bind:value={scale}
-    options={['linear', 'sqrt']} />
+  bind:value={scale}
+  options={['linear', 'sqrt']} />
 <Plot
-    r={{ type: scale, range: [1, 20] }}
-    aspectRatio={0.75}
-    inset={10}
-    axes={false}>
-    <Trail
-        data={minard}
-        x="long"
-        y="lat"
-        cap="butt"
-        r="survivors"
-        z={(d) => `${d.group}-${d.direction}`}
-        fill={(d) =>
-            d.direction === 'A'
-                ? 'currentColor'
-                : 'var(--svp-red)'} />
+  r={{ type: scale, range: [1, 20] }}
+  aspectRatio={0.75}
+  inset={10}
+  axes={false}>
+  <Trail
+    data={minard}
+    x="long"
+    y="lat"
+    cap="butt"
+    r="survivors"
+    z={(d) => `${d.group}-${d.direction}`}
+    fill={(d) =>
+      d.direction === 'A'
+        ? 'currentColor'
+        : 'var(--svp-red)'} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    r={{ type: 'linear', range: [1, 20] }}
-    aspectRatio={0.75}
-    inset={10}
-    axes={false}>
-    <Trail
-        data={minard}
-        x="long"
-        y="lat"
-        cap="butt"
-        r="survivors"
-        z={(d) => `${d.group}-${d.direction}`}
-        fill={(d) =>
-            d.direction === 'A'
-                ? 'currentColor'
-                : 'var(--svp-red)'} />
+  r={{ type: 'linear', range: [1, 20] }}
+  aspectRatio={0.75}
+  inset={10}
+  axes={false}>
+  <Trail
+    data={minard}
+    x="long"
+    y="lat"
+    cap="butt"
+    r="survivors"
+    z={(d) => `${d.group}-${d.direction}`}
+    fill={(d) =>
+      d.direction === 'A'
+        ? 'currentColor'
+        : 'var(--svp-red)'} />
 </Plot>
 ```
 
@@ -110,46 +118,46 @@ The trail mark supports round and butt capping and different interpolating metho
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, Trail } from 'svelteplot';
-    import type { CurveName } from 'svelteplot/types';
+  import { Plot, Line, Trail } from 'svelteplot';
+  import type { CurveName } from 'svelteplot/types';
 
-    const curves: CurveName[] = [
-        'linear',
-        'natural',
-        'basis',
-        'bump-x'
-    ];
-    const caps: ('round' | 'butt')[] = ['round', 'butt'];
+  const curves: CurveName[] = [
+    'linear',
+    'natural',
+    'basis',
+    'bump-x'
+  ];
+  const caps: ('round' | 'butt')[] = ['round', 'butt'];
 
-    const data = [
-        [1, 1, 0],
-        [2, 2, 1],
-        [3, 1, 3]
-    ].map(([x, y, r]) => ({ x, y, r }));
+  const data = [
+    [1, 1, 0],
+    [2, 2, 1],
+    [3, 1, 3]
+  ].map(([x, y, r]) => ({ x, y, r }));
 
-    const args = { data, x: 'x', y: 'y', r: 'r' };
+  const args = { data, x: 'x', y: 'y', r: 'r' };
 </script>
 
 <Plot
-    height={400}
-    inset={20}
-    x={{ axis: false }}
-    y={{ axis: false }}
-    r={{ range: [1, 20] }}
-    fy={{ domain: curves }}
-    fx={{ domain: caps }}>
-    {#each caps as cap (cap)}
-        {#each curves as curve (curve)}
-            <Trail
-                {...args}
-                fy={curve}
-                fx={cap}
-                {cap}
-                {curve}
-                opacity={0.4} />
-            <Line {...args} {curve} fy={curve} fx={cap} />
-        {/each}
+  height={400}
+  inset={20}
+  x={{ axis: false }}
+  y={{ axis: false }}
+  r={{ range: [1, 20] }}
+  fy={{ domain: curves }}
+  fx={{ domain: caps }}>
+  {#each caps as cap (cap)}
+    {#each curves as curve (curve)}
+      <Trail
+        {...args}
+        fy={curve}
+        fx={cap}
+        {cap}
+        {curve}
+        opacity={0.4} />
+      <Line {...args} {curve} fy={curve} fx={cap} />
     {/each}
+  {/each}
 </Plot>
 ```
 

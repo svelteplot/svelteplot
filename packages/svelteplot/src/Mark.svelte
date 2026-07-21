@@ -98,18 +98,21 @@
     // let mark2 = $state(mark);
     const facetMode = $derived(options.facet || 'auto');
 
-    const optionsWithAutoFacet = $derived({
-        ...options,
-        __firstFacet: left && top,
-        ...(facet &&
+    const globalFacetChannels = $derived(
+        facet &&
         facet.data &&
         ((facetMode === 'auto' && facet.data === data) || facetMode === 'include')
-            ? {
-                  fx: facet.x,
-                  fy: facet.y
-              }
-            : {})
-    });
+            ? { fx: facet.x, fy: facet.y }
+            : {}
+    );
+
+    // Options merged with global facet channels, without __firstFacet.
+    // Used for data filtering and channel resolution so that global-facet
+    // marks are correctly filtered per panel and have fx/fy values resolved.
+    const optionsWithFacet = $derived({ ...options, ...globalFacetChannels });
+
+    // Same but includes __firstFacet for mark registration / getEmptyFacets.
+    const optionsWithAutoFacet = $derived({ ...optionsWithFacet, __firstFacet: left && top });
 
     let added = false;
 
@@ -145,7 +148,7 @@
         data
             .map((d, i) => ({ ...d, [INDEX]: i }))
             .flatMap((row, index) => {
-                const channels = options as Record<ChannelName, ChannelAccessor<Datum>>;
+                const channels = optionsWithFacet as Record<ChannelName, ChannelAccessor<Datum>>;
                 if (!testFacet(row, channels) || !testFilter(row, channels)) return [];
                 const out: ResolvedDataRecord<Datum> = {
                     datum: row,
@@ -156,10 +159,10 @@
                     ScaleName
                 ][]) {
                     // check if the mark has defined an accessor for this channel
-                    if ((options as any)?.[channel] !== undefined && out[channel] === undefined) {
+                    if ((optionsWithFacet as any)?.[channel] !== undefined && out[channel] === undefined) {
                         // resolve value
-                        out[channel] = resolveChannel(channel, row, options as any);
-                        if ((options as any)[channel] === INDEX) {
+                        out[channel] = resolveChannel(channel, row, optionsWithFacet as any);
+                        if ((optionsWithFacet as any)[channel] === INDEX) {
                             const scale = plot.scales[CHANNEL_SCALE[channel]];
                             if (scale.type === 'band' || scale.type === 'point') {
                                 out[channel] = scale.domain[out[channel] % scale.domain.length];
@@ -280,7 +283,7 @@
                 ][]) {
                     // check if the mark has defined an accessor for this channel
                     if (
-                        (options as any)?.[channel] != null &&
+                        (optionsWithFacet as any)?.[channel] != null &&
                         (out as any)[channel] === undefined
                     ) {
                         // resolve value

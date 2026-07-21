@@ -8,31 +8,31 @@ Since the filter transform only affects the mark’s index and not the channel v
 
 ```svelte live
 <script lang="ts">
-    import { Plot, BarY, filter } from 'svelteplot';
-    import { page } from '$app/state';
-    const { alphabet } = $derived(page.data.data);
-    import { getContext } from 'svelte';
+  import { Plot, BarY, filter } from 'svelteplot';
+  import { page } from '$app/state';
+  const { alphabet } = $derived(page.data.data);
+  import { getContext } from 'svelte';
 
-    const useCanvas = getContext('useCanvas');
+  const useCanvas = getContext('useCanvas');
 </script>
 
 <Plot>
-    <BarY
-        data={alphabet}
-        canvas={$useCanvas}
-        filter={(d) => /[aeiouy]/i.test(d.letter)}
-        x="letter"
-        y="frequency" />
+  <BarY
+    data={alphabet}
+    canvas={$useCanvas}
+    filter={(d) => /[aeiouy]/i.test(d.letter)}
+    x="letter"
+    y="frequency" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <BarY
-        data={alphabet}
-        filter={(d) => /[aeiouy]/i.test(d.letter)}
-        x="letter"
-        y="frequency" />
+  <BarY
+    data={alphabet}
+    filter={(d) => /[aeiouy]/i.test(d.letter)}
+    x="letter"
+    y="frequency" />
 </Plot>
 ```
 
@@ -46,13 +46,13 @@ You can also use the filter transform directly instead of the **filter** option.
 
 ```svelte
 <Plot>
-    <BarY
-        {...filter({
-            data: alphabet,
-            filter: (d) => /[aeiouy]/i.test(d.letter)
-        })}
-        data={alphabet}
-        x="letter"
-        y="frequency" />
+  <BarY
+    {...filter({
+      data: alphabet,
+      filter: (d) => /[aeiouy]/i.test(d.letter)
+    })}
+    data={alphabet}
+    x="letter"
+    y="frequency" />
 </Plot>
 ```

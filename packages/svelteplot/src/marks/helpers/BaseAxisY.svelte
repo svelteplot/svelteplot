@@ -211,5 +211,8 @@
     }
     text {
         fill: currentColor;
+        &.is-left {
+            text-anchor: end;
+        }
     }
 </style>

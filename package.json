@@ -26,7 +26,7 @@
         "format": "eslint --fix package.json && prettier --write .",
         "lint": "pnpm run lint:oxlint && pnpm run lint:eslint && pnpm run lint:types",
         "lint:eslint": "prettier --check src && eslint src package.json",
-        "lint:oxlint": "oxlint --type-aware",
+        "lint:oxlint": "oxlint --type-aware --format=stylish",
         "lint:types": "svelte-kit sync && tsc --noEmit -p tsconfig.lint-types.json",
         "preview": "vite preview",
         "screenshots": "node screenshot-examples.js",
@@ -35,11 +35,14 @@
         "vr:report": "node scripts/vr-report.js"
     },
     "dependencies": {
+        "@sveltejs/repl": "workspace:*",
         "svelteplot": "workspace:*"
     },
     "devDependencies": {
         "@aitodotai/json-stringify-pretty-compact": "^1.3.0",
         "@emotion/css": "^11.13.5",
+        "@rich_harris/svelte-split-pane": "^3.0.0",
+        "@shikijs/transformers": "^4.0.2",
         "@shikijs/twoslash": "^3.22.0",
         "@sveltejs/adapter-auto": "^7.0.1",
         "@sveltejs/adapter-static": "^3.0.10",
@@ -81,6 +84,7 @@
         "log-update": "^7.1.0",
         "lru-cache": "^11.3.3",
         "magic-string": "^0.30.21",
+        "marked": "^17.0.6",
         "mdast-util-from-markdown": "^2.0.3",
         "mdast-util-gfm": "^3.1.0",
         "oxlint": "^1.59.0",
@@ -115,7 +119,8 @@
         "vitest": "^4.1.4",
         "vitest-matchmedia-mock": "^2.0.3",
         "wx-svelte-grid": "^2.6.1",
-        "yoctocolors": "^2.1.2"
+        "yoctocolors": "^2.1.2",
+        "yootils": "^0.3.1"
     },
     "packageManager": "pnpm@10.33.0"
 }

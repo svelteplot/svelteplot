@@ -24,6 +24,38 @@ const config = {
         }),
         alias: {
             svelteplot: path.resolve(__dirname, './packages/svelteplot/src'),
+            '@sveltejs/repl/bundler': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/Bundler.svelte.ts'
+            ),
+            '@sveltejs/repl/editor': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/Editor/Editor.svelte'
+            ),
+            '@sveltejs/repl/viewer': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/Output/Viewer.svelte'
+            ),
+            '@sveltejs/repl/workspace': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/Workspace.svelte.ts'
+            ),
+            '@sveltejs/repl/console': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/Output/console/index.ts'
+            ),
+            '@sveltejs/site-kit/components': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/site-kit/components/index.ts'
+            ),
+            '@sveltejs/site-kit/codemirror': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/site-kit/codemirror/index.js'
+            ),
+            '@sveltejs/site-kit/polyfills': path.resolve(
+                __dirname,
+                './packages/repl/src/lib/site-kit/polyfills/index.ts'
+            ),
             $shared: path.resolve(__dirname, './src/shared')
         }
     }

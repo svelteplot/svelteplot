@@ -17,9 +17,18 @@ const config = {
         {
             files: '*.md',
             options: {
+                tabWidth: 2,
                 printWidth: 60,
+                embeddedLanguageFormatting: 'off',
                 bracketSameLine: true,
                 svelteAllowShorthand: true
+            }
+        },
+        {
+            files: 'src/content/tutorial/**/*.svelte',
+            options: {
+                tabWidth: 2,
+                printWidth: 60
             }
         },
         {

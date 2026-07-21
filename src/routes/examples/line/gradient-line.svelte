@@ -1,5 +1,7 @@
 <script module>
     export const title = 'Gradient line';
+    export const description =
+        'A line chart with a gradient color based on the x-axis values using the <a href="/features/gradients">LinearGradientX</a> component.';
     export const data = { aapl: '/data/aapl.csv' };
 </script>
 

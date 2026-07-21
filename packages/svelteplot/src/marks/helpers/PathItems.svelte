@@ -101,6 +101,9 @@
                     d={path}
                     class={styleClass}
                     {style}
+                    filter={resolveProp(args.svgFilter, datum.datum, undefined) as
+                        | string
+                        | undefined}
                     {@attach addEventHandlers({
                         plot,
                         options: args as any,

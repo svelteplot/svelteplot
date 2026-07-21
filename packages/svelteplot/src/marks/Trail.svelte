@@ -160,6 +160,11 @@
                             d={pathString}
                             {style}
                             class={styleClass}
+                            filter={resolveProp(
+                                args.svgFilter,
+                                trailData[0].datum,
+                                undefined
+                            ) as string | undefined}
                             {@attach addEventHandlers({
                                 plot,
                                 options: mark.options,

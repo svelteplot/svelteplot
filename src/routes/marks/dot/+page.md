@@ -1,46 +1,55 @@
 ---
 title: Dot mark
+description: The dot mark draws circles or other symbols positioned in x and y as in a scatterplot.
+examples:
+  - dot/1-colored-scatterplot
+  - dot/2-symbol-channel
+  - dot/3-dot-plot
+  - dot/beeswarm-bubbles
+  - dot/jitter
+links:
+  examples: /examples/dot
+  api: /api/marks#Dot  
 ---
 
-The dot mark draws circles or other symbols positioned in **x** and **y** as in a scatterplot.
 For example, the chart below shows the roughly-inverse relationship between car horsepower in
 y↑ and fuel efficiency in miles per gallon in x→.
 
 ```svelte live
 <script>
-    import { Plot, Dot, Pointer, RuleX } from 'svelteplot';
-    import { Checkbox, Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Dot, Pointer, RuleX } from 'svelteplot';
+  import { Checkbox, Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    const { cars } = $derived(page.data.data);
+  const { cars } = $derived(page.data.data);
 
-    let fill = $state(false);
-    let canvas = $state(false);
-    let maxCylinders = $state(10);
+  let fill = $state(false);
+  let canvas = $state(false);
+  let maxCylinders = $state(10);
 
-    const filteredCars = $derived(
-        cars.filter((d) => d.cylinders <= maxCylinders)
-    );
+  const filteredCars = $derived(
+    cars.filter((d) => d.cylinders <= maxCylinders)
+  );
 </script>
 
 <Checkbox bind:value={fill} label="fill symbols" />
 <Checkbox bind:value={canvas} label="use canvas" /><br />
 
 <Slider
-    label="max cylinders"
-    bind:value={maxCylinders}
-    min={1}
-    max={10} />
+  label="max cylinders"
+  bind:value={maxCylinders}
+  min={1}
+  max={10} />
 
 <Plot grid height={500} testid="cars1">
-    <Dot
-        {canvas}
-        filter={(d) => d.cylinders <= maxCylinders}
-        data={cars}
-        x="economy (mpg)"
-        y="power (hp)"
-        {...{ [fill ? 'fill' : 'stroke']: 'manufactor' }}
-        symbol="manufactor" />
+  <Dot
+    {canvas}
+    filter={(d) => d.cylinders <= maxCylinders}
+    data={cars}
+    x="economy (mpg)"
+    y="power (hp)"
+    {...{ [fill ? 'fill' : 'stroke']: 'manufactor' }}
+    symbol="manufactor" />
 </Plot>
 ```
 
@@ -48,28 +57,25 @@ When showing plots with a lot of dots, you can switch to canvas rendering to imp
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { range } from 'd3-array';
-    import { randomNormal } from 'd3-random';
-    import { Checkbox } from '$shared/ui';
+  import { Plot, Dot } from 'svelteplot';
+  import { range } from 'd3-array';
+  import { randomNormal } from 'd3-random';
+  import { Checkbox } from '$shared/ui';
 
-    const randX = randomNormal();
-    const randY = randomNormal();
+  const randX = randomNormal();
+  const randY = randomNormal();
 
-    let fill = $state(false);
+  let fill = $state(false);
 </script>
 
 <Checkbox bind:value={fill} label="fill symbol" />
 
 <Plot>
-    <Dot
-        canvas
-        {...{ [fill ? 'fill' : 'stroke']: 'currentColor' }}
-        opacity={0.4}
-        data={range(20000).map((i) => [
-            randX(),
-            randY()
-        ])} />
+  <Dot
+    canvas
+    {...{ [fill ? 'fill' : 'stroke']: 'currentColor' }}
+    opacity={0.4}
+    data={range(20000).map((i) => [randX(), randY()])} />
 </Plot>
 ```
 
@@ -77,18 +83,18 @@ This example uses stroke color and mark shape/symbol to redundantly encode a cat
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    const { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  const { penguins } = $derived(page.data.data);
 </script>
 
 <Plot grid color={{ legend: true }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species"
-        symbol="island" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species"
+    symbol="island" />
 </Plot>
 ```
 
@@ -96,30 +102,27 @@ One more
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 
-    let maxRad = $state(10);
+  let maxRad = $state(10);
 </script>
 
 max radius: <input
-    type="range"
-    bind:value={maxRad}
-    min={0}
-    max={20} /><br />
+  type="range"
+  bind:value={maxRad}
+  min={0}
+  max={20} /><br />
 
 <Plot grid r={{ range: [0, maxRad] }} inset={maxRad}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        r={(d) =>
-            Math.pow(
-                d.culmen_length_mm * d.culmen_depth_mm,
-                4
-            )}
-        fill="sex" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    r={(d) =>
+      Math.pow(d.bill_length_mm * d.bill_depth_mm, 4)}
+    fill="sex" />
 </Plot>
 ```
 
@@ -127,31 +130,71 @@ You can also use a point scale for dot dimensions to create dot plots, such as t
 
 ```svelte live
 <script>
-    import { Plot, Dot, GridY, AxisX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { languages } = $derived(page.data.data);
+  import { Plot, Dot, GridY, AxisX } from 'svelteplot';
+  import { page } from '$app/state';
+  let { languages } = $derived(page.data.data);
 </script>
 
 <Plot
-    frame
-    inset={20}
-    testid="languages"
-    x={{
-        type: 'log',
-        axis: 'both',
-        label: 'NUMBER OF SPEAKERS',
-        labelAnchor: 'center'
-    }}
-    y={{ type: 'point', label: '' }}>
-    <GridY strokeDasharray="1,3" strokeOpacity="0.5" />
-    <Dot
-        data={languages.filter(
-            (d) => d['Total speakers'] >= 70e6
-        )}
-        fill="currentColor"
-        sort={{ channel: '-x' }}
-        y="Language"
-        x="Total speakers" />
+  frame
+  inset={20}
+  testid="languages"
+  x={{
+    type: 'log',
+    axis: 'both',
+    label: 'NUMBER OF SPEAKERS',
+    labelAnchor: 'center'
+  }}
+  y={{ type: 'point', label: '' }}>
+  <GridY strokeDasharray="1,3" strokeOpacity="0.5" />
+  <Dot
+    data={languages.filter(
+      (d) => d['Total speakers'] >= 70e6
+    )}
+    fill="currentColor"
+    sort={{ channel: '-x' }}
+    y="Language"
+    x="Total speakers" />
+</Plot>
+```
+
+## Symbol types
+
+The `symbol` channel accepts a string name to pick from the built-in set:
+
+```svelte live
+<script>
+  import { Plot, Dot, Text } from 'svelteplot';
+
+  const strokeOnly = new Set(['asterisk', 'plus', 'times']);
+  const symbols = [
+    'asterisk', 'circle', 'cross', 'diamond', 'diamond2',
+    'hexagon', 'plus', 'square', 'square2', 'star',
+    'times', 'triangle', 'triangle2', 'wye'
+  ];
+  const data = symbols.map((name, x) => ({ name, x }));
+</script>
+
+<Plot
+  height={100}
+  marginBottom={45}
+  x={{ axis: false, domain: [-0.5, symbols.length - 0.5] }}
+  y={{ axis: false, domain: [-1, 1] }}>
+  <Dot
+    {data}
+    x="x"
+    y={0}
+    symbol="name"
+    r={7}
+    fill={(d) => strokeOnly.has(d.name) ? null : 'currentColor'}
+    stroke={(d) => strokeOnly.has(d.name) ? 'currentColor' : null} />
+  <Text
+    {data}
+    x="x"
+    y={0}
+    text="name"
+    lineAnchor="top"
+    dy={12} />
 </Plot>
 ```
 
@@ -163,13 +206,13 @@ Using the **DotX** mark, you can quickly plot a list of numbers as dots:
 
 ```svelte live
 <script>
-    import { Plot, DotX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, DotX } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot testid="dotx">
-    <DotX data={cars.map((d) => d['economy (mpg)'])} />
+  <DotX data={cars.map((d) => d['economy (mpg)'])} />
 </Plot>
 ```
 
@@ -181,13 +224,13 @@ Using the <b>DotY</b> mark, you can quickly plot a list of numbers as dots:
 
 ```svelte live
 <script>
-    import { Plot, DotY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, DotY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot testid="doty" height={400}>
-    <DotY data={cars.map((d) => d['economy (mpg)'])} />
+  <DotY data={cars.map((d) => d['economy (mpg)'])} />
 </Plot>
 ```
 
@@ -197,32 +240,32 @@ You can use the color channel for encoding a third quantitative variable.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Dot, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
+  import { Plot, Dot, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
 
-    let decline = $state(false);
+  let decline = $state(false);
 </script>
 
 <!-- <button onclick={() => decline = !decline}>change story</button> -->
 
 <Plot
-    grid
-    height={400}
-    color={{
-        legend: false,
-        type: 'linear',
-        domain: decline ? null : [1, 10],
-        scheme: 'rdylgn',
-        label: 'IMDB rating'
-    }}>
-    <Dot
-        data={simpsons}
-        y="imdb_rating"
-        fill="imdb_rating"
-        x="airdate" />
-    {#if !decline}
-        <RuleY data={[1]} />
-    {/if}
+  grid
+  height={400}
+  color={{
+    legend: false,
+    type: 'linear',
+    domain: decline ? null : [1, 10],
+    scheme: 'rdylgn',
+    label: 'IMDB rating'
+  }}>
+  <Dot
+    data={simpsons}
+    y="imdb_rating"
+    fill="imdb_rating"
+    x="airdate" />
+  {#if !decline}
+    <RuleY data={[1]} />
+  {/if}
 </Plot>
 ```

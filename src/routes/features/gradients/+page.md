@@ -15,70 +15,70 @@ For horizontal gradients (= from left to right)
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        RuleY,
-        LinearGradientX
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    RuleY,
+    LinearGradientX
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot height={250} x={{ grid: true }}>
-    <defs>
-        <LinearGradientX
-            id="gradientx"
-            stops={[
-                {
-                    x: new Date(2014, 0, 1),
-                    color: 'cyan'
-                },
-                {
-                    x: new Date(2016, 0, 1),
-                    color: 'magenta'
-                },
+  <defs>
+    <LinearGradientX
+      id="gradientx"
+      stops={[
+        {
+          x: new Date(2014, 0, 1),
+          color: 'cyan'
+        },
+        {
+          x: new Date(2016, 0, 1),
+          color: 'magenta'
+        },
 
-                {
-                    x: new Date(2018, 0, 1),
-                    color: 'gold'
-                }
-            ]} />
-    </defs>
-    <Line
-        data={aapl}
-        x="Date"
-        y="Close"
-        stroke="url(#gradientx)" />
+        {
+          x: new Date(2018, 0, 1),
+          color: 'gold'
+        }
+      ]} />
+  </defs>
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    stroke="url(#gradientx)" />
 </Plot>
 ```
 
 ```svelte
 <Plot height={250} x={{ grid: true }}>
-    <defs>
-        <LinearGradientX
-            id="gradientx"
-            stops={[
-                {
-                    x: new Date(2014, 0, 1),
-                    color: 'cyan'
-                },
-                {
-                    x: new Date(2016, 0, 1),
-                    color: 'magenta'
-                },
+  <defs>
+    <LinearGradientX
+      id="gradientx"
+      stops={[
+        {
+          x: new Date(2014, 0, 1),
+          color: 'cyan'
+        },
+        {
+          x: new Date(2016, 0, 1),
+          color: 'magenta'
+        },
 
-                {
-                    x: new Date(2018, 0, 1),
-                    color: 'gold'
-                }
-            ]} />
-    </defs>
-    <Line
-        data={aapl}
-        x="Date"
-        y="Close"
-        stroke="url(#gradientx)" />
+        {
+          x: new Date(2018, 0, 1),
+          color: 'gold'
+        }
+      ]} />
+  </defs>
+  <Line
+    data={aapl}
+    x="Date"
+    y="Close"
+    stroke="url(#gradientx)" />
 </Plot>
 ```
 
@@ -95,51 +95,51 @@ For vertical gradients (from top to bottom)
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        Line,
-        Frame,
-        LinearGradientX,
-        LinearGradientY
-    } from 'svelteplot';
-    import { page } from '$app/state';
-    let { sftemp } = $derived(page.data.data);
+  import {
+    Plot,
+    Line,
+    Frame,
+    LinearGradientX,
+    LinearGradientY
+  } from 'svelteplot';
+  import { page } from '$app/state';
+  let { sftemp } = $derived(page.data.data);
 </script>
 
 <Plot marginRight={10} height={250} y={{ grid: true }}>
-    <defs>
-        <LinearGradientY
-            id="gradient-y"
-            stops={[
-                { y: 70, color: 'var(--svp-red)' },
-                { y: 50, color: 'var(--svp-blue)' }
-            ]} />
-    </defs>
-    <Line
-        data={sftemp}
-        x="date"
-        y="high"
-        canvas
-        stroke="url(#gradient-y)" />
+  <defs>
+    <LinearGradientY
+      id="gradient-y"
+      stops={[
+        { y: 70, color: 'var(--svp-red)' },
+        { y: 50, color: 'var(--svp-blue)' }
+      ]} />
+  </defs>
+  <Line
+    data={sftemp}
+    x="date"
+    y="high"
+    canvas
+    stroke="url(#gradient-y)" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <defs>
-        <LinearGradientY
-            id="temp-gradient"
-            stops={[
-                { y: 70, color: 'red' },
-                { y: 50, color: 'blue' }
-            ]} />
-    </defs>
-    <Line
-        data={sftemp}
-        x="date"
-        y="high"
-        canvas
-        stroke="url(#temp-gradient)" />
+  <defs>
+    <LinearGradientY
+      id="temp-gradient"
+      stops={[
+        { y: 70, color: 'red' },
+        { y: 50, color: 'blue' }
+      ]} />
+  </defs>
+  <Line
+    data={sftemp}
+    x="date"
+    y="high"
+    canvas
+    stroke="url(#temp-gradient)" />
 </Plot>
 ```
 

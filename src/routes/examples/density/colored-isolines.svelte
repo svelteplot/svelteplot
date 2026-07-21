@@ -20,8 +20,8 @@
 <Plot color={{ scheme: 'viridis', legend: true }}>
     <Density
         data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
+        x="bill_length_mm"
+        y="bill_depth_mm"
         stroke="density"
         thresholds={15} />
 </Plot>

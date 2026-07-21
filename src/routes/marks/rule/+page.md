@@ -1,26 +1,34 @@
 ---
 title: Rule mark
+description: RuleX and RuleY draw full-width horizontal or vertical lines across the plot — for baselines, thresholds, and reference markers.
+examples:
+  - rule/y-baseline
+  - rule/min-max
+  - rule/data-rules
+links:
+  examples: /examples/rule
+  api: /api/marks#RuleY
 ---
 
 Rules can be used for highlighting certain axis values but they can also be used to show data. Rules come in two variants: [RuleX](#RuleX) for vertical lines (located along the x scale) and [RuleY](#RuleY) for horizontal lines (located along the y scale).
 
 ```svelte
 <Plot>
-    <RuleY y={0} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot height={350}>
-    <RuleY y={0} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -28,29 +36,29 @@ Like most other marks, rules also accept data for displaying multiple lines at o
 
 ```svelte
 <Plot>
-    <RuleY
-        data={[50, 100, 150]}
-        strokeDasharray="3,3"
-        opacity={0.5} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY
+    data={[50, 100, 150]}
+    strokeDasharray="3,3"
+    opacity={0.5} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import type { Datasets } from 'svelteplot/types/index.js';
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import type { Datasets } from 'svelteplot/types/index.js';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot height={350}>
-    <RuleY
-        data={[50, 100, 150]}
-        strokeDasharray="3,3"
-        opacity={0.5} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY
+    data={[50, 100, 150]}
+    strokeDasharray="3,3"
+    opacity={0.5} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -62,27 +70,27 @@ Rules can be used for barcode plots:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleX } from 'svelteplot';
-    import { range } from 'd3-array';
-    import { randomNormal, randomLcg } from 'd3-random';
+  import { Plot, RuleX } from 'svelteplot';
+  import { range } from 'd3-array';
+  import { randomNormal, randomLcg } from 'd3-random';
 
-    const seededNormal = randomNormal.source(
-        randomLcg(0.12345)
-    );
+  const seededNormal = randomNormal.source(
+    randomLcg(0.12345)
+  );
 </script>
 
 <Plot>
-    <RuleX
-        data={range(500).map(seededNormal(0, 1))}
-        strokeOpacity={0.5} />
+  <RuleX
+    data={range(500).map(seededNormal(0, 1))}
+    strokeOpacity={0.5} />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <RuleX
-        data={range(500).map(seededNormal(0, 1))}
-        strokeOpacity={0.5} />
+  <RuleX
+    data={range(500).map(seededNormal(0, 1))}
+    strokeOpacity={0.5} />
 </Plot>
 ```
 
@@ -90,50 +98,49 @@ Or candlestick ([demo](https://svelte.dev/playground/f2b2ada0c65d403c92777250c14
 
 ```svelte
 <Plot grid>
-    <RuleX
-        data={aapl.slice(750, 800)}
-        x="Date"
-        y1="Low"
-        y2="High"
-        strokeWidth="2"
-        opacity="0.3" />
-    <RuleX
-        data={aapl.slice(750, 800)}
-        x="Date"
-        y1="Open"
-        y2="Close"
-        strokeWidth="5"
-        stroke={(d) =>
-            d.Close > d.Open ? 'green' : 'red'} />
+  <RuleX
+    data={aapl.slice(750, 800)}
+    x="Date"
+    y1="Low"
+    y2="High"
+    strokeWidth="2"
+    opacity="0.3" />
+  <RuleX
+    data={aapl.slice(750, 800)}
+    x="Date"
+    y1="Open"
+    y2="Close"
+    strokeWidth="5"
+    stroke={(d) => (d.Close > d.Open ? 'green' : 'red')} />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleX } from 'svelteplot';
+  import { Plot, RuleX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid height={250} testid="candlestick">
-    <RuleX
-        data={aapl.slice(750, 800)}
-        x="Date"
-        y1="Low"
-        y2="High"
-        strokeWidth="2"
-        opacity="0.5" />
-    <RuleX
-        data={aapl.slice(750, 800)}
-        x="Date"
-        y1="Open"
-        y2="Close"
-        strokeWidth="5"
-        stroke={(d) =>
-            (d as AAPL).Close > (d as AAPL).Open
-                ? 'var(--svp-green)'
-                : 'var(--svp-red)'} />
+  <RuleX
+    data={aapl.slice(750, 800)}
+    x="Date"
+    y1="Low"
+    y2="High"
+    strokeWidth="2"
+    opacity="0.5" />
+  <RuleX
+    data={aapl.slice(750, 800)}
+    x="Date"
+    y1="Open"
+    y2="Close"
+    strokeWidth="5"
+    stroke={(d) =>
+      (d as AAPL).Close > (d as AAPL).Open
+        ? 'var(--svp-green)'
+        : 'var(--svp-red)'} />
 </Plot>
 ```
 
@@ -141,43 +148,43 @@ You can combine the rule marks with the group transform to show the mean, median
 
 ```svelte live
 <script lang="ts">
-    import { Plot, RuleY, groupZ, Dot } from 'svelteplot';
+  import { Plot, RuleY, groupZ, Dot } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot frame grid marginTop={35}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fx="species"
-        opacity={0.35} />
-    <RuleY
-        {...groupZ(
-            {
-                data: penguins,
-                y: 'culmen_depth_mm',
-                fx: 'species'
-            },
-            { y: 'mean' }
-        )}
-        strokeWidth={2} />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    fx="species"
+    opacity={0.35} />
+  <RuleY
+    {...groupZ(
+      {
+        data: penguins,
+        y: 'bill_depth_mm',
+        fx: 'species'
+      },
+      { y: 'mean' }
+    )}
+    strokeWidth={2} />
 </Plot>
 ```
 
 ```svelte
 <RuleY
-    {...groupZ(
-        {
-            data: penguins,
-            y: 'culmen_depth_mm',
-            fx: 'species'
-        },
-        { y: 'mean' }
-    )}
-    strokeWidth={2} />
+  {...groupZ(
+    {
+      data: penguins,
+      y: 'bill_depth_mm',
+      fx: 'species'
+    },
+    { y: 'mean' }
+  )}
+  strokeWidth={2} />
 ```
 
 ## RuleX

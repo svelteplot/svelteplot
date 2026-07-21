@@ -25,8 +25,8 @@
     }}>
     <Contour
         data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
+        x="bill_length_mm"
+        y="bill_depth_mm"
         fill="body_mass_g"
         blur={2}
         fy="species" />

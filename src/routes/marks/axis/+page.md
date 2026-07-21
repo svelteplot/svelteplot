@@ -1,25 +1,35 @@
 ---
 title: Axis mark
+description: AxisX and AxisY render tick marks and labels along a scale; SveltePlot adds them implicitly unless you provide your own.
+examples:
+  - axis/rotated-labels
+  - axis/major-minor
+  - axis/tick-intervals
+  - axis/datawrapper-ticks
+  - axis/wordwrap
+links:
+  examples: /examples/axis
+  api: /api/marks#AxisX
 ---
 
 Axis marks are useful for rendering the x and y axes! Since they are useful in 95% of plots, SveltePlot will create axis marks by default (implicit axes):
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+  import { Plot, Line } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot testid="axis">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -29,20 +39,20 @@ You can turn the implicit axes off by adding `axis: false`
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+  import { Plot, Line } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot axes={false}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot axes={false}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -52,19 +62,19 @@ You can also control the implicit axes individually using the x and y options. H
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot x={{ axis: false }} y={{ axis: 'both' }}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot x={{ axis: false }} y={{ axis: 'both' }}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -75,15 +85,15 @@ You can also control the implicit axes individually using the x and y options. H
 When using implicit axes (the default), you can customize them via the `x` and `y` scale options:
 
 - `axis` - controls which sides of the plot have axes
-    - For x-axis: 'top', 'bottom', 'both', or false
-    - For y-axis: 'left', 'right', 'both', or false
+  - For x-axis: 'top', 'bottom', 'both', or false
+  - For y-axis: 'left', 'right', 'both', or false
 - `tickSpacing` - spacing between ticks in pixels
 - `tickFormat` - format for tick labels (can be 'auto', format string, or custom function)
 - `tickRotate` - rotation angle for tick labels in degrees
 - `label` - the axis label
 - `labelAnchor` - position of axis labels
-    - For x-axis: 'auto', 'left', 'center', 'right'
-    - For y-axis: 'auto', 'bottom', 'middle', 'top'
+  - For x-axis: 'auto', 'left', 'center', 'right'
+  - For y-axis: 'auto', 'bottom', 'middle', 'top'
 - `insetLeft/Right` - insets for x-axis positioning
 - `insetTop/Bottom` - insets for y-axis positioning
 
@@ -91,40 +101,40 @@ A combination of options:
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
+  import { Plot, Line } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot
-    x={{
-        axis: 'both'
-    }}
-    y={{
-        axis: 'right',
-        label: '',
-        ticks: 25,
-        tickFormat: (d) => d.toFixed(2)
-    }}>
-    <Line data={aapl} x="Date" y="Close" />
+  x={{
+    axis: 'both'
+  }}
+  y={{
+    axis: 'right',
+    label: '',
+    ticks: 25,
+    tickFormat: (d) => d.toFixed(2)
+  }}>
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{
-        axis: 'bottom',
-        tickSpacing: 100,
-        tickFormat: (d) => `$${d}`,
-        tickRotate: -45
-    }}
-    y={{
-        axis: 'both',
-        ticks: 25,
-        tickFormat: (d) => d.toFixed(2)
-    }}>
-    <!-- plot content -->
+  x={{
+    axis: 'bottom',
+    tickSpacing: 100,
+    tickFormat: (d) => `$${d}`,
+    tickRotate: -45
+  }}
+  y={{
+    axis: 'both',
+    ticks: 25,
+    tickFormat: (d) => d.toFixed(2)
+  }}>
+  <!-- plot content -->
 </Plot>
 ```
 
@@ -134,45 +144,45 @@ If you add the `AxisX` and `AxisY` marks to your plot, SveltePlot will disable t
 
 ```svelte live
 <script>
-    import { Plot, Line, AxisX, AxisY } from 'svelteplot';
+  import { Plot, Line, AxisX, AxisY } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <AxisX tickFontSize={15} />
-    <AxisY fill="red" />
-    <Line data={aapl} x="Date" y="Close" />
+  <AxisX tickFontSize={15} />
+  <AxisY fill="red" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <AxisX tickFontSize={15} />
-    <AxisY fill="red" />
-    <Line data={aapl} x="Date" y="Close" />
+  <AxisX tickFontSize={15} />
+  <AxisY fill="red" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    frame
-    x={{ domain: [0, 10] }}
-    y={{ domain: [0, 5] }}
-    marginBottom={40}
-    marginRight={30}>
-    <AxisX anchor="top" tickSize={10} tickFontSize="14px" />
-    <AxisX stroke="cornflowerblue" fill="cornflowerblue" />
-    <AxisY
-        fill="green"
-        anchor="right"
-        tickSize={-5}
-        tickPadding={10} />
-    <AxisY
-        stroke="magenta"
-        fill="#dd0000"
-        ticks={[0, 1.5, 2, 2.5, 4, 5]} />
+  frame
+  x={{ domain: [0, 10] }}
+  y={{ domain: [0, 5] }}
+  marginBottom={40}
+  marginRight={30}>
+  <AxisX anchor="top" tickSize={10} tickFontSize="14px" />
+  <AxisX stroke="cornflowerblue" fill="cornflowerblue" />
+  <AxisY
+    fill="green"
+    anchor="right"
+    tickSize={-5}
+    tickPadding={10} />
+  <AxisY
+    stroke="magenta"
+    fill="#dd0000"
+    ticks={[0, 1.5, 2, 2.5, 4, 5]} />
 </Plot>
 ```
 
@@ -180,10 +190,10 @@ The automatic ticks can be customized using the <b>tickSpacing</b> option:
 
 ```svelte
 <Plot
-    x={{ tickSpacing: 150 }}
-    y={{ tickSpacing: 10 }}
-    testid="tickspacing">
-    <Line data={aapl} x="Date" y="Close" />
+  x={{ tickSpacing: 150 }}
+  y={{ tickSpacing: 10 }}
+  testid="tickspacing">
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -191,68 +201,62 @@ Ordinal axis:
 
 ```svelte live
 <script>
-    import { Plot, RuleY } from 'svelteplot';
+  import { Plot, RuleY } from 'svelteplot';
 </script>
 
 <Plot
-    x={{
-        domain: 'These are some ordinal ticks on a band scale'.split(
-            ' '
-        )
-    }} />
+  x={{
+    domain:
+      'These are some ordinal ticks on a band scale'.split(
+        ' '
+      )
+  }} />
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: 'These are some ordinal ticks on a band scale'.split(
-            ' '
-        )
-    }} />
+  x={{
+    domain:
+      'These are some ordinal ticks on a band scale'.split(
+        ' '
+      )
+  }} />
 ```
 
 You can change the defaults for SveltePlot grids using the `setPlotDefaults` hook:
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Line,
-        setPlotDefaults
-    } from 'svelteplot';
+  import { Plot, Line, setPlotDefaults } from 'svelteplot';
 
-    setPlotDefaults({
-        axis: { tickSize: 0 }
-    });
+  setPlotDefaults({
+    axis: { tickSize: 0 }
+  });
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid testid="axis">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import {
-        Plot,
-        Line,
-        setPlotDefaults
-    } from 'svelteplot';
+  import { Plot, Line, setPlotDefaults } from 'svelteplot';
 
-    setPlotDefaults({
-        axis: { tickSize: 0 }
-    });
+  setPlotDefaults({
+    axis: { tickSize: 0 }
+  });
 
-    let aapl = [
-        /* import data etc. */
-    ];
+  let aapl = [
+    /* import data etc. */
+  ];
 </script>
 
 <Plot grid testid="axis">
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -319,17 +323,17 @@ You can customize the automatic axis ticks using the `interval` and `tickSpacing
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    let interval = $state(15);
+  let interval = $state(15);
 </script>
 
 <Slider
-    bind:value={interval}
-    min={5}
-    max={50}
-    label="Interval" />
+  bind:value={interval}
+  min={5}
+  max={50}
+  label="Interval" />
 <Plot x={{ domain: [0, 101], interval }} />
 ```
 
@@ -343,58 +347,52 @@ For time-scales you can define the interval as string:
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
-    import { Select } from '$shared/ui';
+  import { Plot } from 'svelteplot';
+  import { Select } from '$shared/ui';
 
-    let interval = $state('3 months');
+  let interval = $state('3 months');
 </script>
 
 <Select
-    label="Interval"
-    bind:value={interval}
-    options={[
-        '2 weeks',
-        '4 weeks',
-        '1 month',
-        '2 months',
-        '3 months'
-    ]} />
+  label="Interval"
+  bind:value={interval}
+  options={[
+    '2 weeks',
+    '4 weeks',
+    '1 month',
+    '2 months',
+    '3 months'
+  ]} />
 <Plot
-    x={{
-        domain: [
-            new Date(2024, 0, 1),
-            new Date(2025, 0, 1)
-        ],
-        interval
-    }} />
+  x={{
+    domain: [new Date(2024, 0, 1), new Date(2025, 0, 1)],
+    interval
+  }} />
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: [
-            new Date(2024, 0, 1),
-            new Date(2025, 0, 1)
-        ],
-        interval: '3 months'
-    }} />
+  x={{
+    domain: [new Date(2024, 0, 1), new Date(2025, 0, 1)],
+    interval: '3 months'
+  }} />
 ```
 
 Another way to customize the number of ticks shown is to set the **tickSpacing** option. Higher tick spacing means fewer ticks.
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    let tickSpacing = $state(30);
+  let tickSpacing = $state(30);
 </script>
 
 <Slider
-    bind:value={tickSpacing}
-    min={10}
-    max={100}
-    label="tickSpacing" />
+  bind:value={tickSpacing}
+  min={10}
+  max={100}
+  label="tickSpacing" />
 <Plot x={{ domain: [0, 101], tickSpacing }} />
 ```
 
@@ -408,23 +406,23 @@ You can also define the ticks manually:
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 </script>
 
 <Plot
-    x={{
-        domain: [0, 101],
-        ticks: [0, 10, 25, 50, 90, 100]
-    }} />
+  x={{
+    domain: [0, 101],
+    ticks: [0, 10, 25, 50, 90, 100]
+  }} />
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: [0, 101],
-        ticks: [0, 10, 25, 50, 90, 100]
-    }} />
+  x={{
+    domain: [0, 101],
+    ticks: [0, 10, 25, 50, 90, 100]
+  }} />
 ```
 
 :::info
@@ -437,31 +435,31 @@ To render y axis ticks inside the plot you need to use the explicit axis mark wh
 
 ```svelte live
 <script>
-    import { Plot, Line, AxisY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, AxisY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid x={{ insetLeft: 20 }}>
-    <AxisY
-        tickSize={0}
-        tickPadding={0}
-        dy={-5}
-        lineAnchor="bottom"
-        textAnchor="start" />
-    <Line data={aapl} x="Date" y="Close" />
+  <AxisY
+    tickSize={0}
+    tickPadding={0}
+    dy={-5}
+    lineAnchor="bottom"
+    textAnchor="start" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid x={{ insetLeft: 20 }}>
-    <AxisY
-        tickSize={0}
-        tickPadding={0}
-        dy={-5}
-        lineAnchor="bottom"
-        textAnchor="start" />
-    <Line data={aapl} x="Date" y="Close" />
+  <AxisY
+    tickSize={0}
+    tickPadding={0}
+    dy={-5}
+    lineAnchor="bottom"
+    textAnchor="start" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -471,43 +469,43 @@ You can assign custom class to ticks based on the tick value by passing a `tickC
 
 ```svelte live
 <script>
-    import { Plot, AxisX } from 'svelteplot';
+  import { Plot, AxisX } from 'svelteplot';
 </script>
 
 <Plot
-    marginBottom={50}
-    x={{
-        domain: [-30, 60]
-    }}>
-    <AxisX
-        tickClass={(d) =>
-            d < 0 ? 'negative' : d > 0 ? 'positive' : ''} />
+  marginBottom={50}
+  x={{
+    domain: [-30, 60]
+  }}>
+  <AxisX
+    tickClass={(d) =>
+      d < 0 ? 'negative' : d > 0 ? 'positive' : ''} />
 </Plot>
 
 <style>
-    :global(.tick.negative text) {
-        fill: var(--svp-red) !important;
-    }
-    :global(.tick.positive text) {
-        fill: var(--svp-blue) !important;
-    }
+  :global(.tick.negative text) {
+    fill: var(--svp-red) !important;
+  }
+  :global(.tick.positive text) {
+    fill: var(--svp-blue) !important;
+  }
 </style>
 ```
 
 ```svelte
 <Plot x={{ domain: [-30, 60] }}>
-    <AxisX
-        tickClass={(d) =>
-            d < 0 ? 'negative' : d > 0 ? 'positive' : ''} />
+  <AxisX
+    tickClass={(d) =>
+      d < 0 ? 'negative' : d > 0 ? 'positive' : ''} />
 </Plot>
 
 <style>
-    :global(.tick.negative text) {
-        fill: red !important;
-    }
-    :global(.tick.positive text) {
-        fill: blue !important;
-    }
+  :global(.tick.negative text) {
+    fill: red !important;
+  }
+  :global(.tick.positive text) {
+    fill: blue !important;
+  }
 </style>
 ```
 
@@ -519,45 +517,45 @@ You can use two explicit axes to create multiple layers of ticks. The yearly tic
 
 ```svelte live
 <script>
-    import { Plot, AxisX } from 'svelteplot';
+  import { Plot, AxisX } from 'svelteplot';
 </script>
 
 <Plot
-    margin={10}
-    marginBottom={40}
-    x={{
-        domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
-    }}>
-    <AxisX
-        interval="quarter"
-        tickFormat={(d) => `Q${d.getMonth() / 3 + 1}`} />
-    <AxisX
-        interval="year"
-        tickSize={0}
-        tickFontSize={15}
-        tickPadding={25}
-        tickFormat="YYYY"
-        fill="#999" />
+  margin={10}
+  marginBottom={40}
+  x={{
+    domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
+  }}>
+  <AxisX
+    interval="quarter"
+    tickFormat={(d) => `Q${d.getMonth() / 3 + 1}`} />
+  <AxisX
+    interval="year"
+    tickSize={0}
+    tickFontSize={15}
+    tickPadding={25}
+    tickFormat="YYYY"
+    fill="#999" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    margin={30}
-    marginBottom={50}
-    x={{
-        domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
-    }}>
-    <AxisX
-        interval="quarter"
-        tickFormat={(d) => `Q${d.getMonth() / 3 + 1}`} />
-    <AxisX
-        interval="year"
-        tickSize={0}
-        tickFontSize={15}
-        tickPadding={25}
-        tickFormat="YYYY"
-        fill="#999" />
+  margin={30}
+  marginBottom={50}
+  x={{
+    domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)]
+  }}>
+  <AxisX
+    interval="quarter"
+    tickFormat={(d) => `Q${d.getMonth() / 3 + 1}`} />
+  <AxisX
+    interval="year"
+    tickSize={0}
+    tickFontSize={15}
+    tickPadding={25}
+    tickFormat="YYYY"
+    fill="#999" />
 </Plot>
 ```
 
@@ -567,36 +565,30 @@ Note that you can achieve a similar axis using a custom tick format function tha
 
 ```svelte live
 <script>
-    import { Plot, AxisX } from 'svelteplot';
+  import { Plot, AxisX } from 'svelteplot';
 </script>
 
 <Plot
-    marginLeft={30}
-    x={{
-        domain: [
-            new Date(2022, 0, 1),
-            new Date(2024, 1, 1)
-        ],
-        tickFormat: (d) => [
-            `Q${d.getMonth() / 3 + 1}`,
-            d.getFullYear()
-        ]
-    }}>
+  marginLeft={30}
+  x={{
+    domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)],
+    tickFormat: (d) => [
+      `Q${d.getMonth() / 3 + 1}`,
+      d.getFullYear()
+    ]
+  }}>
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: [
-            new Date(2022, 0, 1),
-            new Date(2024, 1, 1)
-        ],
-        tickFormat: (d) => [
-            `Q${d.getMonth() / 3 + 1}`,
-            d.getFullYear()
-        ]
-    }}>
+  x={{
+    domain: [new Date(2022, 0, 1), new Date(2024, 1, 1)],
+    tickFormat: (d) => [
+      `Q${d.getMonth() / 3 + 1}`,
+      d.getFullYear()
+    ]
+  }}>
 </Plot>
 ```
 
@@ -612,34 +604,36 @@ Keep in mind that rotated texts are a lot harder to read, so if possible, avoid 
 
 ```svelte live
 <script>
-    import { Plot, RuleY } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot, RuleY } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    let tickRotate = $state(-45);
+  let tickRotate = $state(-45);
 </script>
 
 <Slider
-    label="tick angle"
-    min={-90}
-    max={90}
-    step={5}
-    bind:value={tickRotate} />
+  label="tick angle"
+  min={-90}
+  max={90}
+  step={5}
+  bind:value={tickRotate} />
 <Plot
-    marginBottom={50}
-    x={{
-        tickRotate,
-        domain: 'These are some ordinal ticks on a band scale'.split(
-            ' '
-        )
-    }} />
+  marginBottom={50}
+  x={{
+    tickRotate,
+    domain:
+      'These are some ordinal ticks on a band scale'.split(
+        ' '
+      )
+  }} />
 ```
 
 ```svelte
 <Plot
-    x={{
-        tickRotate: -45,
-        domain: 'These are some ordinal ticks on a band scale'.split(
-            ' '
-        )
-    }} />
+  x={{
+    tickRotate: -45,
+    domain:
+      'These are some ordinal ticks on a band scale'.split(
+        ' '
+      )
+  }} />
 ```

@@ -1,10 +1,16 @@
 ---
 title: Raster mark
+description: Raster mark renders a dense pixel grid by sampling a function or interpolating scattered data — ideal for continuous scalar fields.
+examples:
+  - raster/sampled
+  - raster/interpolated
+  - raster/volcano
+  - raster/weather
+links:
+  examples: /examples/raster
+  api: /api/marks#Raster
+addedIn: '0.12.0'
 ---
-
-:::info
-added in 0.12.0
-:::
 
 [API Reference](/api/marks#Raster)
 
@@ -26,36 +32,36 @@ The volcano example below uses an 87 × 61 elevation grid of [Maungawhau (Mt. Ed
 
 ```svelte
 <script>
-    import { Plot, Raster } from 'svelteplot';
+  import { Plot, Raster } from 'svelteplot';
 
-    const volcano = {
-        width: 87,
-        height: 61,
-        values: [103, 104, 104, 105, 105, 106 /* ... */]
-    };
+  const volcano = {
+    width: 87,
+    height: 61,
+    values: [103, 104, 104, 105, 105, 106 /* ... */]
+  };
 </script>
 
 <Plot color={{ scheme: 'turbo', legend: true }}>
-    <Raster
-        data={volcano.values}
-        width={volcano.width}
-        height={volcano.height} />
+  <Raster
+    data={volcano.values}
+    width={volcano.width}
+    height={volcano.height} />
 </Plot>
 ```
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Raster } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { volcano } = $derived(page.data.data);
+  const { volcano } = $derived(page.data.data);
 </script>
 
 <Plot color={{ scheme: 'turbo', legend: true }}>
-    <Raster
-        data={volcano.values}
-        width={volcano.width}
-        height={volcano.height} />
+  <Raster
+    data={volcano.values}
+    width={volcano.width}
+    height={volcano.height} />
 </Plot>
 ```
 
@@ -63,32 +69,32 @@ By default, the image is stretched to fill the plot using smooth interpolation. 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster, Text } from 'svelteplot';
-    import { range } from 'd3-array';
+  import { Plot, Raster, Text } from 'svelteplot';
+  import { range } from 'd3-array';
 
-    const width = 10;
-    const height = 10;
-    const values = range(width).flatMap((x) =>
-        range(height).map((y) => x * y)
-    );
+  const width = 10;
+  const height = 10;
+  const values = range(width).flatMap((x) =>
+    range(height).map((y) => x * y)
+  );
 </script>
 
 <Plot
-    x={{ domain: [0, width] }}
-    y={{ domain: [0, height] }}
-    color={{ scheme: 'turbo' }}>
-    <Raster
-        data={values}
-        {width}
-        {height}
-        imageRendering="pixelated" />
-    <Text
-        data={values}
-        fill="white"
-        fontSize={10}
-        text={(d) => String(d)}
-        x={(d, i) => (i % width) + 0.5}
-        y={(d, i) => Math.floor(i / width) + 0.5} />
+  x={{ domain: [0, width] }}
+  y={{ domain: [0, height] }}
+  color={{ scheme: 'turbo' }}>
+  <Raster
+    data={values}
+    {width}
+    {height}
+    imageRendering="pixelated" />
+  <Text
+    data={values}
+    fill="white"
+    fontSize={10}
+    text={(d) => String(d)}
+    x={(d, i) => (i % width) + 0.5}
+    y={(d, i) => Math.floor(i / width) + 0.5} />
 </Plot>
 ```
 
@@ -102,39 +108,34 @@ Sometimes your data does not come in a gridded format, but at irregularly distri
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Dot, Geo } from 'svelteplot';
-    import { page } from '$app/state';
-    import * as topojson from 'topojson-client';
+  import { Plot, Dot, Geo } from 'svelteplot';
+  import { page } from '$app/state';
+  import * as topojson from 'topojson-client';
 
-    const { weather, canadaTopo } = $derived(
-        page.data.data
-    );
-    const weatherData = $derived(
-        weather.filter((d) => d.Tx != null)
-    );
-    const land = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.land
-        )
-    );
+  const { weather, canadaTopo } = $derived(page.data.data);
+  const weatherData = $derived(
+    weather.filter((d) => d.Tx != null)
+  );
+  const land = $derived(
+    topojson.feature(canadaTopo, canadaTopo.objects.land)
+  );
 </script>
 
 <Plot
-    projection={{
-        type: 'conic-conformal',
-        domain: land,
-        rotate: [96, 0],
-        center: [0, 56],
-        parallels: [49, 77]
-    }}
-    color={{
-        scheme: 'burd',
-        type: 'quantile',
-        legend: true
-    }}>
-    <Dot data={weatherData} x="Long" y="Lat" fill="Tx" />
-    <Geo data={[land]} stroke="currentColor" fill={null} />
+  projection={{
+    type: 'conic-conformal',
+    domain: land,
+    rotate: [96, 0],
+    center: [0, 56],
+    parallels: [49, 77]
+  }}
+  color={{
+    scheme: 'burd',
+    type: 'quantile',
+    legend: true
+  }}>
+  <Dot data={weatherData} x="Long" y="Lat" fill="Tx" />
+  <Geo data={[land]} stroke="currentColor" fill={null} />
 </Plot>
 ```
 
@@ -151,85 +152,80 @@ Four interpolation strategies are available:
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster, Geo } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Select } from '$shared/ui';
-    import * as topojson from 'topojson-client';
+  import { Plot, Raster, Geo } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Select } from '$shared/ui';
+  import * as topojson from 'topojson-client';
 
-    const { weather, canadaTopo } = $derived(
-        page.data.data
-    );
-    const INTERPOLATIONS = [
-        'none',
-        'nearest',
-        'barycentric',
-        'random-walk'
-    ];
-    const weatherData = $derived(
-        weather.filter((d) => d.Tx != null)
-    );
-    const land = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.land
-        )
-    );
-    const innerBorders = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.innerborders
-        )
-    );
-    let interpolate = $state('random-walk');
+  const { weather, canadaTopo } = $derived(page.data.data);
+  const INTERPOLATIONS = [
+    'none',
+    'nearest',
+    'barycentric',
+    'random-walk'
+  ];
+  const weatherData = $derived(
+    weather.filter((d) => d.Tx != null)
+  );
+  const land = $derived(
+    topojson.feature(canadaTopo, canadaTopo.objects.land)
+  );
+  const innerBorders = $derived(
+    topojson.feature(
+      canadaTopo,
+      canadaTopo.objects.innerborders
+    )
+  );
+  let interpolate = $state('random-walk');
 </script>
 
 <div style="margin-bottom:1em">
-    <Select
-        label="interpolate"
-        options={INTERPOLATIONS}
-        bind:value={interpolate} />
+  <Select
+    label="interpolate"
+    options={INTERPOLATIONS}
+    bind:value={interpolate} />
 </div>
 
 <Plot
-    projection={{
-        type: 'conic-conformal',
-        domain: land,
-        rotate: [96, 0],
-        center: [0, 56],
-        parallels: [49, 77]
-    }}
-    color={{
-        scheme: 'burd',
-        type: 'quantile'
-    }}>
-    <Raster
-        data={weatherData}
-        x="Long"
-        y="Lat"
-        fill="Tx"
-        {interpolate} />
-    <Geo data={[land]} stroke="currentColor" fill={null} />
+  projection={{
+    type: 'conic-conformal',
+    domain: land,
+    rotate: [96, 0],
+    center: [0, 56],
+    parallels: [49, 77]
+  }}
+  color={{
+    scheme: 'burd',
+    type: 'quantile'
+  }}>
+  <Raster
+    data={weatherData}
+    x="Long"
+    y="Lat"
+    fill="Tx"
+    {interpolate} />
+  <Geo data={[land]} stroke="currentColor" fill={null} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    projection={{
-        type: 'conic-conformal',
-        domain: land
-    }}
-    color={{
-        scheme: 'burd',
-        type: 'quantile'
-    }}>
-    <Raster
-        data={weatherData}
-        x="Long"
-        y="Lat"
-        fill="Tx"
-        interpolate="random-walk" />
-    <!-- outline -->
-    <Geo data={[land]} stroke="currentColor" fill={null} />
+  projection={{
+    type: 'conic-conformal',
+    domain: land
+  }}
+  color={{
+    scheme: 'burd',
+    type: 'quantile'
+  }}>
+  <Raster
+    data={weatherData}
+    x="Long"
+    y="Lat"
+    fill="Tx"
+    interpolate="random-walk" />
+  <!-- outline -->
+  <Geo data={[land]} stroke="currentColor" fill={null} />
 </Plot>
 ```
 
@@ -237,72 +233,64 @@ Clipping the raster to the land geometry removes those values outside the coastl
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster, Geo } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Select } from '$shared/ui';
-    import * as topojson from 'topojson-client';
+  import { Plot, Raster, Geo } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Select } from '$shared/ui';
+  import * as topojson from 'topojson-client';
 
-    const { weather, canadaTopo } = $derived(
-        page.data.data
-    );
-    const INTERPOLATIONS = [
-        'none',
-        'nearest',
-        'barycentric',
-        'random-walk'
-    ];
-    const weatherData = $derived(
-        weather.filter((d) => d.Tx != null)
-    );
-    const land = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.land
-        )
-    );
-    const innerBorders = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.innerborders
-        )
-    );
-    let interpolate = $state('random-walk');
+  const { weather, canadaTopo } = $derived(page.data.data);
+  const INTERPOLATIONS = [
+    'none',
+    'nearest',
+    'barycentric',
+    'random-walk'
+  ];
+  const weatherData = $derived(
+    weather.filter((d) => d.Tx != null)
+  );
+  const land = $derived(
+    topojson.feature(canadaTopo, canadaTopo.objects.land)
+  );
+  const innerBorders = $derived(
+    topojson.feature(
+      canadaTopo,
+      canadaTopo.objects.innerborders
+    )
+  );
+  let interpolate = $state('random-walk');
 </script>
 
 <Select
-    label="interpolate"
-    options={INTERPOLATIONS}
-    bind:value={interpolate} />
+  label="interpolate"
+  options={INTERPOLATIONS}
+  bind:value={interpolate} />
 
 <Plot
-    projection={{
-        type: 'conic-conformal',
-        domain: land,
-        rotate: [96, 0],
-        center: [0, 56],
-        parallels: [49, 77]
-    }}
-    color={{
-        scheme: 'burd',
-        type: 'quantile'
-    }}>
-    <defs>
-        <clipPath id="canada-land">
-            <Geo data={[land]} />
-        </clipPath>
-    </defs>
-    <Raster
-        data={weatherData}
-        x="Long"
-        y="Lat"
-        fill="Tx"
-        {interpolate}
-        clipPath="url(#canada-land)" />
-    <Geo data={[land]} stroke="currentColor" fill={null} />
-    <Geo
-        data={[innerBorders]}
-        stroke="white"
-        opacity={0.5} />
+  projection={{
+    type: 'conic-conformal',
+    domain: land,
+    rotate: [96, 0],
+    center: [0, 56],
+    parallels: [49, 77]
+  }}
+  color={{
+    scheme: 'burd',
+    type: 'quantile'
+  }}>
+  <defs>
+    <clipPath id="canada-land">
+      <Geo data={[land]} />
+    </clipPath>
+  </defs>
+  <Raster
+    data={weatherData}
+    x="Long"
+    y="Lat"
+    fill="Tx"
+    {interpolate}
+    clipPath="url(#canada-land)" />
+  <Geo data={[land]} stroke="currentColor" fill={null} />
+  <Geo data={[innerBorders]} stroke="white" opacity={0.5} />
 </Plot>
 ```
 
@@ -336,69 +324,61 @@ The `blur` option applies a Gaussian blur (in grid pixels) after rasterization. 
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster, Geo } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Slider } from '$shared/ui';
-    import * as topojson from 'topojson-client';
+  import { Plot, Raster, Geo } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Slider } from '$shared/ui';
+  import * as topojson from 'topojson-client';
 
-    const { weather, canadaTopo } = $derived(
-        page.data.data
-    );
-    const weatherData = $derived(
-        weather.filter((d) => d.Tx != null)
-    );
-    const land = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.land
-        )
-    );
-    const innerBorders = $derived(
-        topojson.feature(
-            canadaTopo,
-            canadaTopo.objects.innerborders
-        )
-    );
-    let blur = $state(2);
+  const { weather, canadaTopo } = $derived(page.data.data);
+  const weatherData = $derived(
+    weather.filter((d) => d.Tx != null)
+  );
+  const land = $derived(
+    topojson.feature(canadaTopo, canadaTopo.objects.land)
+  );
+  const innerBorders = $derived(
+    topojson.feature(
+      canadaTopo,
+      canadaTopo.objects.innerborders
+    )
+  );
+  let blur = $state(2);
 </script>
 
 <Slider
-    label="blur"
-    bind:value={blur}
-    min={0}
-    max={10}
-    step={1} />
+  label="blur"
+  bind:value={blur}
+  min={0}
+  max={10}
+  step={1} />
 
 <Plot
-    projection={{
-        type: 'conic-conformal',
-        domain: land,
-        rotate: [96, 0],
-        center: [0, 56],
-        parallels: [49, 77]
-    }}
-    color={{
-        scheme: 'burd',
-        type: 'quantile'
-    }}>
-    <defs>
-        <clipPath id="canada-land-blur">
-            <Geo data={[land]} />
-        </clipPath>
-    </defs>
-    <Raster
-        data={weatherData}
-        x="Long"
-        y="Lat"
-        fill="Tx"
-        interpolate="random-walk"
-        {blur}
-        clipPath="url(#canada-land-blur)" />
-    <Geo data={[land]} stroke="currentColor" fill={null} />
-    <Geo
-        data={[innerBorders]}
-        stroke="white"
-        opacity={0.5} />
+  projection={{
+    type: 'conic-conformal',
+    domain: land,
+    rotate: [96, 0],
+    center: [0, 56],
+    parallels: [49, 77]
+  }}
+  color={{
+    scheme: 'burd',
+    type: 'quantile'
+  }}>
+  <defs>
+    <clipPath id="canada-land-blur">
+      <Geo data={[land]} />
+    </clipPath>
+  </defs>
+  <Raster
+    data={weatherData}
+    x="Long"
+    y="Lat"
+    fill="Tx"
+    interpolate="random-walk"
+    {blur}
+    clipPath="url(#canada-land-blur)" />
+  <Geo data={[land]} stroke="currentColor" fill={null} />
+  <Geo data={[innerBorders]} stroke="white" opacity={0.5} />
 </Plot>
 ```
 
@@ -412,52 +392,49 @@ The `x1`, `y1`, `x2`, `y2` props define the data-space bounding box. The example
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Raster } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot, Raster } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    function mandelbrot(x: number, y: number) {
-        for (let n = 0, zr = 0, zi = 0; n < 80; ++n) {
-            [zr, zi] = [
-                zr * zr - zi * zi + x,
-                2 * zr * zi + y
-            ];
-            if (zr * zr + zi * zi > 4) return n;
-        }
+  function mandelbrot(x: number, y: number) {
+    for (let n = 0, zr = 0, zi = 0; n < 80; ++n) {
+      [zr, zi] = [zr * zr - zi * zi + x, 2 * zr * zi + y];
+      if (zr * zr + zi * zi > 4) return n;
     }
+  }
 
-    let pixelSize = $state(1);
+  let pixelSize = $state(1);
 </script>
 
 <Slider
-    label="pixelSize"
-    bind:value={pixelSize}
-    min={1}
-    max={10}
-    step={1} />
+  label="pixelSize"
+  bind:value={pixelSize}
+  min={1}
+  max={10}
+  step={1} />
 <Plot
-    color={{ scheme: 'turbo', domain: [0, 80] }}
-    aspectRatio={1}>
-    <Raster
-        {pixelSize}
-        imageRendering="pixelated"
-        fill={mandelbrot}
-        x1={-2}
-        x2={1}
-        y1={-1.164}
-        y2={1.164} />
+  color={{ scheme: 'turbo', domain: [0, 80] }}
+  aspectRatio={1}>
+  <Raster
+    {pixelSize}
+    imageRendering="pixelated"
+    fill={mandelbrot}
+    x1={-2}
+    x2={1}
+    y1={-1.164}
+    y2={1.164} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    color={{ scheme: 'turbo', domain: [0, 80] }}
-    aspectRatio={1}>
-    <Raster
-        fill={mandelbrot}
-        x1={-2}
-        x2={1}
-        y1={-1.164}
-        y2={1.164} />
+  color={{ scheme: 'turbo', domain: [0, 80] }}
+  aspectRatio={1}>
+  <Raster
+    fill={mandelbrot}
+    x1={-2}
+    x2={1}
+    y1={-1.164}
+    y2={1.164} />
 </Plot>
 ```
 

@@ -8,31 +8,31 @@ In this example, we're shifting a line by adding 2 months to the x values.
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, shiftX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, shiftX } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <Line
-        {...shiftX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            '2 months'
-        )}
-        stroke="var(--svp-red)" />
+  <Line data={aapl} x="Date" y="Close" />
+  <Line
+    {...shiftX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      '2 months'
+    )}
+    stroke="var(--svp-red)" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <Line
-        {...shiftX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            '2 months'
-        )}
-        stroke="red" />
+  <Line data={aapl} x="Date" y="Close" />
+  <Line
+    {...shiftX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      '2 months'
+    )}
+    stroke="red" />
 </Plot>
 ```
 
@@ -42,33 +42,33 @@ You can also define exactly which channels the shifted values should be stored i
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, AreaY, shiftY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, AreaY, shiftY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <AreaY
-        {...shiftY(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { y1: -10, y2: +10 }
-        )}
-        fill="var(--svp-red)"
-        opacity="0.2" />
+  <Line data={aapl} x="Date" y="Close" />
+  <AreaY
+    {...shiftY(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { y1: -10, y2: +10 }
+    )}
+    fill="var(--svp-red)"
+    opacity="0.2" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <AreaY
-        {...shiftY(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { y1: -10, y2: +10 }
-        )}
-        fill="red"
-        opacity="0.2" />
+  <Line data={aapl} x="Date" y="Close" />
+  <AreaY
+    {...shiftY(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { y1: -10, y2: +10 }
+    )}
+    fill="red"
+    opacity="0.2" />
 </Plot>
 ```
 
@@ -80,46 +80,46 @@ Under the hood, the shift transform is using the interval helpers from [d3-time]
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line, AreaY } from 'svelteplot';
-    import { page } from '$app/state';
-    import { timeMonth } from 'd3-time';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line, AreaY } from 'svelteplot';
+  import { page } from '$app/state';
+  import { timeMonth } from 'd3-time';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <Line
-        data={aapl}
-        x={(d) => timeMonth.offset(d.Date, 3)}
-        y="Close"
-        stroke="var(--svp-red)" />
-    <AreaY
-        data={aapl}
-        x="Date"
-        y1={(d) => d.Close - 10}
-        y2={(d) => d.Close + 10}
-        fill="gray"
-        opacity="0.2" />
+  <Line data={aapl} x="Date" y="Close" />
+  <Line
+    data={aapl}
+    x={(d) => timeMonth.offset(d.Date, 3)}
+    y="Close"
+    stroke="var(--svp-red)" />
+  <AreaY
+    data={aapl}
+    x="Date"
+    y1={(d) => d.Close - 10}
+    y2={(d) => d.Close + 10}
+    fill="gray"
+    opacity="0.2" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ grid: true }}>
-    <Line data={aapl} x="Date" y="Close" />
-    <!-- shift x by 3 months -->
-    <Line
-        data={aapl}
-        x={(d) => timeMonth.offset(d.Date, 3)}
-        y="Close"
-        stroke="red" />
-    <!-- shift y by -10 and +10 -->
-    <AreaY
-        data={aapl}
-        x="Date"
-        y1={(d) => d.Close - 10}
-        y2={(d) => d.Close + 10}
-        fill="gray"
-        opacity="0.2" />
+  <Line data={aapl} x="Date" y="Close" />
+  <!-- shift x by 3 months -->
+  <Line
+    data={aapl}
+    x={(d) => timeMonth.offset(d.Date, 3)}
+    y="Close"
+    stroke="red" />
+  <!-- shift y by -10 and +10 -->
+  <AreaY
+    data={aapl}
+    x="Date"
+    y1={(d) => d.Close - 10}
+    y2={(d) => d.Close + 10}
+    fill="gray"
+    opacity="0.2" />
 </Plot>
 ```
 

@@ -14,22 +14,22 @@
     <Plot grid marginTop={40}>
         <Dot
             data={penguins}
-            x="culmen_length_mm"
+            x="bill_length_mm"
             fx="species"
             stroke="species"
             opacity={0.4}
-            y="culmen_depth_mm" />
+            y="bill_depth_mm" />
         <Pointer
             data={penguins}
-            x="culmen_length_mm"
+            x="bill_length_mm"
             fx="species"
-            y="culmen_depth_mm"
+            y="bill_depth_mm"
             maxDistance={30}>
             {#snippet children({ data })}
                 <Dot
                     {data}
-                    x="culmen_length_mm"
-                    y="culmen_depth_mm"
+                    x="bill_length_mm"
+                    y="bill_depth_mm"
                     fill="species"
                     fx="species"
                     r={6} />

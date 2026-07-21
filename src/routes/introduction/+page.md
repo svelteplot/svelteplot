@@ -30,7 +30,7 @@ If we want to plot a line showing the closing price over time, all we have to wr
 
 ```svelte
 <Plot>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -38,13 +38,13 @@ If we want to plot a line showing the closing price over time, all we have to wr
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -58,21 +58,21 @@ Let's say we also want to add a grid and a horizontal rule at zero. To activate 
 
 ```svelte
 <Plot grid>
-    <RuleY y={0} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
-    <RuleY y={0} />
+  <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
 </Plot>
 ```
 
@@ -84,23 +84,23 @@ Now, let's also fill the area between the line and the horizontal rule by adding
 
 ```svelte
 <Plot grid>
-    <RuleY y={0} />
-    <AreaY data={aapl} x="Date" y="Close" opacity={0.2} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <AreaY data={aapl} x="Date" y="Close" opacity={0.2} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line, AreaY, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line, AreaY, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <RuleY y={0} />
-    <AreaY data={aapl} x="Date" y="Close" opacity={0.2} />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <AreaY data={aapl} x="Date" y="Close" opacity={0.2} />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -110,59 +110,59 @@ Since SveltePlots are just SVG, you can mix in SVG elements. Let's say we want t
 
 ```svelte
 <Plot grid>
-    <RuleY y={0} />
-    <defs>
-        <linearGradient
-            id="my-gradient"
-            gradientTransform="rotate(90)">
-            <stop
-                offset="0%"
-                stop-color="gold"
-                stop-opacity={0.5} />
-            <stop
-                offset="100%"
-                stop-color="red"
-                stop-opacity={0.01} />
-        </linearGradient>
-    </defs>
-    <AreaY
-        data={aapl}
-        x="Date"
-        y="Close"
-        fill="url(#my-gradient)" />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <defs>
+    <linearGradient
+      id="my-gradient"
+      gradientTransform="rotate(90)">
+      <stop
+        offset="0%"
+        stop-color="gold"
+        stop-opacity={0.5} />
+      <stop
+        offset="100%"
+        stop-color="red"
+        stop-opacity={0.01} />
+    </linearGradient>
+  </defs>
+  <AreaY
+    data={aapl}
+    x="Date"
+    y="Close"
+    fill="url(#my-gradient)" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line, AreaY, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line, AreaY, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <RuleY y={0} />
-    <defs>
-        <linearGradient
-            id="my-gradient"
-            gradientTransform="rotate(90)">
-            <stop
-                offset="0%"
-                stop-color="gold"
-                stop-opacity={0.5} />
-            <stop
-                offset="100%"
-                stop-color="red"
-                stop-opacity={0.01} />
-        </linearGradient>
-    </defs>
-    <AreaY
-        data={aapl}
-        x="Date"
-        y="Close"
-        fill="url(#my-gradient)" />
-    <Line data={aapl} x="Date" y="Close" />
+  <RuleY y={0} />
+  <defs>
+    <linearGradient
+      id="my-gradient"
+      gradientTransform="rotate(90)">
+      <stop
+        offset="0%"
+        stop-color="gold"
+        stop-opacity={0.5} />
+      <stop
+        offset="100%"
+        stop-color="red"
+        stop-opacity={0.01} />
+    </linearGradient>
+  </defs>
+  <AreaY
+    data={aapl}
+    x="Date"
+    y="Close"
+    fill="url(#my-gradient)" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -176,33 +176,33 @@ Our dataset contains daily data, but what if we want to show monthly aggregates 
 
 ```svelte
 <Plot grid>
-    <!-- daily data -->
-    <Line data={aapl} x="Date" y="Close" opacity={0.3} />
-    <!-- monthly averages -->
-    <Line
-        {...binX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { interval: 'month', y: 'mean' }
-        )}
-        curve="basis" />
+  <!-- daily data -->
+  <Line data={aapl} x="Date" y="Close" opacity={0.3} />
+  <!-- monthly averages -->
+  <Line
+    {...binX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { interval: 'month', y: 'mean' }
+    )}
+    curve="basis" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line, binX } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line, binX } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" opacity={0.3} />
-    <Line
-        curve="basis"
-        {...binX(
-            { data: aapl, x: 'Date', y: 'Close' },
-            { interval: 'month', y: 'mean' }
-        )} />
+  <Line data={aapl} x="Date" y="Close" opacity={0.3} />
+  <Line
+    curve="basis"
+    {...binX(
+      { data: aapl, x: 'Date', y: 'Close' },
+      { interval: 'month', y: 'mean' }
+    )} />
 </Plot>
 ```
 
@@ -212,43 +212,43 @@ We can also use the binX transform to compute the min and max closing value of e
 
 ```svelte
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
-    <AreaY
-        fill="red"
-        opacity={0.3}
-        {...binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'Close',
-                y2: 'Close'
-            },
-            { interval: 'month', y1: 'min', y2: 'max' }
-        )} />
+  <Line data={aapl} x="Date" y="Close" />
+  <AreaY
+    fill="red"
+    opacity={0.3}
+    {...binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'Close',
+        y2: 'Close'
+      },
+      { interval: 'month', y1: 'min', y2: 'max' }
+    )} />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line, AreaY, binX } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line, AreaY, binX } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
-    <AreaY
-        fill="var(--svp-red)"
-        opacity={0.3}
-        {...binX(
-            {
-                data: aapl,
-                x: 'Date',
-                y1: 'Close',
-                y2: 'Close'
-            },
-            { interval: 'month', y1: 'min', y2: 'max' }
-        )} />
+  <Line data={aapl} x="Date" y="Close" />
+  <AreaY
+    fill="var(--svp-red)"
+    opacity={0.3}
+    {...binX(
+      {
+        data: aapl,
+        x: 'Date',
+        y1: 'Close',
+        y2: 'Close'
+      },
+      { interval: 'month', y1: 'min', y2: 'max' }
+    )} />
 </Plot>
 ```
 
@@ -262,19 +262,19 @@ Also, somehow, these axes already know the extent of our data! This is possible 
 
 ```svelte
 <Plot axes={false}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot axes={false}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -282,19 +282,19 @@ Similarly, you can enable the implicit grids by setting `grid` to `true`:
 
 ```svelte
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    const { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  const { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -302,41 +302,41 @@ And somehow these axes already know the extent of the data we passed to the line
 
 ```svelte --live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
 
-    let { olympians } = $derived(page.data.data);
+  let { olympians } = $derived(page.data.data);
 </script>
 
 <Plot
-    testid="olympians"
-    grid
-    color={{ legend: true }}
-    x={{ type: 'linear', insetLeft: 30, grid: true }}
-    inset={10}>
-    <Dot
-        data={olympians}
-        canvas
-        x="weight"
-        opacity="0.5"
-        y="height"
-        stroke="sex" />
+  testid="olympians"
+  grid
+  color={{ legend: true }}
+  x={{ type: 'linear', insetLeft: 30, grid: true }}
+  inset={10}>
+  <Dot
+    data={olympians}
+    canvas
+    x="weight"
+    opacity="0.5"
+    y="height"
+    stroke="sex" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{ legend: true }}
-    x={{ type: 'linear', insetLeft: 30, grid: true }}
-    inset={10}>
-    <Dot
-        data={olympians}
-        x="weight"
-        y="height"
-        opacity="0.5"
-        stroke="sex"
-        canvas />
+  grid
+  color={{ legend: true }}
+  x={{ type: 'linear', insetLeft: 30, grid: true }}
+  inset={10}>
+  <Dot
+    data={olympians}
+    x="weight"
+    y="height"
+    opacity="0.5"
+    stroke="sex"
+    canvas />
 </Plot>
 ```
 
@@ -344,28 +344,28 @@ This scatterplot suffers from overplotting: many dots are drawn in the same spot
 
 ```svelte --live
 <script>
-    import { Plot, Rect, bin } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import { Plot, Rect, bin } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 
-    let args = $derived(
-        bin(
-            {
-                data: olympians,
-                x: 'weight',
-                y: 'height',
-                fill: 'sex'
-            },
-            { fillOpacity: 'count' }
-        )
-    );
+  let args = $derived(
+    bin(
+      {
+        data: olympians,
+        x: 'weight',
+        y: 'height',
+        fill: 'sex'
+      },
+      { fillOpacity: 'count' }
+    )
+  );
 </script>
 
 {#if olympians}
-    <Plot testid="olympians-binned">
-        <Rect {...args} inset={0} />
-    </Plot>
+  <Plot testid="olympians-binned">
+    <Rect {...args} inset={0} />
+  </Plot>
 {/if}
 ```
 
@@ -373,46 +373,46 @@ We can use the [binX transform](/transforms/bin) to compute a weight distributio
 
 ```svelte --live
 <script>
-    import {
-        Plot,
-        Dot,
-        RectY,
-        GridY,
-        AxisX,
-        AxisY,
-        RuleY,
-        DotX,
-        binX
-    } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import {
+    Plot,
+    Dot,
+    RectY,
+    GridY,
+    AxisX,
+    AxisY,
+    RuleY,
+    DotX,
+    binX
+  } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 {#if olympians}
-    <Plot grid testid="olympians-hist">
-        <RectY
-            {...binX(
-                {
-                    data: olympians,
-                    x: 'weight',
-                    fill: 'sex'
-                },
-                { y: 'count' }
-            )} />
-        <RuleY data={[0]} />
-    </Plot>
+  <Plot grid testid="olympians-hist">
+    <RectY
+      {...binX(
+        {
+          data: olympians,
+          x: 'weight',
+          fill: 'sex'
+        },
+        { y: 'count' }
+      )} />
+    <RuleY data={[0]} />
+  </Plot>
 {/if}
 ```
 
 ```svelte
 <Plot grid>
-    <RectY
-        {...binX(
-            { data: olympians, x: 'weight', fill: 'sex' },
-            { y: 'count' }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      { data: olympians, x: 'weight', fill: 'sex' },
+      { y: 'count' }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -420,52 +420,52 @@ Or we can use the built-in [faceting](/features/facets) to look at the distribut
 
 ```svelte --live
 <script>
-    import {
-        Plot,
-        Dot,
-        RectY,
-        GridY,
-        AxisX,
-        AxisY,
-        RuleY,
-        DotX,
-        binX
-    } from 'svelteplot';
-    import Mark from 'svelteplot/Mark.svelte';
-    import { page } from '$app/state';
-    let { olympians } = $derived(page.data.data);
+  import {
+    Plot,
+    Dot,
+    RectY,
+    GridY,
+    AxisX,
+    AxisY,
+    RuleY,
+    DotX,
+    binX
+  } from 'svelteplot';
+  import Mark from 'svelteplot/Mark.svelte';
+  import { page } from '$app/state';
+  let { olympians } = $derived(page.data.data);
 </script>
 
 {#if olympians}
-    <Plot grid testid="olympians-hist-facet">
-        <RectY
-            {...binX(
-                {
-                    data: olympians,
-                    x: 'weight',
-                    fill: 'sex',
-                    fy: 'sex'
-                },
-                { y: 'count' }
-            )} />
-        <RuleY data={[0]} />
-    </Plot>
+  <Plot grid testid="olympians-hist-facet">
+    <RectY
+      {...binX(
+        {
+          data: olympians,
+          x: 'weight',
+          fill: 'sex',
+          fy: 'sex'
+        },
+        { y: 'count' }
+      )} />
+    <RuleY data={[0]} />
+  </Plot>
 {/if}
 ```
 
 ```svelte
 <Plot>
-    <RectY
-        {...binX(
-            {
-                data: olympians,
-                x: 'weight',
-                fill: 'sex',
-                fy: 'sex'
-            },
-            { y: 'count' }
-        )} />
-    <RuleY data={[0]} />
+  <RectY
+    {...binX(
+      {
+        data: olympians,
+        x: 'weight',
+        fill: 'sex',
+        fy: 'sex'
+      },
+      { y: 'count' }
+    )} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 

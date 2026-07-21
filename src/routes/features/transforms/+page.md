@@ -28,38 +28,38 @@ In the returned `data` array, each item will have new properties `__y1` and `__y
 
 ```svelte --live
 <script>
-    import { Plot, BarY, RuleY, stackY } from 'svelteplot';
-    import { rollups } from 'd3-array';
+  import { Plot, BarY, RuleY, stackY } from 'svelteplot';
+  import { rollups } from 'd3-array';
 
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 
-    let data = $derived(
-        rollups(
-            penguins,
-            (d) => d.length,
-            (d) => d.species,
-            (d) => d.island
-        )
-            .map(([species, group]) =>
-                group.map(([island, count]) => ({
-                    species,
-                    island,
-                    count
-                }))
-            )
-            .flat(1)
-    );
+  let data = $derived(
+    rollups(
+      penguins,
+      (d) => d.length,
+      (d) => d.species,
+      (d) => d.island
+    )
+      .map(([species, group]) =>
+        group.map(([island, count]) => ({
+          species,
+          island,
+          count
+        }))
+      )
+      .flat(1)
+  );
 </script>
 
 <Plot grid>
-    <RuleY data={[0]} />
-    <BarY
-        {...stackY(data, {
-            x: 'island',
-            y: 'count',
-            fill: 'species'
-        })} />
+  <RuleY data={[0]} />
+  <BarY
+    {...stackY(data, {
+      x: 'island',
+      y: 'count',
+      fill: 'species'
+    })} />
 </Plot>
 ```
 
@@ -67,19 +67,19 @@ More text here
 
 ```svelte
 <script>
-    import { Plot, BarY, RuleY, stackY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, BarY, RuleY, stackY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot grid>
-    <RuleY data={[0]} />
-    <BarY
-        {...stackY(data, {
-            x: 'island',
-            y: 'count',
-            fill: 'species'
-        })} />
+  <RuleY data={[0]} />
+  <BarY
+    {...stackY(data, {
+      x: 'island',
+      y: 'count',
+      fill: 'species'
+    })} />
 </Plot>
 ```
 

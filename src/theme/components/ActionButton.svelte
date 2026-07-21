@@ -8,16 +8,17 @@
      * @property {string} [type] - The type of the button
      * @property {any} to - The path to navigate to
      * @property {boolean} [external] - Whether the link is external
+     * @property {boolean} [small] - Whether to use the small button style
      */
 
     /** @type {Props} */
-    let { label, type = '', to, external = false } = $props();
+    let { label, type = '', to, external = false, small = false } = $props();
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
     href={external ? to : getPathFromBase(to)}
-    class={`svp-action ${type ? `svp-action--${type}` : ''}`}
+    class={['svp-action', type && `svp-action--${type}`, small && 'svp-action--small'].join(' ')}
     target={external ? '_blank' : ''}>
     <span class="label">
         {label}
@@ -32,6 +33,13 @@
 <style>
     .svp-action {
         --at-apply: 'inline-flex items-center h-12 leading-12 rounded-6 px-6 bg-white dark:bg-zinc-8 transition-300 transition-shadow hover:shadow dark:hover:shadow-gray-6';
+    }
+    .svp-action {
+        --at-apply: 'inline-flex items-center h-12 leading-12 rounded-6 px-6 bg-white dark:bg-zinc-8 transition-300 transition-shadow hover:shadow dark:hover:shadow-gray-6';
+    }
+    .svp-action--small {
+        --at-apply: 'h-8 leading-8 px-4 py-1 rounded-2 text-sm';
+        text-decoration: none;
     }
     .svp-action--primary {
         --at-apply: 'svp-gradient-bg text-white dark:text-warm-gray-8';

@@ -16,34 +16,26 @@ Unlike other transforms, the dodge transform is applied _after_ the positions ha
 
 ```svelte live
 <script>
-    import { Plot, DotX, RuleY } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, DotX, RuleY } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { cars } = $derived(page.data.data);
+  const { cars } = $derived(page.data.data);
 </script>
 
 <Plot
-    height={(w) => Math.sqrt(1 / w) * 4700}
-    inset={10}
-    y={{ axis: false }}>
-    <DotX
-        data={cars}
-        x="weight (lb)"
-        dodgeY="bottom"
-        fill />
+  height={(w) => Math.sqrt(1 / w) * 4700}
+  inset={10}
+  y={{ axis: false }}>
+  <DotX data={cars} x="weight (lb)" dodgeY="bottom" fill />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    inset={5}
-    y={{ axis: false }}
-    height={(w) => Math.sqrt(1 / w) * 4700}>
-    <DotX
-        data={cars}
-        x="weight (lb)"
-        dodgeY="bottom"
-        fill />
+  inset={5}
+  y={{ axis: false }}
+  height={(w) => Math.sqrt(1 / w) * 4700}>
+  <DotX data={cars} x="weight (lb)" dodgeY="bottom" fill />
 </Plot>
 ```
 
@@ -51,30 +43,30 @@ Compare this to a conventional histogram using a rect mark.
 
 ```svelte live
 <script>
-    import { Plot, RectY, RuleY, binX } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, RectY, RuleY, binX } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { cars } = $derived(page.data.data);
+  const { cars } = $derived(page.data.data);
 </script>
 
 <Plot height={(w) => Math.sqrt(1 / w) * 4700} inset={10}>
-    <RectY
-        {...binX(
-            { data: cars, x: 'weight (lb)' },
-            { y: 'count', thresholds: 20 }
-        )} />
-    <RuleY y={0} />
+  <RectY
+    {...binX(
+      { data: cars, x: 'weight (lb)' },
+      { y: 'count', thresholds: 20 }
+    )} />
+  <RuleY y={0} />
 </Plot>
 ```
 
 ```svelte
 <Plot inset={5} height={(w) => Math.sqrt(1 / w) * 4700}>
-    <RectY
-        {...binX(
-            { data: cars, x: 'weight (lb)' },
-            { y: 'count', thresholds: 20 }
-        )} />
-    <RuleY y={0} />
+  <RectY
+    {...binX(
+      { data: cars, x: 'weight (lb)' },
+      { y: 'count', thresholds: 20 }
+    )} />
+  <RuleY y={0} />
 </Plot>
 ```
 
@@ -82,29 +74,29 @@ If you use the r channel to specify the radius of each dot, the dodge transform 
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { countries_2020: countries } = $derived(
-        page.data.data
-    );
+  const { countries_2020: countries } = $derived(
+    page.data.data
+  );
 </script>
 
 <Plot
-    height={(w) => Math.sqrt(1 / w) * 7e3}
-    inset={10}
-    color={{ legend: true }}
-    r={{ range: [1, 40] }}
-    x={{ type: 'log' }}
-    y={{ axis: false }}>
-    <Dot
-        data={countries}
-        x="Life expectancy"
-        sort={{ channel: '-r' }}
-        y={0}
-        r="Population"
-        dodgeY="middle"
-        fill="Continent" />
+  height={(w) => Math.sqrt(1 / w) * 7e3}
+  inset={10}
+  color={{ legend: true }}
+  r={{ range: [1, 40] }}
+  x={{ type: 'log' }}
+  y={{ axis: false }}>
+  <Dot
+    data={countries}
+    x="Life expectancy"
+    sort={{ channel: '-r' }}
+    y={0}
+    r="Population"
+    dodgeY="middle"
+    fill="Continent" />
 </Plot>
 ```
 
@@ -112,40 +104,39 @@ This also works with other positional marks, such as texts:
 
 ```svelte live
 <script>
-    import { Plot, Dot, Text } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Dot, Text } from 'svelteplot';
+  import { page } from '$app/state';
 
-    const { countries_2020: countries } = $derived(
-        page.data.data
-    );
-    const dodgeY = { anchor: 'middle', padding: 3 };
+  const { countries_2020: countries } = $derived(
+    page.data.data
+  );
+  const dodgeY = { anchor: 'middle', padding: 3 };
 </script>
 
 <Plot
-    height={(w) => Math.sqrt(1 / w) * 7e3}
-    inset={15}
-    r={{ range: [1, 40] }}
-    x={{ type: 'log' }}
-    y={{ axis: false }}>
-    <Dot
-        data={countries}
-        x="Life expectancy"
-        sort={{ channel: '-r' }}
-        y={0}
-        r="Population"
-        {dodgeY}
-        fill="Continent" />
-    <Text
-        data={countries}
-        x="Life expectancy"
-        r="Population"
-        sort={{ channel: '-r' }}
-        y={0}
-        text="Code"
-        fontSize={(d) =>
-            Math.sqrt(d.Population / 1.4e9) * 33}
-        {dodgeY}
-        fill="var(--svelteplot-bg)" />
+  height={(w) => Math.sqrt(1 / w) * 7e3}
+  inset={15}
+  r={{ range: [1, 40] }}
+  x={{ type: 'log' }}
+  y={{ axis: false }}>
+  <Dot
+    data={countries}
+    x="Life expectancy"
+    sort={{ channel: '-r' }}
+    y={0}
+    r="Population"
+    {dodgeY}
+    fill="Continent" />
+  <Text
+    data={countries}
+    x="Life expectancy"
+    r="Population"
+    sort={{ channel: '-r' }}
+    y={0}
+    text="Code"
+    fontSize={(d) => Math.sqrt(d.Population / 1.4e9) * 33}
+    {dodgeY}
+    fill="var(--svelteplot-bg)" />
 </Plot>
 ```
 

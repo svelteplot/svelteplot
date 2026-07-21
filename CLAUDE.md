@@ -50,7 +50,7 @@ Pure functions that transform the `{data, ...channels}` object. They are compose
 
 ```ts
 const args = $derived(
-    sort(recordizeXY({ data, x, y, fill, ...rest }))
+  sort(recordizeXY({ data, x, y, fill, ...rest }))
 );
 ```
 

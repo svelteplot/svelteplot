@@ -1,5 +1,14 @@
 ---
 title: Cell mark
+description: Cell mark draws a colored rectangle for each (x, y) category pair — the building block for heatmaps and calendar plots.
+examples:
+  - cell/simpsons
+  - cell/temperatures
+  - cell/temperatures-threshold
+  - cell/cell-canvas
+links:
+  examples: /examples/cell
+  api: /api/marks#Cell
 ---
 
 The **cell mark** draws rectangles positioned in two ordinal dimensions. Hence, the plot’s _x_ and _y_ scales are [band scales](https://observablehq.com/plot/features/scales). Cells typically also have a **fill** color encoding.
@@ -8,60 +17,59 @@ For example, the heatmap below shows the decline of _The Simpsons_ after Season 
 
 ```svelte live
 <script>
-    import { Plot, Cell, Text } from 'svelteplot';
+  import { Plot, Cell, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    padding={0}
-    aspectRatio={1}
-    marginTop={40}
-    x={{ type: 'band', axis: 'top' }}
-    y={{ type: 'band' }}
-    color={{ type: 'quantile', scheme: 'PiYG' }}
-    testid="simpsons">
-    <Cell
-        data={simpsons}
-        x="episode"
-        y="season"
-        fill="imdb_rating"
-        inset={0.5} />
-    <Text
-        data={simpsons}
-        y="season"
-        x="episode"
-        fontSize={9}
-        fill="black"
-        text={(d) =>
-            d.imdb_rating && d.imdb_rating.toFixed(1)}
-        title={(d) => d.title} />
+  grid
+  padding={0}
+  aspectRatio={1}
+  marginTop={40}
+  x={{ type: 'band', axis: 'top' }}
+  y={{ type: 'band' }}
+  color={{ type: 'quantile', scheme: 'PiYG' }}
+  testid="simpsons">
+  <Cell
+    data={simpsons}
+    x="episode"
+    y="season"
+    fill="imdb_rating"
+    inset={0.5} />
+  <Text
+    data={simpsons}
+    y="season"
+    x="episode"
+    fontSize={9}
+    fill="black"
+    text={(d) => d.imdb_rating && d.imdb_rating.toFixed(1)}
+    title={(d) => d.title} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    aspectRatio={1}
-    x={{ type: 'band', axis: 'top' }}
-    y={{ type: 'band' }}
-    color={{ type: 'quantile', scheme: 'PiYG' }}>
-    <Cell
-        data={simpsons}
-        x="episode"
-        y="season"
-        fill="imdb_rating"
-        inset={0.5} />
-    <Text
-        data={simpsons}
-        y="season"
-        x="episode"
-        fontSize={9}
-        fill="black"
-        text={(d) => d.imdb_rating?.toFixed(1)}
-        title={(d) => d.title} />
+  grid
+  aspectRatio={1}
+  x={{ type: 'band', axis: 'top' }}
+  y={{ type: 'band' }}
+  color={{ type: 'quantile', scheme: 'PiYG' }}>
+  <Cell
+    data={simpsons}
+    x="episode"
+    y="season"
+    fill="imdb_rating"
+    inset={0.5} />
+  <Text
+    data={simpsons}
+    y="season"
+    x="episode"
+    fontSize={9}
+    fill="black"
+    text={(d) => d.imdb_rating?.toFixed(1)}
+    title={(d) => d.title} />
 </Plot>
 ```
 
@@ -71,45 +79,45 @@ Seattle temperatures
 
 ```svelte live
 <script>
-    import { Plot, Cell, formatMonth } from 'svelteplot';
+  import { Plot, Cell, formatMonth } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { seattle } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Plot
-    padding={0}
-    aspectRatio={1}
-    y={{
-        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        tickFormat: formatMonth('en', 'short')
-    }}
-    testid="seattle-temp">
-    <Cell
-        data={seattle}
-        filter={(d) => d.date.getUTCFullYear() === 2015}
-        x={(d) => d.date.getUTCDate()}
-        y={(d) => d.date.getUTCMonth()}
-        fill="temp_max"
-        inset={0.5} />
+  padding={0}
+  aspectRatio={1}
+  y={{
+    ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    tickFormat: formatMonth('en', 'short')
+  }}
+  testid="seattle-temp">
+  <Cell
+    data={seattle}
+    filter={(d) => d.date.getUTCFullYear() === 2015}
+    x={(d) => d.date.getUTCDate()}
+    y={(d) => d.date.getUTCMonth()}
+    fill="temp_max"
+    inset={0.5} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    padding={0}
-    aspectRatio={1}
-    y={{
-        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        tickFormat: formatMonth('en', 'short')
-    }}>
-    <Cell
-        data={seattle}
-        filter={(d) => d.date.getUTCFullYear() === 2015}
-        x={(d) => d.date.getUTCDate()}
-        y={(d) => d.date.getUTCMonth()}
-        fill="temp_max"
-        inset={0.5} />
+  padding={0}
+  aspectRatio={1}
+  y={{
+    ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    tickFormat: formatMonth('en', 'short')
+  }}>
+  <Cell
+    data={seattle}
+    filter={(d) => d.date.getUTCFullYear() === 2015}
+    x={(d) => d.date.getUTCDate()}
+    y={(d) => d.date.getUTCMonth()}
+    fill="temp_max"
+    inset={0.5} />
 </Plot>
 ```
 
@@ -117,21 +125,21 @@ Seattle temperatures
 
 ```svelte live
 <script>
-    import { Plot, Cell, Text } from 'svelteplot';
+  import { Plot, Cell, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
-    let first28 = $derived(
-        simpsons.filter((d) => d.season < 4)
-    );
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
+  let first28 = $derived(
+    simpsons.filter((d) => d.season < 4)
+  );
 </script>
 
 <Plot
-    marginTop={40}
-    inset={0}
-    color={{ type: 'quantile', scheme: 'PiYG' }}
-    testid="first28">
-    <Cell data={first28} x="id" y="0" fill="imdb_rating" />
+  marginTop={40}
+  inset={0}
+  color={{ type: 'quantile', scheme: 'PiYG' }}
+  testid="first28">
+  <Cell data={first28} x="id" y="0" fill="imdb_rating" />
 </Plot>
 ```
 
@@ -143,48 +151,48 @@ Equivalent to [cell](/marks/cell#Cell), except that if the **x** option is not s
 
 ```svelte live
 <script>
-    import { Plot, CellX, Text, groupX } from 'svelteplot';
+  import { Plot, CellX, Text, groupX } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
 </script>
 
 <Plot
-    inset={0}
-    y={{ axis: false }}
-    color={{
-        type: 'quantile',
-        scheme: 'PiYG'
-    }}>
-    <CellX
-        {...groupX(
-            {
-                data: simpsons,
-                x: 'season',
-                fill: 'imdb_rating'
-            },
-            { fill: 'mean' }
-        )} />
+  inset={0}
+  y={{ axis: false }}
+  color={{
+    type: 'quantile',
+    scheme: 'PiYG'
+  }}>
+  <CellX
+    {...groupX(
+      {
+        data: simpsons,
+        x: 'season',
+        fill: 'imdb_rating'
+      },
+      { fill: 'mean' }
+    )} />
 </Plot>
 ```
 
 ```svelte -
 <Plot
-    inset={0}
-    x={{ axis: false }}
-    color={{
-        type: 'quantile',
-        scheme: 'PiYG'
-    }}>
-    <CellX
-        {...groupX(
-            {
-                data: simpsons,
-                x: 'season',
-                fill: 'imdb_rating'
-            },
-            { fill: 'mean' }
-        )} />
+  inset={0}
+  x={{ axis: false }}
+  color={{
+    type: 'quantile',
+    scheme: 'PiYG'
+  }}>
+  <CellX
+    {...groupX(
+      {
+        data: simpsons,
+        x: 'season',
+        fill: 'imdb_rating'
+      },
+      { fill: 'mean' }
+    )} />
 </Plot>
 ```
 
@@ -196,51 +204,51 @@ Equivalent to [cell](/marks/cell#Cell), except that if the **y** option is not s
 
 ```svelte live
 <script>
-    import { Plot, CellY, Text, groupY } from 'svelteplot';
+  import { Plot, CellY, Text, groupY } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
 </script>
 
 <Plot
-    inset={0}
-    maxWidth="60px"
-    height={500}
-    x={{ axis: false }}
-    color={{
-        type: 'quantile',
-        scheme: 'PiYG'
-    }}>
-    <CellY
-        {...groupY(
-            {
-                data: simpsons,
-                y: 'season',
-                fill: 'imdb_rating'
-            },
-            { fill: 'mean' }
-        )} />
+  inset={0}
+  maxWidth="60px"
+  height={500}
+  x={{ axis: false }}
+  color={{
+    type: 'quantile',
+    scheme: 'PiYG'
+  }}>
+  <CellY
+    {...groupY(
+      {
+        data: simpsons,
+        y: 'season',
+        fill: 'imdb_rating'
+      },
+      { fill: 'mean' }
+    )} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    inset={0}
-    maxWidth="60px"
-    height={500}
-    color={{
-        type: 'quantile',
-        scheme: 'PiYG'
-    }}>
-    <CellY
-        {...groupY(
-            {
-                data: simpsons,
-                y: 'season',
-                fill: 'imdb_rating'
-            },
-            { fill: 'mean' }
-        )} />
+  inset={0}
+  maxWidth="60px"
+  height={500}
+  color={{
+    type: 'quantile',
+    scheme: 'PiYG'
+  }}>
+  <CellY
+    {...groupY(
+      {
+        data: simpsons,
+        y: 'season',
+        fill: 'imdb_rating'
+      },
+      { fill: 'mean' }
+    )} />
 </Plot>
 ```
 
@@ -248,30 +256,30 @@ But better to use a RectX here:
 
 ```svelte --live
 <script>
-    import { Plot, RectX, Text } from 'svelteplot';
+  import { Plot, RectX, Text } from 'svelteplot';
 
-    import { page } from '$app/state';
-    let { simpsons } = $derived(page.data.data);
-    let first28 = $derived(
-        simpsons.filter((d) => d.season < 29)
-    );
+  import { page } from '$app/state';
+  let { simpsons } = $derived(page.data.data);
+  let first28 = $derived(
+    simpsons.filter((d) => d.season < 29)
+  );
 </script>
 
 <Plot
-    padding={0}
-    margin={5}
-    marginTop={40}
-    height={70}
-    inset={0}
-    x={{
-        axis: 'top',
-        label: 'Season'
-    }}
-    color={{ type: 'linear', scheme: 'PiYG' }}>
-    <RectX
-        data={first28.sort((a, b) => b.id - a.id)}
-        x="id"
-        interval="1"
-        fill="imdb_rating" />
+  padding={0}
+  margin={5}
+  marginTop={40}
+  height={70}
+  inset={0}
+  x={{
+    axis: 'top',
+    label: 'Season'
+  }}
+  color={{ type: 'linear', scheme: 'PiYG' }}>
+  <RectX
+    data={first28.sort((a, b) => b.id - a.id)}
+    x="id"
+    interval="1"
+    fill="imdb_rating" />
 </Plot>
 ```

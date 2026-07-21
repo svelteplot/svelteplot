@@ -10,19 +10,19 @@ The x channel is bound to the _x_ scale, (other marks may also bind channels lik
 
 ```svelte
 <Plot grid>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, Line } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, Line } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid testid="aapl-line-frame" height={250}>
-    <Line data={aapl} x="Date" y="Close" />
+  <Line data={aapl} x="Date" y="Close" />
 </Plot>
 ```
 
@@ -30,7 +30,7 @@ Since there's just one explicit mark in the plot and the channels are mapped to 
 
 ```svelte
 <Plot grid>
-    <RuleX data={aapl} x="Date" y1="Low" y2="High" />
+  <RuleX data={aapl} x="Date" y1="Low" y2="High" />
 </Plot>
 ```
 
@@ -38,17 +38,17 @@ Since we no longer have a single key, the y axis title is left empty.
 
 ```svelte live
 <script>
-    import { Plot, RuleX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, RuleX } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot grid testid="aapl-line-frame" inset={5} height={250}>
-    <RuleX
-        data={aapl.slice(-120)}
-        x="Date"
-        y1="Low"
-        y2="High" />
+  <RuleX
+    data={aapl.slice(-120)}
+    x="Date"
+    y1="Low"
+    y2="High" />
 </Plot>
 ```
 
@@ -56,28 +56,28 @@ You can set a custom axis title or domain by providing global scale options:
 
 ```svelte
 <Plot grid y={{ domain: [140, 200], label: '↑ Price' }}>
-    <RuleX data={aapl} x="Date" y1="Low" y2="High" />
+  <RuleX data={aapl} x="Date" y1="Low" y2="High" />
 </Plot>
 ```
 
 ```svelte live
 <script>
-    import { Plot, RuleX } from 'svelteplot';
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { Plot, RuleX } from 'svelteplot';
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 </script>
 
 <Plot
-    testid="aapl-line-frame"
-    inset={5}
-    height={250}
-    grid
-    y={{ domain: [140, 200], label: '↑ Price' }}>
-    <RuleX
-        data={aapl.slice(-120)}
-        x="Date"
-        y1="Low"
-        y2="High" />
+  testid="aapl-line-frame"
+  inset={5}
+  height={250}
+  grid
+  y={{ domain: [140, 200], label: '↑ Price' }}>
+  <RuleX
+    data={aapl.slice(-120)}
+    x="Date"
+    y1="Low"
+    y2="High" />
 </Plot>
 ```
 
@@ -97,16 +97,16 @@ side of the plot while the second (x = 100) corresponds to the right side.
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Line } from 'svelteplot';
+  import { Plot, GridX, GridY, Line } from 'svelteplot';
 </script>
 
 <Plot
-    x={{ domain: [0, 100], grid: true }}
-    marginTop={0}
-    marginLeft={10}
-    marginRight={10}
-    height={70}
-    testid="linear" />
+  x={{ domain: [0, 100], grid: true }}
+  marginTop={0}
+  marginLeft={10}
+  marginRight={10}
+  height={70}
+  testid="linear" />
 ```
 
 ```svelte
@@ -117,16 +117,16 @@ Scales can be reversed using the **reverse** option:
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Line } from 'svelteplot';
+  import { Plot, GridX, GridY, Line } from 'svelteplot';
 </script>
 
 <Plot
-    x={{ domain: [0, 100], grid: true, reverse: true }}
-    marginTop={0}
-    marginLeft={10}
-    marginRight={10}
-    height={70}
-    testid="linear" />
+  x={{ domain: [0, 100], grid: true, reverse: true }}
+  marginTop={0}
+  marginLeft={10}
+  marginRight={10}
+  height={70}
+  testid="linear" />
 ```
 
 ```svelte
@@ -139,34 +139,34 @@ If the domain contains dates, SveltePlot will default to a **time** scale — a 
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Line } from 'svelteplot';
+  import { Plot, GridX, GridY, Line } from 'svelteplot';
 </script>
 
 <Plot
-    x={{
-        type: 'time',
-        domain: [
-            new Date('2021-01-01'),
-            new Date('2022-01-01')
-        ],
-        grid: true
-    }}
-    marginTop={0}
-    marginLeft={20}
-    marginRight={20}
-    height={70}
-    testid="linear" />
+  x={{
+    type: 'time',
+    domain: [
+      new Date('2021-01-01'),
+      new Date('2022-01-01')
+    ],
+    grid: true
+  }}
+  marginTop={0}
+  marginLeft={20}
+  marginRight={20}
+  height={70}
+  testid="linear" />
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: [
-            new Date('2021-01-01'),
-            new Date('2022-01-01')
-        ],
-        grid: true
-    }} />
+  x={{
+    domain: [
+      new Date('2021-01-01'),
+      new Date('2022-01-01')
+    ],
+    grid: true
+  }} />
 ```
 
 #### UTC scale
@@ -177,43 +177,43 @@ The difference between the two scales is only visible when the viewer is not in 
 
 ```svelte live
 <script>
-    import { Plot } from 'svelteplot';
+  import { Plot } from 'svelteplot';
 
-    const domain = [
-        new Date('2021-01-01T00:00:00Z'),
-        new Date('2021-01-02T00:00:00Z')
-    ];
+  const domain = [
+    new Date('2021-01-01T00:00:00Z'),
+    new Date('2021-01-02T00:00:00Z')
+  ];
 </script>
 
 <div>
-    <p><strong>time</strong> scale (local timezone)</p>
-    <Plot
-        x={{ type: 'time', domain, grid: true }}
-        marginTop={0}
-        marginLeft={20}
-        marginRight={20}
-        height={70}
-        testid="time-vs-utc-time"></Plot>
-    <p><strong>utc</strong> scale</p>
-    <Plot
-        x={{ type: 'utc', domain, grid: true }}
-        marginTop={0}
-        marginLeft={20}
-        marginRight={20}
-        height={70}
-        testid="time-vs-utc-utc">
-    </Plot>
+  <p><strong>time</strong> scale (local timezone)</p>
+  <Plot
+    x={{ type: 'time', domain, grid: true }}
+    marginTop={0}
+    marginLeft={20}
+    marginRight={20}
+    height={70}
+    testid="time-vs-utc-time"></Plot>
+  <p><strong>utc</strong> scale</p>
+  <Plot
+    x={{ type: 'utc', domain, grid: true }}
+    marginTop={0}
+    marginLeft={20}
+    marginRight={20}
+    height={70}
+    testid="time-vs-utc-utc">
+  </Plot>
 </div>
 ```
 
 ```svelte
 <script>
-    import { Plot } from 'svelteplot';
+  import { Plot } from 'svelteplot';
 
-    const domain = [
-        new Date('2021-01-01T00:00:00Z'),
-        new Date('2021-01-02T00:00:00Z')
-    ];
+  const domain = [
+    new Date('2021-01-01T00:00:00Z'),
+    new Date('2021-01-02T00:00:00Z')
+  ];
 </script>
 
 <Plot x={{ type: 'time', domain, grid: true }} />
@@ -226,16 +226,16 @@ SveltePlot will automatically detect a scale type, but you can also set it expli
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Line } from 'svelteplot';
+  import { Plot, GridX, GridY, Line } from 'svelteplot';
 </script>
 
 <Plot
-    x={{ domain: [1, 1000], type: 'log', grid: true }}
-    marginTop={0}
-    marginLeft={10}
-    marginRight={20}
-    height={70}
-    testid="linear" />
+  x={{ domain: [1, 1000], type: 'log', grid: true }}
+  marginTop={0}
+  marginLeft={10}
+  marginRight={20}
+  height={70}
+  testid="linear" />
 ```
 
 ```svelte
@@ -248,45 +248,45 @@ For input domains ranging multiple magnitudes above and below zero, the bi-symme
 
 ```svelte live
 <script>
-    import { Plot, RectX } from 'svelteplot';
-    import { Slider } from '$shared/ui';
+  import { Plot, RectX } from 'svelteplot';
+  import { Slider } from '$shared/ui';
 
-    let constant = $state(1);
+  let constant = $state(1);
 </script>
 
 <Slider
-    label="constant"
-    bind:value={constant}
-    min={1}
-    max={40} />
+  label="constant"
+  bind:value={constant}
+  min={1}
+  max={40} />
 <Plot
-    x={{
-        domain: [-1e6, 1e6],
-        type: 'symlog',
-        grid: true,
-        constant
-    }}
-    marginTop={0}
-    marginLeft={10}
-    marginRight={20}
-    height={70}>
-    <RectX
-        data={[1]}
-        x1={-constant}
-        x2={constant}
-        opacity={0.05} />
+  x={{
+    domain: [-1e6, 1e6],
+    type: 'symlog',
+    grid: true,
+    constant
+  }}
+  marginTop={0}
+  marginLeft={10}
+  marginRight={20}
+  height={70}>
+  <RectX
+    data={[1]}
+    x1={-constant}
+    x2={constant}
+    opacity={0.05} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{
-        domain: [-1e6, 1e6],
-        type: 'symlog',
-        grid: true,
-        constant: 1
-    }}>
-    <RectX x1={-1} x2={1} opacity={0.05} />
+  x={{
+    domain: [-1e6, 1e6],
+    type: 'symlog',
+    grid: true,
+    constant: 1
+  }}>
+  <RectX x1={-1} x2={1} opacity={0.05} />
 </Plot>
 ```
 
@@ -300,46 +300,46 @@ Point scales map a discrete input domain to single coordinates in your plot. Sve
 
 ```svelte live
 <script>
-    import { Plot, Dot, group } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, Dot, group } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    x={{ tickRotate: -90 }}
-    marginTop={30}
-    y={{ insetBottom: 10, tickSpacing: 40 }}
-    height={350}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill />
+  grid
+  x={{ tickRotate: -90 }}
+  marginTop={30}
+  y={{ insetBottom: 10, tickSpacing: 40 }}
+  height={350}>
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill />
 </Plot>
 ```
 
 ```svelte
 <Plot grid x={{ tickRotate: -90 }}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill />
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill />
 </Plot>
 ```
 
@@ -349,46 +349,46 @@ We can force the y scale to use a point scale, too, by setting `type: 'point'` o
 
 ```svelte live
 <script>
-    import { Plot, Dot, group } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, Dot, group } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    x={{ tickRotate: -90 }}
-    marginTop={30}
-    y={{ type: 'point', insetBottom: 10, tickSpacing: 40 }}
-    height={250}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill />
+  grid
+  x={{ tickRotate: -90 }}
+  marginTop={30}
+  y={{ type: 'point', insetBottom: 10, tickSpacing: 40 }}
+  height={250}>
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill />
 </Plot>
 ```
 
 ```svelte
 <Plot grid x={{ tickRotate: -90 }} y={{ type: 'point' }}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill />
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill />
 </Plot>
 ```
 
@@ -398,48 +398,48 @@ We can also see that the scale is no longer sorted by cylinders, as the domain o
 
 ```svelte live
 <script>
-    import { Plot, Dot, group } from 'svelteplot';
-    import { page } from '$app/state';
-    let { cars } = $derived(page.data.data);
+  import { Plot, Dot, group } from 'svelteplot';
+  import { page } from '$app/state';
+  let { cars } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    x={{ tickRotate: -90 }}
-    marginTop={30}
-    y={{ type: 'point', insetBottom: 10, tickSpacing: 40 }}
-    height={250}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill
-        sort="-cylinders" />
+  grid
+  x={{ tickRotate: -90 }}
+  marginTop={30}
+  y={{ type: 'point', insetBottom: 10, tickSpacing: 40 }}
+  height={250}>
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill
+    sort="-cylinders" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid x={{ tickRotate: -90 }} y={{ type: 'point' }}>
-    <Dot
-        {...group(
-            {
-                data: cars,
-                y: 'cylinders',
-                x: 'manufactor'
-            },
-            {
-                r: 'count'
-            }
-        )}
-        fill
-        sort="-cylinders" />
+  <Dot
+    {...group(
+      {
+        data: cars,
+        y: 'cylinders',
+        x: 'manufactor'
+      },
+      {
+        r: 'count'
+      }
+    )}
+    fill
+    sort="-cylinders" />
 </Plot>
 ```
 
@@ -451,56 +451,56 @@ Band scales are similar to point scales but allocate space for each category. Th
 
 ```svelte live
 <script>
-    import { Plot, BarY, groupX, Frame } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
-    let paddingInner = $state(0.1);
-    let paddingOuter = $state(0.25);
-    let align = $state(0.5);
+  import { Plot, BarY, groupX, Frame } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
+  let paddingInner = $state(0.1);
+  let paddingOuter = $state(0.25);
+  let align = $state(0.5);
 
-    const domain = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  const domain = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 </script>
 
 <Slider
-    label="paddingInner"
-    bind:value={paddingInner}
-    min={0}
-    max={0.9}
-    step={0.01} />
+  label="paddingInner"
+  bind:value={paddingInner}
+  min={0}
+  max={0.9}
+  step={0.01} />
 <Slider
-    label="paddingOuter"
-    bind:value={paddingOuter}
-    min={0}
-    max={0.9}
-    step={0.01} />
+  label="paddingOuter"
+  bind:value={paddingOuter}
+  min={0}
+  max={0.9}
+  step={0.01} />
 <Slider
-    label="align"
-    bind:value={align}
-    min={0}
-    max={1}
-    step={0.01} />
+  label="align"
+  bind:value={align}
+  min={0}
+  max={1}
+  step={0.01} />
 
 <Plot
-    x={{
-        type: 'band',
-        grid: true,
-        align,
-        paddingInner,
-        paddingOuter
-    }}
-    marginTop={30}
-    y={{ axis: false }}
-    height={120}>
-    <Frame opacity={0.2} />
-    <BarY
-        data={domain.map((d) => ({
-            category: d,
-            value: 1
-        }))}
-        stroke="currentColor"
-        x="category"
-        y="value" />
+  x={{
+    type: 'band',
+    grid: true,
+    align,
+    paddingInner,
+    paddingOuter
+  }}
+  marginTop={30}
+  y={{ axis: false }}
+  height={120}>
+  <Frame opacity={0.2} />
+  <BarY
+    data={domain.map((d) => ({
+      category: d,
+      value: 1
+    }))}
+    stroke="currentColor"
+    x="category"
+    y="value" />
 </Plot>
 ```
 
@@ -512,31 +512,31 @@ Note that SveltePlot sortes the domain values in point and band scales alphabeti
 
 ```svelte live
 <script>
-    import { Plot, BarX } from 'svelteplot';
-    const data = [
-        { category: 'C', value: 2 },
-        { category: 'A', value: 1 },
-        { category: 'B', value: 3 }
-    ];
+  import { Plot, BarX } from 'svelteplot';
+  const data = [
+    { category: 'C', value: 2 },
+    { category: 'A', value: 1 },
+    { category: 'B', value: 3 }
+  ];
 </script>
 
 <Plot>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import { Plot, BarX } from 'svelteplot';
-    const data = [
-        { category: 'C', value: 2 },
-        { category: 'A', value: 1 },
-        { category: 'B', value: 3 }
-    ];
+  import { Plot, BarX } from 'svelteplot';
+  const data = [
+    { category: 'C', value: 2 },
+    { category: 'A', value: 1 },
+    { category: 'B', value: 3 }
+  ];
 </script>
 
 <Plot>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
@@ -544,22 +544,22 @@ If one of the marks used in the plot is using the [sort transform](/transforms/s
 
 ```svelte live
 <script>
-    import { Plot, BarX } from 'svelteplot';
-    const data = [
-        { category: 'C', value: 2 },
-        { category: 'A', value: 1 },
-        { category: 'B', value: 3 }
-    ];
+  import { Plot, BarX } from 'svelteplot';
+  const data = [
+    { category: 'C', value: 2 },
+    { category: 'A', value: 1 },
+    { category: 'B', value: 3 }
+  ];
 </script>
 
 <Plot>
-    <BarX {data} sort="value" x="value" y="category" />
+  <BarX {data} sort="value" x="value" y="category" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <BarX {data} sort="value" x="value" y="category" />
+  <BarX {data} sort="value" x="value" y="category" />
 </Plot>
 ```
 
@@ -567,22 +567,22 @@ Another way to disable the sorting is to pass `sort: false` to the scale options
 
 ```svelte live
 <script>
-    import { Plot, BarX } from 'svelteplot';
-    const data = [
-        { category: 'C', value: 2 },
-        { category: 'A', value: 1 },
-        { category: 'B', value: 3 }
-    ];
+  import { Plot, BarX } from 'svelteplot';
+  const data = [
+    { category: 'C', value: 2 },
+    { category: 'A', value: 1 },
+    { category: 'B', value: 3 }
+  ];
 </script>
 
 <Plot y={{ sort: false }}>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
 ```svelte
 <Plot y={{ sort: false }}>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
@@ -590,22 +590,22 @@ Alternatively, you can disable this behavior for the entire plot by setting `sor
 
 ```svelte live
 <script>
-    import { Plot, BarX } from 'svelteplot';
-    const data = [
-        { category: 'C', value: 2 },
-        { category: 'A', value: 1 },
-        { category: 'B', value: 3 }
-    ];
+  import { Plot, BarX } from 'svelteplot';
+  const data = [
+    { category: 'C', value: 2 },
+    { category: 'A', value: 1 },
+    { category: 'B', value: 3 }
+  ];
 </script>
 
 <Plot sortOrdinalDomains={false}>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
 ```svelte
 <Plot sortOrdinalDomains={false}>
-    <BarX {data} x="value" y="category" />
+  <BarX {data} x="value" y="category" />
 </Plot>
 ```
 
@@ -624,27 +624,27 @@ schemes are included in SveltePlot:
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot color={{ legend: true }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species" />
 </Plot>
 ```
 
 ```svelte
 <Plot color={{ legend: true }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species" />
 </Plot>
 ```
 
@@ -652,57 +652,57 @@ There are 11 categorical schemes included in SveltePlot, the default is `observa
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { Select } from '$shared/ui';
-    import { page } from '$app/state';
-    let { countries_2020 } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { Select } from '$shared/ui';
+  import { page } from '$app/state';
+  let { countries_2020 } = $derived(page.data.data);
 
-    const schemes = [
-        'accent',
-        'category10',
-        'dark2',
-        'observable10',
-        'paired',
-        'pastel1',
-        'pastel2',
-        'set1',
-        'set2',
-        'set3',
-        'tableau10'
-    ];
-    let scheme = $state('observable10');
+  const schemes = [
+    'accent',
+    'category10',
+    'dark2',
+    'observable10',
+    'paired',
+    'pastel1',
+    'pastel2',
+    'set1',
+    'set2',
+    'set3',
+    'tableau10'
+  ];
+  let scheme = $state('observable10');
 </script>
 
 <Select
-    label="scheme"
-    options={schemes}
-    bind:value={scheme} />
+  label="scheme"
+  options={schemes}
+  bind:value={scheme} />
 <Plot
-    grid
-    color={{ legend: true, scheme }}
-    y={{ type: 'log' }}
-    r={{ range: [2, 14] }}>
-    <Dot
-        data={countries_2020}
-        x="Life expectancy"
-        y="GDP per capita"
-        r="Population"
-        fill="Continent" />
+  grid
+  color={{ legend: true, scheme }}
+  y={{ type: 'log' }}
+  r={{ range: [2, 14] }}>
+  <Dot
+    data={countries_2020}
+    x="Life expectancy"
+    y="GDP per capita"
+    r="Population"
+    fill="Continent" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    y={{ type: 'log' }}
-    r={{ range: [2, 14] }}
-    color={{ legend: true, scheme: 'observable10' }}>
-    <Dot
-        data={countries_2020}
-        x="Life expectancy"
-        y="GDP per capita"
-        r="Population"
-        fill="Continent" />
+  grid
+  y={{ type: 'log' }}
+  r={{ range: [2, 14] }}
+  color={{ legend: true, scheme: 'observable10' }}>
+  <Dot
+    data={countries_2020}
+    x="Life expectancy"
+    y="GDP per capita"
+    r="Population"
+    fill="Continent" />
 </Plot>
 ```
 
@@ -712,41 +712,41 @@ If you want to map custom colors to your data, you need to pass them via the `sc
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    color={{
-        legend: true,
-        scheme: [
-            'var(--svp-red)',
-            'var(--svp-blue)',
-            'var(--svp-green)'
-        ]
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species" />
+  grid
+  color={{
+    legend: true,
+    scheme: [
+      'var(--svp-red)',
+      'var(--svp-blue)',
+      'var(--svp-green)'
+    ]
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        scheme: ['red', 'blue', 'green']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species" />
+  grid
+  color={{
+    legend: true,
+    scheme: ['red', 'blue', 'green']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species" />
 </Plot>
 ```
 
@@ -754,39 +754,39 @@ Note that the colors are picked in the order the categories appear in your datas
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    color={{
-        legend: true,
-        domain: ['FEMALE', 'MALE'],
-        scheme: ['var(--svp-green)', 'var(--svp-violet)']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="sex" />
+  grid
+  color={{
+    legend: true,
+    domain: ['FEMALE', 'MALE'],
+    scheme: ['var(--svp-green)', 'var(--svp-violet)']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="sex" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        domain: ['FEMALE', 'MALE'],
-        scheme: ['green', 'violet']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="sex" />
+  grid
+  color={{
+    legend: true,
+    domain: ['FEMALE', 'MALE'],
+    scheme: ['green', 'violet']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="sex" />
 </Plot>
 ```
 
@@ -796,43 +796,43 @@ As a simpler syntax you can also pass domain -> scheme mapping as object:
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    color={{
-        legend: true,
-        scheme: {
-            FEMALE: 'var(--svp-green)',
-            MALE: 'var(--svp-violet)'
-        }
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        fill="sex" />
+  grid
+  color={{
+    legend: true,
+    scheme: {
+      FEMALE: 'var(--svp-green)',
+      MALE: 'var(--svp-violet)'
+    }
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    fill="sex" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        scheme: {
-            FEMALE: 'green',
-            MALE: 'violet'
-        }
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="sex" />
+  grid
+  color={{
+    legend: true,
+    scheme: {
+      FEMALE: 'green',
+      MALE: 'violet'
+    }
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="sex" />
 </Plot>
 ```
 
@@ -846,49 +846,49 @@ Another very common way to color plots is to map numbers to colors. If you simpl
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        label: 'Body mass',
-        tickFormat: (d) =>
-            Intl.NumberFormat('en-US', {
-                style: 'unit',
-                unit: 'kilogram'
-            }).format(d / 1000)
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    label: 'Body mass',
+    tickFormat: (d) =>
+      Intl.NumberFormat('en-US', {
+        style: 'unit',
+        unit: 'kilogram'
+      }).format(d / 1000)
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        label: 'Body mass',
-        tickFormat: (d) =>
-            Intl.NumberFormat('en-US', {
-                style: 'unit',
-                unit: 'kilogram'
-            }).format(d / 1000)
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    label: 'Body mass',
+    tickFormat: (d) =>
+      Intl.NumberFormat('en-US', {
+        style: 'unit',
+        unit: 'kilogram'
+      }).format(d / 1000)
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -896,81 +896,81 @@ The default color scheme shown above is called `turbo`, but we can change it to 
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Select } from '$shared/ui';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, GridX, GridY, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Select } from '$shared/ui';
+  let { penguins } = $derived(page.data.data);
 
-    const schemes = [
-        'blues',
-        'BrBg',
-        'BuGn',
-        'BuPu',
-        'BuRd',
-        'BuYlRd',
-        'cividis',
-        'cool',
-        'cubehelix',
-        'GnBu',
-        'greens',
-        'greys',
-        'inferno',
-        'magma',
-        'oranges',
-        'OrRd',
-        'PiYG',
-        'plasma',
-        'PrGn',
-        'PuBu',
-        'PuBuGn',
-        'PuOr',
-        'PuRd',
-        'purples',
-        'rainbow',
-        'RdBu',
-        'RdGy',
-        'RdPu',
-        'RdYlBu',
-        'RdYlGn',
-        'reds',
-        'sinebow',
-        'spectral',
-        'turbo',
-        'viridis',
-        'warm',
-        'YlGn',
-        'YlGnBu',
-        'YlOrBr',
-        'YlOrRd'
-    ];
+  const schemes = [
+    'blues',
+    'BrBg',
+    'BuGn',
+    'BuPu',
+    'BuRd',
+    'BuYlRd',
+    'cividis',
+    'cool',
+    'cubehelix',
+    'GnBu',
+    'greens',
+    'greys',
+    'inferno',
+    'magma',
+    'oranges',
+    'OrRd',
+    'PiYG',
+    'plasma',
+    'PrGn',
+    'PuBu',
+    'PuBuGn',
+    'PuOr',
+    'PuRd',
+    'purples',
+    'rainbow',
+    'RdBu',
+    'RdGy',
+    'RdPu',
+    'RdYlBu',
+    'RdYlGn',
+    'reds',
+    'sinebow',
+    'spectral',
+    'turbo',
+    'viridis',
+    'warm',
+    'YlGn',
+    'YlGnBu',
+    'YlOrBr',
+    'YlOrRd'
+  ];
 
-    let scheme = $state('plasma');
+  let scheme = $state('plasma');
 </script>
 
 <Select
-    label="scheme:"
-    options={schemes}
-    bind:value={scheme} />
+  label="scheme:"
+  options={schemes}
+  bind:value={scheme} />
 <Plot
-    grid
-    testid="linear"
-    color={{ scheme, legend: true }}
-    height={200}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  testid="linear"
+  color={{ scheme, legend: true }}
+  height={200}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot color={{ scheme: 'plasma' }}>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        stroke="temp_max" />
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    stroke="temp_max" />
 </Plot>
 ```
 
@@ -978,39 +978,39 @@ You can also interpolate between custom colors of your liking by passing them as
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        scheme: ['#fa6244', '#ececec', '#00abe1']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    scheme: ['#fa6244', '#ececec', '#00abe1']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        scheme: ['#fa6244', '#ececec', '#00abe1']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    scheme: ['#fa6244', '#ececec', '#00abe1']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1020,30 +1020,30 @@ You may wonder why some of the color schemes don't use their entire range (e.g.,
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    color={{ legend: true, scheme: 'BuYlRd' }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{ legend: true, scheme: 'BuYlRd' }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid color={{ legend: true, scheme: 'BuYlRd' }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1051,40 +1051,40 @@ You can disable this by passing `type: 'linear'` to the color options:
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        type: 'linear',
-        scheme: 'BuYlRd'
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    type: 'linear',
+    scheme: 'BuYlRd'
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        type: 'linear',
-        scheme: 'BuYlRd'
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  color={{
+    legend: true,
+    type: 'linear',
+    scheme: 'BuYlRd'
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1092,40 +1092,40 @@ Alternatively you can change the center point of the diverging scale using the `
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    import { Slider } from '$shared/ui';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  import { Slider } from '$shared/ui';
+  let { penguins } = $derived(page.data.data);
 
-    let pivot = $state(4000);
+  let pivot = $state(4000);
 </script>
 
 <Slider
-    label="pivot"
-    bind:value={pivot}
-    min={3000}
-    max={6500} />
+  label="pivot"
+  bind:value={pivot}
+  min={3000}
+  max={6500} />
 <Plot
-    grid
-    height={200}
-    color={{ legend: true, pivot, scheme: 'BuYlRd' }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{ legend: true, pivot, scheme: 'BuYlRd' }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{ legend: true, pivot: 1000, scheme: 'BuYlRd' }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  color={{ legend: true, pivot: 1000, scheme: 'BuYlRd' }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1135,28 +1135,28 @@ You can set `type: 'quantile-cont'` for a continuous quantile interpolation. Not
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { countries_2020 } = $derived(page.data.data);
-    import { Checkbox } from '$shared/ui';
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { countries_2020 } = $derived(page.data.data);
+  import { Checkbox } from '$shared/ui';
 
-    let log = $state(true);
+  let log = $state(true);
 </script>
 
 <Plot
-    grid
-    height={200}
-    y={{ type: 'log' }}
-    color={{
-        scheme: 'OrRd',
-        type: 'quantile-cont',
-        legend: true
-    }}>
-    <Dot
-        data={countries_2020}
-        x="Life expectancy"
-        y="Population"
-        stroke="GDP per capita" />
+  grid
+  height={200}
+  y={{ type: 'log' }}
+  color={{
+    scheme: 'OrRd',
+    type: 'quantile-cont',
+    legend: true
+  }}>
+  <Dot
+    data={countries_2020}
+    x="Life expectancy"
+    y="Population"
+    stroke="GDP per capita" />
 </Plot>
 ```
 
@@ -1166,42 +1166,42 @@ For mapping [power-law distributions](https://en.wikipedia.org/wiki/Power_law) (
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { countries_2020 } = $derived(page.data.data);
-    import { Checkbox } from '$shared/ui';
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { countries_2020 } = $derived(page.data.data);
+  import { Checkbox } from '$shared/ui';
 
-    let log = $state(true);
+  let log = $state(true);
 </script>
 
 <Plot
-    grid
-    height={200}
-    y={{ type: 'log' }}
-    color={{
-        legend: true,
-        scheme: 'OrRd',
-        type: log ? 'log' : 'linear'
-    }}>
-    <Dot
-        data={countries_2020}
-        x="Life expectancy"
-        y="Population"
-        stroke="GDP per capita" />
+  grid
+  height={200}
+  y={{ type: 'log' }}
+  color={{
+    legend: true,
+    scheme: 'OrRd',
+    type: log ? 'log' : 'linear'
+  }}>
+  <Dot
+    data={countries_2020}
+    x="Life expectancy"
+    y="Population"
+    stroke="GDP per capita" />
 </Plot>
 <Checkbox label="log scale" bind:value={log} />
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{ legend: true, type: 'log', scheme: 'OrRd' }}
-    y={{ type: 'log' }}>
-    <Dot
-        data={countries_2020}
-        x="Life expectancy"
-        y="Population"
-        stroke="GDP per capita" />
+  grid
+  color={{ legend: true, type: 'log', scheme: 'OrRd' }}
+  y={{ type: 'log' }}>
+  <Dot
+    data={countries_2020}
+    x="Life expectancy"
+    y="Population"
+    stroke="GDP per capita" />
 </Plot>
 ```
 
@@ -1211,30 +1211,30 @@ Like log scales but allows for negative values.
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { RadioInput } from '$shared/ui';
-    import { csvFormat } from 'd3-dsv';
-    import { page } from '$app/state';
-    let { symlog } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { RadioInput } from '$shared/ui';
+  import { csvFormat } from 'd3-dsv';
+  import { page } from '$app/state';
+  let { symlog } = $derived(page.data.data);
 
-    let type = $state('diverging-symlog');
+  let type = $state('diverging-symlog');
 </script>
 
 <RadioInput
-    options={[
-        'linear',
-        'diverging',
-        'symlog',
-        'diverging-symlog'
-    ]}
-    bind:value={type} />
+  options={[
+    'linear',
+    'diverging',
+    'symlog',
+    'diverging-symlog'
+  ]}
+  bind:value={type} />
 <Plot
-    color={{
-        legend: true,
-        scheme: 'BuYlRd',
-        type: type
-    }}>
-    <Dot canvas data={symlog} x="x" y="y" stroke="value" />
+  color={{
+    legend: true,
+    scheme: 'BuYlRd',
+    type: type
+  }}>
+  <Dot canvas data={symlog} x="x" y="y" stroke="value" />
 </Plot>
 ```
 
@@ -1248,36 +1248,36 @@ Quantize is like a "stepped" linear scale, where a continuous input domain is ma
 
 ```svelte live
 <script>
-    import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    let n = $state(5);
-    let { seattle } = $derived(page.data.data);
+  import { Plot, Cell, formatMonth } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  let n = $state(5);
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Slider label="n" bind:value={n} min={2} max={15} />
 <Plot
-    padding={0}
-    aspectRatio={1}
-    color={{
-        scheme: 'OrRd',
-        type: 'quantize',
-        n,
-        legend: true,
-        nice: true
-    }}
-    y={{
-        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        tickFormat: formatMonth('en', 'short')
-    }}
-    testid="seattle-temp">
-    <Cell
-        data={seattle}
-        filter={(d) => d.date.getUTCFullYear() === 2015}
-        x={(d) => d.date.getUTCDate()}
-        y={(d) => d.date.getUTCMonth()}
-        fill="temp_max"
-        inset="0.5" />
+  padding={0}
+  aspectRatio={1}
+  color={{
+    scheme: 'OrRd',
+    type: 'quantize',
+    n,
+    legend: true,
+    nice: true
+  }}
+  y={{
+    ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    tickFormat: formatMonth('en', 'short')
+  }}
+  testid="seattle-temp">
+  <Cell
+    data={seattle}
+    filter={(d) => d.date.getUTCFullYear() === 2015}
+    x={(d) => d.date.getUTCDate()}
+    y={(d) => d.date.getUTCMonth()}
+    fill="temp_max"
+    inset="0.5" />
 </Plot>
 ```
 
@@ -1285,40 +1285,40 @@ Again, you can use your custom colors using the `scheme` option. If you omit the
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        type: 'quantize',
-        scheme: ['#fa6244', '#ececec', '#00abe1']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    type: 'quantize',
+    scheme: ['#fa6244', '#ececec', '#00abe1']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        type: 'quantize',
-        scheme: ['#fa6244', '#ececec', '#00abe1']
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  color={{
+    legend: true,
+    type: 'quantize',
+    scheme: ['#fa6244', '#ececec', '#00abe1']
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1326,46 +1326,46 @@ If you also pass the `n` option to set a different number of output values, Svel
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
-    let n = $state(5);
+  import { Plot, Dot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
+  let n = $state(5);
 </script>
 
 <Slider label="n" bind:value={n} min={2} max={9} />
 
 <Plot
-    grid
-    height={200}
-    color={{
-        legend: true,
-        type: 'quantize',
-        scheme: ['#fa6244', '#ececec', '#00abe1'],
-        n
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  height={200}
+  color={{
+    legend: true,
+    type: 'quantize',
+    scheme: ['#fa6244', '#ececec', '#00abe1'],
+    n
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    grid
-    color={{
-        legend: true,
-        type: 'quantize',
-        scheme: ['#fa6244', '#ececec', '#00abe1'],
-        n: 5
-    }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="body_mass_g" />
+  grid
+  color={{
+    legend: true,
+    type: 'quantize',
+    scheme: ['#fa6244', '#ececec', '#00abe1'],
+    n: 5
+  }}>
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="body_mass_g" />
 </Plot>
 ```
 
@@ -1375,36 +1375,36 @@ Similar to the `quantile` scale. Not to be confused with the continuous [quantil
 
 ```svelte live
 <script>
-    import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    let n = $state(5);
-    let { seattle } = $derived(page.data.data);
+  import { Plot, Cell, formatMonth } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  let n = $state(5);
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Slider label="n" bind:value={n} min={2} max={15} />
 <Plot
-    padding={0}
-    aspectRatio={1}
-    color={{
-        scheme: 'OrRd',
-        type: 'quantile',
-        n,
-        legend: true
-    }}
-    y={{
-        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        tickFormat: formatMonth('en', 'short')
-    }}
-    testid="seattle-temp">
-    <!-- todo: -->
-    <Cell
-        data={seattle}
-        filter={(d) => d.date.getUTCFullYear() === 2015}
-        x={(d) => d.date.getUTCDate()}
-        y={(d) => d.date.getUTCMonth()}
-        fill="temp_max"
-        inset="0.5" />
+  padding={0}
+  aspectRatio={1}
+  color={{
+    scheme: 'OrRd',
+    type: 'quantile',
+    n,
+    legend: true
+  }}
+  y={{
+    ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    tickFormat: formatMonth('en', 'short')
+  }}
+  testid="seattle-temp">
+  <!-- todo: -->
+  <Cell
+    data={seattle}
+    filter={(d) => d.date.getUTCFullYear() === 2015}
+    x={(d) => d.date.getUTCDate()}
+    y={(d) => d.date.getUTCMonth()}
+    fill="temp_max"
+    inset="0.5" />
 </Plot>
 ```
 
@@ -1414,43 +1414,43 @@ Threshold scales give you absolute freedom for the breaks:
 
 ```svelte live
 <script>
-    import { Plot, Cell, formatMonth } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
+  import { Plot, Cell, formatMonth } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
 
-    let domain_raw = $state('5,10,15,20,25');
-    let domain = $derived(
-        domain_raw.split(',').map((s) => +s)
-    );
+  let domain_raw = $state('5,10,15,20,25');
+  let domain = $derived(
+    domain_raw.split(',').map((s) => +s)
+  );
 
-    let { seattle } = $derived(page.data.data);
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <input
-    type="text"
-    bind:value={domain_raw}
-    pattern="^(-?\d+(?:\.\d+)?)(,(-?\d+(?:\.\d+)?))*$" />
+  type="text"
+  bind:value={domain_raw}
+  pattern="^(-?\d+(?:\.\d+)?)(,(-?\d+(?:\.\d+)?))*$" />
 <Plot
-    padding={0}
-    aspectRatio={1}
-    color={{
-        scheme: 'OrRd',
-        type: 'threshold',
-        domain,
-        legend: true
-    }}
-    y={{
-        ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        tickFormat: formatMonth('en', 'short')
-    }}
-    testid="seattle-temp">
-    <Cell
-        data={seattle}
-        filter={(d) => d.date.getUTCFullYear() === 2015}
-        x={(d) => d.date.getUTCDate()}
-        y={(d) => d.date.getUTCMonth()}
-        fill="temp_max"
-        inset="0.5" />
+  padding={0}
+  aspectRatio={1}
+  color={{
+    scheme: 'OrRd',
+    type: 'threshold',
+    domain,
+    legend: true
+  }}
+  y={{
+    ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    tickFormat: formatMonth('en', 'short')
+  }}
+  testid="seattle-temp">
+  <Cell
+    data={seattle}
+    filter={(d) => d.date.getUTCFullYear() === 2015}
+    x={(d) => d.date.getUTCDate()}
+    y={(d) => d.date.getUTCMonth()}
+    fill="temp_max"
+    inset="0.5" />
 </Plot>
 ```
 
@@ -1460,27 +1460,27 @@ The color scales are used whenever a _fill_ or _stroke_ channel is mapped to val
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { seattle } = $derived(page.data.data);
+  import { Plot, GridX, GridY, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Plot testid="linear" height={180}>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        stroke="crimson" />
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    stroke="crimson" />
 </Plot>
 ```
 
 ```svelte
 <Plot>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        stroke="crimson" />
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    stroke="crimson" />
 </Plot>
 ```
 
@@ -1488,45 +1488,45 @@ Note that SveltePlot also recognizes generic CSS variables as valid color names,
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { seattle } = $derived(page.data.data);
+  import { Plot, GridX, GridY, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Plot testid="linear" height={180}>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        stroke="var(--brand-red)" />
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    stroke="var(--brand-red)" />
 </Plot>
 
 <style>
-    :global(html) {
-        --brand-red: crimson;
-    }
-    :global(html.dark) {
-        --brand-red: hotpink;
-    }
+  :global(html) {
+    --brand-red: crimson;
+  }
+  :global(html.dark) {
+    --brand-red: hotpink;
+  }
 </style>
 ```
 
 ```svelte
 <Plot height={180}>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        stroke="var(--brand-red)" />
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    stroke="var(--brand-red)" />
 </Plot>
 
 <style>
-    :global(html) {
-        --brand-red: crimson;
-    }
-    :global(html.dark) {
-        --brand-red: hotpink;
-    }
+  :global(html) {
+    --brand-red: crimson;
+  }
+  :global(html.dark) {
+    --brand-red: hotpink;
+  }
 </style>
 ```
 
@@ -1534,38 +1534,38 @@ You can also force SveltePlot to bypass the color scale using `scale: null`.
 
 ```svelte live
 <script>
-    import { Plot, GridX, GridY, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { seattle } = $derived(page.data.data);
+  import { Plot, GridX, GridY, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { seattle } = $derived(page.data.data);
 </script>
 
 <Plot testid="linear" height={180}>
-    <defs>
-        <linearGradient id="gradient" y2="1" x2="0">
-            <stop offset="0%" stop-color="#f7f8c8" />
-            <stop offset="100%" stop-color="hotpink" />
-        </linearGradient>
-    </defs>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        fill="url(#gradient)" />
+  <defs>
+    <linearGradient id="gradient" y2="1" x2="0">
+      <stop offset="0%" stop-color="#f7f8c8" />
+      <stop offset="100%" stop-color="hotpink" />
+    </linearGradient>
+  </defs>
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    fill="url(#gradient)" />
 </Plot>
 ```
 
 ```svelte
 <Plot height={180}>
-    <defs>
-        <linearGradient id="gradient" y2="1" x2="0">
-            <stop offset="0%" stop-color="#f7f8c8" />
-            <stop offset="100%" stop-color="hotpink" />
-        </linearGradient>
-    </defs>
-    <Dot
-        data={seattle}
-        x="date"
-        y="temp_max"
-        fill="url(#gradient)" />
+  <defs>
+    <linearGradient id="gradient" y2="1" x2="0">
+      <stop offset="0%" stop-color="#f7f8c8" />
+      <stop offset="100%" stop-color="hotpink" />
+    </linearGradient>
+  </defs>
+  <Dot
+    data={seattle}
+    x="date"
+    y="temp_max"
+    fill="url(#gradient)" />
 </Plot>
 ```

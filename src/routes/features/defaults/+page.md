@@ -10,16 +10,16 @@ If you're using SveltePlot in a SvelteKit project, you can even set the defaults
 
 ```svelte title="+layout.svelte"
 <script>
-    import { setPlotDefaults } from 'svelteplot';
+  import { setPlotDefaults } from 'svelteplot';
 
-    setPlotDefaults({
-        height: 400,
-        colorScheme: 'plasma',
-        axis: {
-            tickSize: 0,
-            tickPadding: 5
-        }
-    });
+  setPlotDefaults({
+    height: 400,
+    colorScheme: 'plasma',
+    axis: {
+      tickSize: 0,
+      tickPadding: 5
+    }
+  });
 </script>
 
 <slot />
@@ -101,39 +101,39 @@ Setting Global and Component Defaults
 
 ```svelte live
 <script>
-    import { Plot, Dot, setPlotDefaults } from 'svelteplot';
-    import { page } from '$app/state';
+  import { Plot, Dot, setPlotDefaults } from 'svelteplot';
+  import { page } from '$app/state';
 
-    let { penguins } = $derived(page.data.data);
+  let { penguins } = $derived(page.data.data);
 
-    setPlotDefaults({
-        // Global defaults
-        inset: 15,
-        categoricalColorScheme: [
-            'var(--svp-red)',
-            'var(--svp-blue)',
-            'var(--svp-green)'
-        ],
-        // Component-specific defaults
-        axis: {
-            tickSize: 0,
-            tickPadding: 5
-        },
-        frame: true,
-        grid: { implicit: true },
-        dot: {
-            r: 5
-        }
-    });
+  setPlotDefaults({
+    // Global defaults
+    inset: 15,
+    categoricalColorScheme: [
+      'var(--svp-red)',
+      'var(--svp-blue)',
+      'var(--svp-green)'
+    ],
+    // Component-specific defaults
+    axis: {
+      tickSize: 0,
+      tickPadding: 5
+    },
+    frame: true,
+    grid: { implicit: true },
+    dot: {
+      r: 5
+    }
+  });
 </script>
 
 <Plot>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        fx="species"
-        y="culmen_depth_mm"
-        fill="species" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    fx="species"
+    y="bill_depth_mm"
+    fill="species" />
 </Plot>
 ```
 
@@ -141,23 +141,23 @@ Setting Global and Component Defaults
 import { setPlotDefaults } from 'svelteplot';
 
 setPlotDefaults({
-    // Global defaults
-    inset: 15,
-    categoricalColorScheme: [
-        'var(--svp-red)',
-        'var(--svp-blue)',
-        'var(--svp-green)'
-    ],
-    // Mark-specific defaults
-    axis: {
-        tickSize: 0,
-        tickPadding: 5
-    },
-    frame: true,
-    grid: { implicit: true },
-    dot: {
-        r: 5
-    }
+  // Global defaults
+  inset: 15,
+  categoricalColorScheme: [
+    'var(--svp-red)',
+    'var(--svp-blue)',
+    'var(--svp-green)'
+  ],
+  // Mark-specific defaults
+  axis: {
+    tickSize: 0,
+    tickPadding: 5
+  },
+  frame: true,
+  grid: { implicit: true },
+  dot: {
+    r: 5
+  }
 });
 ```
 
@@ -165,35 +165,35 @@ another one
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        BarX,
-        AreaY,
-        setPlotDefaults
-    } from 'svelteplot';
-    import { page } from '$app/state';
+  import {
+    Plot,
+    BarX,
+    AreaY,
+    setPlotDefaults
+  } from 'svelteplot';
+  import { page } from '$app/state';
 
-    let { penguins } = $derived(page.data.data);
-    setPlotDefaults({
-        bar: {
-            borderRadius: 4,
-            stroke: 'currentColor',
-            fill: null
-        },
-        area: {
-            curve: 'basis',
-            fillOpacity: 0.5
-        }
-    });
+  let { penguins } = $derived(page.data.data);
+  setPlotDefaults({
+    bar: {
+      borderRadius: 4,
+      stroke: 'currentColor',
+      fill: null
+    },
+    area: {
+      curve: 'basis',
+      fillOpacity: 0.5
+    }
+  });
 </script>
 
 <div style="columns:2">
-    <Plot height={300}>
-        <BarX data={[1, 2, 3, 4, 5, 6]} />
-    </Plot>
-    <Plot height={300}>
-        <AreaY data={[1, 3, 2, 4, 6, 5]} />
-    </Plot>
+  <Plot height={300}>
+    <BarX data={[1, 2, 3, 4, 5, 6]} />
+  </Plot>
+  <Plot height={300}>
+    <AreaY data={[1, 3, 2, 4, 6, 5]} />
+  </Plot>
 </div>
 ```
 
@@ -201,15 +201,15 @@ another one
 import { setPlotDefaults } from 'svelteplot';
 
 setPlotDefaults({
-    bar: {
-        borderRadius: 4,
-        stroke: 'currentColor',
-        fill: null
-    },
-    area: {
-        curve: 'basis',
-        fillOpacity: 0.5
-    }
+  bar: {
+    borderRadius: 4,
+    stroke: 'currentColor',
+    fill: null
+  },
+  area: {
+    curve: 'basis',
+    fillOpacity: 0.5
+  }
 });
 ```
 

@@ -13,29 +13,29 @@ This means there is no "scatterplot" component in SveltePlot, but you can use th
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { page } from '$app/state';
-    let { penguins } = $derived(page.data.data);
+  import { Plot, Dot } from 'svelteplot';
+  import { page } from '$app/state';
+  let { penguins } = $derived(page.data.data);
 </script>
 
 <Plot grid color={{ legend: true }} testid="penguins">
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species"
-        symbol="species" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species"
+    symbol="species" />
 </Plot>
 ```
 
 ```svelte
 <Plot grid color={{ legend: true }}>
-    <Dot
-        data={penguins}
-        x="culmen_length_mm"
-        y="culmen_depth_mm"
-        stroke="species"
-        symbol="species" />
+  <Dot
+    data={penguins}
+    x="bill_length_mm"
+    y="bill_depth_mm"
+    stroke="species"
+    symbol="species" />
 </Plot>
 ```
 
@@ -45,49 +45,49 @@ You can think of marks as the building blocks for your visualizations -- or the 
 
 ```svelte live
 <script>
-    import { Plot, Dot, GridY, AxisX } from 'svelteplot';
-    import { page } from '$app/state';
-    const { languages } = $derived(page.data.data);
+  import { Plot, Dot, GridY, AxisX } from 'svelteplot';
+  import { page } from '$app/state';
+  const { languages } = $derived(page.data.data);
 </script>
 
 <Plot
-    x={{
-        type: 'log',
-        insetLeft: 20,
-        insetRight: 20,
-        axis: 'top'
-    }}
-    y={{ type: 'point', label: '' }}>
-    <GridY strokeDasharray="1,3" strokeOpacity="0.5" />
-    <Dot
-        data={languages.filter(
-            (d) => d['Total speakers'] >= 90e6
-        )}
-        x="Total speakers"
-        y="Language"
-        fill
-        sort={{ channel: '-x' }} />
+  x={{
+    type: 'log',
+    insetLeft: 20,
+    insetRight: 20,
+    axis: 'top'
+  }}
+  y={{ type: 'point', label: '' }}>
+  <GridY strokeDasharray="1,3" strokeOpacity="0.5" />
+  <Dot
+    data={languages.filter(
+      (d) => d['Total speakers'] >= 90e6
+    )}
+    x="Total speakers"
+    y="Language"
+    fill
+    sort={{ channel: '-x' }} />
 </Plot>
 ```
 
 ```svelte
 <Plot
-    x={{
-        type: 'log',
-        insetLeft: 20,
-        insetRight: 20,
-        axis: 'top'
-    }}
-    y={{ type: 'point', label: '' }}>
-    <!-- dotted lines for grid -->
-    <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
-    <!-- and the dots: -->
-    <Dot
-        data={languages}
-        x="Total speakers"
-        y="Language"
-        fill
-        sort={{ channel: '-x' }} />
+  x={{
+    type: 'log',
+    insetLeft: 20,
+    insetRight: 20,
+    axis: 'top'
+  }}
+  y={{ type: 'point', label: '' }}>
+  <!-- dotted lines for grid -->
+  <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
+  <!-- and the dots: -->
+  <Dot
+    data={languages}
+    x="Total speakers"
+    y="Language"
+    fill
+    sort={{ channel: '-x' }} />
 </Plot>
 ```
 
@@ -97,38 +97,36 @@ This makes it a lot easier to iterate over different ideas for visualizations. F
 
 ```svelte live
 <script>
-    import { Plot, Dot, Line, GridY } from 'svelteplot';
-    import { page } from '$app/state';
-    let { languages: allLanguages } = $derived(
-        page.data.data
-    );
-    const languages = $derived(
-        allLanguages.filter(
-            (d) => d['Total speakers'] >= 90e6
-        )
-    );
+  import { Plot, Dot, Line, GridY } from 'svelteplot';
+  import { page } from '$app/state';
+  let { languages: allLanguages } = $derived(
+    page.data.data
+  );
+  const languages = $derived(
+    allLanguages.filter((d) => d['Total speakers'] >= 90e6)
+  );
 </script>
 
 <Plot
-    x={{
-        type: 'log',
-        axis: 'top',
-        insetLeft: 20,
-        insetRight: 20
-    }}
-    y={{ type: 'point', label: '' }}>
-    <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
-    <Line
-        opacity={0.5}
-        data={languages}
-        x="Total speakers"
-        y="Language" />
-    <Dot
-        data={languages}
-        x="Total speakers"
-        y="Language"
-        fill
-        sort={{ channel: '-x' }} />
+  x={{
+    type: 'log',
+    axis: 'top',
+    insetLeft: 20,
+    insetRight: 20
+  }}
+  y={{ type: 'point', label: '' }}>
+  <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
+  <Line
+    opacity={0.5}
+    data={languages}
+    x="Total speakers"
+    y="Language" />
+  <Dot
+    data={languages}
+    x="Total speakers"
+    y="Language"
+    fill
+    sort={{ channel: '-x' }} />
 </Plot>
 ```
 
@@ -153,53 +151,50 @@ And if we wanted to add uncertainty ranges, we can add a [Rule mark](/marks/rule
 
 ```svelte live
 <script>
-    import {
-        Plot,
-        Dot,
-        Line,
-        GridY,
-        RuleY
-    } from 'svelteplot';
-    import { page } from '$app/state';
+  import {
+    Plot,
+    Dot,
+    Line,
+    GridY,
+    RuleY
+  } from 'svelteplot';
+  import { page } from '$app/state';
 
-    let { languages: allLanguages } = $derived(
-        page.data.data
-    );
-    const languages = $derived(
-        allLanguages.filter(
-            (d) => d['Total speakers'] >= 90e6
-        )
-    );
+  let { languages: allLanguages } = $derived(
+    page.data.data
+  );
+  const languages = $derived(
+    allLanguages.filter((d) => d['Total speakers'] >= 90e6)
+  );
 </script>
 
 <Plot
-    x={{
-        type: 'log',
-        axis: 'top',
-        insetLeft: 20,
-        insetRight: 20
-    }}
-    y={{ type: 'point', label: '' }}>
-    <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
-    <Line
-        opacity={0.5}
-        data={languages}
-        x="Total speakers"
-        y="Language" />
-    <RuleY
-        data={languages}
-        y="Language"
-        x1={(d) =>
-            d['Total speakers'] - d['First-language'] * 0.2}
-        x2={(d) =>
-            d['Total speakers'] +
-            d['First-language'] * 0.2} />
-    <Dot
-        data={languages}
-        x="Total speakers"
-        y="Language"
-        fill
-        sort={{ channel: '-x' }} />
+  x={{
+    type: 'log',
+    axis: 'top',
+    insetLeft: 20,
+    insetRight: 20
+  }}
+  y={{ type: 'point', label: '' }}>
+  <GridY strokeDasharray="1,3" strokeOpacity="0.3" />
+  <Line
+    opacity={0.5}
+    data={languages}
+    x="Total speakers"
+    y="Language" />
+  <RuleY
+    data={languages}
+    y="Language"
+    x1={(d) =>
+      d['Total speakers'] - d['First-language'] * 0.2}
+    x2={(d) =>
+      d['Total speakers'] + d['First-language'] * 0.2} />
+  <Dot
+    data={languages}
+    x="Total speakers"
+    y="Language"
+    fill
+    sort={{ channel: '-x' }} />
 </Plot>
 ```
 
@@ -219,28 +214,28 @@ Take the following example, where you can filter the data using the [filter](/tr
 
 ```svelte live
 <script>
-    import { Plot, Dot } from 'svelteplot';
-    import { Slider } from '$shared/ui';
-    import { page } from '$app/state';
-    const { cars } = $derived(page.data.data);
-    let min = $state(0);
-    let noAxisX = $state(false);
-    let noAxisTitle = $state(false);
+  import { Plot, Dot } from 'svelteplot';
+  import { Slider } from '$shared/ui';
+  import { page } from '$app/state';
+  const { cars } = $derived(page.data.data);
+  let min = $state(0);
+  let noAxisX = $state(false);
+  let noAxisTitle = $state(false);
 </script>
 
 <Slider
-    bind:value={min}
-    label="min economy (mpg)"
-    max={50} />
+  bind:value={min}
+  label="min economy (mpg)"
+  max={50} />
 
 <Plot grid testid="cars" color={{ type: 'linear' }}>
-    <Dot
-        data={cars}
-        filter={(d) => d['economy (mpg)'] > min}
-        y="weight (lb)"
-        x="power (hp)"
-        r={4}
-        stroke="economy (mpg)" />
+  <Dot
+    data={cars}
+    filter={(d) => d['economy (mpg)'] > min}
+    y="weight (lb)"
+    x="power (hp)"
+    r={4}
+    stroke="economy (mpg)" />
 </Plot>
 ```
 
@@ -248,88 +243,81 @@ Here's an example where we're binding a live-updated dataset to a [Line mark](/m
 
 ```svelte live
 <script lang="ts">
-    import {
-        Plot,
-        LineY,
-        RuleY,
-        AreaY,
-        Dot,
-        Text
-    } from 'svelteplot';
-    import { noise } from 'svelteplot/helpers/noise.js';
+  import {
+    Plot,
+    LineY,
+    RuleY,
+    AreaY,
+    Dot,
+    Text
+  } from 'svelteplot';
+  import { noise } from 'svelteplot/helpers/noise.js';
 
-    let rand: number[] = $state([]);
-    let maxLen = $state(200);
+  let rand: number[] = $state([]);
+  let maxLen = $state(200);
 
-    const S = Math.ceil(Math.random() * 1e7);
+  const S = Math.ceil(Math.random() * 1e7);
 
-    // const rand = range(400).map(i => ({ x: i - 200, y: noise(i/20) * 200 - 100 }))
-    let mag = $state(1);
+  // const rand = range(400).map(i => ({ x: i - 200, y: noise(i/20) * 200 - 100 }))
+  let mag = $state(1);
 
-    function addLine() {
-        do {
-            const prevI = rand.length ? rand.at(-1).x : 200;
-            mag = Math.pow(
-                10,
-                Math.floor(Math.log10(prevI) - 2)
-            );
-            const i = prevI + mag;
-            const pt = {
-                x: i,
-                y:
-                    (noise(i / 40 / mag) * 100 - 50) *
-                    Math.log10(mag * 10) *
-                    5
-            };
-            rand = [...rand.slice(-maxLen), pt];
-        } while (rand.length < 150);
-        window.requestAnimationFrame(addLine);
-    }
+  function addLine() {
+    do {
+      const prevI = rand.length ? rand.at(-1).x : 200;
+      mag = Math.pow(10, Math.floor(Math.log10(prevI) - 2));
+      const i = prevI + mag;
+      const pt = {
+        x: i,
+        y:
+          (noise(i / 40 / mag) * 100 - 50) *
+          Math.log10(mag * 10) *
+          5
+      };
+      rand = [...rand.slice(-maxLen), pt];
+    } while (rand.length < 150);
+    window.requestAnimationFrame(addLine);
+  }
 
-    $effect(async () => {
-        if (!rand.length) addLine();
-    });
+  $effect(async () => {
+    if (!rand.length) addLine();
+  });
 </script>
 
 <Plot
-    grid
-    marginRight={10}
-    marginLeft={35 + Math.log10(mag) * 5}
-    inset={10}
-    y={{ tickSpacing: 30, nice: true }}
-    x={{ tickSpacing: 90, insetRight: 30 }}
-    color={{ type: 'categorical' }}
-    height={250}>
-    <RuleY data={[0]} />
-    {#if rand.length > 1}
-        <AreaY
-            data={rand}
-            x="x"
-            y="y"
-            fill="currentColor"
-            opacity={0.1} />
-        <LineY
-            data={rand}
-            x="x"
-            y="y"
-            stroke="currentColor" />
-        <Dot
-            data={[rand.at(-1)]}
-            x="x"
-            y="y"
-            fill="currentColor" />
-        <Text
-            data={[rand.at(-1)]}
-            x="x"
-            y="y"
-            fontWeight="bold"
-            stroke="var(--svelteplot-bg)"
-            strokeWidth={3}
-            fill="currentColor"
-            textAnchor="start"
-            dx={6}
-            text={(d) => d.y.toFixed(0)} />
-    {/if}
+  grid
+  marginRight={10}
+  marginLeft={35 + Math.log10(mag) * 5}
+  inset={10}
+  y={{ tickSpacing: 30, nice: true }}
+  x={{ tickSpacing: 90, insetRight: 30 }}
+  color={{ type: 'categorical' }}
+  height={250}>
+  <RuleY data={[0]} />
+  {#if rand.length > 1}
+    <AreaY
+      data={rand}
+      x="x"
+      y="y"
+      fill="currentColor"
+      opacity={0.1} />
+    <LineY data={rand} x="x" y="y" stroke="currentColor" />
+    <Dot
+      data={[rand.at(-1)]}
+      x="x"
+      y="y"
+      fill="currentColor" />
+    <Text
+      data={[rand.at(-1)]}
+      x="x"
+      y="y"
+      fontWeight="bold"
+      stroke="var(--svelteplot-bg)"
+      strokeWidth={3}
+      fill="currentColor"
+      textAnchor="start"
+      dx={6}
+      text={(d) => d.y.toFixed(0)} />
+  {/if}
 </Plot>
 ```
 
@@ -340,60 +328,57 @@ Try clicking on the bars to change their values.
 
 ```svelte live
 <script>
-    import { Plot, RuleY, BarY } from 'svelteplot';
-    import { Tween } from 'svelte/motion';
-    import { cubicOut } from 'svelte/easing';
-    import { extent } from 'd3-array';
-    import { fade } from 'svelte/transition';
+  import { Plot, RuleY, BarY } from 'svelteplot';
+  import { Tween } from 'svelte/motion';
+  import { cubicOut } from 'svelte/easing';
+  import { extent } from 'd3-array';
+  import { fade } from 'svelte/transition';
 
-    let data = $state([1, 2, 3, 4, 5]);
+  let data = $state([1, 2, 3, 4, 5]);
 
-    const domain = Tween.of(() => extent([0, ...data]), {
-        duration: 1000,
-        easing: cubicOut
-    });
+  const domain = Tween.of(() => extent([0, ...data]), {
+    duration: 1000,
+    easing: cubicOut
+  });
 </script>
 
 <Plot
-    color={{ scheme: 'reds' }}
-    x={{ axis: false, padding: data.length < 60 ? 0.1 : 0 }}
-    y={{ grid: true, domain: domain.current }}>
-    <BarY
-        {data}
-        fill={(d) => d}
-        cursor="pointer"
-        onclick={(e, d, index) => {
-            data[index] += 0.2 * data[index];
-        }} />
-    <RuleY data={[0]} />
+  color={{ scheme: 'reds' }}
+  x={{ axis: false, padding: data.length < 60 ? 0.1 : 0 }}
+  y={{ grid: true, domain: domain.current }}>
+  <BarY
+    {data}
+    fill={(d) => d}
+    cursor="pointer"
+    onclick={(e, d, index) => {
+      data[index] += 0.2 * data[index];
+    }} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
 ```svelte
 <script>
-    import { Tween } from 'svelte/motion';
-    import { cubicOut } from 'svelte/easing';
+  import { Tween } from 'svelte/motion';
+  import { cubicOut } from 'svelte/easing';
 
-    let data = $state([1, 2, 3, 4, 5]);
+  let data = $state([1, 2, 3, 4, 5]);
 
-    const domain = new Tween.of(
-        () => extent([0, ...data]),
-        {
-            duration: 1000,
-            easing: cubicOut
-        }
-    );
+  const domain = new Tween.of(() => extent([0, ...data]), {
+    duration: 1000,
+    easing: cubicOut
+  });
 </script>
 
 <Plot
-    color={{ scheme: 'RdBu' }}
-    y={{ grid: true, domain: domain.current }}>
-    <BarY
-        {data}
-        onclick={(evt, d, index) => {
-            data[index] += 0.2 * data[index];
-        }} />
-    <RuleY data={[0]} />
+  color={{ scheme: 'RdBu' }}
+  y={{ grid: true, domain: domain.current }}>
+  <BarY
+    {data}
+    onclick={(evt, d, index) => {
+      data[index] += 0.2 * data[index];
+    }} />
+  <RuleY data={[0]} />
 </Plot>
 ```
 
@@ -405,88 +390,88 @@ You can extend SveltePlot by injecting regular Svelte snippets. For instance, th
 
 ```svelte live
 <script lang="ts">
-    import { Plot, Line } from 'svelteplot';
-    import { fly, fade } from 'svelte/transition';
+  import { Plot, Line } from 'svelteplot';
+  import { fly, fade } from 'svelte/transition';
 
-    import { page } from '$app/state';
-    let { aapl } = $derived(page.data.data);
+  import { page } from '$app/state';
+  let { aapl } = $derived(page.data.data);
 
-    let shown = $state(false);
+  let shown = $state(false);
 
-    $effect(() => {
-        const t = setInterval(() => {
-            shown = !shown;
-        }, 1000);
-        return () => clearInterval(t);
-    });
+  $effect(() => {
+    const t = setInterval(() => {
+      shown = !shown;
+    }, 1000);
+    return () => clearInterval(t);
+  });
 </script>
 
 <Plot grid height={300}>
-    <Line
-        data={aapl.slice(-40)}
-        curve="basis"
-        x="Date"
-        y="Adj Close">
-        {#snippet marker(id, color)}
-            <marker
-                {id}
-                fill="none"
-                stroke={color}
-                markerWidth="6"
-                markerHeight="10"
-                viewBox="-4 -10 8 10"
-                orient="auto">
-                {#if shown}
-                    <path
-                        in:fly={{ duration: 1000, y: -10 }}
-                        out:fade
-                        d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
-                {/if}
-            </marker>
-        {/snippet}
-    </Line>
+  <Line
+    data={aapl.slice(-40)}
+    curve="basis"
+    x="Date"
+    y="Adj Close">
+    {#snippet marker(id, color)}
+      <marker
+        {id}
+        fill="none"
+        stroke={color}
+        markerWidth="6"
+        markerHeight="10"
+        viewBox="-4 -10 8 10"
+        orient="auto">
+        {#if shown}
+          <path
+            in:fly={{ duration: 1000, y: -10 }}
+            out:fade
+            d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
+        {/if}
+      </marker>
+    {/snippet}
+  </Line>
 </Plot>
 ```
 
 ```svelte
 <script>
-    // ...
-    import { fly, fade } from 'svelte/transition';
+  // ...
+  import { fly, fade } from 'svelte/transition';
 
-    let shown = $state(false);
+  let shown = $state(false);
 
-    $effect(() => {
-        const t = setInterval(() => {
-            shown = !shown;
-        }, 1000);
-        return () => clearInterval(t);
-    });
+  $effect(() => {
+    const t = setInterval(() => {
+      shown = !shown;
+    }, 1000);
+    return () => clearInterval(t);
+  });
 </script>
 
 <Plot grid height={300}>
-    <Line
-        data={aapl.slice(-40)}
-        x="Date"
-        y="Adj Close"
-        curve="basis">
-        {#snippet marker(id, color)}
-            <marker
-                {id}
-                fill="none"
-                stroke={color}
-                markerWidth="6"
-                markerHeight="10"
-                viewBox="-4 -10 8 10"
-                orient="auto">
-                {#if shown}
-                    <path
-                        in:fly={{ duration: 1000, y: -10 }}
-                        out:fade
-                        d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
-                {/if}
-            </marker>
-        {/snippet}
-    </Line>
+  <Line
+    data={aapl.slice(-40)}
+    x="Date"
+    y="Adj Close"
+    curve="basis">
+    {#snippet marker(id, color)}
+      <marker
+        {id}
+        fill="none"
+        stroke={color}
+        markerWidth="6"
+        markerHeight="10"
+        viewBox="-4 -10 8 10"
+        orient="auto">
+        {#if shown}
+          <path
+            in:fly={{ duration: 1000, y: -10 }}
+            out:fade
+            d="M0,-10L0,-2m-3,-3 l3,3l3,-3" />
+        {/if}
+      </marker>
+    {/snippet}
+  </Line>
 </Plot>
 ```
 

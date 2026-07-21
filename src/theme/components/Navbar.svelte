@@ -19,11 +19,9 @@
     <div class="header-inner">
         <div class="left">
             <NavbarMobile />
-            {#if hasError || isHome}
-                <div class="logo-container">
-                    <Logo />
-                </div>
-            {/if}
+            <div class="logo-container">
+                <Logo />
+            </div>
         </div>
 
         <nav class="nav-links" aria-label="Menu">

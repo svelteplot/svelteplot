@@ -231,7 +231,10 @@ describe('groupZ', () => {
 });
 
 const penguins: DataRecord[] = csvParse(
-    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../../../static/data/penguins.csv'), 'utf-8')
+    readFileSync(
+        resolve(dirname(fileURLToPath(import.meta.url)), '../../../../static/data/penguins.csv'),
+        'utf-8'
+    )
 );
 
 describe('group', () => {

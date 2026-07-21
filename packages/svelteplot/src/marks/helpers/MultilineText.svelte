@@ -140,6 +140,7 @@
                     (computedFontSize as number) *
                     lineHeight
         )}) rotate({rotate})"
+        filter={resolveProp(args.svgFilter, d.datum, undefined) as string | undefined}
         >{#each textLines as line, l (l)}<tspan
                 x="0"
                 dy={l ? (computedFontSize as number) * lineHeight : 0}
@@ -153,6 +154,7 @@
         dominant-baseline={LINE_ANCHOR[lineAnchor]}
         transform="translate({Math.round(x ?? 0)},{Math.round(y ?? 0)}) rotate({rotate})"
         {style}
+        filter={resolveProp(args.svgFilter, d.datum, undefined) as string | undefined}
         >{textLines[0]}{#if title}<title>{title}</title>{/if}</text>
 {/if}
 
